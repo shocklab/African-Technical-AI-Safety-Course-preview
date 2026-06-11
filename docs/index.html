@@ -33,6 +33,11 @@
     .lesson-list .soon::after { content: ' — coming soon'; font-size: 0.85em; color: #bbb; }
     .lesson-list .lab::before { content: '🧪 '; }
     .badge-built { display:inline-block; background:#2a5298; color:#fff; font-size:0.7em; padding:2px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+    .session-group { color:#2c3e50; font-weight:700; padding:8px 15px; border-left:3px solid #003A70; background:#f0f4f8; border-radius:8px; margin-top:4px; }
+    .subsession-list { list-style:none; margin:6px 0 8px 22px; }
+    .subsession-list li { margin-bottom:4px; }
+    .subsession-list a { color:#2c3e50; text-decoration:none; padding:6px 14px; display:block; border-radius:8px; border-left:3px solid transparent; font-size:0.96em; transition:all 0.2s ease; }
+    .subsession-list a:hover { background:#f0f4f8; border-left:3px solid #2a5298; color:#003A70; }
     footer { background: #f9f9f9; padding: 25px 40px; text-align: center; color: #888; font-size: 0.9em; border-top: 1px solid #eee; }
     footer a { color: #003A70; }
     @media (max-width: 768px) { header h1 { font-size: 1.6em; } .content { padding: 25px 20px; } .lesson-list { margin-left: 20px; } .week-number { width: 35px; height: 35px; font-size: 0.9em; } }
@@ -75,7 +80,15 @@
             <div class="week-header"><div class="week-number">2</div><h2>The alignment problem &amp; the physical substrate</h2></div>
             <ul class="lesson-list">
                 <li><span class="soon">Session 3 · The core alignment problem</span></li>
-                <li><a href="sessions/session-04-physical-substrate-of-scale.html">Session 4 · The physical substrate of scale (energy)<span class="badge-built">built</span></a></li>
+                <li>
+                    <div class="session-group">Session 4 · The physical substrate of scale (energy) <span class="badge-built">built</span></div>
+                    <ul class="subsession-list">
+                        <li><a href="sessions/session-04/cost-of-every-prompt.html">4.1 · The cost of every prompt</a></li>
+                        <li><a href="sessions/session-04/infrastructure-and-rebound.html">4.2 · Infrastructure, scale &amp; the rebound problem</a></li>
+                        <li><a href="sessions/session-04/critical-minerals.html">4.3 · Critical minerals &amp; the hardware supply chain</a></li>
+                        <li><a href="sessions/session-04/sustainable-and-sovereign-ai.html">4.4 · Sustainable &amp; sovereign AI</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
 
@@ -94,7 +107,15 @@
             <div class="week-header"><div class="week-number">4</div><h2>Scalable alignment methods</h2></div>
             <ul class="lesson-list">
                 <li><span class="soon lab">Session 7 · Learning from AI feedback (RLAIF, Constitutional AI)</span></li>
-                <li><a href="sessions/session-08-scalable-oversight-and-whose-values.html">Session 8 · Scalable oversight &amp; "whose values?" (ethics)<span class="badge-built">built</span></a></li>
+                <li>
+                    <div class="session-group">Session 8 · Scalable oversight &amp; "whose values?" (ethics) <span class="badge-built">built</span></div>
+                    <ul class="subsession-list">
+                        <li><a href="sessions/session-08/scalable-oversight.html">8.1 · The supervision gap &amp; scalable oversight</a></li>
+                        <li><a href="sessions/session-08/ethical-frameworks-four-lenses.html">8.2 · Ethical frameworks &amp; the four lenses</a></li>
+                        <li><a href="sessions/session-08/ubuntu-relational-ethics.html">8.3 · Ubuntu, relational ethics &amp; the Just AI framework</a></li>
+                        <li><a href="sessions/session-08/whose-values.html">8.4 · Whose values? Preference aggregation</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
 

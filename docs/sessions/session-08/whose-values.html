@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 8.4 — Whose Values? Preference Aggregation &amp; the Alignment Target</title>
+    <link rel="stylesheet" href="https://s.brightspace.com/lib/fonts/0.6.1/fonts.css">
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="back-nav"><a href="../../index.html">← Back to course contents</a></div>
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 4 • Session 8.4</div>
+        <h1>⚖️ <span style="color:#ffffff;">Whose Values? Preference Aggregation &amp; the Alignment Target</span></h1>
+        <p>Even perfect oversight cannot escape the prior question of which values a system is aligned to</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>🎯 What we'll cover</h2>
+            <p>Sub-session 8.1 asked how to oversee a stronger system; 8.2 and 8.3 gave us tools — the four lenses, and Ubuntu/relational ethics — for reasoning about the <em>target</em>. This sub-session closes the loop: "align to human values" hides a choice of <em>whose</em>, <em>how weighted</em>, and <em>aggregated by what rule</em> — and shows that some of those choices are provably in tension. We end with the in-class debate exercise for the whole session.</p>
+        </div>
+
+        <h2 class="section-title">⚖️ The normative turn</h2>
+        <p class="lead">"Aligned" is not a property a model has on its own — it is a relation to a target, and the target is a values choice. RLHF's reward model is silently encoding <em>some</em> population's averaged preferences; the question is whose, and whether that is even coherent.</p>
+        <div class="info-box">
+            <h4>💡 From 8.2–8.3, carried forward</h4>
+            <p>The four lenses (8.2) disagree about what a "good" output is; relational ethics (8.3) asks whose voices set the values and whose harms are even legible to the reward model. Both land on the same practical question for an alignment engineer: when you write a constitution, choose annotators, or define a reward, you are answering "whose values?" — usually implicitly.</p>
+        </div>
+
+        <h2 class="section-title">🧮 The maths hook: aggregating preferences</h2>
+        <div class="highlight-box">
+            <h3>➗ <span style="color:#ffffff;">"Whose values" is partly a theorem</span></h3>
+            <p>If you try to align to <em>everyone's</em> values, you must aggregate conflicting preferences into a single ordering. Social-choice theory says you cannot do this perfectly: <strong>Arrow's impossibility theorem</strong> shows no aggregation rule satisfies a short list of reasonable fairness conditions at once. RLHF's averaged reward model is making exactly such an aggregation — over whichever population the annotators happened to represent.</p>
+            <p>The takeaway is not nihilism but precision: alignment hides a choice of <em>whose</em> values, <em>how weighted</em>, and <em>aggregated by what rule</em> — and some of those choices are provably in tension. For a maths cohort this is a natural bridge from ethics to a result they can prove.</p>
+        </div>
+        <div class="info-box">
+            <h4>💡 A South African angle worth raising</h4>
+            <p>Whose preferences are in the annotation pool that trains a frontier reward model? Almost certainly not isiZulu- or Sesotho-speaking ones in any representative number. The aggregation problem is not only abstract — it has a concrete demographic answer, and it connects directly to the Global-South safety thread the course returns to in Session 18.</p>
+        </div>
+
+        <h2 class="section-title">🗣️ In-class: the debate exercise</h2>
+        <div class="lab-box">
+            <h4>🧪 Does debate actually help a weak judge? <span class="tag">seminar</span></h4>
+            <p>Two students argue opposite answers to a contested question; a third plays a deliberately under-informed "judge" and must rule using only the debate. Run it twice — once on a checkable factual question, once on a value-laden one.</p>
+            <p><strong>Debrief:</strong> Did the judge converge on truth, or on the better rhetorician? What changed between the factual and the value question? Map the result back onto the AI-debate proposal (8.1) and onto the social-choice problem above.</p>
+        </div>
+
+        <h2 class="section-title">📚 Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• Grosse, CSC2547 Lecture 12 "Whose Values?" reading set (U. Toronto).</p>
+            <p>• Background on Arrow's impossibility theorem (any social-choice text) for the preference-aggregation argument.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• Revisit 8.2 (four lenses) and 8.3 (Ubuntu / relational ethics) as the normative toolkit.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>🧾 Session 8 summary &amp; what's next</h2>
+            <p>Scalable oversight (8.1) is the attempt to keep a weak overseer's signal tied to the truth as models outstrip us — none of debate, recursive decomposition, sandwiching, or weak-to-strong is yet solved. And even perfect oversight cannot escape the prior question of <em>whose</em> values the system targets: at once an ethical choice (the four lenses, 8.2; relational ethics, 8.3) and a mathematical constraint (Arrow, 8.4).</p>
+            <p><strong>Next (Week 5, Sessions 9–10):</strong> robustness and the AI-control agenda — what happens when the system is adversarially attacked, or when we stop assuming it is even trying to cooperate. Session 9 opens with a result that makes "whose values" concrete: guardrails that hold in English fail in isiZulu.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="ubuntu-relational-ethics.html"><span class="nav-label">← Previous</span><span class="nav-title">8.3 · Ubuntu, relational ethics &amp; the Just AI framework</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="../session-12-technical-ai-governance.html"><span class="nav-label">Next →</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

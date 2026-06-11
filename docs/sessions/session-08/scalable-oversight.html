@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 8.1 — Scalable Oversight: The Supervision Gap</title>
+    <link rel="stylesheet" href="https://s.brightspace.com/lib/fonts/0.6.1/fonts.css">
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="back-nav"><a href="../../index.html">← Back to course contents</a></div>
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 4 • Session 8.1</div>
+        <h1>🪞 <span style="color:#ffffff;">Scalable Oversight: The Supervision Gap</span></h1>
+        <p>How do you train and check a system that may know more than you do?</p>
+    </header>
+    <div class="content">
+
+        <div class="highlight-box">
+            <h3>🪞 <span style="color:#ffffff;">Session 8 — scalable oversight &amp; "whose values?"</span></h3>
+            <p>Session 7 showed how labs scale feedback by replacing human raters with AI (RLAIF, Constitutional AI). That sharpens a problem rather than solving it — and forces a second, normative question the engineering can't dodge.</p>
+            <p style="margin-bottom:0;"><strong>This session's sub-sessions:</strong> 8.1 the supervision gap &amp; scalable oversight · 8.2 ethical frameworks &amp; the four lenses · 8.3 Ubuntu, relational ethics &amp; the Just AI framework · 8.4 whose values? preference aggregation &amp; the alignment target.</p>
+        </div>
+
+        <div class="intro-text">
+            <h2>🎯 What we'll cover</h2>
+            <p>If a model becomes more capable than its supervisors on a task, <strong>how can a weaker overseer reliably train and check a stronger system?</strong> This is the <em>scalable oversight</em> problem. This sub-session covers the leading technical mechanisms — debate, recursive reward modelling, sandwiching, weak-to-strong generalisation — and why none is yet solved. Sub-sessions 8.2–8.4 then take the normative turn: oversight <em>toward what</em>, and <em>whose</em> values?</p>
+        </div>
+
+        <h2 class="section-title">🕳️ The supervision gap</h2>
+        <p class="lead">The core difficulty in one sentence: training signals come from evaluators, and evaluators have limits.</p>
+        <div class="info-box">
+            <h4>💡 Why "just have humans check it" fails at the frontier</h4>
+            <p>RLHF works when a human can judge which of two outputs is better. But for a long proof, a subtle security audit, or a 10,000-line refactor, the human may be unable to tell a correct answer from a confident wrong one. Worse, optimising against a flawed judge rewards <em>persuasiveness</em> over <em>correctness</em> — the Goodhart problem from Session 3, now aimed directly at the overseer. Scalable oversight asks how to amplify a limited overseer so the training signal stays tied to the truth.</p>
+        </div>
+
+        <h2 class="section-title">🛠️ Mechanisms for amplifying oversight</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3>Debate</h3>
+                <p>Two strong models argue opposing answers in front of a weaker judge. The hope: it is harder to defend a falsehood than to refute it, so truth wins even when the judge could not have found it alone. The risk: debate may reward rhetorical skill, or both sides may collude.</p>
+            </div>
+            <div class="card">
+                <h3>Recursive reward modelling / IDA</h3>
+                <p>Decompose a hard task into sub-tasks a human <em>can</em> judge, train assistants on those, and use them to help judge the harder whole. Oversight is built up recursively from pieces that remain checkable.</p>
+            </div>
+            <div class="card">
+                <h3>Sandwiching</h3>
+                <p>An empirical test bed: put a model between non-expert overseers and ground-truth experts, and see whether non-experts plus the model can reach expert-level judgements. A way to <em>study</em> oversight today on tasks where we know the answer.</p>
+            </div>
+            <div class="card">
+                <h3>Weak-to-strong generalisation</h3>
+                <p>Can a weak supervisor elicit the full capability of a strong model? Burns et al. fine-tune a strong model on a weak model's labels and find it can <em>exceed</em> its noisy supervisor — evidence, and a warning, about what supervision does and doesn't transfer.</p>
+            </div>
+        </div>
+        <div class="warning-box">
+            <h4>⚠️ None of these is solved</h4>
+            <p>Each mechanism has known failure modes (collusion, persuasive falsehoods, judges that anchor on fluency). Treat them as the field's <em>current best attempts</em>, not settled methods — this is live research, and a fertile source of student projects (Week 9).</p>
+        </div>
+
+        <h2 class="section-title">📚 Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Burns et al. (2023), "Weak-to-Strong Generalization"</strong> (arXiv:2312.09390).</p>
+            <p>• <strong>Irving, Christiano &amp; Amodei (2018), "AI Safety via Debate"</strong> (arXiv:1805.00899).</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>↪️ Where this goes next</h2>
+            <p>Suppose oversight worked perfectly. You would still have to decide what you are overseeing <em>toward</em> — and "aligned" is a relation to a target, not a property a model has alone. Sub-session <strong>8.2</strong> introduces the four philosophical lenses for reasoning about that target; <strong>8.3</strong> brings in Ubuntu and relational ethics; <strong>8.4</strong> shows the choice is also a mathematical constraint.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="../session-04/sustainable-and-sovereign-ai.html"><span class="nav-label">← Previous</span><span class="nav-title">4.4 · Sustainable &amp; sovereign AI</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="ethical-frameworks-four-lenses.html"><span class="nav-label">Next →</span><span class="nav-title">8.2 · Ethical frameworks &amp; the four lenses</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

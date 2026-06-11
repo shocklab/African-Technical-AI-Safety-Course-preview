@@ -59,12 +59,21 @@ wholesale — see the reuse audit.
 
 - `docs/index.html` — **the contents page** (single source of truth for session order): all 12 weeks ×
   2 sessions, built lessons linked, rest "coming soon".
-- `docs/sessions/` — built lessons so far: **Session 4** (physical substrate/energy), **Session 8**
-  (scalable oversight & whose values), **Session 12** (technical AI governance). All reference-checked.
-- **Prev/Next nav:** every built lesson carries a "← Previous / ⌂ / Next →" bar injected by
-  `add_page_nav.py`, which reads the order from `docs/index.html`. **Re-run `python3 add_page_nav.py`
-  after building/reordering pages** (use `--check` for a dry run). It chains only *built* (linked)
-  sessions and is idempotent.
+- `docs/sessions/` — built lessons so far. **Sessions can have sub-sessions** (own folder, multiple
+  pages):
+  - **Session 4** (`session-04/`) — physical substrate/energy, 4 sub-sessions: cost of every prompt ·
+    infrastructure & rebound · critical minerals · sustainable & sovereign AI.
+  - **Session 8** (`session-08/`) — scalable oversight & whose values, 4 sub-sessions: supervision gap ·
+    four lenses · Ubuntu/relational ethics · whose values.
+  - **Session 12** — technical AI governance (single page).
+- **`build_subsessions.py`** ports reused content from the GenAI course (Weeks 3 & 4) *verbatim* into
+  Sessions 4.1–4.4, 8.2, 8.3 — preserving its fact-checking — restyled into the shared design system,
+  with stale cross-references auto-fixed and the safety framing added. Sessions 8.1 and 8.4 are
+  hand-authored. Re-run it to regenerate those ported pages (then re-run `add_page_nav.py`).
+- **Prev/Next nav:** every built page carries a "← Previous / ⌂ / Next →" bar injected by
+  `add_page_nav.py`, which reads the order from `docs/index.html` and computes correct relative paths
+  across sub-session folders. **Re-run `python3 add_page_nav.py` after building/reordering pages**
+  (use `--check` for a dry run). It chains only *built* (linked) pages and is idempotent.
 
 **Deployed.** Repo `shocklab/African-Technical-AI-Safety-Course` (public), GitHub Pages serving `/docs`
 on `main` at the live URL above. To update: edit `docs/`, run `python3 add_page_nav.py`, commit and push
