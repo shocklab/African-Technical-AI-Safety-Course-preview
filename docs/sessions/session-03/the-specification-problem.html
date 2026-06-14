@@ -94,6 +94,8 @@
             <div class="formula"><code>argmax (goal + ε)</code></div>
             <p style="color:#555;">over-selects options where <code>ε</code> happens to be large and positive — not just options where <code>goal</code> is large. Conditioning on a high proxy value, the expected noise is positive: <code>E[ε | proxy high] &gt; 0</code>. So the proxy <em>systematically over-estimates</em> the true goal at the top, and the harder you optimise (the further into the tail you select), the larger the over-estimate. The error is built into selection itself — it appears <em>even with a perfectly unbiased proxy and no adversary</em>. Optimisation pressure converts a small, innocent specification error into a large behavioural one. This is the mathematical core of why "just write a good reward" cannot be the whole answer.</p>
         </div>
+        <p style="text-align:center; margin:18px 0 0;"><a href="regressional-goodhart-derivation.html" style="display:inline-block; background:#003A70; color:#fff; padding:12px 24px; border-radius:10px; text-decoration:none; font-weight:600;">📐 Read the full formal derivation →</a></p>
+        <p style="text-align:center; color:#888; font-size:0.9em; margin-top:8px;">The bivariate-normal posterior, the optimizer's curse as a distribution-free theorem, and how the bias grows like √(ln N) with search.</p>
 
         <h2 class="section-title">⚡ Capability makes it worse — sometimes abruptly</h2>
         <div class="highlight-box">
