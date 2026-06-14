@@ -6,6 +6,10 @@
     <title>Session 2.1 — From Neurons to Networks</title>
     <link rel="stylesheet" href="https://s.brightspace.com/lib/fonts/0.6.1/fonts.css">
     <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
 </head>
 <body>
 <div class="container">
@@ -30,19 +34,19 @@
         </div>
 
         <h2 class="section-title">📐 A network is a parametrised function</h2>
-        <p class="lead">Strip away the biology metaphor and a neural network is just a function <code>f<sub>θ</sub> : ℝ<sup>n</sup> → ℝ<sup>m</sup></code> with a great many parameters <code>θ</code>.</p>
+        <p class="lead">Strip away the biology metaphor and a neural network is just a function \( f_\theta : \mathbb{R}^n \to \mathbb{R}^m \) with a great many parameters \( \theta \).</p>
         <div class="technical-detail">
             <h4>From a neuron to a layer</h4>
-            <p style="color:#555;">Start with a single <strong>neuron</strong>: it takes an input vector <code>x ∈ ℝ<sup>dᵢₙ</sup></code>, forms a weighted sum with its own weight vector <code>w</code> and bias <code>b</code>, and passes the result through a nonlinearity — producing one scalar, <code>a = σ(w·x + b)</code>. Now stack <code>d<sub>out</sub></code> neurons side by side and collect their weight vectors as the <em>rows</em> of a matrix <code>W</code>. The whole <strong>layer</strong> then computes a vector in one shot:</p>
-            <div class="formula"><code>h = σ(Wx + b),&nbsp;&nbsp; W ∈ ℝ<sup>d<sub>out</sub>×dᵢₙ</sup>,&nbsp; b, h ∈ ℝ<sup>d<sub>out</sub></sup></code></div>
-            <p style="color:#555;">Here <code>σ</code> is applied <em>elementwise</em> — the same scalar function to each component — and the standard choice is ReLU, <code>σ(z) = max(0, z)</code>. A <strong>deep network</strong> chains <code>L</code> such layers, each feeding the next:</p>
-            <div class="formula"><code>h<sup>(ℓ)</sup> = σ(W<sup>(ℓ)</sup> h<sup>(ℓ−1)</sup> + b<sup>(ℓ)</sup>),&nbsp;&nbsp; h<sup>(0)</sup> = x</code></div>
-            <p style="color:#555;">and the full collection of weights and biases <code>{W<sup>(ℓ)</sup>, b<sup>(ℓ)</sup>}</code> is exactly what we bundled into the parameters <code>θ</code>. Without <code>σ</code> the composition of linear maps would collapse to a single linear map — the nonlinearity is what lets depth buy expressive power. By the universal-approximation results such a network can approximate essentially any function; the real engineering question is whether <em>gradient descent can find</em> parameters that do so.</p>
+            <p style="color:#555;">Start with a single <strong>neuron</strong>: it takes an input vector \( x \in \mathbb{R}^{d_{\text{in}}} \), forms a weighted sum with its own weight vector \( w \) and bias \( b \), and passes the result through a nonlinearity — producing one scalar, \( a = \sigma(w \cdot x + b) \). Now stack \( d_{\text{out}} \) neurons side by side and collect their weight vectors as the <em>rows</em> of a matrix \( W \). The whole <strong>layer</strong> then computes a vector in one shot:</p>
+            <div class="formula">\[ h = \sigma(Wx + b), \qquad W \in \mathbb{R}^{d_{\text{out}} \times d_{\text{in}}}, \quad b,\, h \in \mathbb{R}^{d_{\text{out}}} \]</div>
+            <p style="color:#555;">Here \( \sigma \) is applied <em>elementwise</em> — the same scalar function to each component — and the standard choice is ReLU, \( \sigma(z) = \max(0, z) \). A <strong>deep network</strong> chains \( L \) such layers, each feeding the next:</p>
+            <div class="formula">\[ h^{(\ell)} = \sigma\!\left(W^{(\ell)} h^{(\ell-1)} + b^{(\ell)}\right), \qquad h^{(0)} = x \]</div>
+            <p style="color:#555;">and the full collection of weights and biases \( \{W^{(\ell)},\, b^{(\ell)}\} \) is exactly what we bundled into the parameters \( \theta \). Without \( \sigma \) the composition of linear maps would collapse to a single linear map — the nonlinearity is what lets depth buy expressive power. By the universal-approximation results such a network can approximate essentially any function; the real engineering question is whether <em>gradient descent can find</em> parameters that do so.</p>
         </div>
 
         <figure>
             <img src="../../assets/img/session-2-1-neuron-layer-network.jpg" alt="Three panels. (A) A single neuron: inputs x1, x2, x3 with weights w1, w2, w3 feed a node that computes the weighted sum plus a bias and then a nonlinearity, giving the scalar a = σ(w·x + b). (B) A layer: an input vector fully connected to a column of neurons, producing the vector h = σ(Wx + b), with x in ℝ^d_in, W in ℝ^(d_out×d_in) and h in ℝ^d_out, and each neuron's weight vector forming one row of W. (C) A network: several such layers stacked left to right, with x entering and ŷ leaving, computing h^(l) = σ(W^(l) h^(l−1) + b^(l)) over depth L.">
-            <figcaption><strong>From a neuron to a network.</strong> (A) one neuron, <code>a = σ(w·x + b)</code>; (B) a layer stacks neurons into <code>h = σ(Wx + b)</code> — each neuron's weights are one row of <code>W</code>; (C) a deep network chains <code>L</code> such layers. Without the nonlinearity the whole stack would collapse to a single linear map.</figcaption>
+            <figcaption><strong>From a neuron to a network.</strong> (A) one neuron, \( a = \sigma(w \cdot x + b) \); (B) a layer stacks neurons into \( h = \sigma(Wx + b) \) — each neuron's weights are one row of \( W \); (C) a deep network chains \( L \) such layers. Without the nonlinearity the whole stack would collapse to a single linear map.</figcaption>
         </figure>
 
         <h2 class="section-title">🎯 Training = minimising a loss</h2>
@@ -50,17 +54,17 @@
         <div class="technical-detail">
             <h4>The loop, precisely</h4>
             <ul class="styled-list">
-                <li><strong>Loss.</strong> A scalar <code>L(θ)</code> measuring how wrong the model is on data — for language models, the cross-entropy of the predicted next-token distribution against the true token.</li>
-                <li><strong>Gradient.</strong> Compute <code>∇<sub>θ</sub>L</code> by back-propagation (the chain rule, applied layer by layer).</li>
-                <li><strong>Step.</strong> Update <code>θ ← θ − η ∇<sub>θ</sub>L</code> for a small learning rate <code>η</code> (in practice, a variant like Adam). Each step estimates the gradient on a <em>mini-batch</em> — a small random subset of the data, far cheaper than using all of it — and we repeat for a very long time.</li>
+                <li><strong>Loss.</strong> A scalar \( L(\theta) \) measuring how wrong the model is on data — for language models, the cross-entropy of the predicted next-token distribution against the true token.</li>
+                <li><strong>Gradient.</strong> Compute \( \nabla_\theta L \) by back-propagation (the chain rule, applied layer by layer).</li>
+                <li><strong>Step.</strong> Update \( \theta \leftarrow \theta - \eta\, \nabla_\theta L \) for a small learning rate \( \eta \) (in practice, a variant like Adam). Each step estimates the gradient on a <em>mini-batch</em> — a small random subset of the data, far cheaper than using all of it — and we repeat for a very long time.</li>
             </ul>
-            <p style="color:#555; margin-top:12px;">That is the whole of it. Everything a frontier model "knows" is the low-loss configuration of <code>θ</code> this process settles into on its training data.</p>
+            <p style="color:#555; margin-top:12px;">That is the whole of it. Everything a frontier model "knows" is the low-loss configuration of \( \theta \) this process settles into on its training data.</p>
         </div>
         <div class="info-box">
             <h4>💡 What the language-model loss actually is</h4>
-            <p>A language model is trained to predict the next <strong>token</strong> — a chunk of text, defined precisely in Session 2.2 — given the tokens before it. At each position it outputs a probability distribution <code>p<sub>θ</sub></code> over the whole vocabulary (the <em>softmax</em> of its output scores; softmax is defined in 2.2), and the loss is the <strong>cross-entropy</strong>:</p>
-            <div class="formula"><code>L = −(1/T) Σ<sub>i</sub> log p<sub>θ</sub>(t<sub>i</sub> | t<sub>&lt;i</sub>)</code></div>
-            <p>where <code>t<sub>i</sub></code> is the true token at position <code>i</code> and <code>t<sub>&lt;i</sub></code> all tokens before it. (General cross-entropy is <code>−Σ p<sub>true</sub> log p<sub>θ</sub></code>; because the true "distribution" puts all its mass on the one token that actually occurred, the sum collapses to the negative log-probability of that token.) So minimising <code>L</code> just means making the correct token as probable as possible. Two things to carry forward: this is exactly the "loss" that falls as a power law in Session 2.3; and the model is never told <em>how</em> to be right, only scored on the probability it placed on what actually came next.</p>
+            <p>A language model is trained to predict the next <strong>token</strong> — a chunk of text, defined precisely in Session 2.2 — given the tokens before it. At each position it outputs a probability distribution \( p_\theta \) over the whole vocabulary (the <em>softmax</em> of its output scores; softmax is defined in 2.2), and the loss is the <strong>cross-entropy</strong>:</p>
+            <div class="formula">\[ L = -\frac{1}{T} \sum_i \log p_\theta\!\left(t_i \mid t_{&lt;i}\right) \]</div>
+            <p>where \( t_i \) is the true token at position \( i \) and \( t_{&lt;i} \) all tokens before it. (General cross-entropy is \( -\sum p_{\text{true}} \log p_\theta \); because the true "distribution" puts all its mass on the one token that actually occurred, the sum collapses to the negative log-probability of that token.) So minimising \( L \) just means making the correct token as probable as possible. Two things to carry forward: this is exactly the "loss" that falls as a power law in Session 2.3; and the model is never told <em>how</em> to be right, only scored on the probability it placed on what actually came next.</p>
         </div>
 
         <h2 class="section-title">⚠️ Why this framing matters for safety</h2>
