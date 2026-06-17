@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6.2 — The Reward Model</title>
+    <link rel="stylesheet" href="https://s.brightspace.com/lib/fonts/0.6.1/fonts.css">
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+    <div class="back-nav"><a href="../../index.html">← Back to course contents</a></div>
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 3 • Session 6.2</div>
+        <h1>🏅 <span style="color:#ffffff;">The Reward Model</span></h1>
+        <p>Turning human comparisons into a single number — the Bradley–Terry model, and the proxy we're about to optimise</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>🎯 What we'll cover</h2>
+            <p>The reward model is the hinge of RLHF: it converts a pile of "response A is better than B" judgements into a function \(r_\phi(x,y)\) that scores any response, which the policy can then be optimised against. This sub-session derives that function from the classic <strong>Bradley–Terry</strong> model of paired comparisons, writes down its training loss, and — most importantly for this course — names exactly what it is: a <em>learned, scalar proxy</em> for human approval, with all the Goodhart exposure of Session 3.1 built in.</p>
+        </div>
+
+        <h2 class="section-title">⚖️ From comparisons to a score</h2>
+        <p class="lead">We collect data of one shape: a prompt \(x\), two candidate responses, and a human's judgement of which is better.</p>
+        <p>Write the preferred ("winning") response \(y_w\) and the dispreferred ("losing") one \(y_l\). We want a scalar reward function \(r_\phi(x,y)\) — a neural network with parameters \(\phi\) — such that better responses get higher scores. The question is how to turn discrete "A beats B" judgements into a continuous score. The standard answer borrows a seventy-year-old model from statistics.</p>
+        <div class="technical-detail">
+            <h4>The Bradley–Terry model</h4>
+            <p style="color:#555;">Bradley &amp; Terry (1952) modelled paired comparisons by giving each item a latent "worth" and making the probability that one beats another a function of the difference in worth. Identifying "worth" with our reward, the probability a human prefers \(y_w\) to \(y_l\) is the logistic of the reward gap:</p>
+            <div class="formula">\[ P(y_w \succ y_l \mid x) = \sigma\!\big( r_\phi(x, y_w) - r_\phi(x, y_l) \big), \qquad \sigma(z) = \frac{1}{1 + e^{-z}}. \]</div>
+            <p style="color:#555;">So if the two responses score equally the human is a coin-flip to prefer either; the larger the reward gap, the more confidently the better-scoring one should be preferred. Only <em>differences</em> in reward matter — the model has no absolute zero, which is fine, because we only ever optimise relative preferences.</p>
+        </div>
+
+        <div class="info-box">
+            <h4>🔢 The logistic, in numbers</h4>
+            <p>The Bradley–Terry probability depends only on the reward gap \(\Delta = r_\phi(x,y_w) - r_\phi(x,y_l)\): a gap of \(0\) gives \(\sigma(0)=0.5\) (a coin-flip — the model is indifferent), a gap of \(1\) gives \(\sigma(1)\approx 0.73\), and a gap of \(2\) gives \(\sigma(2)\approx 0.88\). So the reward scale is calibrated in <em>log-odds of preference</em>: training nudges the gap until the model's predicted preference probabilities match how often humans actually chose each response. A reward difference is therefore not an arbitrary number — it is a statement about how reliably one response beats another.</p>
+        </div>
+
+        <h2 class="section-title">🎯 Training the reward model</h2>
+        <p class="lead">Fit \(\phi\) by maximum likelihood: make the model assign high probability to the comparisons humans actually made.</p>
+        <p>Taking the negative log-likelihood of the Bradley–Terry model over a dataset \(\mathcal{D}\) of comparisons gives the reward-model loss:</p>
+        <div class="formula">\[ \mathcal{L}(\phi) = -\,\mathbb{E}_{(x,\,y_w,\,y_l)\sim\mathcal{D}}\Big[ \log \sigma\!\big( r_\phi(x, y_w) - r_\phi(x, y_l) \big) \Big]. \]</div>
+        <p>Minimising it pushes the reward of preferred responses above that of dispreferred ones, by a margin that grows with how consistently humans favoured them. In practice \(r_\phi\) is usually the SFT model itself with its final unembedding replaced by a single scalar "reward head", so the reward model starts from the same language understanding as the policy it will judge.</p>
+        <div class="info-box">
+            <h4>💡 What you've built — and what you haven't</h4>
+            <p>You now have a function that, given a prompt and a response, returns a number meant to track "how much a human would approve". That is enormously useful: it can score millions of responses automatically, far beyond the comparisons you collected. But notice what it is <em>not</em>. It is not a measure of truth, or of the user's real interest, or of long-run benefit. It is a <strong>learned model of the average labeller's snap judgement</strong>, compressed to one scalar — and that is the object the policy is about to be optimised against, as hard as the KL leash allows.</p>
+        </div>
+
+        <h2 class="section-title">⚠️ The reward model is a proxy — by construction</h2>
+        <div class="highlight-box">
+            <h3>🪤 <span style="color:#ffffff;">Goodhart, pre-loaded</span></h3>
+            <p>Re-read Session 3.1 with \(r_\phi\) in the role of the proxy. We cannot write down "be genuinely helpful and honest", so we <em>learn</em> a stand-in from human comparisons — and then optimise it. Every gap between \(r_\phi\) and true human values is a place the optimiser can exploit: a response that scores high on the reward model without being good. The reward model is unbiased and useful in the region of responses it was trained on; push the policy into regions it never saw and the proxy and the goal come apart. This is not a flaw in any particular reward model — it is what optimising a learned proxy <em>means</em>.</p>
+        </div>
+        <div class="technical-detail">
+            <h4>Three built-in limitations to keep in view</h4>
+            <ul class="styled-list">
+                <li><strong>One scalar, plural values.</strong> Human preferences are diverse and multidimensional (helpful vs. harmless vs. honest can conflict). Collapsing them to a single number forces trade-offs the model makes silently, on whose behalf is unclear (Session 8's "whose values?").</li>
+                <li><strong>It inherits the labellers.</strong> The reward model is only as representative as the comparison data — overwhelmingly English, drawn from particular annotator pools. Preferences in under-represented languages and contexts are barely in the signal (the Global-South thread again).</li>
+                <li><strong>It rewards what <em>looks</em> good.</strong> Labellers judge from the response alone; they prefer confident, fluent, agreeable answers. So the reward model can score persuasiveness over correctness — the seed of sycophancy (6.4).</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">💬 Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>Why does the Bradley–Terry model depend only on the <em>difference</em> \(r_\phi(x,y_w) - r_\phi(x,y_l)\)? What does that imply about the absolute scale of the reward?</li>
+            <li>The reward model is typically the SFT model with a scalar head. Why start there rather than from a fresh network?</li>
+            <li>Map the reward model onto Session 3.1's "proxy". Which of Goodhart's four variants do you expect to bite hardest when the policy is optimised against it, and why?</li>
+            <li>A single scalar must rank a helpful-but-blunt answer against a polite-but-evasive one. Who decided that trade-off, and where in the pipeline?</li>
+        </ul>
+
+        <h2 class="section-title">📚 Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Ouyang et al. (2022), InstructGPT</strong> (arXiv:2203.02155) — §3 reward-model training (the loss above is theirs).</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Bradley, R. A. &amp; Terry, M. E. (1952), "Rank Analysis of Incomplete Block Designs: I"</strong> (<em>Biometrika</em> 39(3/4), 324–345) — the original paired-comparison model.</p>
+            <p>• <strong>Stiennon et al. (2020)</strong> (arXiv:2009.01325) — reward modelling for summarisation, with careful data-collection detail.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>↪️ Next</h2>
+            <p>With a reward model in hand, sub-session <strong>6.3</strong> optimises the policy against it — and explains the <strong>KL "leash"</strong> that stops the optimiser from running off into the reward model's blind spots, plus PPO and the simpler DPO alternative.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="from-demonstrations-to-preferences.html"><span class="nav-label">← Previous</span><span class="nav-title">6.1 · From demonstrations to preferences</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="policy-optimisation.html"><span class="nav-label">Next →</span><span class="nav-title">6.3 · Policy optimisation: PPO &amp; the KL leash</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

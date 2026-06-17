@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6.5 — Lab: Reward Models &amp; Over-optimisation</title>
+    <link rel="stylesheet" href="https://s.brightspace.com/lib/fonts/0.6.1/fonts.css">
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+    <div class="back-nav"><a href="../../index.html">← Back to course contents</a></div>
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 3 • Session 6.5</div>
+        <h1>🧪 <span style="color:#ffffff;">Lab — Reward Models &amp; Over-optimisation</span></h1>
+        <p>Train a reward model from preferences, then watch Goodhart happen with your own model</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>🎯 What we'll cover</h2>
+            <p>This lab makes Session 6 concrete and Colab-friendly. You'll train a small <strong>reward model</strong> on preference pairs and check it ranks held-out pairs correctly; then — the centrepiece — use <strong>best-of-\(n\)</strong> sampling as a cheap, RL-free stand-in for policy optimisation and <em>watch over-optimisation happen</em>: a proxy score that keeps rising while true quality peaks and falls (6.4). An optional GPU track runs a real RLHF step in ARENA.</p>
+        </div>
+
+        <div class="lab-box">
+            <h4>🧪 Setup <span class="tag">Colab — core tasks run on CPU</span></h4>
+            <p>Open a Colab notebook and install:</p>
+            <div class="formula" style="text-align:left;"><code>!pip install "transformers&gt;=4.44" datasets torch</code></div>
+            <p>For the reward model, use a small base such as <code>distilbert-base-uncased</code> or <code>gpt2</code> with a scalar head; for preference data, take a small slice of an open set (e.g. the Anthropic HH-RLHF dataset on the Hugging Face Hub). Save the notebook to submit.</p>
+        </div>
+
+        <h2 class="section-title">① Train a reward model</h2>
+        <div class="technical-detail">
+            <h4>Bradley–Terry, in code</h4>
+            <ul class="styled-list">
+                <li>Load a few thousand preference pairs \((x, y_w, y_l)\). Build a model that maps a (prompt, response) to a scalar \(r_\phi(x,y)\) (a transformer with a linear reward head).</li>
+                <li>Train with the Bradley–Terry loss from 6.2: <code>loss = -F.logsigmoid(r_w - r_l).mean()</code> — i.e. \(\mathcal{L} = -\,\mathbb{E}[\log \sigma(r_\phi(x,y_w) - r_\phi(x,y_l))]\).</li>
+                <li>Evaluate on a held-out split: what fraction of pairs does it rank correctly (reward of the preferred response higher)? Report this <em>preference accuracy</em> — a well-trained RM on an easy split lands well above chance but rarely near 100%.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">② Watch over-optimisation: best-of-<em>n</em></h2>
+        <div class="technical-detail">
+            <h4>Goodhart on your laptop</h4>
+            <p style="color:#555;">Best-of-\(n\) is the cheapest possible "optimiser": sample \(n\) responses from a base model, score them all with your reward model, and keep the highest-scoring one. As \(n\) grows you are optimising harder against the proxy — exactly what RL does, without the RL. The experiment:</p>
+            <ul class="styled-list">
+                <li>For a set of prompts, generate \(n\) responses each for \(n = 1, 2, 4, 8, 16, \dots\) and select the top by your reward model. Plot the selected response's <strong>proxy reward</strong> against \(n\) (or against \(\sqrt{\ln n}\), the over-optimisation axis).</li>
+                <li>Now score the <em>same</em> selected responses with a <strong>different, held-out judge</strong> of "true" quality — a second reward model, a stronger model used as an LLM-judge, or your own ratings on a small sample. Plot this "gold" score on the same axis.</li>
+                <li>You should see the signature of Goodhart (6.4): the proxy score rises monotonically with \(n\), while the gold score rises then <strong>plateaus or falls</strong>. Identify the \(n\) at which they diverge — that is over-optimisation, made with your own hands.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">③ Optional: a real RLHF step <span style="font-size:0.6em; color:#888; vertical-align:middle;">[GPU — optional]</span></h2>
+        <div class="technical-detail">
+            <h4>ARENA Chapter 2</h4>
+            <p style="color:#555;">On a free Colab GPU, work through the RLHF notebook in <strong>ARENA</strong> (Chapter 2): a reward model plus a policy-gradient/PPO step on a small model and a toy objective, with the KL penalty (6.3) in place. Watch what happens to sample quality and to the KL as you train — and try setting the KL coefficient \(\beta\) to zero to see the policy run off into the reward model's blind spots.</p>
+        </div>
+
+        <h2 class="section-title">🌍 African-safety probe</h2>
+        <div class="info-box">
+            <h4>💡 Whose preferences does the reward model encode?</h4>
+            <p>Construct a handful of preference pairs in isiZulu (or another language you read) — a clearly-better and a clearly-worse response to the same prompt. Score them with an off-the-shelf reward model (or your trained one). Does it rank them sensibly, or does its accuracy collapse outside English? Note what you find: a reward model that can't judge a language has nothing useful to teach the policy there — a concrete instance of the evaluation-representativeness problem we take up in Session 11.</p>
+        </div>
+
+        <div class="lab-box">
+            <h4>📤 Submit</h4>
+            <p>Your Colab notebook with: the reward model's held-out preference accuracy (①); the best-of-\(n\) plot showing proxy vs gold and your identified divergence point, with a sentence linking it to Goodhart (②); the African-language probe result; and, if attempted, the ARENA RLHF observations (③). Graded on completion and the quality of your analysis; resubmission allowed.</p>
+        </div>
+
+        <h2 class="section-title">📚 Tools &amp; references</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>ARENA</strong> Chapter 2 (RL → RLHF) notebooks (learn.arena.education).</p>
+            <p>• <strong>Hugging Face</strong> <code>trl</code> / <code>transformers</code> and the HH-RLHF preference dataset on the Hub.</p>
+            <p>• <strong>Gao, Schulman &amp; Hilton (2023)</strong> (arXiv:2210.10760) — the over-optimisation curves you are reproducing in miniature.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>🧾 Session 6 &amp; Week 3 summary — what's next</h2>
+            <p>RLHF breaks SFT's ceiling by learning from <em>comparisons</em> (6.1): a Bradley–Terry <strong>reward model</strong> turns preferences into a scalar proxy (6.2), and the policy is optimised against it under a <strong>KL leash</strong> with PPO — or directly with DPO (6.3). The price is steep and now familiar: optimising a learned proxy invites reward hacking, over-optimisation and sycophancy, and human feedback cannot supervise superhuman behaviour (6.4) — all of which you've now seen in code (6.5). With Week 3 done, Part II has its foundation: we know how an assistant is built, and exactly where its "alignment" is thin.</p>
+            <p><strong>Next (Week 4, Session 7):</strong> the first response to RLHF's human-feedback ceiling — replace (some) human feedback with <em>AI</em> feedback: <strong>RLAIF and Constitutional AI</strong>. Then Session 8 confronts scalable oversight and the question of <em>whose</em> values.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="limits-of-rlhf.html"><span class="nav-label">← Previous</span><span class="nav-title">6.4 · The limits of RLHF</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="../session-08/scalable-oversight.html"><span class="nav-label">Next →</span><span class="nav-title">8.1 · The supervision gap &amp; scalable oversight</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

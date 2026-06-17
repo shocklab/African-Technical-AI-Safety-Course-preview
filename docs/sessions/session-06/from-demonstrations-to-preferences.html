@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6.1 — From Demonstrations to Preferences</title>
+    <link rel="stylesheet" href="https://s.brightspace.com/lib/fonts/0.6.1/fonts.css">
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+    <div class="back-nav"><a href="../../index.html">← Back to course contents</a></div>
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 3 • Session 6.1</div>
+        <h1>🔀 <span style="color:#ffffff;">From Demonstrations to Preferences</span></h1>
+        <p>Why learning from human <em>comparisons</em> breaks through the ceiling that supervised fine-tuning hits</p>
+    </header>
+    <div class="content">
+
+        <div class="highlight-box">
+            <h3>🎯 <span style="color:#ffffff;">Session 6 — RLHF &amp; RL fine-tuning</span></h3>
+            <p>Session 5 left us at a wall: supervised fine-tuning can imitate a good answer but cannot express "this answer is <em>better</em> than that one", and so caps out at demonstration quality. This session is about the technique that broke through it — <strong>reinforcement learning from human feedback</strong> — and the price it charges: we now optimise a <em>learned proxy</em> for human approval, with all the Goodhart hazards of Session 3.1.</p>
+            <p style="margin-bottom:0;"><strong>This session's sub-sessions:</strong> 6.1 from demonstrations to preferences · 6.2 the reward model · 6.3 policy optimisation: PPO &amp; the KL leash · 6.4 the limits of RLHF · 6.5 lab (Colab).</p>
+        </div>
+
+        <div class="intro-text">
+            <h2>🎯 What we'll cover</h2>
+            <p>This sub-session motivates the whole RLHF pipeline. We recall exactly why SFT stalls, introduce the central idea — <strong>learn from preferences, not demonstrations</strong> — trace its short but consequential history (from Atari to InstructGPT), and lay out the three-step pipeline the next sub-sessions unpack. Throughout, keep one question live: what does optimising a <em>model of what humans approve of</em> incentivise, as opposed to optimising for what is actually good?</p>
+        </div>
+
+        <h2 class="section-title">🧱 The wall, restated</h2>
+        <p class="lead">Recall the asymmetry from Session 5.2: for most of what we want from an assistant, <em>judging</em> is far easier than <em>producing</em>.</p>
+        <p>You may not be able to write the ideal answer to an open-ended question, or the perfectly calibrated, honest response — but shown two attempts, you can usually say which is better. SFT cannot use that ability: its loss, "make this target more likely", needs a single demonstration to imitate and has no way to encode "A &gt; B". So SFT inherits three limits — it caps at demonstration quality, it can't express comparative judgement, and it has no clean negative signal (Session 5.2). The opening is obvious in hindsight: build the training signal out of the <em>comparisons</em> humans can reliably give, not the demonstrations they struggle to author.</p>
+
+        <h2 class="section-title">💡 The idea: optimise for what humans prefer</h2>
+        <div class="info-box">
+            <h4>💡 The move in one sentence</h4>
+            <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are cheaper and more reliable than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and — crucially — the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
+        </div>
+        <p>That last point is the real prize. SFT is bounded above by its demonstrators. A preference-trained model can, in principle, climb past them: as long as humans can <em>recognise</em> improvements, the model can be pushed toward them even if no human wrote the ideal answer. The same property is also the danger — "push toward what humans recognise as better" quietly becomes "push toward what <em>looks</em> better to a rater", and those diverge (we will see this as sycophancy in 6.4).</p>
+
+        <h2 class="section-title">🕰️ A short history</h2>
+        <div class="technical-detail">
+            <h4>From game-playing to chatbots</h4>
+            <ul class="styled-list">
+                <li><strong>Christiano et al. (2017), "Deep RL from Human Preferences".</strong> The foundational paper: learn a reward function from human preferences between short trajectory <em>segments</em>, then optimise it with RL. It taught simulated robots and Atari agents complex behaviours from feedback on <strong>under 1%</strong> of their interactions — sometimes behaviours no one could easily hand-specify a reward for.</li>
+                <li><strong>Stiennon et al. (2020), "Learning to summarize from human feedback".</strong> The first big language application: a reward model trained on human comparisons of summaries, then RL. The summaries were preferred by humans over the reference (human-written) summaries and over much larger supervised models — and optimising the learned reward beat optimising ROUGE, a hand-coded proxy.</li>
+                <li><strong>Ouyang et al. (2022), InstructGPT.</strong> RLHF applied to general instruction-following — the recipe behind ChatGPT-style assistants. The headline result is the one to remember: outputs from the <strong>1.3B-parameter InstructGPT were preferred to those of the 175B-parameter GPT-3</strong> — a 100× smaller model, made more useful by alignment rather than scale.</li>
+                <li><strong>Bai et al. (2022), Anthropic's "Helpful and Harmless" assistant.</strong> RLHF for helpfulness and harmlessness together, with iterated (weekly) online data collection; found the "alignment tax" on raw capability to be small at scale.</li>
+            </ul>
+        </div>
+        <div class="info-box">
+            <h4>💡 Why a safety course studies the training recipe so closely</h4>
+            <p>RLHF is not a footnote — it is the technique that turned capable-but-unusable base models into the assistants now deployed to hundreds of millions of people. Its successes (InstructGPT) and its failure modes (6.4) are therefore not academic: they are the alignment method actually in production. Understanding precisely what it optimises is understanding what today's "aligned" models are aligned <em>to</em>.</p>
+        </div>
+
+        <h2 class="section-title">🔧 The three-step pipeline</h2>
+        <div class="technical-detail">
+            <h4>What the next sub-sessions unpack</h4>
+            <ol style="margin-left:25px; color:#555; line-height:2.0;">
+                <li><strong>Supervised fine-tuning</strong> — start from an SFT model (Session 5.2); this is the policy we will refine and the anchor we will stay close to.</li>
+                <li><strong>Reward modelling</strong> (6.2) — collect human comparisons of model outputs and fit a reward model \(r_\phi\) that scores a response, via the Bradley–Terry model.</li>
+                <li><strong>RL fine-tuning</strong> (6.3) — optimise the policy to maximise \(r_\phi\), <em>penalised</em> for drifting too far from the SFT model (the KL "leash"), typically with PPO — or skip the explicit RL with DPO.</li>
+            </ol>
+        </div>
+        <p>Each step is an opportunity and a hazard. Step 2 compresses the entirety of "what humans want" into a single learned number — a proxy. Step 3 then optimises hard against that proxy, which (Session 3.1) is exactly the recipe for specification gaming unless something holds it back. The KL leash is that something; whether it is enough is the question of 6.4.</p>
+
+        <h2 class="section-title">💬 Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>Give a task where you could confidently say "answer A is better than B" but could not have written the ideal answer yourself. Why is that gap the whole motivation for RLHF?</li>
+            <li>RLHF can in principle exceed human demonstration quality. State the precondition that makes this possible — and the precise way that same precondition can backfire.</li>
+            <li>InstructGPT (1.3B) beat GPT-3 (175B) on human preference. What does that tell you about where "usefulness" actually comes from, and what it does <em>not</em> tell you about safety?</li>
+            <li>The pipeline replaces "imitate a human" with "optimise a model of human approval". List the assumptions hidden in that substitution.</li>
+        </ul>
+
+        <h2 class="section-title">📚 Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Christiano et al. (2017), "Deep Reinforcement Learning from Human Preferences"</strong> (NeurIPS 2017; arXiv:1706.03741).</p>
+            <p>• <strong>Ouyang et al. (2022), "Training language models to follow instructions with human feedback"</strong> (InstructGPT; arXiv:2203.02155) — now read the full three-step pipeline.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Stiennon et al. (2020), "Learning to summarize from human feedback"</strong> (NeurIPS 2020; arXiv:2009.01325).</p>
+            <p>• <strong>Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF"</strong> (arXiv:2204.05862).</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>↪️ Next</h2>
+            <p>Step 2 is where human judgements become a number. Sub-session <strong>6.2</strong> builds the <strong>reward model</strong> — the Bradley–Terry preference model and its loss — and names, precisely, the proxy we are about to optimise.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="../session-05/lab-nanochat.html"><span class="nav-label">← Previous</span><span class="nav-title">🧪 5.4 · Lab: from base model to assistant (nanochat)</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="the-reward-model.html"><span class="nav-label">Next →</span><span class="nav-title">6.2 · The reward model</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

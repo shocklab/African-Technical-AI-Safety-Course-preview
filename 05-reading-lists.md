@@ -143,7 +143,41 @@ All ✅ verified 2026-06-15 (see log).
 
 ---
 
+## Session 6 — RLHF &amp; RL fine-tuning (Week 3)
+
+All ✅ verified 2026-06-15 (see log).
+
+### 6.1 — From demonstrations to preferences
+1. **Christiano, P. F., et al. (2017)**, "Deep Reinforcement Learning from Human Preferences." NeurIPS 2017. arXiv:1706.03741.
+2. **Stiennon, N., et al. (2020)**, "Learning to summarize from human feedback." NeurIPS 2020. arXiv:2009.01325.
+3. **Ouyang, L., et al. (2022)**, InstructGPT (arXiv:2203.02155) — the 3-step pipeline (also Session 5).
+4. **Bai, Y., et al. (2022)**, "Training a Helpful and Harmless Assistant with RLHF." Anthropic. arXiv:2204.05862.
+
+### 6.2 — The reward model
+5. **Bradley, R. A. & Terry, M. E. (1952)**, "Rank Analysis of Incomplete Block Designs: I." *Biometrika* 39(3/4), 324–345. DOI 10.2307/2334029.
+
+### 6.3 — Policy optimisation
+6. **Schulman, J., Wolski, F., Dhariwal, P., Radford, A. & Klimov, O. (2017)**, "Proximal Policy Optimization Algorithms" (PPO). arXiv:1707.06347.
+7. **Rafailov, R., et al. (2023)**, "Direct Preference Optimization: Your Language Model is Secretly a Reward Model" (DPO). NeurIPS 2023. arXiv:2305.18290.
+
+### 6.4 — The limits of RLHF
+8. **Casper, S., et al. (2023)**, "Open Problems and Fundamental Limitations of RLHF." TMLR. arXiv:2307.15217.
+9. **Gao, L., Schulman, J. & Hilton, J. (2023)**, "Scaling Laws for Reward Model Overoptimization." ICML 2023. arXiv:2210.10760.
+10. **Sharma, M., et al. (2023)**, "Towards Understanding Sycophancy in Language Models." ICLR 2024. arXiv:2310.13548.
+
+### 6.5 — Lab
+11. **ARENA** Chapter 2 (RL → RLHF), learn.arena.education; Hugging Face `trl` + the Anthropic HH-RLHF dataset.
+
+---
+
 ## Verification log
+
+**Session 6 — verified 2026-06-15** (web cross-check vs arXiv/publisher; same pass as Session 5). All 11
+entries correct. The three RLHF equations confirmed: Bradley–Terry \(P(y_w\succ y_l)=\sigma(r_w-r_l)\); RM
+loss \(-\mathbb{E}[\log\sigma(r_w-r_l)]\); objective \(\max_\pi \mathbb{E}[r]-\beta\,\mathrm{KL}(\pi_\theta\|\pi_{\text{ref}})\).
+Citable extras used: Bai et al.'s reward \(\propto\sqrt{\mathrm{KL}}\); Gao et al.'s humped gold-reward forms
+\(R(d)=d(\alpha-\beta d)\) (best-of-n) and \(d(\alpha-\beta\log d)\) (RL); InstructGPT 1.3B preferred to 175B GPT-3.
+Venue notes: Gao is ICML 2023 (arXiv 2022); Sharma is ICLR 2024 (arXiv 2023); Casper is TMLR.
 
 **Session 5 — verified 2026-06-15** (web cross-check vs arXiv / OpenAI / GitHub). All 7 entries correct.
 Notes: GPT-2 is an OpenAI technical report (no arXiv ID/DOI — don't invent one); FLAN's arXiv year is 2021
