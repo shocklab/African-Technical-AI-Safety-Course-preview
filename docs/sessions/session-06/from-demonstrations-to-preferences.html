@@ -60,6 +60,14 @@
             <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are cheaper and more reliable than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
         </div>
         <p>That last point is the real prize. SFT is bounded above by its demonstrators. A preference-trained model can, in principle, climb past them: as long as humans can <em>recognise</em> improvements, the model can be pushed toward them even if no human wrote the ideal answer. The same property is also the danger — "push toward what humans recognise as better" quietly becomes "push toward what <em>looks</em> better to a rater", and those diverge (we will see this as sycophancy in 6.4).</p>
+        <div class="case-study">
+            <h4>Why a comparison beats a demonstration, concretely</h4>
+            <p>Take the task "write a clear, honest two-sentence summary of this paper." A <em>demonstration</em> asks an annotator to produce the ideal summary, which is slow and capped by that person's own writing; two good annotators will write different "ideal" answers, so the target is noisy. A <em>comparison</em> asks only whether summary A is better than summary B, which is quick and far more reproducible: annotators who could never agree on the perfect summary will readily agree that the fluent, faithful one beats the rambling, inaccurate one. The same human hour yields more signal, and signal that is less arbitrary. And because the model is being told which of <em>its own</em> samples is better, it climbs its own gradient of quality rather than aiming at one fixed human answer — which is how it can end up better than any single demonstration in the data.</p>
+        </div>
+        <div class="technical-detail">
+            <h4>Where the data comes from — and where values enter</h4>
+            <p style="color:#555;">The collection loop is simple, and worth picturing, because it is also where human values quietly enter the system. For a prompt \(x\), sample two or more responses from the current model; show them to a human annotator with a set of <em>instructions</em> ("prefer helpful, honest, harmless answers; penalise confident falsehoods…"); record which they pick. Repeat across tens of thousands of prompts to build a dataset of triples \((x, y_w, y_l)\): a prompt, a preferred ("winning") response, and a dispreferred ("losing") one. Two choices here do a great deal of work, and both return in 6.2 and Session 8: <em>who</em> the annotators are (their language, context and training), and what the <em>instructions</em> told them to value. A reward model can only learn the preferences these choices wrote into the data.</p>
+        </div>
 
         <h2 class="section-title">A short history</h2>
         <div class="technical-detail">
@@ -74,6 +82,10 @@
         <div class="info-box">
             <h4>Why a safety course studies the training recipe so closely</h4>
             <p>RLHF is the technique that turned capable-but-unusable base models into the assistants now deployed to hundreds of millions of people. Its successes (InstructGPT) and its failure modes (6.4) therefore carry real stakes: they belong to the alignment method actually in production. Understanding precisely what it optimises is understanding what today's "aligned" models are aligned <em>to</em>.</p>
+        </div>
+        <div class="warning-box">
+            <h4>A common misconception: RLHF makes the model "smarter"</h4>
+            <p>It mostly does not. The capability — the knowledge, the reasoning, the language — is laid down in pre-training (Session 5.1). RLHF largely <em>elicits and reshapes</em> what is already there: it changes which behaviours surface, the format of answers, the willingness to follow instructions and to refuse. That is exactly why a 1.3B InstructGPT could be preferred to the 175B GPT-3 it was built from: the smaller model gained no raw ability, it was made to <em>use</em> its ability the way people wanted. Keep this straight, because it bounds what alignment-by-RLHF can do: it is a powerful lever on <em>behaviour and disposition</em>, and a weak one on <em>competence</em>.</p>
         </div>
 
         <h2 class="section-title">The three-step pipeline</h2>
