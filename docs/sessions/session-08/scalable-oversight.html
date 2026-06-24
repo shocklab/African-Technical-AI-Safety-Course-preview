@@ -23,45 +23,83 @@
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Session 8 — scalable oversight &amp; "whose values?"</span></h3>
-            <p>Session 7 showed how labs scale feedback by replacing human raters with AI (RLAIF, Constitutional AI). That sharpens a problem rather than solving it — and forces a second, normative question the engineering can't dodge.</p>
+            <p>Session 7 showed how labs scale feedback by replacing human raters with AI (RLAIF, Constitutional AI). That sharpens a problem rather than solving it, and forces a second, normative question the engineering cannot dodge.</p>
             <p style="margin-bottom:0;"><strong>This session's sub-sessions:</strong> 8.1 the supervision gap &amp; scalable oversight · 8.2 ethical frameworks &amp; the four lenses · 8.3 Ubuntu, relational ethics &amp; the Just AI framework · 8.4 whose values? preference aggregation &amp; the alignment target.</p>
         </div>
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>If a model becomes more capable than its supervisors on a task, <strong>how can a weaker overseer reliably train and check a stronger system?</strong> This is the <em>scalable oversight</em> problem. This sub-session covers the leading technical mechanisms — debate, recursive reward modelling, sandwiching, weak-to-strong generalisation — and why none is yet solved. Sub-sessions 8.2–8.4 then take the normative turn: oversight <em>toward what</em>, and <em>whose</em> values?</p>
+            <p>If a model becomes more capable than its supervisors on a task, <strong>how can a weaker overseer reliably train and check a stronger system?</strong> This is the <em>scalable oversight</em> problem, and it is where the RLHF ceiling of Session 6.4 starts to bind. We state the gap precisely, look at <em>sandwiching</em> — the paradigm that lets us study the problem before we have superhuman models — then work through the five families of method that try to amplify a limited overseer, the stress test of weak-to-strong generalisation, and why none of this is yet a guarantee. Sub-sessions 8.2–8.4 take the normative turn that follows: oversight <em>toward what</em>, and <em>whose</em> values?</p>
         </div>
 
         <h2 class="section-title">The supervision gap</h2>
-        <p class="lead">The core difficulty in one sentence: training signals come from evaluators, and evaluators have limits.</p>
+        <p class="lead">One sentence frames the whole problem: <strong>you can only optimise what you can evaluate.</strong></p>
+        <p>Every training signal we have met comes from an evaluator. Pre-training is graded by the next token; RLHF is graded by a human's preference (Session 6). So the quality of an aligned model is bounded by the quality of the judgement used to train it. RLHF works because of an asymmetry we noted in 6.1: for most current tasks, <em>judging</em> an answer is easier than <em>producing</em> one, so a human rater is a competent grader even of outputs they could not have written. Scalable oversight is about the regime where that asymmetry runs out — where evaluating the answer is itself beyond the unaided human.</p>
         <div class="info-box">
-            <h4>Why "just have humans check it" fails at the frontier</h4>
-            <p>RLHF works when a human can judge which of two outputs is better. But for a long proof, a subtle security audit, or a 10,000-line refactor, the human may be unable to tell a correct answer from a confident wrong one. Worse, optimising against a flawed judge rewards <em>persuasiveness</em> over <em>correctness</em> — the Goodhart problem from Session 3, now aimed directly at the overseer. Scalable oversight asks how to amplify a limited overseer so the training signal stays tied to the truth.</p>
+            <h4>Why "just have a human check it" fails at the frontier</h4>
+            <p>For a 10,000-line refactor, a novel mathematical proof, or a subtle security audit, a human may be unable to tell a correct answer from a confident wrong one. Two things then go wrong at once. The signal becomes <em>noisy</em>, so the model learns little; and, worse, optimising against a judge who can be fooled actively rewards <em>persuasiveness</em> over <em>correctness</em> — the Goodhart dynamic of Session 3, now aimed straight at the overseer. The signal does not just fade where we need it most; it inverts.</p>
+        </div>
+        <p>This is the same ceiling that closed Session 6.4, stated as a research agenda. RLHF cannot align behaviour beyond what its evaluators can evaluate, so the question becomes: can we <em>amplify</em> a limited overseer — give them tools, helpers, or structure — so the training signal stays tied to the truth even as the model pulls ahead? That is what every method below attempts.</p>
+
+        <h2 class="section-title">Studying the gap before we have superhuman models: sandwiching</h2>
+        <p>There is an obvious methodological trap: the systems we most need to oversee do not exist yet, so we cannot experiment on them. <strong>Sandwiching</strong> (Bowman et al., 2022) is the field's way around it. Pick a task on which a current model is already more capable than a <em>non-expert</em> human, but for which a separate <em>expert</em> (or ground-truth answer) can score the result — medical questions for a layperson, say, or code review for a non-programmer. The non-expert, equipped with the oversight protocol you want to test, tries to supervise the model toward the expert's answer. If they succeed, the protocol has genuinely scaled a weak overseer's judgement; if they fail, you have found a real limit, now, on hardware you actually have.</p>
+        <div class="info-box">
+            <h4>Why the paradigm matters</h4>
+            <p>Sandwiching turns "scalable oversight" from a slogan into something measurable. It lets a lab compare debate against simple Q&amp;A, or AI-assisted critique against unaided judgement, on the same task, and report which protocol closes more of the non-expert-to-expert gap. Much of the empirical work in this area is now reported in this frame, and it is a clean source of student projects (Week 9): take a sandwiching task in a language or domain that the published work ignores, and measure whether the protocol still holds.</p>
         </div>
 
-        <h2 class="section-title">Mechanisms for amplifying oversight</h2>
+        <h2 class="section-title">Five ways to amplify a limited overseer</h2>
+        <p class="lead">The proposals differ in <em>how</em> they extend the overseer, but share one aim: keep the human anchored to the truth while the model does the heavy lifting.</p>
         <div class="card-grid">
             <div class="card">
+                <h3>Task decomposition (iterated amplification)</h3>
+                <p>Break a hard question into sub-questions a human, helped by model assistants, <em>can</em> answer, and recurse. Christiano et al. (2018) formalise this as amplifying a weak expert by letting it call copies of itself. The bet: hard judgements decompose into checkable pieces. The risk: the decomposition may not be faithful, and small per-step errors compound up the tree.</p>
+            </div>
+            <div class="card">
+                <h3>Recursive reward modelling</h3>
+                <p>Leike et al. (2018) propose building reward models for easy tasks, then using those models to help humans evaluate harder ones, climbing a ladder of capability. Each rung is checkable using the rung below — and inherits its errors, which is the open worry.</p>
+            </div>
+            <div class="card">
                 <h3>Debate</h3>
-                <p>Two strong models argue opposing answers in front of a weaker judge. The hope: it is harder to defend a falsehood than to refute it, so truth wins even when the judge could not have found it alone. The risk: debate may reward rhetorical skill, or both sides may collude.</p>
+                <p>Irving et al. (2018) pit two strong models against each other to argue opposing answers before a weaker judge. The hope: defending a falsehood is harder than exposing it, so an honest strategy wins even when the judge could not solve the task alone.</p>
             </div>
             <div class="card">
-                <h3>Recursive reward modelling / IDA</h3>
-                <p>Decompose a hard task into sub-tasks a human <em>can</em> judge, train assistants on those, and use them to help judge the harder whole. Oversight is built up recursively from pieces that remain checkable.</p>
+                <h3>AI-assisted evaluation</h3>
+                <p>Saunders et al. (2022) train models to <em>critique</em> outputs — to surface the flaws a human would otherwise miss. The human stays the judge, but with a sharper lens. The critic itself can miss or fabricate problems, so it assists rather than replaces.</p>
             </div>
             <div class="card">
-                <h3>Sandwiching</h3>
-                <p>An empirical test bed: put a model between non-expert overseers and ground-truth experts, and see whether non-experts plus the model can reach expert-level judgements. A way to <em>study</em> oversight today on tasks where we know the answer.</p>
-            </div>
-            <div class="card">
-                <h3>Weak-to-strong generalisation</h3>
-                <p>Can a weak supervisor elicit the full capability of a strong model? Burns et al. fine-tune a strong model on a weak model's labels and find it can <em>exceed</em> its noisy supervisor — evidence, and a warning, about what supervision transfers and what it leaves behind.</p>
+                <h3>AI feedback at scale (RLAIF / Constitutional AI)</h3>
+                <p>Bai et al. (2022) replace most human labels with model-generated feedback steered by a written <em>constitution</em> (Session 7). This scales oversight cheaply, but relocates the hard question to "whose constitution, and who wrote it?" — which 8.4 takes up.</p>
             </div>
         </div>
+        <p>Notice the two limits that recur across the list. The decomposition methods assume hard judgements break cleanly into easy ones; the competitive and assistance methods assume the human judge cannot be manipulated by a sufficiently capable arguer. Debate makes the second assumption sharpest, and it is also where it is most contested: the "obfuscated argument" problem shows a dishonest debater can sometimes bury a flaw in a sub-tree too large for the judge to check, so persuasion can still beat truth. These are the open theoretical questions of the field, not implementation bugs to be patched.</p>
+
+        <h2 class="section-title">The empirical stress test: weak-to-strong generalisation</h2>
+        <div class="technical-detail">
+            <h4>What a weak supervisor can and cannot elicit</h4>
+            <p style="color:#555;">Burns et al. (2023) study the analogy head-on. If a future human is a <em>weak</em> supervisor of a <em>strong</em> model, what does naive supervision get you? They stand in for the pair by fine-tuning a strong model (say GPT-4) on labels produced by a weak one (say GPT-2), and ask how much of the strong model's latent capability the weak labels elicit. The finding cuts both ways: the strong model generalises <em>past</em> its noisy supervisor — it does not merely imitate the weak labels' mistakes — recovering a good fraction of the performance it would reach under ground-truth labels. But a real gap remains; naive weak supervision leaves capability, and with it alignment, on the table. Closing that gap, so a weak overseer can elicit a strong model's <em>full</em> competence and not a degraded copy, is the concrete form the superalignment problem takes.</p>
+        </div>
+
+        <h2 class="section-title">Does any of it escape the ceiling?</h2>
+        <p>Honestly, not yet, and perhaps not completely. Each method amplifies human judgement; none removes the human's vulnerability to a capable enough system that wants to exploit it. A debate judge can still be dazzled; a decomposition can still hide its load-bearing error in an unchecked branch; AI feedback inherits whatever the feedback model gets wrong. The methods raise the bar an overseer can clear, which is real and valuable, and they give us something to measure with sandwiching. They do not yet provide a guarantee that scales without limit.</p>
         <div class="warning-box">
-            <h4>None of these is solved</h4>
-            <p>Each mechanism has known failure modes (collusion, persuasive falsehoods, judges that anchor on fluency). Treat them as the field's <em>current best attempts</em>, not settled methods — this is live research, and a fertile source of student projects (Week 9).</p>
+            <h4>Treat these as the field's best current attempts</h4>
+            <p>Debate, amplification, recursive reward modelling, AI-assisted critique and weak-to-strong are live research directions with known failure modes — collusion, obfuscated arguments, judges that anchor on fluency, critics that fabricate. Read them as the current state of an unsolved problem, not as settled methods. This is exactly why the course also pursues a complementary bet: instead of only watching a model's <em>outputs</em>, look inside its <em>computation</em> (interpretability, Weeks 7–8), so oversight does not depend solely on a human grading text a model may have learned to game.</p>
         </div>
+
+        <h2 class="section-title">Whose oversight, in which language</h2>
+        <div class="info-box">
+            <h4>The gap is widest where the infrastructure is thinnest</h4>
+            <p>Every protocol here assumes an overseer with the relevant expertise, and usually the relevant language. A sandwiching study needs non-expert overseers <em>and</em> ground-truth experts; a constitution encodes the principles of whoever wrote it. For most African languages the model is already weaker (the data gap of Session 2.3), expert evaluators and labelled benchmarks are scarcer, and the published oversight results were almost all measured in English. So the supervision gap is largest precisely where the tools to close it are least developed. "Can a non-expert reliably oversee a model in isiZulu?" is both a fair exam question and an open research problem — and it connects directly to whose values the oversight is steering toward (8.4) and to how we evaluate any of this (Session 11).</p>
+        </div>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>State the supervision gap in your own words, and give a task on which you are a competent grader but not a competent producer — and one where you are neither.</li>
+            <li>Sandwiching needs a task where a model beats a non-expert but an expert can still score it. Propose one in a domain you know, and say what could go wrong with using it to certify an oversight method.</li>
+            <li>Debate and weak-to-strong make opposite bets about a weak judge facing a strong model. Which do you find more convincing, and what evidence would change your mind?</li>
+            <li>Pick one method above and explain precisely how a capable, misaligned model could still defeat it.</li>
+        </ul>
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
@@ -69,10 +107,18 @@
             <p>• <strong>Burns et al. (2023), "Weak-to-Strong Generalization"</strong> (<a href="https://arxiv.org/abs/2312.09390" target="_blank" rel="noopener">arXiv:2312.09390</a>).</p>
             <p>• <strong>Irving, Christiano &amp; Amodei (2018), "AI Safety via Debate"</strong> (<a href="https://arxiv.org/abs/1805.00899" target="_blank" rel="noopener">arXiv:1805.00899</a>).</p>
         </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Bowman et al. (2022), "Measuring Progress on Scalable Oversight for Large Language Models"</strong> (<a href="https://arxiv.org/abs/2211.03540" target="_blank" rel="noopener">arXiv:2211.03540</a>) — the sandwiching paradigm.</p>
+            <p>• <strong>Christiano, Shlegeris &amp; Amodei (2018), "Supervising Strong Learners by Amplifying Weak Experts"</strong> (<a href="https://arxiv.org/abs/1810.08575" target="_blank" rel="noopener">arXiv:1810.08575</a>) — iterated amplification.</p>
+            <p>• <strong>Leike et al. (2018), "Scalable Agent Alignment via Reward Modeling"</strong> (<a href="https://arxiv.org/abs/1811.07871" target="_blank" rel="noopener">arXiv:1811.07871</a>) — recursive reward modelling.</p>
+            <p>• <strong>Saunders et al. (2022), "Self-critiquing Models for Assisting Human Evaluators"</strong> (<a href="https://arxiv.org/abs/2206.05802" target="_blank" rel="noopener">arXiv:2206.05802</a>).</p>
+            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>) — taken up in Session 7.</p>
+        </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Where this goes next</h2>
-            <p>Suppose oversight worked perfectly. You would still have to decide what you are overseeing <em>toward</em> — and "aligned" is a relation to a target, not a property a model has alone. Sub-session <strong>8.2</strong> introduces the four philosophical lenses for reasoning about that target; <strong>8.3</strong> brings in Ubuntu and relational ethics; <strong>8.4</strong> shows the choice is also a mathematical constraint.</p>
+            <p>Suppose oversight worked perfectly. You would still have to decide what you are overseeing <em>toward</em> — and "aligned" is a relation to a target, not a property a model has on its own. Sub-session <strong>8.2</strong> introduces the four philosophical lenses for reasoning about that target; <strong>8.3</strong> brings in Ubuntu and relational ethics; <strong>8.4</strong> shows the choice is also a mathematical constraint.</p>
         </div>
 
     </div>
