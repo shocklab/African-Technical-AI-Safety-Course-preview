@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 7.5 — Lab: a tiny Constitutional-AI loop</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 7</summary>
+    <ul>
+      <li><a href="from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
+      <li><a href="constitutional-ai.html">7.2 · Constitutional AI: critique &amp; revise</a></li>
+      <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF, self-rewarding &amp; its limits</a></li>
+      <li><a href="whose-constitution.html">7.4 · Whose constitution?</a></li>
+      <li><span class="tn-current">7.5 · Lab: a tiny Constitutional-AI loop</span></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="whose-constitution.html">← <span class="tn-title">7.4 · Whose constitution?</span></a>
+    <a class="tn-next" href="../session-08/scalable-oversight.html"><span class="tn-title">8.1 · The supervision gap &amp; scalable oversight</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 4 • Session 7.5</div>
+        <h1>Lab: build a tiny Constitutional-AI loop</h1>
+        <p>Critique-and-revise, AI preference labelling, and an in-language safety probe — by hand, in Colab</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What you'll build</h2>
+            <p>You will run the two moves at the heart of Constitutional AI on a small open model: a <strong>critique-and-revise</strong> loop, and an <strong>AI preference-labelling</strong> step. Then you will do the thing the papers mostly skip — measure how the model's safety judgement holds up <em>outside English</em>. The core is CPU-friendly and runs on the free Colab tier; the real RL step is an optional GPU extension that reuses your Session 6.5 machinery. This is the lab no surveyed course offers, and Task 4 is a natural seed for a research project.</p>
+        </div>
+
+        <div class="technical-detail">
+            <h4>Setup</h4>
+            <p style="color:#555;">Open the Colab notebook and load a small instruction-tuned model (a 1–3B open model is plenty — the point is the loop, not the scale). Everything in Tasks 1–4 is prompting and bookkeeping, so it runs on CPU; you do not train anything until the optional extension. Reuse the harm-prompt handling conventions from the 6.5 lab.</p>
+        </div>
+
+        <h2 class="section-title">Task 1 — write a mini-constitution</h2>
+        <p>Write <strong>3–5 principles</strong> in plain language, each a single sentence of the form "choose the response that…". Cover at least one harm you care about and one positive behaviour (helpfulness, clarity). Keep them short — you will be sampling one at a time, as the real method does. Record them at the top of your notebook; they are the rubric for everything that follows.</p>
+
+        <h2 class="section-title">Task 2 — critique-and-revise</h2>
+        <p>Pick a mildly harmful prompt (the 6.5 conventions apply — nothing genuinely dangerous; "how do I get back at a coworker" is plenty). Then run the loop:</p>
+        <ul class="styled-list">
+            <li><strong>Answer:</strong> have the model respond to the prompt directly, with no safety framing.</li>
+            <li><strong>Critique:</strong> sample one principle and ask the same model to critique its own answer by that principle — where does it fall short?</li>
+            <li><strong>Revise:</strong> ask it to rewrite the answer in light of the critique.</li>
+            <li><strong>Compare:</strong> put the original and revised answers side by side. Did the revision improve, over-correct into a useless refusal, or miss the point? Note which.</li>
+        </ul>
+
+        <h2 class="section-title">Task 3 — AI preference labelling</h2>
+        <p>Generate two responses to each of several prompts. For each pair, hand both to the model with a sampled principle and ask which is better, reading the choice off as in 7.2. Two things to do properly:</p>
+        <ul class="styled-list">
+            <li><strong>Position-swap:</strong> ask twice with the order flipped and check whether the model changes its mind. How often does it? That rate is the position bias you read about, measured on your own model.</li>
+            <li><strong>Agreement with you:</strong> label the same pairs yourself first, then compute how often the model's preference matches yours. That agreement number <em>is</em> the reliability of the RLAIF signal, made tangible — a low number means the reward model you would train on these labels is learning your model's quirks, not your values.</li>
+        </ul>
+
+        <div class="case-study">
+            <h4>Task 4 — the African-safety probe (the one that matters)</h4>
+            <p>Repeat Task 3's labelling in <strong>isiZulu</strong> (or another language you read), using the same prompts translated over. Compute the model's agreement with your labels in-language, and compare it to the English number. Does the agreement collapse? Does the model start refusing to judge, mis-parsing the options, or labelling at chance? Whatever you find, you have measured the 7.4 ceiling with your own hands: the point at which the automated safety signal stops being trustworthy as you move away from English. Write down the gap — it is the most important number in this lab, and a strong starting point for a Session 11 evaluation or a full project.</p>
+        </div>
+
+        <div class="info-box">
+            <h4>Optional GPU extension</h4>
+            <p>If you want the full loop, distil your Task-3 AI labels into a small reward model and run one short PPO (or DPO) step against it, reusing the 6.5 / ARENA RLHF code. You will not get a dramatically better model from a handful of labels — the goal is to feel the whole pipeline run on signal a <em>model</em> generated, and to see the over-optimisation exposure of 6.4 reappear on an AI-made proxy.</p>
+        </div>
+
+        <h2 class="section-title">What to submit</h2>
+        <p>One Colab notebook containing: your mini-constitution (Task 1); the before/after critique-and-revise example with your one-line verdict (Task 2); your position-bias rate and model-versus-you agreement number (Task 3); and the in-language agreement, the English–isiZulu gap, and a short description of how the failure looked (Task 4). Graded on completion and the quality of your observations; resubmission allowed.</p>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder">
+            <h4>Reference</h4>
+            <p>• Re-use the critique/label mechanics from <strong>Bai et al. (2022)</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>, §2–3) and the labelling-prompt details in <strong>Lee et al. (2023)</strong> (<a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">arXiv:2309.00267</a>, appendices).</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>That closes Week 4's first session. <strong>Session 8</strong> takes up the two questions this one raised: can model-assisted oversight actually scale (8.1), and whose values is any of it steering toward (8.2–8.4)?</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="whose-constitution.html"><span class="nav-label">← Previous</span><span class="nav-title">7.4 · Whose constitution?</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="../session-08/scalable-oversight.html"><span class="nav-label">Next →</span><span class="nav-title">8.1 · The supervision gap &amp; scalable oversight</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

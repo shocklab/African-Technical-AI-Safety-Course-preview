@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 7.4 — Whose constitution? Democratic and African perspectives</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 7</summary>
+    <ul>
+      <li><a href="from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
+      <li><a href="constitutional-ai.html">7.2 · Constitutional AI: critique &amp; revise</a></li>
+      <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF, self-rewarding &amp; its limits</a></li>
+      <li><span class="tn-current">7.4 · Whose constitution?</span></li>
+      <li><a href="lab-constitutional-ai.html">7.5 · Lab: a tiny Constitutional-AI loop</a></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="rlaif-and-self-rewarding.html">← <span class="tn-title">7.3 · RLAIF, self-rewarding &amp; its limits</span></a>
+    <a class="tn-next" href="lab-constitutional-ai.html"><span class="tn-title">7.5 · Lab: a tiny Constitutional-AI loop</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 4 • Session 7.4</div>
+        <h1>Whose constitution? Democratic and African perspectives</h1>
+        <p>A written value-set is auditable — and applied to millions at once. Who writes it, and who is left out?</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>Constitutional AI's defining feature is that its values are written down. That makes them auditable, which is real progress over a reward model's buried preferences. It also means one value-set is applied, identically, to everyone the model serves. This sub-session asks who writes that document. We look at the one serious attempt to source it democratically (Collective Constitutional AI), why it still left out the Global South, the language ceiling that makes AI feedback unreliable in African languages exactly where it is most needed, and what genuine rather than tokenistic participation would require. This is the session's African-safety core, and it hands the formal argument — that there is no neutral way to aggregate values — to Session 8.4.</p>
+        </div>
+
+        <h2 class="section-title">One document, millions of judgements</h2>
+        <p class="lead">Writing the values down is a genuine advance. It is also what lets a single blind spot scale to everyone.</p>
+        <p>An RLHF reward model encodes its values implicitly, smeared across millions of weights, where no one can read them off. A constitution states them in a paragraph you can criticise, contest, and revise. That is a real gain in transparency, and it is why the method is worth taking seriously as a democratic instrument rather than only an engineering one. The flip side is structural. The same explicitness that makes the values auditable also makes them <em>uniform</em>: one constitution, written once, shapes every judgement the model makes, for every user, in every language. A preference that a particular reward model happened to learn is a local accident; a principle written into a constitution is a global policy. So the question "whose values?" stops being a diffuse worry about training data and becomes a sharp, answerable question about a specific short document and the specific people who wrote it.</p>
+
+        <h2 class="section-title">Collective Constitutional AI: democratising the document</h2>
+        <p class="lead">Huang et al. (2024) asked a sample of the public to write the constitution, and trained a real model on the result.</p>
+        <p>The method is careful. They recruited a representative sample of <strong>1,002 US adults</strong> and used <strong>Polis</strong> — a deliberation platform where participants propose short statements and vote on each other's — gathering 1,127 statements and around 38,000 votes. Statements were selected by <em>group-aware consensus</em>, which favours principles that command agreement <em>across</em> opinion clusters rather than within a single bloc, a deliberate guard against majority capture. The surviving statements became a "Public" constitution, and they trained a model on it identically to a baseline model trained on Anthropic's own "Standard" constitution, changing nothing else, so any difference traces to the constitution alone.</p>
+        <div class="info-box">
+            <h4>What the public constitution changed</h4>
+            <p>The two constitutions overlapped about <strong>50%</strong> in concepts, so the public reproduced much of the experts' document and then diverged in revealing ways: the public principles leaned harder on <em>objectivity and impartiality</em>, on <em>accessibility</em> (including for people with disabilities), and on stating desired behaviour positively rather than listing prohibitions. The trained model held its ground on capability — equivalent on MMLU and the GSM8K maths benchmark, and on helpfulness and harmlessness — while scoring <strong>lower social bias across all nine dimensions</strong> of the BBQ bias benchmark than the standard model. Public input measurably reduced bias without costing capability. As a proof of concept that the document can be opened up, it works.</p>
+        </div>
+
+        <h2 class="section-title">...that left out the Global South</h2>
+        <p class="lead">The one serious public-input experiment drew its public entirely from one country, and screened for AI familiarity.</p>
+        <p>The sample was US adults, and participants were screened to include only people already familiar with generative AI, those who had read about it or discussed it. Both choices are defensible for a first study, and the authors name the US limitation explicitly, attributing it partly to a US-based team. The effect, whatever the intent, is that the most-cited demonstration of "democratic" constitution-writing had no seat for anyone in Lagos, Nairobi, or Cape Town, and excluded by design the very people least likely to have prior exposure to the technology. A method's first instantiation tends to set its defaults. If "the public" means "AI-familiar Americans", then democratising the constitution can entrench a Northern value-set under a participatory banner — the precise risk the next two sections name.</p>
+
+        <h2 class="section-title">The African-language ceiling</h2>
+        <p class="lead">AI feedback can only be as good as the model's competence in the language it judges — and that competence collapses in African languages.</p>
+        <p>This is where 7.3's technical worry meets 7.4's normative one. AI feedback inherits the base model's competence profile, which is steeply tilted toward high-resource languages, so a feedback model judges harmfulness confidently in English and unreliably in low-resource African languages. The consequence is measurable, and it is the result this course keeps returning to. Yong et al. (2023) translated a benchmark of harmful requests out of English and back: against GPT-4, the attack-success rate rose from <strong>under 1% in English to roughly 79% when combining low-resource languages</strong> (Zulu, Scots Gaelic, Hmong, Guarani) — with isiZulu alone around <strong>53%</strong>. The guardrails were, in effect, English-language guardrails.</p>
+        <div class="warning-box">
+            <h4>Cite the number precisely</h4>
+            <p>The 79% is the <em>combined</em> low-resource figure — an adversary free to pick the best of several low-resource languages succeeds about four times in five. Any single language is lower: isiZulu ~53%, Scots Gaelic ~43%. Stating "isiZulu jailbreaks GPT-4 79% of the time" overstates the per-language result and is exactly the kind of loose summary Session 1 trained you to catch. The honest claim is sharp enough: a safety system that holds in English fails most of the time once you switch to a low-resource language, using nothing more than a public translation tool.</p>
+        </div>
+        <p>Now compound it with AI feedback. A self-judging or constitution-following loop in isiZulu pairs a weaker generator with a weaker judge, each unable to catch the other's failures, and produces safety labels no one in the loop is competent to verify. The cheapest, most scalable alignment signal in the field is least trustworthy precisely where the populations are least represented and the human fallback is also thinnest. That is not a diversity footnote. It is a robustness and evaluation failure sitting at the technical core of the method, and it lands on this continent first.</p>
+
+        <h2 class="section-title">Participation without power</h2>
+        <p class="lead">Asking people for input is not the same as giving them control, and the gap has a literature.</p>
+        <p>Collective Constitutional AI is a participatory method, and participatory methods carry a known risk: that consultation becomes a legitimacy stamp while real decisions stay with the developer. Birhane et al. (2022), in <em>Power to the People?</em>, map this directly for AI — they warn that participation is prone to <em>cooptation</em> and to <em>conflation</em> with unrelated activities, and they insist on asking who the primary beneficiaries of a participatory exercise actually are. (The catchier label often attached to this failure, "participation-washing", is Sloane et al.'s coinage rather than Birhane's; attribute it correctly if you use it.) The test they propose is the one to apply to any "public input" scheme, including Collective CAI: does the public set the agenda and hold a veto, or do they vote on statements inside a frame the developer already fixed, with the developer retaining every downstream choice? Genuine participation moves power; tokenistic participation moves only the appearance of it.</p>
+
+        <h2 class="section-title">Data and feedback sovereignty</h2>
+        <p class="lead">The alternative to being consulted is owning the pipeline — the data and the feedback that shape models of and for a community.</p>
+        <p>Two efforts make the alternative concrete. <strong>Masakhane</strong> is a grassroots network building natural-language tools for African languages with the communities that speak them, on the principle that the people whose language is being modelled should lead the modelling rather than be data sources for someone else's. <strong>Te Hiku Media</strong>, a Māori organisation, built speech-recognition for te reo Māori from community-contributed recordings and released the data under a <em>Kaitiakitanga</em> licence — a guardianship licence that keeps the community in control of how their data is used and refuses to hand it to outside firms on extractive terms. The through-line is sovereignty: deciding the values a model is aligned to, and supplying the feedback that enforces them, is a form of power, and the question is whether African and other underrepresented communities exercise it or merely receive its outputs. A constitution written elsewhere, applied here, in a language the judge cannot reliably read, is the opposite of sovereignty.</p>
+
+        <div class="highlight-box">
+            <h3><span style="color:#ffffff;">The argument handed to 8.4</span></h3>
+            <p>You might hope that the answer to "whose constitution?" is simply "everyone's — aggregate all the preferences fairly". Session 8.4 is the bad news: social-choice theory (Arrow's theorem, and Conitzer et al.'s work bringing it to RLHF and constitutions) shows there is no aggregation rule that is simultaneously fair on every reasonable axis. So "just combine everyone's values" is not a neutral technical step; every aggregation embeds a choice about whose preferences dominate when they conflict. The constitution does not escape that; it only makes the choice visible. Hold the question; 8.4 supplies the impossibility result that explains why it has no clean answer.</p>
+        </div>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>A constitution makes values auditable but uniform. For an African user, which property matters more, and does Collective CAI improve either one for them?</li>
+            <li>Collective CAI reduced bias on all nine BBQ dimensions with a US-only sample. Does that result transfer to a Kenyan or South African deployment? What would you need to measure to know?</li>
+            <li>Apply Birhane et al.'s test to Collective CAI: where does the public hold real power in that process, and where does the developer keep it?</li>
+            <li>Restate the Yong et al. result precisely, distinguishing the combined 79% from the per-language figures. Why does the distinction matter for what you would claim in a paper?</li>
+            <li>Te Hiku refused to hand its language data to outside firms. What does data and feedback sovereignty cost a community in the short term, and what does it buy in the long term?</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Huang et al. (2024), "Collective Constitutional AI: Aligning a Language Model with Public Input"</strong> (<a href="https://arxiv.org/abs/2406.07814" target="_blank" rel="noopener">arXiv:2406.07814</a>, FAccT 2024; <a href="https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input" target="_blank" rel="noopener">blog</a>) — the method, the results, and the US-only limitation in the authors' own words.</p>
+            <p>• <strong>Yong, Menghini &amp; Bach (2023), "Low-Resource Languages Jailbreak GPT-4"</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">arXiv:2310.02446</a>) — the language ceiling; read Table 1 for the per-language versus combined rates.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Birhane et al. (2022), "Power to the People? Opportunities and Challenges for Participatory AI"</strong> (<a href="https://arxiv.org/abs/2209.07572" target="_blank" rel="noopener">arXiv:2209.07572</a>) — cooptation, conflation, and who benefits from participation.</p>
+            <p>• <strong>Masakhane</strong> (<a href="https://www.masakhane.io/" target="_blank" rel="noopener">masakhane.io</a>) — community-led NLP for African languages.</p>
+            <p>• <strong>Te Hiku Media &amp; the Kaitiakitanga licence</strong> (<a href="https://tehiku.nz/" target="_blank" rel="noopener">tehiku.nz</a>) — Māori data sovereignty as a worked model of community control over training and feedback data.</p>
+            <p>• <strong>Conitzer et al. (2024), "Social Choice for AI Alignment"</strong> (<a href="https://arxiv.org/abs/2404.10271" target="_blank" rel="noopener">arXiv:2404.10271</a>) — the no-neutral-aggregation argument, taken up fully in Session 8.4.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Sub-session <strong>7.5</strong> is the lab: build a tiny Constitutional-AI loop in Colab — write a mini-constitution, run critique-and-revise, label preferences with a model, and measure for yourself how the AI's judgement degrades outside English.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="rlaif-and-self-rewarding.html"><span class="nav-label">← Previous</span><span class="nav-title">7.3 · RLAIF, self-rewarding &amp; its limits</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="lab-constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.5 · Lab: a tiny Constitutional-AI loop</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

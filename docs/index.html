@@ -45,6 +45,10 @@
     footer a{ color:var(--navy); }
     @media (max-width:768px){ body{ padding:0; } .container{ border:none; } header{ padding:34px 22px 22px; } header h1{ font-size:1.9rem; } .content{ padding:28px 22px; } .lesson-list{ margin-left:18px; } .week-number{ width:34px; height:34px; font-size:0.85rem; } }
     </style>
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
 </head>
 <body>
 <div class="container">
@@ -152,7 +156,16 @@
         <div class="week-section">
             <div class="week-header"><div class="week-number">4</div><h2>Scalable alignment methods</h2></div>
             <ul class="lesson-list">
-                <li><span class="soon">Session 7 · Learning from AI feedback (RLAIF, Constitutional AI)</span></li>
+                <li>
+                    <div class="session-group">Session 7 · Learning from AI feedback (RLAIF &amp; Constitutional AI) <span class="badge-built">built</span></div>
+                    <ul class="subsession-list">
+                        <li><a href="sessions/session-07/from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
+                        <li><a href="sessions/session-07/constitutional-ai.html">7.2 · Constitutional AI: critique &amp; revise</a></li>
+                        <li><a href="sessions/session-07/rlaif-and-self-rewarding.html">7.3 · RLAIF, self-rewarding &amp; its limits</a></li>
+                        <li><a href="sessions/session-07/whose-constitution.html">7.4 · Whose constitution?</a></li>
+                        <li><a href="sessions/session-07/lab-constitutional-ai.html">7.5 · Lab: a tiny Constitutional-AI loop</a></li>
+                    </ul>
+                </li>
                 <li>
                     <div class="session-group">Session 8 · Scalable oversight &amp; "whose values?" (ethics) <span class="badge-built">built</span></div>
                     <ul class="subsession-list">

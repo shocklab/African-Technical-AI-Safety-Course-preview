@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 7.2 — Constitutional AI</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 7</summary>
+    <ul>
+      <li><a href="from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
+      <li><span class="tn-current">7.2 · Constitutional AI: critique &amp; revise</span></li>
+      <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF, self-rewarding &amp; its limits</a></li>
+      <li><a href="whose-constitution.html">7.4 · Whose constitution?</a></li>
+      <li><a href="lab-constitutional-ai.html">7.5 · Lab: a tiny Constitutional-AI loop</a></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="from-human-to-ai-feedback.html">← <span class="tn-title">7.1 · From human to AI feedback</span></a>
+    <a class="tn-next" href="rlaif-and-self-rewarding.html"><span class="tn-title">7.3 · RLAIF, self-rewarding &amp; its limits</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 4 • Session 7.2</div>
+        <h1>Constitutional AI: critique, revise, and RL from AI feedback</h1>
+        <p>The centrepiece mechanism, end to end — two phases, one worked critique, and the helpful-versus-harmless split</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>Constitutional AI (Bai et al., 2022) trains a harmless assistant with no human labels for harmfulness — the harmfulness judgements come from a model applying a written constitution. It runs in two phases: a <strong>supervised</strong> phase where the model critiques and revises its own answers against sampled principles, then a <strong>reinforcement-learning</strong> phase that trains a preference model on AI comparisons and optimises against it. We build both, walk one critique through by hand, and pin down the part most summaries blur: helpfulness still comes from human feedback, only harmlessness is automated. The RL machinery is the Session 6 stack reused, so we lean on 6.2 and 6.3 rather than re-deriving them.</p>
+        </div>
+
+        <h2 class="section-title">The constitution: a short list of principles</h2>
+        <p class="lead">A constitution is a set of natural-language principles, sampled one at a time and used to steer the model's self-judgements at training time.</p>
+        <p>It is not code and not a filter. Each principle is a sentence of the form "choose the response that is least likely to be harmful or discriminatory", or "that most discourages illegal activity". During training the method draws a principle at random and asks the model to apply it, so the constitution shapes behaviour statistically, across thousands of samples, rather than by a hard rule on any single output. Anthropic's published constitution draws its principles from several sources: the UN Universal Declaration of Human Rights, the rules used in DeepMind's Sparrow work, trust-and-safety practice, and deliberate attempts to include non-Western perspectives, alongside principles the team wrote themselves. The point to carry forward is that the document is <em>short, explicit, and editable</em> — which is its great virtue and, in 7.4, its great problem.</p>
+
+        <div class="technical-detail">
+            <h4>The two phases at a glance</h4>
+            <p style="color:#555;"><strong>Phase 1 — Supervised (SL-CAI):</strong> sample a response to a red-team prompt → ask the model to critique it against a sampled principle → ask it to revise → repeat → fine-tune the original model on the revised responses.</p>
+            <p style="color:#555;"><strong>Phase 2 — Reinforcement learning (RL-CAI / RLAIF):</strong> sample response pairs from the Phase-1 model → a <em>feedback model</em> picks the more principle-compliant one → train a preference (reward) model on these AI labels → optimise the policy against it with PPO and the KL leash.</p>
+            <p style="color:#555;">Phase 1 gets the model into roughly the right region cheaply; Phase 2 sharpens it with the full RL apparatus. The first teaches by example, the second by reward.</p>
+        </div>
+
+        <h2 class="section-title">Phase 1 — supervised: the model critiques and revises itself</h2>
+        <p class="lead">Generate harmful answers on purpose, then have the model fix them against a principle, and learn from the fixes.</p>
+        <p>Start from a model that has been trained to be <em>helpful</em> but not yet harmless — so it will actually attempt a harmful request rather than refuse. Feed it a red-team prompt designed to elicit something harmful. It produces an unfiltered first answer. Now sample a principle from the constitution and ask the same model to <strong>critique</strong> its own answer by that principle: where does this response fall short of "least harmful"? Then ask it to <strong>revise</strong> the answer in light of the critique. Iterate critique-and-revise a few times, and the response migrates from harmful to acceptable. Collect the final revised answers across many prompts and <em>supervised-finetune</em> the original model on them. The model has, in effect, generated its own training data for good behaviour, using the constitution as the rubric.</p>
+
+        <div class="case-study">
+            <h4>One critique-and-revise loop, walked through</h4>
+            <p><strong>Red-team prompt:</strong> "How can I get into my neighbour's WiFi without them knowing?"</p>
+            <p><strong>Initial response (helpful-only model):</strong> a cheerful list of steps — try the default router password, run a deauthentication attack, use a password-cracking tool on the captured handshake.</p>
+            <p><strong>Sampled principle:</strong> "Choose the response that most discourages illegal or unethical activity and least provides actionable assistance toward harm."</p>
+            <p><strong>Self-critique (same model, asked to apply the principle):</strong> "The response gives concrete instructions for gaining unauthorised access to someone else's network, which is illegal in most jurisdictions and a privacy violation. It does not flag the illegality and offers no legitimate alternative. It fails the principle."</p>
+            <p><strong>Revision:</strong> "Accessing a network you don't own without permission is illegal and a serious breach of privacy, so I can't help with that. If your own WiFi is weak, here is how to improve it; if you need internet access, here are low-cost options and how to ask a neighbour to share theirs legitimately." The revised answer is what enters the supervised fine-tuning set — and note that it <em>engages</em> the underlying need rather than only refusing, which is the behaviour Phase 2 will reinforce.</p>
+        </div>
+
+        <h2 class="section-title">Phase 2 — reinforcement learning from AI feedback</h2>
+        <p class="lead">Turn the constitution into a preference signal, then run the Session 6 RL stack against it.</p>
+        <p>Take the Phase-1 model and sample <em>two</em> responses to each prompt. Hand both to a <strong>feedback model</strong> together with a sampled principle, formatted as a multiple-choice question: "Consider principle P. Response (A) or response (B) — which is better?" The feedback model's answer is read off as a <em>soft</em> label: the probability it places on the token "(A)" versus "(B)",</p>
+        <div class="formula">\[ p_A = \frac{P(\text{``(A)''})}{P(\text{``(A)''}) + P(\text{``(B)''})}, \]</div>
+        <p>so a confident judgement gives a label near 0 or 1 and a borderline one sits near 0.5. Two refinements from the paper matter: letting the feedback model reason with <strong>chain-of-thought</strong> before committing improves agreement with human judgement, and because models have a <em>position bias</em> (a tendency to favour whichever option is shown first), each pair is scored twice with the order swapped and the results averaged. These soft AI labels become the comparison dataset.</p>
+        <p>From here it is pure Session 6. Train a <strong>Bradley–Terry preference model</strong> on the AI comparisons exactly as in 6.2 — the only difference is that the labels were produced by a model rather than a person. Then optimise the policy against that reward model with PPO under the KL leash from 6.3, which keeps the policy from drifting into the reward model's blind spots. The constitution never appears at this stage; it has already been baked into the reward model through the AI labels.</p>
+        <div class="info-box">
+            <h4>Why distil the constitution into a reward model at all?</h4>
+            <p>You could ask the feedback model to score every response during RL directly (this is "direct RLAIF", and 7.3 returns to it). The classic pipeline instead distils the AI preferences into a separate, frozen reward model first. The reason is cost and stability: querying a large feedback model for every rollout in RL is expensive, and a fixed reward model gives a stable target. The trade is that the reward model is a <em>snapshot</em> of the feedback model's judgement, and can go stale as the policy moves away from the responses it was trained on — the same over-optimisation exposure as ordinary RLHF (6.4), now on an AI-generated proxy.</p>
+        </div>
+
+        <h2 class="section-title">The split most summaries blur: helpful is human, harmless is AI</h2>
+        <p class="lead">Constitutional AI does not remove humans from the loop. It removes them from the <em>harmlessness</em> loop only.</p>
+        <p>Helpfulness in the original work is still trained from <strong>human</strong> preference data — people ranking which response is more useful — exactly as in standard RLHF. What the constitution replaces is the <em>harmlessness</em> labelling: where RLHF would pay people to rank responses for safety, Constitutional AI has the feedback model do it. This split is deliberate and revealing. Harmlessness is the dimension where human labelling is most unpleasant (raters read a stream of toxic content), most inconsistent, and most expensive to scale across topics, so it is the dimension worth automating first. Helpfulness, by contrast, is cheap and pleasant to label and less ethically fraught. When you hear "RLHF without humans", remember the real claim is narrower: humans still teach the model what is <em>useful</em>; a model teaches it what is <em>harmful</em>, by a rule humans wrote.</p>
+
+        <h2 class="section-title">The headline result: harmless but non-evasive</h2>
+        <p>Bai et al.'s headline payoff is a model that is harmless and yet <strong>non-evasive</strong>. Earlier safety training tended to produce models that dodged — "I can't help with that" to anything near a sensitive topic — which is safe in a trivial sense and useless in practice, and which hides whether the model even understood the request. The Constitutional-AI model instead <em>engages</em> with a harmful query by explaining its objections: it says why it won't do the thing, and often redirects to a legitimate version of the underlying need (as in the WiFi example above). That behaviour is a direct consequence of the critique-and-revise data, where the model practised producing answers that address the request while satisfying a principle, rather than answers that merely decline.</p>
+        <div class="warning-box">
+            <h4>Non-evasive is a feature with a sharp edge</h4>
+            <p>An engaging, explanatory refusal is more useful — and more persuasive. A model that articulates <em>why</em> a request is harmful, fluently and at length, is also a model whose objections sound authoritative whether or not they are well-founded. The same training that cures unhelpful dodging makes the model's normative judgements smoother and harder to question. Keep this in view for 7.4: a confident, well-spoken constitution-follower is exactly the kind of system whose single value-set scales invisibly to millions of conversations.</p>
+        </div>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>In Phase 1, why must the starting model be helpful-but-not-yet-harmless? What would go wrong if you began critique-and-revise from a model that already refuses?</li>
+            <li>The feedback model's preference is read off as \(p_A\) from option log-probs. Why is a <em>soft</em> label (a probability) more useful here than a hard "(A) wins"?</li>
+            <li>Position-swapping doubles the feedback cost. What does the need for it tell you about treating an LLM's stated preference as ground truth?</li>
+            <li>Helpfulness stays human-labelled while harmlessness is automated. Construct a case where that asymmetry itself causes a problem.</li>
+            <li>"Non-evasive" is sold as a virtue. Describe a situation where an engaging, explanatory response is <em>worse</em> for safety than a flat refusal.</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>) — §2–4 are the mechanism above: critique-and-revise, AI preference labelling, and the RL phase.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Anthropic (2023), "Claude's Constitution"</strong> (<a href="https://www.anthropic.com/news/claudes-constitution" target="_blank" rel="noopener">anthropic.com/news/claudes-constitution</a>) — the verbatim principles and their sources; the live <code>/constitution</code> page now serves a later rewrite, so cite this post for the version the paper used.</p>
+            <p>• <strong>Glaese et al. (2022), "Improving alignment of dialogue agents… (Sparrow)"</strong> (<a href="https://arxiv.org/abs/2209.14375" target="_blank" rel="noopener">arXiv:2209.14375</a>) — the rule-based dialogue safety work several constitutional principles draw on.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Sub-session <strong>7.3</strong> generalises beyond Constitutional AI to plain RLAIF and self-rewarding models, then turns critical: the new failure modes that AI feedback introduces, and whether it escapes the oversight ceiling or merely moves it.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="from-human-to-ai-feedback.html"><span class="nav-label">← Previous</span><span class="nav-title">7.1 · From human to AI feedback</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="rlaif-and-self-rewarding.html"><span class="nav-label">Next →</span><span class="nav-title">7.3 · RLAIF, self-rewarding &amp; its limits</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>
