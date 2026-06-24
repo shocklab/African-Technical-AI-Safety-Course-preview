@@ -70,10 +70,21 @@
             <p style="color:#555;">Position \(i\)'s output is the average of the value vectors, weighted by how much it attended to each. Putting the steps together gives the familiar formula:</p>
             <div class="formula">\[ \operatorname{Attention}(Q,K,V) = \operatorname{softmax}\!\left( \frac{QK^\top}{\sqrt{d_{\text{head}}}} \right) V \]</div>
         </div>
+
+        <figure>
+            <img src="../../assets/img/session-2-2a-attention-head-flow.jpg" alt="Flow diagram of one attention head. The input X (shape T by d_model) is projected by three learned matrices W_Q, W_K and W_V into Q, K and V, each of shape T by d_head. Q and K feed a matmul that produces the score matrix S = Q K-transpose (shape T by T); S is divided by the square root of d_head, given a causal mask, and passed through a row-wise softmax to produce the attention weights A (shape T by T). A and V feed a second matmul, giving the head output of shape T by d_head. The caption formula reads Attention(Q,K,V) equals softmax of (Q K-transpose divided by root d_head) times V.">
+            <figcaption><strong>Figure 2.2a.</strong> One attention head as a flow of matrix operations. The input X is projected by three learned matrices W_Q, W_K, W_V into queries, keys and values; only Q and K form the scores S = QKᵀ, which are scaled by √d_head, causally masked, and softmaxed into the attention weights A; A then reads out a weighted sum of the values V to give the head's output (T × d_head).</figcaption>
+        </figure>
+
         <div class="info-box">
             <h4>A worked intuition: "…the Eiffel Tower is in the city of ___"</h4>
             <p>To predict the next token, the final position emits a query that (in some head) is best matched by the key at "Eiffel Tower". That head's attention row puts most weight on the "Eiffel Tower" position and copies its value into the final position's output — effectively moving the information "this sentence is about the Eiffel Tower" forward to where it's needed. Attention only <em>moves</em> information like this; it is the later layers and MLPs that turn "this is about the Eiffel Tower" into the actual prediction "Paris". <em>Induction heads</em> — which you'll reverse-engineer in Week 7 — are a famous, crisp version of exactly this copy-by-matching behaviour.</p>
         </div>
+
+        <figure>
+            <img src="../../assets/img/session-2-2b-attention-heatmap.jpg" alt="Attention-weight heatmap for the sentence 'The Eiffel Tower is in the city of'. Rows are query positions and columns are key positions, forming a lower-triangular grid because each position can attend only to itself and earlier positions, with the upper triangle blank. The first token 'The' attends entirely to itself with weight 1.0. The final position 'of' places its largest weights on the 'Eiffel' and 'Tower' columns, showing that it reads from 'Eiffel Tower' to predict the next word.">
+            <figcaption><strong>Figure 2.2b.</strong> The attention weights A for one head on "…the Eiffel Tower is in the city of ___". Rows are queries, columns are keys; the lower-triangular shape is the causal mask. The final position reads most strongly from "Eiffel Tower" — the routing described above, made concrete. (Illustrative weights.)</figcaption>
+        </figure>
 
         <h2 class="section-title">Multi-head attention</h2>
         <div class="technical-detail">
