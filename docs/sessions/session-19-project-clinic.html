@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 19 — Project clinic</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../index.html">⌂ Contents</a>
+  <div class="tn-links">
+    <a class="tn-prev" href="session-18/the-african-ecosystem.html">← <span class="tn-title">18.4 · The African AI-safety ecosystem</span></a>
+    <a class="tn-next" href="session-20/meaning-and-present-harms.html"><span class="tn-title">20.1 · "It doesn't understand", and the present harms</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 10 • Session 19</div>
+        <h1>Project clinic</h1>
+        <p>Bring a first result, however rough, and we debug it together: baselines, the statistics, and where to cut</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What this session is</h2>
+            <p>This is a working session, not a lecture. You have a proposal from Session 17; by now you should have run something. Bring whatever you have — a half-working notebook, a confusing plot, a result you do not trust — and we work through it as a group. The checklist below is what we will hold each project against, and it is also how the final paper is marked, so treat it as a rehearsal for the rubric.</p>
+        </div>
+
+        <h2 class="section-title">Bring a result, not a plan</h2>
+        <p class="lead">The proposal stage is over. The fastest way to find out whether a project works is to run the smallest version of it.</p>
+        <p>The most useful thing you can bring is a first measurement, even a broken one. A plot that looks wrong tells us more than a paragraph describing what you intend to do, because the wrongness is usually where the real question lives. Teams that arrive with "we are still setting up" are the ones most at risk, so if you are stuck on setup, that is the thing to raise first, and the labs from Sessions 9, 11, 14 and 16 are the quickest way past it since the scaffolding is already written.</p>
+
+        <h2 class="section-title">Baselines first</h2>
+        <p class="lead">The Session 15.4 lesson, applied to your own work: a result only means something next to an alternative.</p>
+        <p>Before you believe your own effect, write down the simplest thing that could produce it without your hypothesis being true. If you are claiming an SAE feature detects deception, the baseline is a logistic regression on the raw activations; if it matches you, you have not yet shown what you think. If you are claiming a steering vector changes behaviour, the baseline is a random vector of the same norm. Most weak projects are weak because they never ran the baseline that would have killed the exciting interpretation, and the clinic exists partly to make you run it.</p>
+
+        <h2 class="section-title">The statistics you will need</h2>
+        <p class="lead">One run is an anecdote. Session 11.4 gave you the tools; here is the short version for a project under time pressure.</p>
+        <ul class="styled-list">
+            <li><strong>Several seeds, not one.</strong> Re-run with different random seeds and report the spread. A difference smaller than the seed-to-seed variation is not a finding.</li>
+            <li><strong>Confidence intervals on rates.</strong> If your metric is a success rate, put a <a href="session-11/statistics-of-evals.html">Wilson or bootstrap interval</a> on it. "47%" and "47% ± 18%" support very different claims.</li>
+            <li><strong>Cluster where the data clusters.</strong> If you have many prompts from a few templates, the templates are your unit, not the prompts; ignoring that shrinks your error bars dishonestly.</li>
+            <li><strong>Paired comparisons when you can.</strong> Testing the same items before and after an intervention is far more powerful than comparing two separate samples.</li>
+        </ul>
+
+        <h2 class="section-title">Common failure modes at this stage</h2>
+        <div class="warning-box">
+            <h4>The five we see most</h4>
+            <ul class="styled-list">
+                <li><strong>Still too big.</strong> If a week of work has produced no result, the project is over-scoped. Cut until one thing has to work (Session 17's scoping test: name the single figure).</li>
+                <li><strong>The eval does not measure the claim.</strong> The Session 11.3 problem: you report an accuracy, but the accuracy is not evidence for the thing you are claiming. Check construct validity before you scale up.</li>
+                <li><strong>A bug, not a finding.</strong> A dramatic result on the first run is more often a data leak or an off-by-one than a discovery. Try to break it before you believe it.</li>
+                <li><strong>No baseline.</strong> Covered above, and worth repeating because it is the most common.</li>
+                <li><strong>Quiet p-hacking.</strong> Trying ten interventions and reporting the one that "worked" is a way to find noise. Pre-register the comparison you care about, or report all ten.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">A reproducibility checklist</h2>
+        <p class="lead">Reproducibility is graded in the method section. The bar is simple: a classmate can open your notebook and get your figure.</p>
+        <ul class="styled-list">
+            <li>Seeds set and recorded; the notebook runs top to bottom without manual fixing.</li>
+            <li>Model and library versions noted (a result that needs a specific version is fine if you say so).</li>
+            <li>Data documented: where it came from, how you filtered it, how big it is.</li>
+            <li>The figure or table is generated by code in the notebook, not pasted in from elsewhere.</li>
+        </ul>
+
+        <div class="info-box">
+            <h4>What to bring to the clinic</h4>
+            <p>Three things, in order of usefulness: the single figure your paper will contain (or your best attempt at it); the baseline you have run, or the one you know you still need to; and the specific blocker that is slowing you, stated concretely enough that someone could help in ten minutes. "It does not work" is hard to help with; "the attack-success rate is identical across seeds and I expected it to vary" is easy.</p>
+        </div>
+
+        <h2 class="section-title">Questions to work through</h2>
+        <ul class="styled-list">
+            <li>What is the single figure your paper will contain, and have you produced a first version of it?</li>
+            <li>What is the simplest baseline that could explain your effect, and have you run it?</li>
+            <li>Is your headline number reported with a confidence interval and more than one seed?</li>
+            <li>If you had to cut your project in half today, what would you keep?</li>
+        </ul>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Session <strong>20</strong> runs alongside this week's project work: steelman the skeptics, and the open problems — the strongest case against the field, and the honest list of what remains unsolved. It is the intellectual-honesty through-line brought to a close.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="session-18/the-african-ecosystem.html"><span class="nav-label">← Previous</span><span class="nav-title">18.4 · The African AI-safety ecosystem</span></a>
+  <a class="home" href="../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="session-20/meaning-and-present-harms.html"><span class="nav-label">Next →</span><span class="nav-title">20.1 · "It doesn't understand", and the present harms</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

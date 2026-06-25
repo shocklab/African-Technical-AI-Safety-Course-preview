@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 20.3 — The open problems, and how to hold a belief</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 20</summary>
+    <ul>
+      <li><a href="meaning-and-present-harms.html">20.1 · "It doesn't understand", and the present harms</a></li>
+      <li><a href="political-economy-of-x-risk.html">20.2 · The political economy of the x-risk frame</a></li>
+      <li><span class="tn-current">20.3 · The open problems, and how to hold a belief</span></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="political-economy-of-x-risk.html">← <span class="tn-title">20.2 · The political economy of the x-risk frame</span></a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 10 • Session 20.3</div>
+        <h1>The open problems, and how to hold a belief</h1>
+        <p>What even the field's defenders admit is unsolved — and the calibrated stance the whole course has been training</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>The skeptics of 20.1 and 20.2 argue the field looks in the wrong place or serves the wrong interests. This sub-session adds the field's own admissions: the technical problems its practitioners agree are unsolved, drawn from papers you have already read. Then it closes the course's intellectual-honesty through-line, which began in 1.1, with the question that underlies all of it — how do you hold a belief about a contested, fast-moving field at the confidence the evidence actually supports?</p>
+        </div>
+
+        <h2 class="section-title">The open problems, in the field's own words</h2>
+        <p class="lead">These are not the critics' complaints; they are the unsolved questions named by the researchers doing the work.</p>
+        <p>Each of these came up earlier in the course, and each remains open. Taken together they are the honest answer to "is alignment solved?": no, and here is where.</p>
+        <div class="technical-detail">
+            <h4>Five that are genuinely unsolved</h4>
+            <table class="comparison-table">
+                <thead><tr><th>Problem</th><th>What is unsolved, and where you met it</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Scalable oversight</strong></td><td>How to supervise a system that outperforms its supervisor. Bowman et al.'s "sandwiching" experiments are a proof of concept, and the authors say plainly the results do not yet validate the method for high-stakes oversight — participants sometimes confidently accept false-but-plausible claims (Session 8.1).</td></tr>
+                    <tr><td><strong>Interpretability's false assurance</strong></td><td>The 2025 "Open Problems in Mechanistic Interpretability" review states that decomposition methods lack solid theoretical foundations and that documented illusions let a method look like it explains a model while misdescribing it — risking false confidence in a safety audit (Session 16.3).</td></tr>
+                    <tr><td><strong>Eval construct validity</strong></td><td>Raji et al. show that benchmarks framed as measuring "general" capability cannot represent open-ended ability; an aggregate score is a poor proxy for the real-world property a safety case needs (Session 11.3).</td></tr>
+                    <tr><td><strong>Deception that survives training</strong></td><td>"Sleeper Agents" demonstrates a backdoor that persists through supervised fine-tuning, RL and adversarial training — and that adversarial training can teach the model to hide it better, creating a false impression of safety. Detecting emergent deception is open (Sessions 3.4, 16.2).</td></tr>
+                    <tr><td><strong>Specification</strong></td><td>The root of the others: we still lack a way to write a training signal that captures what we intend rather than an exploitable proxy, and to gain justified confidence in it on the first try (Sessions 3.1, 6.4).</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Notice what this list does to the skeptics' case. It concedes a great deal — the methods of this course manage parts of the gap, and none of them closes it — while showing that the concession is the field's own, made in peer-reviewed work by the people building the tools. A field that publishes its open problems this plainly is not the unfalsifiable enterprise the sharpest critics describe, even where the critics are right that the problems are hard.</p>
+
+        <h2 class="section-title">How to hold a belief</h2>
+        <p class="lead">This is the through-line that began in Session 1.1, and it is the most portable thing the course has to teach.</p>
+        <p>You have now seen the case for taking misalignment seriously (1.3, Weeks 2–8), the case that the field misreads its object (20.1), the case that it serves the wrong interests (20.2), and the field's own list of what it cannot yet do (above). The temptation is to collapse all this into a verdict — doom, or dismissal. The discipline the course asks for instead is to hold a <strong>credence</strong>: a probability, revised as evidence arrives, rather than a side. Four habits make that possible, and they are the same four from 1.4, now turned on the largest question.</p>
+        <ul class="styled-list">
+            <li><strong>Steelman before you dismiss.</strong> If you cannot state a critic's argument in a form they would endorse, you have not earned the right to reject it. This whole session was an exercise in that.</li>
+            <li><strong>Separate the claims.</strong> "Present harms are real", "future misalignment is a serious risk", and "the x-risk frame serves incumbents" can all be true at once; arguing as if they were a single package is the most common error in this debate.</li>
+            <li><strong>Track what would change your mind.</strong> A belief you hold no matter what the evidence does is not a belief about the world. For each position, name the observation that would move your credence.</li>
+            <li><strong>Let "I don't know" be an answer.</strong> On many of these questions the calibrated position is uncertainty with reasons, not confidence borrowed from whichever camp is loudest. You are graded, here and in your project, on the quality of the reasoning, not the drama of the conclusion.</li>
+        </ul>
+
+        <h2 class="section-title">Session 20 summary</h2>
+        <p>The skeptics give you the strongest case against the field: that fluency is not understanding and the documented harms are present (20.1), and that the existential framing is convenient for the firms that promote it (20.2). The open problems give you the unsolved technical core, conceded by the field's own researchers (above). The discipline that holds it all together is the one the course opened with: carry the case and its critics at once, at the confidence the evidence supports, and treat a well-reasoned "I am not sure" as the respectable answer it is. That stance is what you take into your project, and out of the course.</p>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>Pick one of the five open problems. State precisely what is solved, what is not, and what a convincing solution would have to show.</li>
+            <li>Write your current credence that misalignment poses a serious large-scale risk this century. What evidence would move it up, and what would move it down?</li>
+            <li>Which of the session's critiques did you find strongest, and did engaging with it change your credence or only your understanding of the other side?</li>
+            <li>Give an example, from your own project or reading, where "I don't know, and here is why" is a better answer than a confident verdict.</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Sharkey, Chughtai et al. (2025), "Open Problems in Mechanistic Interpretability"</strong> (<a href="https://arxiv.org/abs/2501.16496" target="_blank" rel="noopener">arXiv:2501.16496</a>) — the field naming its own open problems; read the introduction and conclusion.</p>
+            <p>• <strong>Bowman et al. (2022), "Measuring Progress on Scalable Oversight for Large Language Models"</strong> (<a href="https://arxiv.org/abs/2211.03540" target="_blank" rel="noopener">arXiv:2211.03540</a>) — what sandwiching does and does not establish.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Raji et al. (2021), "AI and the Everything in the Whole Wide World Benchmark"</strong> (<a href="https://arxiv.org/abs/2111.15366" target="_blank" rel="noopener">arXiv:2111.15366</a>) and <strong>Hubinger et al. (2024), "Sleeper Agents"</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>) — construct validity and persistent deception, revisited as open problems.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Session <strong>21</strong> is the mid-project check-in: a structured look at where your project stands, and an honest decision about whether to push on, pivot, or cut.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="political-economy-of-x-risk.html"><span class="nav-label">← Previous</span><span class="nav-title">20.2 · The political economy of the x-risk frame</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <span class="nav-empty"></span>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

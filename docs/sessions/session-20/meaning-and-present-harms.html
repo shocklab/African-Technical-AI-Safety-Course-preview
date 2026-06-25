@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 20.1 — "It doesn't understand", and the present harms</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 20</summary>
+    <ul>
+      <li><span class="tn-current">20.1 · "It doesn't understand", and the present harms</span></li>
+      <li><a href="political-economy-of-x-risk.html">20.2 · The political economy of the x-risk frame</a></li>
+      <li><a href="open-problems-and-calibration.html">20.3 · The open problems, and how to hold a belief</a></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="../session-19-project-clinic.html">← <span class="tn-title">Session 19 · Project clinic</span></a>
+    <a class="tn-next" href="political-economy-of-x-risk.html"><span class="tn-title">20.2 · The political economy of the x-risk frame</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 10 • Session 20.1</div>
+        <h1>"It doesn't understand", and the present harms</h1>
+        <p>The meaning critique and the documented near-term harms — the strongest version of the case that the field is looking in the wrong place</p>
+    </header>
+    <div class="content">
+
+        <div class="highlight-box">
+            <h3><span style="color:#ffffff;">Session 20 — steelman the skeptics + open problems</span></h3>
+            <p>The course has argued, since 1.1, that intellectual honesty means holding beliefs at the confidence the evidence supports and steelmanning the people who disagree with you. This session is where that promise is kept. The next two sub-sessions give the strongest critiques of the field — the ones that say it misunderstands its object (20.1) or serves the wrong interests (20.2) — argued as their authors would argue them. The third turns to what even the field's defenders admit is unsolved. None of this is a debunking; it is the course taking its own critics seriously.</p>
+        </div>
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>Two related critiques from the present-harms tradition you met in 18.1. First, the argument that language models do not understand language at all, only its form — Bender and Koller's octopus. Second, the argument that the real dangers of these systems are present and documented, not future and speculative — the "Stochastic Parrots" paper. Both are steelmanned here, and both are held up honestly against where they are strong and where the frontier camp pushes back.</p>
+        </div>
+
+        <h2 class="section-title">The octopus: form is not meaning</h2>
+        <p class="lead">Bender and Koller (2020) make an in-principle argument, not an empirical one, and that is what gives it force.</p>
+        <p>Imagine a hyper-intelligent octopus that taps into an undersea cable and listens to two people exchanging messages. It never sees the world the messages are about, only the stream of symbols. In time it learns the statistical patterns well enough to insert plausible replies, and the human on the other end notices nothing. Then one day the human, under attack from a bear, sends instructions for building a weapon and asks for help. The octopus, having only ever seen <em>form</em>, has no way to map those symbols to objects and actions in a world it has never touched. It fails, and the failure reveals that its fluency was never comprehension.</p>
+        <p>The argument generalises to language models: a system trained purely to predict the next token has access only to the form of language, not to the relation between form and communicative intent that constitutes <em>meaning</em>. No quantity of text closes that gap, because meaning is grounded outside the text. Bender and Koller are careful about the scope of the claim. They do not say language models are useless, or that they cannot be impressive; they say that "understanding" and "meaning" are the wrong words for what these systems do, and that using them invites us to over-trust the output. That restraint is what makes the argument hard to wave away.</p>
+
+        <h2 class="section-title">Stochastic Parrots: the harms are here now</h2>
+        <p class="lead">The most cited critique of large language models is about present, documented harm — and it is worth reading for what it actually says, because it is constantly misremembered.</p>
+        <p>"On the Dangers of Stochastic Parrots", published at FAccT in 2021, was written by Emily Bender, Timnit Gebru, Angelina McMillan-Major, and "Shmargaret Shmitchell" — a pseudonym for Margaret Mitchell, listed under the affiliation "The Aether" after Google moved to remove her name. Gebru was forced out of Google as the paper was being suppressed; Mitchell was fired soon after. The circumstances are part of the paper's standing: it is a present-harms argument that its own authors paid a price to publish.</p>
+        <p>Its claims are concrete, and none of them is about superintelligence. Ever-larger models carry costs that scale faster than their benefits: the <strong>environmental and financial cost</strong> of training, borne unevenly; training data scraped at a scale no one can curate or document, which <strong>encodes and amplifies hegemonic bias</strong> and leaves what they call "documentation debt"; and the <strong>illusion of meaning</strong> — fluent text that humans reflexively read as understanding (the octopus again), which makes these systems effective engines of disinformation and misplaced trust. The prescription is direction rather than scale: weigh the costs before building bigger, curate and document the data, and do the value-sensitive analysis up front. There is no claim here that the model might one day seize control; the argument is that it is already doing harm, to real people, now.</p>
+
+        <div class="info-box">
+            <h4>Why a frontier-safety course teaches this</h4>
+            <p>These two papers are the sharpest statement of the present-harms framing from 18.1, and taking them seriously changes how you read the rest of the course. If "understanding" is an over-read, then claims that a model "knows" or "believes" something (the interpretability of Session 16, the deception of Session 3) need stating with more care. And if documented present harms are large, then a safety agenda that attends only to speculative future misalignment is, at best, incomplete. The course's answer is not to choose a side but to hold both registers (18.1); this sub-session is the part where the present-harms register gets its strongest hearing.</p>
+        </div>
+
+        <h2 class="section-title">The steelman, and its limits</h2>
+        <p class="lead">Honesty cuts both ways: the critiques are strong, and there are honest replies, and you should be able to state both.</p>
+        <p>The replies the frontier camp would offer are these. The meaning critique is an in-principle argument from 2020, and the empirical behaviour of models since then — tool use, grounding through images and actions, in-context learning — complicates the clean line between form and meaning, even if it does not erase it. And "present harms are real" does not establish "future harms are not", any more than the reverse; that two communities emphasise different risks is not evidence that either risk is unreal. The honest position, the one this course defends, is that the Stochastic Parrots harms are documented and serious <em>and</em> the misalignment concerns of Weeks 2 to 8 are not thereby refuted. What the skeptics establish beyond reasonable dispute is that the present harms are not optional to think about, and that the language of "understanding" is a trap. Hold that, and carry it into the next sub-session, which asks a harder question: not whether the field is looking in the wrong place, but whose interests the looking serves.</p>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>State the octopus argument in your own words. Is it an empirical claim or an in-principle one, and why does the distinction matter for how you would argue against it?</li>
+            <li>List the harms "Stochastic Parrots" actually names. Which are about the data, which about the model, and which about the human reader?</li>
+            <li>The paper makes no existential-risk argument. Does that make it irrelevant to a frontier-safety course, or central to it? Defend your answer.</li>
+            <li>Give the strongest reply to the meaning critique that you can — then give the strongest counter-reply. Where do you actually land?</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Bender, E. M. &amp; Koller, A. (2020), "Climbing towards NLU: On Meaning, Form, and Understanding in the Age of Data"</strong> (<a href="https://aclanthology.org/2020.acl-main.463/" target="_blank" rel="noopener">ACL 2020</a>) — the octopus; read the thought experiment and the argument around it.</p>
+            <p>• <strong>Bender, Gebru, McMillan-Major &amp; Shmitchell (2021), "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?"</strong> (<a href="https://doi.org/10.1145/3442188.3445922" target="_blank" rel="noopener">FAccT '21</a>) — the present-harms case, in full.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• Revisit <strong>Session 18.1</strong> (the two framings) and <strong>8.3</strong> (Birhane's relational ethics) — this sub-session is the present-harms framing argued at full strength.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Sub-session <strong>20.2</strong> takes up the harder critique: that the existential-risk framing is politically convenient for the very companies that promote it, whatever its truth.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="../session-19-project-clinic.html"><span class="nav-label">← Previous</span><span class="nav-title">Session 19 · Project clinic</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="political-economy-of-x-risk.html"><span class="nav-label">Next →</span><span class="nav-title">20.2 · The political economy of the x-risk frame</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>
