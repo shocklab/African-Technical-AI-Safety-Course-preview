@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 10.1 — Machine unlearning: what "forget" means</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 10</summary>
+    <ul>
+      <li><span class="tn-current">10.1 · Machine unlearning</span></li>
+      <li><a href="the-control-paradigm.html">10.2 · The control paradigm</a></li>
+      <li><a href="control-protocols.html">10.3 · Control protocols &amp; the frontier</a></li>
+      <li><a href="limits-of-unlearning-and-control.html">10.4 · Limits, and where they fit</a></li>
+      <li><a href="lab-trusted-monitor.html">10.5 · Lab: build a trusted monitor</a></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="../session-09/injection-poisoning-defences.html">← <span class="tn-title">9.5 · Injection, poisoning &amp; defences</span></a>
+    <a class="tn-next" href="the-control-paradigm.html"><span class="tn-title">10.2 · The control paradigm</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 5 • Session 10.1</div>
+        <h1>Machine unlearning: what "forget" means</h1>
+        <p>Removing a capability after training — the exact-versus-approximate distinction, why naïve forgetting fails, and how you would even measure success</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>Suppose a trained model knows something you wish it did not — a person's private data, copyrighted text, or hazardous knowledge. Can you make it <em>forget</em>, without retraining from scratch? This sub-session sets up machine unlearning precisely: the gold-standard definition and why it is infeasible, the approximate methods that replace it, and the harder question of how you would <em>verify</em> that forgetting succeeded. Two worked pieces anchor it — why the obvious approach (gradient ascent on the forget set) is pathological, and how the TOFU benchmark turns "did it forget?" into a hypothesis test. The session-long warning starts here: removing knowledge and removing the <em>ability to reconstruct</em> it are different problems, and only the first is close to solved.</p>
+        </div>
+
+        <h2 class="section-title">Exact unlearning, and why we cannot have it</h2>
+        <p class="lead">The clean definition is "behave as if the forget data had never been in the training set." For an LLM that is out of reach.</p>
+        <p>Let \(D\) be the training set and \(D_f \subset D\) the data you want removed. <strong>Exact unlearning</strong> means producing the model you would have got by training on \(D \setminus D_f\) from the start. That is the gold standard because it is unambiguous: the forgotten data has provably no influence. The trouble is cost. Retraining a frontier model from scratch for every deletion request is economically and environmentally absurd (recall Session 4 on what one training run costs). So exact unlearning is the definition we measure against, not a method we can use, except in special cases where the training procedure was designed in advance to be partitioned for cheap retraining.</p>
+        <p>Everything practical is therefore <strong>approximate</strong> unlearning: cheap post-hoc edits to an already-trained model that aim to make it <em>indistinguishable</em> from the exactly-unlearned model — same outputs, same internal behaviour, at least as far as anyone can check. That word "indistinguishable" hides the whole difficulty, because it raises a question the rest of the session keeps returning to: indistinguishable <em>to whom</em>, probing <em>how hard</em>?</p>
+
+        <div class="info-box">
+            <h4>Three reasons to forget — and they are not the same problem</h4>
+            <p>The motivation matters, because the techniques that work for one regime fail for another.</p>
+            <ul class="styled-list">
+                <li><strong>Privacy / right-to-be-forgotten.</strong> GDPR and similar laws give people the right to have their data removed. The target is specific, memorised records — and removing them is the most tractable case, because the thing to forget is a discrete piece of data.</li>
+                <li><strong>Copyright.</strong> Remove the ability to reproduce a protected work. Harder, because "the style of" or "facts from" a work blur into general knowledge.</li>
+                <li><strong>Safety / hazard removal.</strong> Remove a dangerous <em>capability</em> (say, how to synthesise a pathogen). This is the hardest case and the one safety cares about, because a capability is not a record — it can be recombined from benign pieces the model still holds.</li>
+            </ul>
+            <p>A recurring finding (Barez et al.'s <em>Open Problems</em>) is that unlearning is far more effective for privacy-style data removal than for capability control. Keep the three apart; conflating them is how "we can unlearn" overclaims.</p>
+        </div>
+
+        <h2 class="section-title">Why the obvious method is pathological</h2>
+        <p class="lead">If training minimises loss on the data, surely forgetting just maximises it? No — and seeing why is instructive.</p>
+        <p>The naïve idea is <strong>gradient ascent</strong> on the forget set: flip the sign and climb the loss on \(D_f\). Look at what that does to the gradient. For a next-token distribution \(p\) over the vocabulary with correct token \(t\), the cross-entropy loss is \(-\log p_t\), and its gradient with respect to the logits \(z\) is</p>
+        <div class="formula">\[ \frac{\partial\,(-\log p_t)}{\partial z_j} = p_j - \mathbb{1}[j = t]. \]</div>
+        <p>On a fact the model knows well, \(p_t \approx 1\), so the gradient on the correct token is \(p_t - 1 \approx 0\) — ascent barely moves the very token you wanted to suppress. What it <em>does</em> move is the rest of the distribution: it pushes probability toward whatever was second-most likely. Ask the unlearned model to complete "Harry Potter went to" and instead of forgetting Hogwarts it cheerfully promotes the next-best continuation — another character, another wizarding term. You have not removed the knowledge; you have nudged it sideways, and if you ascend hard enough you destroy the model's general fluency before you erase the fact. Gradient ascent forgets the wrong thing.</p>
+        <div class="technical-detail">
+            <h4>Eldan &amp; Russinovich's fix: aim at what an ignorant model would say</h4>
+            <p style="color:#555;">"Who's Harry Potter?" (2023) unlearns the Harry Potter books from Llama-2-7B in about a GPU-hour, and the trick is to construct a sensible <em>target</em> to train toward rather than just pushing the old answer down. They first fine-tune a <em>reinforced</em> model that knows the books even better, then compare its token logits to the baseline's. Where the reinforced model is much more confident than the baseline, that confidence is HP-specific knowledge to be removed. They build generic targets by subtracting it off:</p>
+            <div class="formula">\[ v_{\text{generic}} = v_{\text{base}} - \alpha \,\operatorname{ReLU}\!\big(v_{\text{reinforced}} - v_{\text{base}}\big), \]</div>
+            <p style="color:#555;">with \(\alpha \approx 5\). The \(\operatorname{ReLU}\) keeps only the directions where book-knowledge <em>raised</em> a token's logit, and subtracts those, leaving what a model ignorant of the books would have predicted. Fine-tune toward \(v_{\text{generic}}\) (plus replacing anchored terms like character names) and the model answers "Harry Potter went to" with a generic continuation while keeping ARC, HellaSwag, and the rest of its abilities essentially unchanged. The authors are honest about the limits: "Hogwarts" still leaks occasionally, and the method leans on the books being <em>fiction</em> — non-fiction and textbook knowledge, which is woven through far more of the model, is much harder to excise.</p>
+        </div>
+
+        <h2 class="section-title">How would you even know it worked?</h2>
+        <p class="lead">Measuring forgetting is its own research problem, and TOFU made it rigorous.</p>
+        <p>The deep difficulty is evaluation. If you ask the model the forgotten fact and it declines, has it forgotten, or merely learned to <em>refuse</em>? The TOFU benchmark (Maini et al., 2024) gets a clean signal with a clever construction: a forget set of <strong>200 fictitious authors</strong> with synthetic biographies, written so they appear <em>nowhere</em> in any real pretraining corpus. Because the facts are invented, a model only knows them if they were in the fine-tuning data — so "forgetting" them is unconfounded by leakage from the wider internet.</p>
+        <div class="technical-detail">
+            <h4>Forget quality as a hypothesis test</h4>
+            <p style="color:#555;">TOFU scores unlearning on two axes. <strong>Model utility</strong> is the harmonic mean of nine capability metrics — it must stay high. <strong>Forget quality</strong> is the striking one: take the distribution of the model's "truth ratios" (how much more probable it makes true answers than false ones) on the forget set, and compare it, with a two-sample <strong>Kolmogorov–Smirnov test</strong>, to the same distribution from a model that was <em>retrained without</em> the forget data. The KS statistic is</p>
+            <div class="formula">\[ D_{n,m} = \sup_{x}\,\big|\,F_{\text{unlearned}}(x) - F_{\text{retain}}(x)\,\big|, \]</div>
+            <p style="color:#555;">the largest gap between the two cumulative distributions, and it yields a \(p\)-value. Here is the satisfying inversion for a stats-literate reader: a <em>high</em> \(p\)-value is the good outcome. A high \(p\) means you <em>cannot reject</em> the hypothesis that the unlearned model and the never-trained-on-it model produce the same distribution — that is exactly the indistinguishability we defined as the goal. The headline TOFU result is sobering: across the standard unlearning methods, <strong>none crosses the \(p = 0.05\) forget-quality threshold</strong> without wrecking model utility. Good forgetting and a usable model have, so far, been hard to have at once.</p>
+        </div>
+
+        <h2 class="section-title">Knowledge is not the same as capability</h2>
+        <p>The last conceptual move sets up the rest of the session. Removing a <em>fact</em> ("author X wrote book Y") is one thing; removing a <em>capability</em> ("how to design a toxin") is another, because a capability can be reconstructed from pieces that are individually benign and that you would never want to remove — chemistry, biology, reasoning. You can scrub the explicit recipe and leave intact everything needed to re-derive it. That is why the safety case for unlearning is the weakest of the three regimes, and why 10.4 returns with evidence that today's methods mostly <em>suppress</em> knowledge rather than remove it. First, though, the other half of the session: what to do when you cannot trust the model at all.</p>
+
+        <div class="highlight-box">
+            <h3><span style="color:#ffffff;">The African-lens angle: can a community's data actually be withdrawn?</h3>
+            <p>Unlearning is the technical face of data sovereignty (Session 8.3). If a community contributes a low-resource-language corpus, or a local health cohort shares records, and later withdraws consent, "delete my data from the model" is an unlearning request. TOFU's key precondition — that the forget data is <em>rare</em> in the wider pretraining set — actually holds <em>better</em> for African-language data than for English, because there is so little of it elsewhere to reinforce the memory. So in principle the cleaner case applies here. But 10.4's result complicates the promise: if "we unlearned your data" can be undone by a little fine-tuning, then a sovereignty guarantee backed by unlearning may be unverifiable in practice. That turns an abstract rights debate into a concrete, measurable technical claim your cohort can interrogate.</p>
+        </div>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>Write the gradient of cross-entropy with respect to the logits and use it to explain, in one sentence, why gradient ascent "forgets the wrong thing." What does it do to the second-most-likely token?</li>
+            <li>Why does a <em>high</em> KS \(p\)-value mean <em>good</em> forgetting? Contrast this with the usual use of a \(p\)-value to reject a null hypothesis.</li>
+            <li>TOFU uses fictitious authors. What confound does that remove, and why could you not get the same clean signal by unlearning a real public figure?</li>
+            <li>Give an example where you could remove every explicit statement of a dangerous fact and still leave the model able to reconstruct it. What does that imply for safety-motivated unlearning?</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Eldan &amp; Russinovich (2023), "Who's Harry Potter? Approximate Unlearning in LLMs"</strong> (<a href="https://arxiv.org/abs/2310.02238" target="_blank" rel="noopener">arXiv:2310.02238</a>) — §2 for the generic-label construction above.</p>
+            <p>• <strong>Maini, Feng, Schwarzschild, Lipton &amp; Kolter (2024), "TOFU: A Task of Fictitious Unlearning for LLMs"</strong> (<a href="https://arxiv.org/abs/2401.06121" target="_blank" rel="noopener">arXiv:2401.06121</a>) — §2.2 for forget quality as a KS test.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Barez et al. (2025), "Open Problems in Machine Unlearning for AI Safety"</strong> (<a href="https://arxiv.org/abs/2501.04952" target="_blank" rel="noopener">arXiv:2501.04952</a>) — §1–2 on why capability control is far harder than data removal.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Sub-session <strong>10.2</strong> turns to the other paradigm: <strong>AI control</strong> — stop assuming the model is aligned, assume it may be actively subverting you, and design a protocol that stays safe regardless.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="../session-09/injection-poisoning-defences.html"><span class="nav-label">← Previous</span><span class="nav-title">9.5 · Injection, poisoning &amp; defences</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="the-control-paradigm.html"><span class="nav-label">Next →</span><span class="nav-title">10.2 · The control paradigm</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

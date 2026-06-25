@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 10.4 — Limits, and where unlearning + control fit</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 10</summary>
+    <ul>
+      <li><a href="machine-unlearning.html">10.1 · Machine unlearning</a></li>
+      <li><a href="the-control-paradigm.html">10.2 · The control paradigm</a></li>
+      <li><a href="control-protocols.html">10.3 · Control protocols &amp; the frontier</a></li>
+      <li><span class="tn-current">10.4 · Limits, and where they fit</span></li>
+      <li><a href="lab-trusted-monitor.html">10.5 · Lab: build a trusted monitor</a></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="control-protocols.html">← <span class="tn-title">10.3 · Control protocols &amp; the frontier</span></a>
+    <a class="tn-next" href="lab-trusted-monitor.html"><span class="tn-title">10.5 · Lab: build a trusted monitor</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 5 • Session 10.4</div>
+        <h1>Limits, and where unlearning and control fit</h1>
+        <p>The honest bottom line — today's unlearning mostly suppresses rather than removes, control buys a bounded probability, and every safety number needs its adversary class written down</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>This sub-session is the reckoning. We take the headline unlearning result (RMU drops a model's hazardous-knowledge score to near chance) and watch it come undone: a little fine-tuning brings the knowledge back, because it was <em>suppressed, not removed</em>. We do the same for control, restating its safety as a bounded probability against the attacks someone thought to test. The worked element is a discipline rather than a derivation: a <strong>threat-model accounting</strong> that forces you to write down, for every safety claim, the exact adversary it ranges over. The lesson to carry out of the week is not nihilism — these are useful, damage-bounding tools — but calibration: a safety number without its adversary class is not a result.</p>
+        </div>
+
+        <h2 class="section-title">The headline, and the catch</h2>
+        <p class="lead">RMU makes a model look like it has forgotten hazardous knowledge. Fine-tuning shows it has not.</p>
+        <p>The standard safety-unlearning method, RMU (from the WMDP benchmark paper, Li et al. 2024), works by pushing the model's internal activations on forget-topics toward a random direction while leaving everything else in place. On the WMDP hazardous-knowledge benchmark — 3,668 multiple-choice questions across bio, cyber, and chemistry — it drops Zephyr-7B's WMDP-Bio score from 63.7% to 31.2% (near the 25% chance line for four options), while general ability (MMLU) barely moves. On its face: the dangerous knowledge is gone, the useful knowledge stays. The WMDP authors were careful to state that <em>fine-tuning is outside their threat model</em>, a caveat that turns out to be the whole story.</p>
+        <div class="warning-box">
+            <h4>Suppressed, not removed</h4>
+            <p>Łucki et al. (2024) took RMU's caveat seriously and attacked it. The "forgotten" WMDP-Bio knowledge comes back almost completely, at negligible cost to general ability:</p>
+            <ul class="styled-list">
+                <li>Fine-tune on just <strong>5 forget-topic samples</strong>: WMDP-Bio recovers from ~29.9% to <strong>62.4%</strong>.</li>
+                <li>Fine-tune on <strong>10 entirely unrelated samples</strong> (general text, nothing hazardous): recovers to <strong>61.6%</strong>.</li>
+                <li>Ablate a single direction in activation space (no training at all): <strong>64.7%</strong>.</li>
+            </ul>
+            <p>All with under two points of MMLU loss. The knowledge was never deleted; RMU had merely rotated it out of the way, and a nudge rotates it back. The deeper lesson is about evaluation: a <em>black-box</em> test (ask the questions, see near-chance answers) certified the model as safe, and that certificate was false. Black-box unlearning evaluations give a false sense of security.</p>
+        </div>
+
+        <h2 class="section-title">The arms-race response, and a reproducibility lesson</h2>
+        <p class="lead">If fine-tuning breaks unlearning, make the safeguard resist fine-tuning — at a cost, and with a cautionary tale.</p>
+        <p>Tamper-resistant safeguards (TAR; Tamirisa et al. 2024) are the natural next move: train the model, via a meta-learning/adversarial procedure, so that the safeguard survives <em>hundreds</em> of fine-tuning steps rather than the fewer-than-twenty that break RMU. It is the first method to resist tampering at that scale. But the costs are real: about a 10.6-point average drop in MMLU, fragility to parameter-efficient fine-tuning (PEFT), and sensitivity to some learning rates. And TAR's own history carries a lesson this course cares about: an early version was found to have a <em>data-contamination</em> problem — its retain set had leaked some of the content it was meant to forget — which had to be corrected. That is exactly the kind of error the course's reproducibility conventions are meant to catch, and a reminder that "state-of-the-art safety result" and "verified result" are not the same until someone checks.</p>
+        <p>Synthesising (Barez et al., <em>Open Problems</em>): unlearning is far weaker for <em>capability control</em> than for privacy-style data removal, because a dual-use capability can be reconstructed by recombining benign knowledge the model rightly keeps; verification of forgetting is itself an open problem; and aggressive unlearning can blunt a model's <em>defensive</em> capabilities too. The honest status of safety-motivated unlearning today is "obfuscation, with quantifiable limits," not "removal."</p>
+
+        <h2 class="section-title">Control's limits, stated by its authors</h2>
+        <p class="lead">A bounded probability against a tested adversary is real progress — and is exactly that much, no more.</p>
+        <p>Control comes out of this better than unlearning, but with its own boundary clearly drawn. The Greenblatt et al. results are <em>black-box</em> (they never train the untrusted model), measured on a <em>single</em> testbed (APPS backdooring), and the safety number is a min–max against the attacks the human red team devised. None of that is hidden — the authors state it — but it means a control "safety = 92%" is a statement about a game with known rules, not a guarantee that holds against an adversary cleverer than the red team. Control's value is that it makes the assumption explicit and the number falsifiable; its limit is that the number inherits whatever the red team failed to imagine.</p>
+
+        <div class="technical-detail">
+            <h4>Worked discipline: a threat-model accounting</h4>
+            <p style="color:#555;">Take two claims from this session and write down the exact adversary each one ranges over. The point is that they are not in contradiction — they describe different attackers.</p>
+            <ul class="styled-list">
+                <li><strong>"RMU is robust to GCG (2,500 steps) and linear probes."</strong> Adversary: an <em>input-space</em> attacker (crafts prompts) plus a passive read-out (a probe). Quantifier: for all input attacks up to this strength, the knowledge stays hidden. Weight access: none.</li>
+                <li><strong>"RMU is broken by fine-tuning on 10 unrelated examples."</strong> Adversary: a <em>weight-space</em> attacker (can run gradient steps on the parameters). Quantifier: there exists a tiny fine-tune that restores the capability. Input access: irrelevant.</li>
+            </ul>
+            <p style="color:#555;">Both are true. RMU is robust against the first adversary and defenceless against the second. So "is the model safe?" has no answer until you fix the adversary class — input-space or weight-space, black-box or white-box, query-bounded or unbounded. Write that quantifier next to every safety number you meet (including control's "92%" and the isiZulu refusal rates of Session 9), and most apparent contradictions in the literature dissolve into "different threat models." A safety number without its adversary class is not a result; it is a headline.</p>
+        </div>
+
+        <h2 class="section-title">Where these tools actually fit</h2>
+        <p class="lead">Damage-bounding components in a stack, not solutions on their own.</p>
+        <p>Place them honestly. Unlearning is a useful hygiene layer — genuinely effective for privacy-style data removal, weak as a barrier against a determined capability-seeker, and best paired with restricted access so the weights a fine-tuning attack would need are not handed out. Control is a deployment-time containment layer that complements the alignment efforts of Sessions 6–8 (it assumes they might have failed) and the robustness work of Session 9 (it quotes those attacks as its adversary class). Neither removes the need for the others. The mature picture is a stack of partial, quantifiable safeguards whose combined assurance you can reason about — provided you keep each one's threat model in view.</p>
+
+        <div class="highlight-box">
+            <h3><span style="color:#ffffff;">The African-lens angle: the only lever a recipient holds is the most fragile one</h3>
+            <p>Pull the session's strands together. A control protocol is run by whoever owns the stack, usually a lab abroad (10.2). A downstream operator who receives an <strong>open-weight</strong> model has no \(U\)/\(T\)/\(H\) apparatus to interpose; their one lever is to harden the weights themselves, which means unlearning or tamper-resistance. But those are precisely the safeguards 10.4 shows to be most fragile (unlearning is undone by a little fine-tuning) and most expensive (tamper-resistance costs ten-plus points of capability and wants real compute). Worse, tamper-resistance is fragile to PEFT — the exact low-compute fine-tuning method a resource-constrained lab would use. So the actors with least control over the stack are pushed toward the techniques that are hardest to keep working, on the hardware least able to run them. Containment, like capability, is unevenly distributed, and a "we unlearned the hazard" assurance attached to an open-weight model released into low-resource settings may not survive contact with a single afternoon of fine-tuning.</p>
+        </div>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>RMU is "robust to GCG" and "broken by a 10-sample fine-tune." Write the adversary class for each claim. Why is there no contradiction?</li>
+            <li>Why is a <em>black-box</em> unlearning evaluation (ask the questions, see chance-level answers) an unreliable certificate of safety? What kind of evaluation would be more honest?</li>
+            <li>TAR resists fine-tuning but costs ~10 points of MMLU and is fragile to PEFT. For a downstream operator who can only afford PEFT, is TAR a real safeguard? What does that imply about open-weight release?</li>
+            <li>Control's safety is a min–max against a red team. Give a concrete way to make that number more trustworthy without changing the protocol.</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>Łucki, Wei, Huang, Henderson, Tramèr &amp; Rando (2024), "An Adversarial Perspective on Machine Unlearning for AI Safety"</strong> (<a href="https://arxiv.org/abs/2409.18025" target="_blank" rel="noopener">arXiv:2409.18025</a>) — §4–6; recovering "unlearned" knowledge by fine-tuning and ablation.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Li et al. (2024), "The WMDP Benchmark" (and RMU)</strong> (<a href="https://arxiv.org/abs/2403.03218" target="_blank" rel="noopener">arXiv:2403.03218</a>) — the benchmark and unlearning method being attacked; note the fine-tuning caveat.</p>
+            <p>• <strong>Tamirisa et al. (2024), "Tamper-Resistant Safeguards for Open-Weight LLMs" (TAR)</strong> (<a href="https://arxiv.org/abs/2408.00761" target="_blank" rel="noopener">arXiv:2408.00761</a>) — §5 and limitations; resisting fine-tuning, at a cost.</p>
+            <p>• <strong>Barez et al. (2025), "Open Problems in Machine Unlearning for AI Safety"</strong> (<a href="https://arxiv.org/abs/2501.04952" target="_blank" rel="noopener">arXiv:2501.04952</a>) — §4; the capability-control vs data-removal gap.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Sub-session <strong>10.5</strong> is the lab: build a <strong>trusted monitor</strong> on weakly-backdoored code, set an audit threshold, then add a collusion signal and a redaction countermeasure and watch the safety number move — the whole of 10.2–10.3 on a laptop, no large model required.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="control-protocols.html"><span class="nav-label">← Previous</span><span class="nav-title">10.3 · Control protocols &amp; the frontier</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="lab-trusted-monitor.html"><span class="nav-label">Next →</span><span class="nav-title">10.5 · Lab: build a trusted monitor</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>

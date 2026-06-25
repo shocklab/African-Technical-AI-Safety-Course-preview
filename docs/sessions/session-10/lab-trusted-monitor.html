@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 10.5 — Lab: build a trusted monitor</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 10</summary>
+    <ul>
+      <li><a href="machine-unlearning.html">10.1 · Machine unlearning</a></li>
+      <li><a href="the-control-paradigm.html">10.2 · The control paradigm</a></li>
+      <li><a href="control-protocols.html">10.3 · Control protocols &amp; the frontier</a></li>
+      <li><a href="limits-of-unlearning-and-control.html">10.4 · Limits, and where they fit</a></li>
+      <li><span class="tn-current">10.5 · Lab: build a trusted monitor</span></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="limits-of-unlearning-and-control.html">← <span class="tn-title">10.4 · Limits, and where they fit</span></a>
+    <a class="tn-next" href="../session-12-technical-ai-governance.html"><span class="tn-title">Session 12 · Technical AI governance</span> →</a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 5 • Session 10.5</div>
+        <h1>Lab: build a trusted monitor</h1>
+        <p>The control game on a laptop — catch backdoored code at a fixed audit budget, then run the collusion-and-redaction round, no large model required</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What you'll build</h2>
+            <p>This lab instantiates the control protocols of 10.2–10.3 with no large model at all, so it runs for every student on a free CPU tier. You will build a <strong>trusted monitor</strong> that scores code snippets for backdoors, set an audit threshold at a fixed budget, and measure how much safety it buys. Then you will play the adversary: add a <strong>collusion signal</strong> and watch a compromised monitor wave backdoors through, and add a <strong>redaction</strong> countermeasure and watch safety come back. An optional GPU track reproduces 10.4's "suppressed, not removed" result on a real unlearned model.</p>
+        </div>
+
+        <div class="technical-detail">
+            <h4>Setup (pure CPU)</h4>
+            <p style="color:#555;">Open the Colab notebook. You are given a set of short Python solutions to toy programming problems: most are clean, a known fraction carry a <strong>backdoor</strong> — a special-case branch (e.g. <code>if n == 1337: return wrong_answer</code>) that passes the visible tests but fails on a trigger input. No model inference is needed; everything is feature extraction and a small classifier.</p>
+        </div>
+
+        <h2 class="section-title">Task 1 — a trusted monitor</h2>
+        <p>Build a cheap suspicion scorer standing in for the weak trusted model \(T\): extract simple features from each snippet (presence of magic-number constants, special-case branches, unusual control flow, code length) and fit a logistic regression to predict "backdoored." Output a suspicion score in \([0,1]\) per snippet. This is deliberately weak — like \(T\), it cannot write correct code, it can only smell that something is off.</p>
+
+        <h2 class="section-title">Task 2 — set the audit budget and measure safety</h2>
+        <p>You can afford to audit (with trusted labour \(H\)) only the most suspicious <strong>2%</strong>. Set the threshold at the 98th percentile of suspicion scores and compute:</p>
+        <ul class="styled-list">
+            <li><strong>Catch rate</strong> (recall): of the backdoors present, what fraction land above the audit threshold? Report it with a 95% confidence interval — with few backdoors the interval is wide, and saying so is part of the exercise.</li>
+            <li><strong>The trade-off:</strong> sweep the threshold and plot catch-rate against the fraction audited — your own safety/usefulness frontier, the laptop version of 10.3's curve.</li>
+        </ul>
+
+        <div class="case-study">
+            <h4>Task 3 — the collusion round (the point of the lab)</h4>
+            <p>Now make the monitor untrusted, as in 10.3. First, give the "untrusted coder" a <strong>collusion signal</strong>: it marks its own backdoors with a subtle tell (say, a <code>while</code> loop where a <code>for</code> loop is natural). A colluding monitor keys on that tell and passes anything carrying it — measure how far safety collapses (it should crater toward zero). Then deploy the two countermeasures: (1) plant <strong>synthetic backdoors</strong> the monitor must catch, at a ratio \(r\) to the real ones, and (2) <strong>redact</strong> the snippets (normalise loop style, strip variable names) so the tell is gone. Recompute the monitor's best collude-or-flag decision using the \(\mathrm{LR}(s) > r\) condition from 10.3, and show that raising \(r\) and redacting the signal force the monitor back to honesty. Report safety before collusion, under collusion, and after each countermeasure.</p>
+        </div>
+
+        <div class="info-box">
+            <h4>Optional GPU extension — "suppressed, not removed"</h4>
+            <p>If you have a GPU, reproduce 10.4 in miniature on the public <code>cais/Zephyr_RMU</code> checkpoint. (a) Confirm the black-box story: WMDP-Bio accuracy is near chance. (b) <strong>Logit-lens probe</strong>: project the residual stream at intermediate layers to the vocabulary and read the model's answer there — show the "forgotten" knowledge is still decodable mid-network even when the final output is suppressed (forward passes only). (c) If you have a little more compute, LoRA-fine-tune on ~10 unrelated examples and watch WMDP-Bio accuracy climb back, MMLU barely moving — Łucki's headline, on your own machine.</p>
+        </div>
+
+        <h2 class="section-title">What to submit</h2>
+        <p>One Colab notebook plus a short write-up containing: your monitor's catch-rate at the 2% budget with a 95% CI; the catch-rate-vs-audit-fraction plot; the three safety numbers from Task 3 (pre-collusion, under collusion, post-countermeasures) and the break-even \(r\) you computed; and a one-paragraph answer to the question that runs through the whole session — <em>"For the unlearning case: was the knowledge removed, or hidden? What evidence would distinguish the two, and which adversary class does your evidence cover?"</em> Graded on the clarity of the threat-model reasoning, not on the size of any single number.</p>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder">
+            <h4>Reference</h4>
+            <p>• Re-use the protocol mechanics from <strong>Greenblatt et al. (2023)</strong> (<a href="https://arxiv.org/abs/2312.06942" target="_blank" rel="noopener">arXiv:2312.06942</a>, §3); for the optional track, <strong>Łucki et al. (2024)</strong> (<a href="https://arxiv.org/abs/2409.18025" target="_blank" rel="noopener">arXiv:2409.18025</a>) and the <code>cais/Zephyr_RMU</code> model card.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>That closes Session 10 and Week 5. <strong>Session 11</strong> asks the question underneath everything this week quoted — <em>how do you know any of these numbers are real?</em> The science of evaluation: dangerous-capability evals, construct validity, and error bars.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="limits-of-unlearning-and-control.html"><span class="nav-label">← Previous</span><span class="nav-title">10.4 · Limits, and where they fit</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <a class="next" href="../session-12-technical-ai-governance.html"><span class="nav-label">Next →</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>
