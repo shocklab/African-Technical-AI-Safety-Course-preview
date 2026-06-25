@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 18.4 — The African AI-safety ecosystem</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+</head>
+<body>
+<div class="container">
+<!-- TOP-NAV-START -->
+<div class="top-nav">
+  <a class="tn-home" href="../../index.html">⌂ Contents</a>
+  <details class="tn-menu">
+    <summary>Session 18</summary>
+    <ul>
+      <li><a href="two-framings.html">18.1 · Two framings, one honest stance</a></li>
+      <li><a href="the-multilingual-safety-gap.html">18.2 · The multilingual safety gap</a></li>
+      <li><a href="sovereignty-and-the-decolonial-critique.html">18.3 · Sovereignty &amp; the decolonial critique</a></li>
+      <li><span class="tn-current">18.4 · The African AI-safety ecosystem</span></li>
+    </ul>
+  </details>
+  <div class="tn-links">
+    <a class="tn-prev" href="sovereignty-and-the-decolonial-critique.html">← <span class="tn-title">18.3 · Sovereignty &amp; the decolonial critique</span></a>
+  </div>
+</div>
+<!-- TOP-NAV-END -->
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <header>
+        <div class="week-badge">Week 9 • Session 18.4</div>
+        <h1>The African AI-safety ecosystem</h1>
+        <p>Who is actually doing this work, what "safety" means to each, where the real frontier-safety bridge is, and how to plug in</p>
+    </header>
+    <div class="content">
+
+        <div class="intro-text">
+            <h2>What we'll cover</h2>
+            <p>A map of the organisations doing AI work across Africa, grouped not alphabetically but by what they actually do and which sense of "safety" they use. The grouping is the lesson: most of this ecosystem builds capability and governs present harms, one organisation works on frontier safety directly, and conflating the two would misread the whole picture. We close with an honest accounting of how thin the frontier-safety layer is, and with the entry points for your project.</p>
+        </div>
+
+        <h2 class="section-title">Building the substrate: capability and access</h2>
+        <p class="lead">Before there can be African AI safety there has to be African AI, and this is the layer that makes it exist.</p>
+        <p><strong>Masakhane</strong> (<a href="https://www.masakhane.io/" target="_blank" rel="noopener">masakhane.io</a>) is a grassroots, distributed research collective for African-language NLP; the name means "we build together" in isiZulu, and it is run collectively rather than from a head office, with no single founder. It has produced open datasets and models (such as the MasakhaNER named-entity benchmarks) that much African-language work now rests on. <strong>Lelapa AI</strong> (<a href="https://lelapa.ai/" target="_blank" rel="noopener">lelapa.ai</a>), founded in Johannesburg in 2022 and led by Pelonomi Moiloa with Jade Abbott as CTO, builds resource-efficient African-language systems; its <strong>InkubaLM-0.4B</strong> is a small language model — about 0.422 billion parameters, covering Swahili, Yoruba, Hausa, isiZulu and isiXhosa — deliberately small, and not the "first African LLM" some coverage called it. <strong>GhanaNLP</strong> and its Khaya app (<a href="https://ghananlp.org/" target="_blank" rel="noopener">ghananlp.org</a>) build translation, speech recognition and text-to-speech for Ghanaian and other African languages. <strong>Lacuna Fund</strong> (<a href="https://lacunafund.org/" target="_blank" rel="noopener">lacunafund.org</a>) finances labelled machine-learning datasets across lower- and middle-income contexts (not Africa alone), backed by the Rockefeller Foundation, Google.org and Canada's IDRC. <strong>Zindi</strong> (<a href="https://zindi.africa/" target="_blank" rel="noopener">zindi.africa</a>) runs data-science competitions on African problems, and the <strong>Deep Learning Indaba</strong> (<a href="https://deeplearningindaba.com/" target="_blank" rel="noopener">deeplearningindaba.com</a>), founded in 2017 by Shakir Mohamed and Ulrich Paquet, is the continent's main machine-learning gathering and a field-builder through its regional IndabaX events. None of these is a safety-research organisation; they build the capability and the data on which any local safety work depends.</p>
+
+        <h2 class="section-title">Governing present harms: the "safety" of policy and peace</h2>
+        <p class="lead">This is where the word "safety" appears most often in African institutions — and it means something specific.</p>
+        <p>The <strong>African Union Continental AI Strategy</strong>, endorsed by the AU Executive Council in Accra in July 2024, sets out five focus areas — harnessing AI's benefits, building capabilities, minimising risks, stimulating investment, and fostering cooperation — aligned to Agenda 2063 and phased across 2025–2030. "Minimising risks" is one pillar of a development strategy, not a frontier-alignment mandate. <strong>Research ICT Africa</strong>'s "Africa Just AI" (<a href="https://researchictafrica.net/project/africa-just-ai/" target="_blank" rel="noopener">researchictafrica.net</a>), led from RIA by Alison Gillwald with Pria Chetty, is a multi-year research project (funded by IDRC and Sida under the AI4D programme) on rights-based and data-justice approaches to AI governance. The <strong>African Hub on AI Safety, Peace and Security</strong> (<a href="https://ai.uct.ac.za/african-hub-ai-safety-peace-security" target="_blank" rel="noopener">ai.uct.ac.za</a>), run by the UCT AI Initiative with the Global Center on AI Governance, studies societal harms (including synthetic-media harms to women and girls) and African leadership in AI governance. In all three, "AI safety" means governance, societal harms and peace-and-security: the present-harms register of 18.1, not the frontier-alignment one.</p>
+
+        <h2 class="section-title">The frontier bridge: ILINA</h2>
+        <p class="lead">One organisation works on frontier and catastrophic-risk safety directly, and it is African-led.</p>
+        <p>The <strong>ILINA Program</strong> (<a href="https://www.ilinaprogram.org/" target="_blank" rel="noopener">ilinaprogram.org</a>), coordinated by Cecil Abungu and based in Nairobi, advances AI safety through research, policy and talent development, running a seminar series and a junior research fellowship. Its orientation is genuinely frontier and catastrophic-risk — unusual among African initiatives, and not aspirational labelling. ILINA is the clearest case of the frontier sense of "AI safety" being pursued from the continent, which is why 18.1 named it as one of the session's two real bridges. It is a standout, not a crowd, and that is the honest description.</p>
+
+        <div class="info-box">
+            <h4>Three senses of "safety", side by side</h4>
+            <p>The map only reads correctly if you keep the senses apart. The language collectives and dataset funds build <strong>capability and access</strong> — the precondition for any safety work. The AU Strategy, RIA and the UCT Hub do <strong>governance and present-harms</strong> work, and call it "AI safety" in the peace-and-security sense. ILINA does <strong>frontier safety</strong> in the Week-2-to-8 sense. A reader who assumes a single meaning will either overstate the African frontier-safety scene or miss the substantial governance and capability work entirely.</p>
+        </div>
+
+        <h2 class="section-title">What Global-South-led safety looks like</h2>
+        <p class="lead">Put the four sub-sessions together and a coherent picture emerges, neither inflated nor dismissive.</p>
+        <p>Global-South-led safety, as it actually exists, does four things. It <strong>re-defines the safety problem</strong> so that a safety case has to cover Southern realities: language equity treated as a robustness requirement, not a courtesy (18.2). It <strong>builds the substrate</strong> — data, models, compute access — so that evaluation and auditing can happen locally rather than only on permission (18.3, 18.4). It <strong>governs for its own context</strong>, fitting African legal frameworks such as data-protection law and the AU's instruments rather than importing Northern templates wholesale (Session 12). And it sustains a <strong>small but real frontier-safety presence</strong>, with ILINA as the anchor. The centre of gravity is present-harms and governance; the frontier-safety layer is nascent but genuine. Saying both halves plainly is the point.</p>
+
+        <div class="warning-box">
+            <h4>Honest limits of this session</h4>
+            <p>The same candour the interpretability block practised in 16.4 applies here. Most of this ecosystem is capability, governance and present-harms work, not frontier-alignment research; the African frontier-safety community is small, with ILINA the standout rather than one of many; much of the funding flows from Northern donors (IDRC, AI4D), which shapes what gets studied; and the convenor of this course is part of the ecosystem described, through the UCT African Hub, so read the framing with that interest in view. None of this diminishes the work. It means the honest claim is "a real and growing present-harms-and-governance ecosystem, with a small genuine frontier-safety bridge", not "an African frontier-safety field".</p>
+        </div>
+
+        <div class="case-study">
+            <h4>Project hook: where to plug in</h4>
+            <p>Several Part V tracks start here. You can contribute labelled data through a Masakhane or Lacuna-style effort; build an in-language safety eval on open data (the Session 11.5 lab); measure a robustness gap in a new African language (the Session 9.4 lab); or take a frontier-flavoured question in the ILINA mould. Whichever you choose, the one-paragraph context statement from Session 17 is where you name whose safety your project serves — and, if the honest answer is "this is general work with no specific African dimension", you say that too.</p>
+        </div>
+
+        <h2 class="section-title">Session 18 summary</h2>
+        <p>AI safety from the Global South is not a separate discipline and not a diversity add-on. It is the course's central questions — whose safety, whose risks, whose values — asked from a vantage where the present harms are concentrated and the frontier vulnerabilities show up first. The multilingual safety gap is a frontier failure made visible from the South (18.2); compute, data and talent sovereignty decide who can build and audit safe systems at all (18.3); and a real ecosystem does the work, mostly in the present-harms and governance register, with one genuine frontier-safety bridge in ILINA (18.4). The honest stance of 18.1 holds: name the centre of gravity plainly, and rest the frontier-safety weight on the two bridges that actually bear it.</p>
+
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>Sort five organisations from this session into the three senses of "safety". Which sorting decisions were hard, and why?</li>
+            <li>Why is ILINA described as "a standout, not a crowd"? What would have to change for that sentence to need rewriting?</li>
+            <li>The session names the convenor's own involvement in the ecosystem. Why does disclosing that matter, and how should it change the way you read the map?</li>
+            <li>Design a one-line project that does genuine Global-South-led safety work. Which of the four things in "what it looks like" does it do?</li>
+        </ul>
+
+        <h2 class="section-title">Readings</h2>
+        <div class="resource-placeholder reading-core">
+            <h4>Core</h4>
+            <p>• <strong>African Union (2024), <em>Continental Artificial Intelligence Strategy</em></strong> (<a href="https://au.int/en/documents/20240809/continental-artificial-intelligence-strategy" target="_blank" rel="noopener">au.int</a>) — read the executive summary and the five focus areas; note what "risk" means here.</p>
+            <p>• <strong>The ILINA Program</strong> (<a href="https://www.ilinaprogram.org/" target="_blank" rel="noopener">ilinaprogram.org</a>) and <strong>Masakhane</strong> (<a href="https://www.masakhane.io/" target="_blank" rel="noopener">masakhane.io</a>) — browse the two ends of the spectrum: African-led frontier safety, and participatory capability-building.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Supplementary</h4>
+            <p>• <strong>Research ICT Africa — Africa Just AI</strong> (<a href="https://researchictafrica.net/project/africa-just-ai/" target="_blank" rel="noopener">researchictafrica.net</a>) and the <strong>UCT African Hub on AI Safety, Peace and Security</strong> (<a href="https://ai.uct.ac.za/african-hub-ai-safety-peace-security" target="_blank" rel="noopener">ai.uct.ac.za</a>) — governance-sense "AI safety" in practice.</p>
+            <p>• <strong>Okolo, C. T.</strong> — writing on AI for the Global Majority and data labour, a useful synthesis of the present-harms register from a researcher working across the divide.</p>
+        </div>
+
+        <div class="intro-text" style="margin-top:50px;">
+            <h2>Next</h2>
+            <p>Session <strong>19</strong> is the project clinic: bring a first result, however rough, and we work through baselines, the statistics from Session 11, and scoping it down to something you can finish.</p>
+        </div>
+
+    </div>
+<!-- PAGE-NAV-START -->
+<nav class="page-nav">
+  <a class="prev" href="sovereignty-and-the-decolonial-critique.html"><span class="nav-label">← Previous</span><span class="nav-title">18.3 · Sovereignty &amp; the decolonial critique</span></a>
+  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
+  <span class="nav-empty"></span>
+</nav>
+<!-- PAGE-NAV-END -->
+</div>
+</body>
+</html>
