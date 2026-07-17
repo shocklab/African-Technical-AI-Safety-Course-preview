@@ -65,10 +65,15 @@ built off the index were simply wrong: 10.3's "the frontier" is really "the safe
 invention, absent from the page. The index was the artefact being fixed, which made it the worst
 available source on what to fix.
 
-**Grep the course's own pejoratives against the course's own titles.** 18.1 calls a manufactured
-"angle" the thing this course refuses; 16.4 was titled "…and the African angle", with the word three
-more times in its subtitle and a section heading. If a word is a tell when someone else uses it, it is
-a tell here.
+**Check a word's usage across the whole corpus before calling it a tell.** "The African angle" in
+16.4's title looked like an own-goal, because 18.1 refuses a "manufactured angle". It was not. *Angle*
+is this course's term of art: `The African-lens angle:` is a recurring section heading (Sessions 9, 10,
+13), and the positive uses are everywhere — "the one strong angle here, backed by a verified result",
+"the thinnest African angle in the course", "the (thin but real) sovereignty angle". The pejorative is
+*manufactured* angle, not *angle*. Acting on the single grep hit cost a subtitle rewrite that silently
+broke a deliberate echo between 16.3 and 16.4, and had to be reverted. **One hit is not a usage
+pattern.** The 16.4 title was still worth changing — it was a three-item compound, and 16.3's own prose
+already called the page "interpretability and sovereignty" — but for that reason, not this one.
 
 **Three zones must agree:** `<title>` == `<h1>` == contents-page link. 51/77 pages as of `01b7c94`; the
 remaining 26 need a per-page call on which string wins, and no rule decides them.
