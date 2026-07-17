@@ -49,6 +49,30 @@ summarises the paragraph below it. That is a narrator standing outside the mater
 you are about to read. Use it sparingly — where it genuinely orients — not as the default under every
 heading.
 
+### The title layer counts, and it is not `index.html`
+
+These rules govern `<h1>`, `<title>` and the contents-page link text, not only
+`<h2 class="section-title">`. The de-slop sweep protected the title zone on the false theory that it
+cascaded into nav (nav is regenerated from `docs/index.html`), so the titles kept every tell the sweep
+stripped from the prose underneath them. Eighteen renames on 2026-07-17 (`01b7c94`) cleared the four
+families above plus a fifth: **vague tails that name nothing** — "& the frontier", "& its limits",
+"& the African angle".
+
+**Census the `<h1>`s. `docs/index.html` is an abbreviation of the site, not a description of it.**
+Seven pages carried a longer or different `<h1>` than the index advertised, and two confident diagnoses
+built off the index were simply wrong: 10.3's "the frontier" is really "the safety/usefulness frontier"
+(a genuine Pareto frontier from the control literature), and 7.3's dangling "its" was the index's own
+invention, absent from the page. The index was the artefact being fixed, which made it the worst
+available source on what to fix.
+
+**Grep the course's own pejoratives against the course's own titles.** 18.1 calls a manufactured
+"angle" the thing this course refuses; 16.4 was titled "…and the African angle", with the word three
+more times in its subtitle and a section heading. If a word is a tell when someone else uses it, it is
+a tell here.
+
+**Three zones must agree:** `<title>` == `<h1>` == contents-page link. 51/77 pages as of `01b7c94`; the
+remaining 26 need a per-page call on which string wins, and no rule decides them.
+
 ## 1. Density budgets, measured — not per-paragraph rules
 
 The old rule was "em-dash ≤ 1 per paragraph, or one genuine paired parenthetical." Every page passed
