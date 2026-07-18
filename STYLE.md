@@ -75,8 +75,12 @@ broke a deliberate echo between 16.3 and 16.4, and had to be reverted. **One hit
 pattern.** The 16.4 title was still worth changing — it was a three-item compound, and 16.3's own prose
 already called the page "interpretability and sovereignty" — but for that reason, not this one.
 
-**Three zones must agree:** `<title>` == `<h1>` == contents-page link. 51/77 pages as of `01b7c94`; the
-remaining 26 need a per-page call on which string wins, and no rule decides them.
+**Three zones must agree:** `<title>` == `<h1>` == contents-page link. Since the 2026-07-18
+adjudication (all pages agree), two policies Jonathan set govern the winner: **"and" over "&"** in
+titles, and **the contents page carries the full title**, never an abbreviation (the abbreviations are
+what made the index lie; see above). Adjudication rule when zones disagree: apply §0 to the FULLEST
+form, then use the winner in all three zones. Residue Jonathan has not yet ruled on: ~20 older titles
+still use "&" (13 sub-sessions, 7 session groups); they were internally consistent so never surfaced.
 
 ## 1. Density budgets, measured — not per-paragraph rules
 
@@ -238,6 +242,27 @@ Surgical edits: change the flagged word or phrase, not the surrounding sentence.
 inside HTML tags, inside MathJax (`\(…\)`, `\[…\]`), or inside code. Preserve every citation, number,
 and technical claim verbatim. Don't introduce a new tell while removing an old one. After a pass,
 re-run the census and confirm the densities fell.
+
+## 11. Authoring new pages: apply the rules at draft time
+
+Sweeping after the fact costs ten times what writing clean costs. The 2026-07-18 additions (7.5, the
+2.4 takeoff section, the 3.4 scheming blocks) were written under these rules and needed no cleanup:
+
+- Whether authoring yourself or briefing an agent, put the binding style rules **inline in the brief**
+  (no em-dashes or their evasions; no emphasis bold; factual sentence-case headings; delete-test on
+  contrasts; British spelling). Pointing at this file is not enough; paste the constraints.
+- **Only pre-verified links.** Verify every URL resolves AND its title matches the work you cite
+  before writing the sentence around it, and forbid the agent from adding links you did not supply.
+- **Describing an external document means fetching it.** The 7.5 page's account of the OpenAI Model
+  Spec is trustworthy because the agent fetched the current spec and the 2024 original; paper claims
+  come from the fetched abstract, never from memory. Make this an explicit instruction in every
+  authoring brief, and require the agent to report what it verified.
+- **Follow sibling conventions, including mirrored furniture** (manifest lines, Next boxes, dash-label
+  h4 patterns within a page). A new element should be indistinguishable in register from the page it
+  joins; when a page already uses a convention (for example its case-study h4 dash-labels), match it
+  rather than importing a different one.
+- Require a tag-balance check (every tag the page uses, including span and iframe) before the agent
+  reports done.
 
 ## Sources
 
