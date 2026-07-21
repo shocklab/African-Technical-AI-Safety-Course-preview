@@ -56,6 +56,13 @@ def main():
         nn = f"{int(s):02d}"
         pages = sorted(glob.glob(f"docs/sessions/session-{nn}/*.html")) or \
             sorted(glob.glob(f"docs/sessions/session-{nn}-*.html"))
+
+        def session_key(path):
+            import re as _re
+            raw = open(path, encoding="utf-8").read()
+            m = _re.search(r"<title>Session (\d+)\.(\d+)", raw)
+            return (int(m.group(1)), int(m.group(2))) if m else (99, 99)
+        pages.sort(key=session_key)
         if not pages:
             sys.exit(f"no pages found for session {nn}")
         out += [page_html(p) for p in pages]
