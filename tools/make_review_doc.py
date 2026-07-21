@@ -12,6 +12,14 @@ conversion enabled, titled "ATAS Week N — review copy (Session N)".
 The HTML in this repo stays the source of truth; accepted Doc suggestions
 are applied back to the pages by hand (or by a Claude session reading the
 Doc's comments).
+
+HARD RULE, learned 2026-07-21: before replacing the Doc's content, ALWAYS
+diff its CURRENT content against the previous upload (readDocument, or
+File -> Version history). Reviewers edit directly, leaving no comments or
+suggestions, and an in-place replace destroys their edits silently -- Ben's
+first two review edits were nearly lost this way (recovered via version
+history). Harvest collaborator edits first, apply them to the pages, then
+regenerate and replace.
 """
 import glob
 import re
