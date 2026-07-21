@@ -33,7 +33,7 @@
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Week 2 • Session 2.3</div>
+        <div class="week-badge">Week 1 • Session 2.3</div>
         <h1>Neural scaling laws</h1>
         <p>Why loss falls as a power law in compute, data and parameters</p>
     </header>
@@ -74,6 +74,7 @@
             <p>At a fixed budget of about \(5.8 \times 10^{23}\) FLOPs, DeepMind had trained <strong>Gopher</strong> at 280B parameters. Chinchilla spent the <em>same</em> compute on a 70B model trained on 1.4T tokens (four times smaller, four times more data) and beat Gopher across the board. Check the arithmetic with \(C \approx 6ND\): \(6 \times (70\times10^9) \times (1.4\times10^{12}) \approx 5.9\times10^{23}\), and \(1.4\text{T} / 70\text{B} = 20\) tokens per parameter.</p>
             <p>Now run it forward. Suppose you hold a budget \(C = 10^{24}\) FLOPs and follow the rule \(D \approx 20N\). Then \(C \approx 6N(20N) = 120\,N^2\), so \(N \approx \sqrt{10^{24}/120} \approx 9\times10^{10}\), about a 90B-parameter model, trained on \(D \approx 1.8\) trillion tokens. The law turns a vague "make it bigger" into a specific, checkable recipe.</p>
         </div>
+        <p>The ratio is a rule for minimising loss at a fixed <em>training</em> budget, and production models no longer follow it: once a model will be served at scale, inference cost dominates, so it pays to overtrain a smaller model far past the Chinchilla point. Llama 3 8B, for example, was trained on about 15 trillion tokens, roughly 1,875 per parameter against the rule's 20.</p>
         <div class="info-box">
             <h4>The correction to Kaplan</h4>
             <p>This is an example of an empirical result being overturned by a better-controlled one. Kaplan et al. (2020) had concluded that model size should grow much faster than data, which is why the models of that era (GPT-3 at 175B parameters on 300B tokens, under two tokens per parameter) were enormous and badly undertrained. Chinchilla traced the discrepancy partly to the learning-rate schedule: Kaplan used a single fixed cosine schedule rather than decaying it to match each shorter training horizon, which inflated the loss estimates for the smaller-data runs, making training on less data look less effective than it is, and so pushing the apparent optimum toward over-large, under-trained models. Fix that, and the optimum shifts to equal scaling. For a safety course the record is worth keeping in mind: confident, widely-followed scaling advice was wrong for two years, and only careful re-measurement caught it.</p>

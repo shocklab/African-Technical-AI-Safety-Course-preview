@@ -65,7 +65,7 @@
                 <li>Translation into another language, especially a low-resource one. This is the case the whole course turns on.</li>
             </ul>
         </div>
-        <p>The two modes can be combined, and when they are the attack rates are severe: Wei et al. report combination attacks succeeding on over 96% of prompts, and on a held-out 317-prompt set their strongest combination reaches roughly 0.93 against GPT-4 and 0.89 against Claude v1.3. These are systematic consequences of the training recipe, not edge cases scraped from a forum.</p>
+        <p>The two modes can be combined, and when they are the attack rates are severe: Wei et al. report combination attacks succeeding on over 96% of prompts, and on a held-out 317-prompt set the same combined attack (their combination_3) reaches roughly 0.93 against GPT-4 and 0.87 against Claude v1.3. These are systematic consequences of the training recipe, not edge cases scraped from a forum.</p>
 
         <h2 class="section-title">The limits of scaling</h2>
         <p class="lead">The competing-objective gap is built into the alignment objective itself.</p>
@@ -80,7 +80,7 @@
         <h2 class="section-title">The prediction for low-resource languages</h2>
         <p class="lead">Mismatched generalisation makes a falsifiable claim about languages.</p>
         <p>This is what ties the theory to this course. Wei et al. note explicitly that although safety training is often claimed to generalise across languages, the success of attacks like Base64 should make us cautious about how far off-distribution safety can be expected to reach. Read that as a hypothesis with a free variable: any transformation that is in-distribution for capability and out-of-distribution for safety should jailbreak the model. Translation into a low-resource language is such a transformation: the model learned enough isiZulu during pretraining to understand the request, but its safety training was conducted overwhelmingly in English. So mismatched generalisation predicts that an isiZulu request behaves like a Base64 one: understood, and unsafe.</p>
-        <p>Session 1 told us the empirical answer: Yong et al. measured English under 1% attack success rising to about 79% across combined low-resource languages, with isiZulu alone near 53%. What 9.3 adds is that this is not a surprising bug; it is what the theory predicts. And 9.4 turns it from a number you were told into a number you produce.</p>
+        <p>Session 1 told us the empirical answer: Yong et al. measured English under 1% attack success rising to about 79% across combined low-resource languages, with isiZulu alone near 53%. Those are 2023 measurements of GPT-4; frontier safety training has covered far more languages since, and the headline gap is much reduced, though it persists on weaker models and under translation-controlled and multi-turn attacks. What 9.3 adds is that the 2023 result was not a surprising bug; it is what the theory predicts wherever safety coverage is thin. And 9.4 turns it from a number you were told into a number you produce.</p>
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The hypothesis you will test in 9.4</span></h3>

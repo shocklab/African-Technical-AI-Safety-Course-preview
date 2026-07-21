@@ -36,7 +36,7 @@
 
         <div class="technical-detail">
             <h4>Setup</h4>
-            <p style="color:#555;">Open the Colab notebook and <code>pip install transformer_lens</code> (the notebook pins a specific version so the API does not drift: recent releases move from <code>HookedTransformer.from_pretrained</code> toward a <code>TransformerBridge</code>; the notebook uses whichever its pinned version documents as primary). Load two models on <code>device="cpu"</code>: <strong>gpt2-small</strong> (124M; a real model with MLPs) and <strong>attn-only-2l</strong> (a 2-layer attention-only demo model where the maths of 13.3–13.4 is exact). The core idioms: <code>logits, cache = model.run_with_cache(tokens)</code> to capture activations, and <code>model.run_with_hooks(tokens, fwd_hooks=[...])</code> to intervene.</p>
+            <p style="color:#555;">Open the Colab notebook and install a pinned TransformerLens rather than the latest release. TransformerLens 3.x (v3.5.1 at the time of writing) deprecates the legacy <code>HookedTransformer</code> API this lab is written against and recommends <code>TransformerBridge</code> instead, so an unpinned <code>pip install transformer_lens</code> can hand you a library whose recommended API no longer matches these instructions. Pin a known-good 2.x release (a <code>pip install transformer_lens==2.x</code> style pin, with the version fixed to the one tested); instructor pre-flight: verify before class that the pinned version still loads both models below. Load two models on <code>device="cpu"</code>: <strong>gpt2-small</strong> (124M; a real model with MLPs) and <strong>attn-only-2l</strong> (a 2-layer attention-only demo model where the maths of 13.3–13.4 is exact). The core idioms: <code>logits, cache = model.run_with_cache(tokens)</code> to capture activations, and <code>model.run_with_hooks(tokens, fwd_hooks=[...])</code> to intervene.</p>
         </div>
 
         <h2 class="section-title">Core tasks (CPU)</h2>
@@ -45,7 +45,7 @@
             <li><strong>2. See the induction stripe.</strong> Build a <em>repeated random</em> sequence (a block of random tokens concatenated with an identical copy) and plot per-head attention patterns (e.g. with <code>circuitsvis</code>). In the second copy, look for the off-diagonal "stripe" where each token attends to the position <em>after</em> its first occurrence. That stripe is the induction head, visible to the eye.</li>
             <li><strong>3. Find the previous-token head.</strong> On natural text, score every head by how much it attends to position \(i-1\). The top scorer in an early layer is head 1 of the circuit.</li>
             <li><strong>4. Score induction heads.</strong> Implement the <strong>prefix-matching (induction) score</strong> from 13.4: on the repeated sequence, average each repeat-token's attention back to the token that followed its first occurrence. Rank all heads; the top scorer(s) are your induction head(s). Optionally implement the <strong>copying score</strong> from the eigenvalues of \(W_U W_{OV} W_E\).</li>
-            <li><strong>5. Verify by ablation (the causal step).</strong> Mean-ablate the identified induction head, then (separately) the previous-token head, with <code>run_with_hooks</code>, and measure the rise in loss on the repeated-sequence task. Knocking out <em>either</em> head should destroy the induction behaviour, direct evidence that the two compose, as 13.3–13.4 predicted.</li>
+            <li><strong>5. Verify by ablation (the causal step).</strong> With <code>run_with_hooks</code>, mean-ablate every top-scoring induction head from task 4: each one singly, then all of them together, and (separately) the previous-token head, measuring the rise in loss on the repeated-sequence task each time. Before running, write down a prediction: will a single-head ablation destroy the behaviour or only dent it? If the behaviour partly survives a single ablation, you have met <em>backup heads</em>, other heads picking up the ablated head's job, which 15.2's IOI circuit documents in detail. Ablating all the top scorers together, or the previous-token head, should destroy the induction behaviour, direct evidence that the two stages compose, as 13.3–13.4 predicted.</li>
         </ul>
 
         <div class="info-box">
@@ -58,13 +58,13 @@
         </div>
 
         <h2 class="section-title">What to submit</h2>
-        <p>One annotated Colab notebook containing: the induction-stripe attention plot; the ranked induction-score table with the identified head(s) named; and the before/after-ablation loss numbers for both the induction head and the previous-token head, each with one or two sentences linking the observation to the 13.3/13.4 mechanism. Graded on whether the causal story is established (does ablation break it?), not on polish.</p>
+        <p>One annotated Colab notebook containing: the induction-stripe attention plot; the ranked induction-score table with the identified head(s) named; and the ablation loss numbers (each induction head singly, all top scorers together, and the previous-token head), with your written prediction and one or two sentences linking the outcome to the 13.3/13.4 mechanism, including whether any single ablation left the behaviour partly intact. Graded on whether the causal story is established (does ablation break it?), not on polish.</p>
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
             <h4>Reference</h4>
             <p>• <strong>Olsson et al. (2022)</strong> (<a href="https://arxiv.org/abs/2209.11895" target="_blank" rel="noopener">arXiv:2209.11895</a>): the prefix-matching and copying definitions you are implementing, and the ablation argument you are reproducing.</p>
-            <p>• <strong>TransformerLens documentation</strong> (<a href="https://transformerlensorg.github.io/TransformerLens/" target="_blank" rel="noopener">transformerlensorg.github.io/TransformerLens</a>): <code>run_with_cache</code>, hook names, and ablation hooks; ARENA's interpretability chapter is the fuller guided version.</p>
+            <p>• <strong>TransformerLens documentation</strong> (<a href="https://transformerlensorg.github.io/TransformerLens/" target="_blank" rel="noopener">transformerlensorg.github.io/TransformerLens</a>): <code>run_with_cache</code>, hook names, and ablation hooks; ARENA's <a href="https://learn.arena.education/chapter1_transformer_interp/02_intro_mech_interp/" target="_blank" rel="noopener">Intro to Mechanistic Interpretability</a> section (TransformerLens and induction circuits) is the fuller guided version.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">

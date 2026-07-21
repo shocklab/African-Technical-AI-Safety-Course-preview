@@ -83,7 +83,7 @@
 
         <h2 class="section-title">The reward model as proxy</h2>
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Goodhart, pre-loaded</span></h3>
+            <h3><span style="color:#ffffff;">Goodhart exposure by construction</span></h3>
             <p>Re-read Session 3.1 with \(r_\phi\) in the role of the proxy. We cannot write down "be helpful and honest", so we <em>learn</em> a stand-in from human comparisons, and then optimise it. Every gap between \(r_\phi\) and true human values is a place the optimiser can exploit: a response that scores high on the reward model without being good. The reward model is unbiased and useful in the region of responses it was trained on; push the policy into regions it never saw and the proxy and the goal come apart. This is what optimising a learned proxy <em>means</em>, not a flaw in any particular reward model.</p>
         </div>
         <div class="technical-detail">

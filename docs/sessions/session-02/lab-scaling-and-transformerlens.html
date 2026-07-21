@@ -33,7 +33,7 @@
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Week 2 • Session 2.5</div>
+        <div class="week-badge">Week 1 • Session 2.5</div>
         <h1>Lab: scaling laws &amp; a first look inside a model</h1>
         <p>Fit a power law, explore the compute trends, and open up GPT-2 in TransformerLens</p>
     </header>
@@ -55,7 +55,7 @@
         <div class="technical-detail">
             <h4>From data to a power-law exponent</h4>
             <ul class="styled-list">
-                <li>Load the provided table of (training compute \(C\), final loss \(L\)) points (shared on the course page).</li>
+                <li>Load the table of (training compute \(C\), final loss \(L\)) points distributed in class (a small CSV of published scaling-run results).</li>
                 <li>Plot \(L\) against \(C\) on log–log axes. Confirm by eye that it's close to a straight line.</li>
                 <li>Fit \(\log L = a - \alpha \cdot \log C\) by least squares; recover the exponent \(\alpha\) and compare it to the small values reported by Kaplan et al.</li>
                 <li>Extrapolate one order of magnitude beyond your data, then write one sentence on why you should distrust your own extrapolation (revisit 2.4).</li>
@@ -66,7 +66,7 @@
         <div class="technical-detail">
             <h4>Doubling time from Epoch AI data</h4>
             <ul class="styled-list">
-                <li>Load a slice of Epoch AI's notable-models dataset (CSV provided / linked).</li>
+                <li>Load a slice of Epoch AI's <a href="https://epoch.ai/data/notable-ai-models" target="_blank" rel="noopener">notable-models dataset</a> (the page has a "Download the data in CSV" button; the columns you need are publication date and training compute).</li>
                 <li>Plot training compute against publication date on a log axis; estimate the doubling time.</li>
                 <li>Answer in a sentence each: which quantity did you actually measure, and over what window? (The Session 1.4 reading habits, applied to your own plot.)</li>
             </ul>
@@ -80,7 +80,7 @@
             <ul class="styled-list">
                 <li>Feed the model a few prompts and read off the top predicted next tokens. Where is it confident, where not?</li>
                 <li>Use <code>run_with_cache</code> to capture activations; print the shape of the residual stream (you should see <code>[batch, position, d_model]</code>, the \(T \times d\) matrix from 2.2).</li>
-                <li><strong>Tokenisation check (the African-safety thread):</strong> tokenise the same sentence in English and in isiZulu (or another language you know). Count the tokens. What does the difference imply for cost and quality, and later for safety?</li>
+                <li><strong>Tokenisation check (the African-safety thread):</strong> GPT-2's tokenizer is a byte-pair-encoding (BPE) vocabulary of 50,257 tokens, fitted mostly to English text. Tokenise the same sentence in English and in isiZulu (or another language you know) with <code>model.to_str_tokens</code>. Count the tokens. What does the difference imply for cost and quality, and later for safety?</li>
             </ul>
         </div>
 

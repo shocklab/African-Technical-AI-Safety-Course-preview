@@ -33,7 +33,7 @@
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Week 2 • Session 2.2</div>
+        <div class="week-badge">Week 1 • Session 2.2</div>
         <h1>Inside the transformer</h1>
         <p>Tokens, attention, and the residual stream</p>
     </header>
@@ -55,7 +55,7 @@
         <div class="technical-detail">
             <h4>Tokens, embeddings, positions</h4>
             <ul class="styled-list">
-                <li><strong>Tokenisation.</strong> Text is split into <em>tokens</em>: sub-word pieces from a fixed vocabulary of size \(V\) (typically 30k–100k). "tokenisation" might become <code>token | isation</code>; a rare word becomes several pieces. Each token is an integer id.</li>
+                <li><strong>Tokenisation.</strong> Text is split into <em>tokens</em>: sub-word pieces from a fixed vocabulary of size \(V\) (30k–100k in the GPT-2/GPT-3 generation; newer vocabularies are larger, e.g. Llama 3's 128k and GPT-4o's ~200k). "tokenisation" might become <code>token | isation</code>; a rare word becomes several pieces. Each token is an integer id.</li>
                 <li><strong>Embedding.</strong> A learned matrix \(W_E \in \mathbb{R}^{V \times d_{\text{model}}}\) maps each id to a vector in \(\mathbb{R}^{d_{\text{model}}}\) (one row of \(W_E\)). A length-\(T\) sequence becomes an activation matrix \(X \in \mathbb{R}^{T \times d_{\text{model}}}\), one row per position.</li>
                 <li><strong>Position.</strong> Self-attention is <em>permutation-equivariant</em>: shuffle the input rows and the output rows shuffle the same way; it has no built-in sense of order (because, as the next section shows, attention is a content-weighted sum with no term that depends on a position's index). So positional information is injected (added positional embeddings, or rotary/relative schemes) before the first block.</li>
             </ul>

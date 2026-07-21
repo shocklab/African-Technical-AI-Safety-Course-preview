@@ -45,7 +45,7 @@
         </div>
 
         <h2 class="section-title">The panda example</h2>
-        <p class="lead">Szegedy et al. (2013) noticed that imperceptible perturbations could flip a classifier's verdict. Goodfellow et al. (2015) explained why, and made the attack trivial to compute.</p>
+        <p class="lead">Szegedy et al. (2014) noticed that imperceptible perturbations could flip a classifier's verdict. Goodfellow et al. (2015) explained why, and made the attack trivial to compute.</p>
         <p>The canonical picture: a network classifies a photo as "panda" with moderate confidence; add a perturbation invisible to the eye, scaled by \(\varepsilon = 0.007\) (smaller than the precision of 8-bit pixels), and the same network calls it "gibbon" with 99.3% confidence. Nothing about the image a human can see has changed. The first reaction in the field was that this came from networks being too nonlinear and complicated. Goodfellow's contribution was to argue the opposite: the vulnerability comes from models being too <em>linear</em> in high dimensions. That explanation is the one worth understanding, because it tells you the problem will not be scaled or engineered away.</p>
 
         <h2 class="section-title">The linear explanation</h2>
@@ -84,7 +84,7 @@
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Language as the perturbation</span></h3>
-            <p>The session turns on one idea: models behave differently off the distribution they were trained and safety-tuned on. For a vision model that off-distribution region is reached by an \(L_\infty\) pixel ball. For a frontier language model deployed across this continent, it is reached by writing the request in isiZulu instead of English. The course's anchor result (Session 1) is an adversarial attack in this sense: the "perturbation" is a translation, the safety training never covered it, and the model complies. Sub-session 9.4 has you measure it by hand.</p>
+            <p>The session turns on one idea: models behave differently off the distribution they were trained and safety-tuned on. For a vision model that off-distribution region is reached by an \(L_\infty\) pixel ball. For a language model deployed across this continent, it is reached by writing the request in isiZulu instead of English. The course's anchor result (Session 1) was an adversarial attack in this sense: the "perturbation" was a translation, GPT-4's 2023 safety training had not covered it, and the model complied. Frontier safety training has covered far more languages since, and the headline gap is much reduced; it persists on weaker models and under translation-controlled and multi-turn attacks. Sub-session 9.4 has you measure it by hand.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>

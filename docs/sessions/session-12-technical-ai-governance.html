@@ -32,7 +32,7 @@
         <div class="intro-text">
             <h2>What we'll cover</h2>
             <p>Session 11 built evaluations: ways to measure what a model can do and whether it will. This session asks the next question. Given a measurement, who acts on it, and how would anyone verify compliance? That is <em>technical</em> AI governance: the engineering substrate that determines whether a governance proposal is enforceable or merely aspirational.</p>
-            <p>We use a map of the field, locate compute governance on it (callback to Session 4), compare the three real frontier-safety frameworks labs operate under, touch agent governance, and then look at the question from an African vantage point, where the RIA Just AI framework, the AU strategy, POPIA, and the sovereignty debate change which levers are even available.</p>
+            <p>We use a map of the field, locate compute governance on it (callback to Session 4), compare three frontier-safety frameworks in depth, touch agent governance, and then look at the question from an African vantage point, where the RIA Just AI framework, the AU strategy, POPIA, and the sovereignty debate change which levers are even available.</p>
         </div>
 
         <h2 class="section-title">A map: capacities × targets</h2>
@@ -62,26 +62,26 @@
         <p>The thresholds are already concrete. The EU AI Act sets its systemic-risk line for general-purpose models at \(10^{25}\) training FLOP, and the 2023 US executive order (since rescinded) had used \(10^{26}\); both reach for <em>compute</em> because it is the one input a regulator can count, and in principle verify. Whether a fixed FLOP line is well-chosen is debated, since it ages as algorithms grow more efficient (2.3); but the choice itself shows why compute is the substrate governance reaches for first.</p>
 
         <h2 class="section-title">The three frontier-safety frameworks</h2>
-        <p class="lead">The leading labs publish voluntary policies that share a common skeleton: capability thresholds → eval commitments → required mitigations → a commitment to pause if mitigations aren't ready.</p>
+        <p class="lead">The leading labs publish frontier-safety policies that share a common skeleton: capability thresholds → eval commitments → required mitigations → a commitment to pause if mitigations aren't ready.</p>
         <div class="card-grid">
             <div class="card"><h3>Anthropic — RSP</h3><p>The Responsible Scaling Policy defines AI Safety Levels (ASL); crossing a capability threshold triggers specified security and deployment safeguards.</p></div>
             <div class="card"><h3>OpenAI — Preparedness</h3><p>Tracks frontier capabilities (bio/chem, cybersecurity, AI self-improvement) against High and Critical capability thresholds; crossing High gates deployment, Critical gates further development; findings are recorded in Capabilities Reports.</p></div>
-            <div class="card"><h3>DeepMind — Frontier Safety Framework</h3><p>Defines "critical capability levels" and the mitigations expected when models approach them.</p></div>
+            <div class="card"><h3>DeepMind — Frontier Safety Framework</h3><p>Defines Critical Capability Levels and the mitigations expected as models approach them; v3 (2025) adds a harmful-manipulation CCL, misalignment risks such as shutdown resistance, and Tracked Capability Levels that flag less extreme risks earlier.</p></div>
         </div>
-        <p>Under the surface all three share an <em>if–then</em> logic: <em>if</em> a model crosses a defined capability threshold on a specified evaluation, <em>then</em> a named set of mitigations (hardened security, deployment limits, or a training pause) becomes mandatory before work continues. The strength is that this commits a lab in advance, when the incentives are cleaner. The weakness is that all three are voluntary, self-assessed and self-reported: a lab grades its own eval, decides whether the threshold was crossed, and can revise the policy. That is the <em>Verification</em> gap in Reuel's grid (nothing external confirms the claim), and closing it with independent evals, audit access and hardware attestation is the live frontier. "Voluntary framework" is a stage on the way to closing that gap.</p>
+        <p>Under the surface all three share an <em>if–then</em> logic: <em>if</em> a model crosses a defined capability threshold on a specified evaluation, <em>then</em> a named set of mitigations (hardened security, deployment limits, or a training pause) becomes mandatory before work continues. The strength is that this commits a lab in advance, when the incentives are cleaner. These began as purely voluntary commitments; publishing one no longer is. California's SB 53 (signed September 2025) requires large frontier developers (annual revenue above $500m and training runs above \(10^{26}\) FLOP) to publish a frontier AI framework, to publish a justified update within 30 days of materially changing it, and to report critical safety incidents to the state's Office of Emergency Services within 15 days; the EU AI Act's obligations on general-purpose model providers have applied since August 2025. What the law has not changed is who does the grading: the lab runs its own eval, decides whether the threshold was crossed, and no external party checks either. That is the <em>Verification</em> gap in Reuel's grid (nothing external confirms the claim), and closing it with independent evals, audit access and hardware attestation is the live frontier.</p>
         <div class="info-box">
             <h4>Comparing the frameworks</h4>
-            <p>METR's "Common Elements of Frontier AI Safety Policies" distils what these share and where they differ. The instructive class exercise (Session 12 seminar) is a jigsaw. Groups take one framework each, then cross-compare against the "Common Elements": what's shared, what's missing, and <em>what's enforceable versus self-reported?</em> All three are voluntary, which is itself the governance gap.</p>
+            <p>METR's "Common Elements of Frontier AI Safety Policies" distils what these share and where they differ. The instructive class exercise (Session 12 seminar) is a jigsaw. Groups take one framework each, then cross-compare against the "Common Elements": what's shared, what's missing, and <em>what's enforceable versus self-reported?</em> For the largest developers publishing such a framework is now the law; grading it is still internal, which is itself the governance gap.</p>
         </div>
         <div class="case-study">
             <h4>From an eval to a commitment</h4>
-            <p>Make the if–then chain tangible. Suppose a dangerous-capability evaluation (Session 11) tests whether a model can materially help a non-expert plan a biological or large-scale cyber attack. The framework sets a threshold: score above it and the model is deemed to have crossed into a higher risk tier. The <em>then</em> follows automatically: the weights must sit behind hardened security (so an actor who could misuse them cannot steal them), deployment is gated behind specific safeguards (refusal training, monitoring, restricted access), and if those mitigations are not yet ready, training or release pauses until they are. Every link in that chain is a technical artefact someone has to build, and someone ought to be able to verify. That is the subject of this session.</p>
+            <p>Make the if–then chain tangible. Suppose a dangerous-capability evaluation (Session 11) tests whether a model can materially help a non-expert plan a biological or large-scale cyber attack. The framework sets a threshold: score above it and the model is deemed to have crossed into a higher risk tier. The <em>then</em> follows automatically: the weights must sit behind hardened security (so an actor who could misuse them cannot steal them), deployment is gated behind specific safeguards (refusal training, monitoring, restricted access), and if those mitigations are not yet ready, training or release pauses until they are. The chain has run for real once: in May 2025 Anthropic <a href="https://www.anthropic.com/news/activating-asl3-protections" target="_blank" rel="noopener">activated ASL-3 protections</a> for Claude Opus 4 as a precaution, not having determined that the model crossed the CBRN capability threshold but being unable to clearly rule it out. Every link in that chain is a technical artefact someone has to build, and someone ought to be able to verify. That is the subject of this session.</p>
         </div>
 
         <h2 class="section-title">Agent governance</h2>
         <div class="info-box">
             <h4>New surface area</h4>
-            <p>Agentic systems take actions, use tools, and run for long horizons (Weeks 5 and the Session 22 agents material). Governance then has to cover <em>actions</em>, not only <em>models</em>: identifiers for AI agents, logging and rollback, liability for autonomous actions, and limits on what an agent may do without a human in the loop. This is among the least-settled corners of the field and a rich source of conceptual projects.</p>
+            <p>Agentic systems take actions, use tools, and run for long horizons (11.2's scaffolded-agent evals; the untrusted agent of Session 10's control setting). Governance then has to cover <em>actions</em>, not only <em>models</em>: identifiers for AI agents, logging and rollback, liability for autonomous actions, and limits on what an agent may do without a human in the loop. This is among the least-settled corners of the field and a rich source of conceptual projects.</p>
         </div>
 
         <h2 class="section-title">Where the technical contribution is</h2>
@@ -110,12 +110,20 @@
             <p>It is easy to cite the $60bn fund as if it were committed money or to treat the AU Strategy as binding regulation. Neither is true yet. Teaching the gap accurately (pledge vs capital, strategy vs enforcement) is more useful than the press-release version.</p>
         </div>
 
+        <h2 class="section-title">Questions to bring to class</h2>
+        <ul class="styled-list">
+            <li>The EU AI Act's systemic-risk line sits at \(10^{25}\) training FLOP. Algorithmic efficiency keeps lowering the compute needed for a given capability (2.3). Does a fixed FLOP threshold survive that, and if not, what should a regulator index the line to instead?</li>
+            <li>What does SB 53 change about the frontier-safety frameworks, and what does it leave untouched? Put the answer in Reuel's grid: which capacity did the law strengthen, and which gap remains open?</li>
+            <li>For the jigsaw: as you read your group's framework, mark each commitment as externally verifiable or self-reported. Pick one commitment from the second column and say what technical artefact would move it to the first.</li>
+            <li>From a South African vantage point, which of the six capacities in Reuel's grid could a country without frontier compute actually exercise, and on which targets?</li>
+        </ul>
+
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
             <p>• <strong>Reuel et al. (2024), "Open Problems in Technical AI Governance"</strong> (<a href="https://arxiv.org/abs/2407.14981" target="_blank" rel="noopener">arXiv:2407.14981</a>; TMLR 2025). Skim the taxonomy + one capacity in depth.</p>
-            <p>• <a href="https://metr.org/common-elements" target="_blank" rel="noopener"><strong>METR, "Common Elements of Frontier AI Safety Policies"</strong></a> (2024).</p>
-            <p>• One frontier framework in full: <a href="https://www.anthropic.com/responsible-scaling-policy" target="_blank" rel="noopener">Anthropic RSP</a>, <a href="https://openai.com/index/updating-our-preparedness-framework/" target="_blank" rel="noopener">OpenAI Preparedness</a>, <em>or</em> <a href="https://deepmind.google/blog/introducing-the-frontier-safety-framework/" target="_blank" rel="noopener">DeepMind FSF</a>.</p>
+            <p>• <a href="https://metr.org/common-elements" target="_blank" rel="noopener"><strong>METR, "Common Elements of Frontier AI Safety Policies"</strong></a> (December 2025 edition): nine common elements distilled from twelve companies' policies. Around a dozen firms now publish such frameworks; the three below are the deep-dive set.</p>
+            <p>• One frontier framework in full: <a href="https://www.anthropic.com/responsible-scaling-policy" target="_blank" rel="noopener">Anthropic RSP</a>, <a href="https://openai.com/index/updating-our-preparedness-framework/" target="_blank" rel="noopener">OpenAI Preparedness</a>, <em>or</em> <a href="https://deepmind.google/discover/blog/strengthening-our-frontier-safety-framework/" target="_blank" rel="noopener">DeepMind FSF v3</a>.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Supplementary (African governance)</h4>
@@ -127,7 +135,7 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Summary &amp; what's next</h2>
-            <p>Technical AI governance is the engineering that decides whether a safety policy can be enforced. Reuel et al.'s capacities × targets grid maps the field; compute governance is the most tractable lever because it sits on a countable, detectable substrate; the three lab frameworks share a skeleton but are voluntary; agent governance is new and unsettled; and from Africa the available levers, the applicable law (POPIA, Malabo), and the sovereignty gap reshape the question.</p>
+            <p>Technical AI governance is the engineering that decides whether a safety policy can be enforced. Reuel et al.'s capacities × targets grid maps the field; compute governance is the most tractable lever because it sits on a countable, detectable substrate; the lab frameworks share a skeleton and remain self-graded, though the largest developers are now legally required to publish them; agent governance is new and unsettled; and from Africa the available levers, the applicable law (POPIA, Malabo), and the sovereignty gap reshape the question.</p>
             <p>Next (Weeks 7–8, Sessions 13–16): mechanistic interpretability, opening the model up to see whether we can read what it's doing, with hands-on TransformerLens labs. The course's project phase (Week 9) then turns several threads from this week into scoped student work.</p>
         </div>
 

@@ -65,7 +65,7 @@
         <p>The strong form of the ambition is striking: a trained network is just a large pile of matrices and nonlinearities, fully observable, perfectly reproducible, with every activation available for inspection and every component open to intervention. In principle nothing is hidden, which is what a neuroscientist studying a brain would envy. The field has delivered this for small systems. As Sessions 13.3–13.4 will show, a one-layer attention-only transformer can be written out almost completely as a set of token-to-token tables read directly from its weights, and a two-layer model's in-context-learning circuit can be reverse-engineered and verified by ablation.</p>
         <div class="warning-box">
             <h4>The evidence at frontier scale</h4>
-            <p>For frontier models the case is far weaker, and the framing comes from the interpretability researchers themselves: at scale the evidence is "more like neuroscience" (lesion studies, developmental observations, perturbations) than like reading source code. Results that are <em>causal</em> for small attention-only models (established by tens of thousands of targeted ablations) are usually only <em>correlational</em> for large models with MLPs. The course will grade evidence this way throughout the block: a tidy mechanistic story on a toy model is strong; the same story extrapolated to a 70-billion-parameter model is a hypothesis until tested. Treat anyone who tells you interpretability has "solved" transparency for frontier models with the scepticism Session 1 trained into you.</p>
+            <p>For frontier models the case is far weaker, and the framing comes from the interpretability researchers themselves: at scale the evidence is more like neuroscience (lesion studies, developmental observations, perturbations) than like reading source code. Results that are <em>causal</em> for small attention-only models (established by tens of thousands of targeted ablations) are usually only <em>correlational</em> for large models with MLPs. The course will grade evidence this way throughout the block: a tidy mechanistic story on a toy model is strong; the same story extrapolated to a 70-billion-parameter model is a hypothesis until tested. Treat anyone who tells you interpretability has "solved" transparency for frontier models with the scepticism Session 1 trained into you.</p>
         </div>
 
         <h2 class="section-title">The safety payoffs</h2>
@@ -80,7 +80,7 @@
         <ul class="styled-list">
             <li>Give a safety question that a black-box evaluation cannot answer even in principle, and say what a mechanistic explanation would add.</li>
             <li>Why is attribution (saliency, probing) not the same as mechanistic understanding? Construct a case where a saliency map is correct about <em>where</em> and wrong about <em>why</em>.</li>
-            <li>Interpretability researchers describe their frontier-scale evidence as "more like neuroscience." What does that analogy concede, and which Session-11 failure does it echo?</li>
+            <li>Interpretability researchers describe their frontier-scale evidence as more like neuroscience than like decompilation. What does that analogy concede, and which Session-11 failure does it echo?</li>
             <li>Of the three safety payoffs (deception detection, scalable oversight, auditing), which most depends on interpretability working at <em>frontier</em> scale rather than toy scale? Why?</li>
         </ul>
 

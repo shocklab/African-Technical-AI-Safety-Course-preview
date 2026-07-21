@@ -42,7 +42,7 @@
 
         <div class="intro-text">
             <h2>What you'll build</h2>
-            <p>You will run the two moves at the heart of Constitutional AI on a small open model: a critique-and-revise loop, and an AI preference-labelling step. Then you will do the thing the papers mostly skip: measure how the model's safety judgement holds up <em>outside English</em>. The core is CPU-friendly and runs on the free Colab tier; the real RL step is an optional GPU extension that reuses your Session 6.5 machinery. This is the lab no surveyed course offers, and Task 4 is a natural seed for a research project.</p>
+            <p>You will run the two moves at the heart of Constitutional AI on a small open model: a critique-and-revise loop, and an AI preference-labelling step. Then you will do the thing the papers mostly skip: measure how the model's safety judgement holds up <em>outside English</em>. The core is CPU-friendly and runs on the free Colab tier; the real RL step is an optional GPU extension that reuses your Session 6.5 machinery. Task 4 is a natural seed for a research project.</p>
         </div>
 
         <div class="technical-detail">
@@ -71,7 +71,7 @@
 
         <div class="case-study">
             <h4>Task 4 — the African-safety probe</h4>
-            <p>Repeat Task 3's labelling in isiZulu (or another language you read), using the same prompts translated over. Compute the model's agreement with your labels in-language, and compare it to the English number. Does the agreement collapse? Does the model start refusing to judge, mis-parsing the options, or labelling at chance? Whatever you find, you have measured the 7.4 ceiling with your own hands: the point at which the automated safety signal stops being trustworthy as you move away from English. Write down the gap: it is a strong starting point for a Session 11 evaluation or a full project.</p>
+            <p>Repeat Task 3's labelling in isiZulu (or another language you read), using the same prompts translated over with NLLB or a public translator of your choice; record which tool you used. Compute the model's agreement with your labels in-language, and compare it to the English number. Does the agreement collapse? Does the model start refusing to judge, mis-parsing the options, or labelling at chance? One confound to rule out before you interpret the gap: translation adds noise of its own, so weak agreement can reflect a poor translation rather than a weak judge; back-translate a few prompts, or have a speaker check them, to separate the two. Whatever you find, you have measured the 7.4 ceiling with your own hands: the point at which the automated safety signal stops being trustworthy as you move away from English. Write down the gap: it is a strong starting point for a Session 11 evaluation or a full project.</p>
         </div>
 
         <div class="info-box">

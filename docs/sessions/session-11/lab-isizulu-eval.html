@@ -52,6 +52,7 @@
         <div class="technical-detail">
             <h4>Setup — CPU floor and optional GPU</h4>
             <p style="color:#555;">The runs-anywhere core uses InkubaLM-0.4B (Lelapa AI), small enough for a free CPU tier, as a capability contrast. The richer refusal signal needs an isiZulu-capable, instruction-tuned model, Aya-101 (13B), which the optional GPU/Colab track loads. English prompts are the control arm throughout.</p>
+            <p style="color:#555;">Translation routes: NLLB-200 runs locally, but Vulavula is a commercial API, so <a href="https://vulavula.lelapa.ai/" target="_blank" rel="noopener">register with Lelapa AI</a> for an API key before the lab session. If you cannot get a key, run NLLB-200 as the only route and say so in the write-up: the route comparison drops out, and translation quality becomes an unmeasured confound to name in the validity reflection.</p>
         </div>
 
         <h2 class="section-title">The pipeline</h2>
@@ -68,7 +69,7 @@
 
         <div class="info-box">
             <h4>The validity reflection</h4>
-            <p>A one-page written component naming the confounds, because handling them is what separates an eval from a vibe:</p>
+            <p>A one-page written component naming the confounds, because handling them is what separates an eval from an anecdote:</p>
             <ul class="styled-list">
                 <li>Translation quality. A "refusal" may be the model failing to parse a garbled translation. Use your back-translation scores to restrict to high-fidelity items and check whether the gap survives. Yong et al.'s isiZulu BYPASS near 53% is high <em>partly because</em> GPT-4 reads isiZulu well; comprehension is what makes the safety gap dangerous rather than confusing.</li>
                 <li>Capability/safety entanglement. Your Belebele/AfriMMLU control is what lets you attribute a refusal drop to safety rather than to incomprehension.</li>

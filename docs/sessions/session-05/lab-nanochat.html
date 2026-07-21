@@ -59,18 +59,20 @@
                 <li>Find the SFT stage: see how it switches to (prompt, response) data and masks the loss to the response tokens (5.2).</li>
                 <li>Note what is <em>not</em> there in a from-scratch run: no preference/RLHF stage by default; that is Session 6.</li>
             </ul>
-            <p style="color:#555;">Write 3–4 sentences mapping the repo's stages onto the four-stage table from 5.3. (The older, even smaller <strong>nanoGPT</strong> repo is a fine alternative for just the pretraining loop.)</p>
+            <p style="color:#555;">Write 3–4 sentences mapping the repo's stages onto the five-stage table from 5.3. (The older, even smaller <strong>nanoGPT</strong> repo is a fine alternative for just the pretraining loop.)</p>
         </div>
 
         <h2 class="section-title">② The experiment: base vs instruct</h2>
         <div class="technical-detail">
             <h4>Same prompts, two models</h4>
-            <p style="color:#555;">Load a small base model and a comparably small instruction-tuned model, and probe them identically:</p>
-            <div class="formula" style="text-align:left;"><code>from transformers import pipeline<br>base = pipeline("text-generation", model="gpt2")&nbsp; # a base model<br>chat = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B-Instruct")&nbsp; # an instruct model<br><br>prompt = "List three causes of the First World War."<br>print(base(prompt, max_new_tokens=80))<br>print(chat(prompt, max_new_tokens=80))</code></div>
+            <p style="color:#555;">Load a small base model and the instruction-tuned model built from it, and probe them identically. The pair below share architecture, size, tokeniser and pretraining data; the only difference is post-training, so whatever behavioural gap you find is the post-training stack of 5.3, isolated:</p>
+            <div class="formula" style="text-align:left;"><code>from transformers import pipeline<br>base = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B")&nbsp;&nbsp;# base<br>chat = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B-Instruct")&nbsp;&nbsp;# instruct<br><br>prompt = "List three causes of the First World War."<br>print(base(prompt, max_new_tokens=80))<br><br>messages = [{"role": "user", "content": prompt}]<br>print(chat(messages, max_new_tokens=80))</code></div>
             <ul class="styled-list">
+                <li>Note the two call shapes. The base model gets a raw string; the instruct model gets a <em>messages</em> list, which makes the pipeline apply its chat template (the special tokens marking user and assistant turns it was trained on, 5.2). Pass the instruct model a bare string and you are probing it outside its trained format; try it once and compare.</li>
                 <li>Give both the same three instructions (a question, a "summarise this", a "translate this"). Record what each does.</li>
                 <li>You should see the pattern from 5.1: the base model tends to <em>continue</em> the text (more questions, tangents) while the instruct model <em>answers</em>. Describe the difference in your own words; this is the SFT effect, made visible.</li>
                 <li><strong>African-safety probe:</strong> repeat one instruction in isiZulu (or another language you read). Does the gap between base and instruct widen? Note what you see: it previews Session 9.</li>
+                <li><strong>Optional era contrast:</strong> run the same prompts through <code>gpt2</code> (2019, base). The gap is far larger, but it confounds era with tuning: gpt2 differs from the Qwen pair in data, size and architecture as well as post-training. It shows how far base models themselves have come, while the matched pair above isolates what post-training adds.</li>
             </ul>
         </div>
 

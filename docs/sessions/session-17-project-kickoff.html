@@ -31,7 +31,7 @@
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Part V — the research project</span></h3>
-            <p>The taught core is behind you. The final third of the course is a single piece of work: a small safety project, written up as a short paper with code and presented to the class. It is worth 40% of the mark, and it is where the reading, the labs and the seminars turn into something of your own. This session is about choosing well, because a project that is scoped right is most of the battle.</p>
+            <p>The taught core is behind you. The final third of the course is a single piece of work: a small safety project, written up as a 6–8 page paper with code and presented to the class in an 8–10 minute talk. It is worth 40% of the mark, and it is where the reading, the labs and the seminars turn into something of your own. This session is about choosing well, because a project that is scoped right is most of the battle.</p>
         </div>
 
         <div class="intro-text">
@@ -66,7 +66,7 @@
         </div>
 
         <h2 class="section-title">The timeline</h2>
-        <p class="lead">Four weeks, with a checkpoint built into each so a stuck project surfaces early rather than the night before.</p>
+        <p class="lead">Four weeks including this proposal week, so three of experimental work, with a checkpoint built into each so a stuck project surfaces early rather than the night before.</p>
         <ul class="styled-list">
             <li>Week 9 (now) is the proposal. Pick a question, form a team, write the one-page proposal. The frontier-topic session (18) runs alongside, and several of its threads are first-class project options.</li>
             <li>Week 10 is the clinic (19). Bring a first result, however rough, to the project clinic; we debug baselines, statistics and scope together. Session 20 (steelman the skeptics) runs alongside.</li>
@@ -80,7 +80,7 @@
         <div class="info-box">
             <h4>Robustness &amp; multilingual safety (extends Session 9)</h4>
             <ul class="styled-list">
-                <li>Refusal degradation in a new language. Repeat the <a href="session-09/lab-isizulu-robustness.html">9.4 lab</a> for isiXhosa, Yoruba or Hausa: measure the English-to-target refusal gap on an open harmful-prompt set, with confidence intervals. <em>Builds on:</em> the isiZulu robustness lab. <em>Twist:</em> test whether a cheap defence (a translation-back check, a refusal-classifier in the loop) closes the gap.</li>
+                <li>Refusal degradation in a new language. Repeat the <a href="session-09/lab-isizulu-robustness.html">9.4 lab</a> for isiXhosa, Yoruba or Hausa: measure the English-to-target refusal gap on an open harmful-prompt set, with confidence intervals. <em>Builds on:</em> the isiZulu robustness lab. <em>Twist:</em> test whether a cheap defence (a translation-back check, a refusal-classifier in the loop) closes the gap. <em>Include the 11.5 capability control:</em> pair refusal rates with an in-language comprehension check, so a reported gap is attributable to safety training rather than incomprehension.</li>
                 <li>Does paraphrase-back recover safety? Take a low-resource jailbreak, translate the model's reply back to English, and ask a judge model whether it is harmful. Measure how much of the gap a back-translation monitor catches. <em>Close to finished:</em> one week if you reuse the lab harness.</li>
             </ul>
         </div>
@@ -128,7 +128,7 @@
 
         <div class="case-study">
             <h4>The one-paragraph context statement</h4>
-            <p>Every project carries a short statement: who does this help, whose risk does it address, and how (if at all) does it apply in an African context? This is graded on thought. "Not applicable, because this is a general interpretability result with no language- or region-specific dimension" is a full-credit answer for a pure-theory project. What loses marks is ignoring the question, or bolting on an African angle that the work does not actually have. Several tracks above carry a real one; a theory project may carry none, and saying so plainly is the move the course has practised all term.</p>
+            <p>Every project carries a short statement: who does this help, whose risk does it address, and how (if at all) does it apply in an African context? This is graded on thought. "Not applicable, because this is a general interpretability result with no language- or region-specific dimension" is a full-credit answer for a pure-theory project. What loses marks is ignoring the question, or bolting on an African angle that the work does not actually have. Several tracks above carry a real one; a theory project may carry none, and you should say so plainly.</p>
         </div>
 
         <h2 class="section-title">Forming a team and writing the proposal</h2>
@@ -145,8 +145,9 @@
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
-            <p>• <strong>Neel Nanda, "200 Concrete Open Problems in Mechanistic Interpretability"</strong> (<a href="https://www.alignmentforum.org/posts/LbrPTJ4fmABEdEnLf/200-concrete-open-problems-in-mechanistic-interpretability" target="_blank" rel="noopener">Alignment Forum</a>) and his "Concrete Steps to Get Started": a ready bank of scoped, Colab-feasible interpretability questions.</p>
-            <p>• <strong>ARENA project ideas &amp; capstone suggestions</strong> (<a href="https://www.arena.education/" target="_blank" rel="noopener">arena.education</a>): worked starting points across interpretability, evals and RL.</p>
+            <p>• <strong>Neel Nanda (2025), "How To Become A Mechanistic Interpretability Researcher"</strong> (<a href="https://www.alignmentforum.org/posts/jP9KDyMkchuv6tHwm/how-to-become-a-mechanistic-interpretability-researcher" target="_blank" rel="noopener">Alignment Forum</a>): how to pick and run a small research project, with a staged path from mini-projects to research sprints; the scoping advice applies well beyond interpretability.</p>
+            <p>• <strong>Nanda's earlier "200 Concrete Open Problems in Mechanistic Interpretability"</strong> (<a href="https://www.alignmentforum.org/posts/LbrPTJ4fmABEdEnLf/200-concrete-open-problems-in-mechanistic-interpretability" target="_blank" rel="noopener">Alignment Forum</a>) is still a bank of scoped, Colab-feasible questions, but read it as an idea bank only: his 2024 update marks the list as out of date and no longer a reliable guide to what is worth working on.</p>
+            <p>• <strong>The ARENA curriculum</strong> (<a href="https://www.arena.education/curriculum" target="_blank" rel="noopener">arena.education/curriculum</a>): five chapters of worked, runnable material (fundamentals, transformer interpretability, RL, evals, alignment science) whose exercises are natural seeds for a project extension.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Supplementary</h4>

@@ -66,7 +66,7 @@ def gate_index(full_index: str, released: set) -> str:
             return m.group(0)
         text = re.sub(r'<span class="badge-built">.*?</span>', "", text,
                       flags=re.S).strip()
-        return f"<li>{text}</li>"
+        return f'<li><span class="soon">{text}</span></li>'
 
     out = re.sub(r'<li><a href="(sessions/[^"]+)">(.*?)</a></li>',
                  sub_li, full_index, flags=re.S)
@@ -81,6 +81,13 @@ def gate_index(full_index: str, released: set) -> str:
         return f'<div class="session-group">{clean}</div>'
 
     out = re.sub(r'<div class="session-group">(.*?)</div>', group_div, out,
+                 flags=re.S)
+
+    # the dev index's own status line and badges are dev-facing; drop them
+    out = out.replace(
+        '<p style="margin-top:12px;"><em>Built lessons are linked below; '
+        "the rest are in preparation.</em></p>", "")
+    out = re.sub(r'\s*<span class="badge-built">.*?</span>', "", out,
                  flags=re.S)
 
     # release note in the caveat banner, idempotent

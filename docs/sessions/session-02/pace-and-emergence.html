@@ -33,7 +33,7 @@
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Week 2 • Session 2.4</div>
+        <div class="week-badge">Week 1 • Session 2.4</div>
         <h1>Pace of progress, emergence and takeoff</h1>
         <p>Measured rates of progress, and whether emergence is real or a metric artefact</p>
     </header>
@@ -47,10 +47,11 @@
         <h2 class="section-title">The measurable part: compute trends</h2>
         <p class="lead">Before any argument about "the pace of AI", anchor on what is actually measured. The clearest signal is training compute.</p>
         <div class="technical-detail">
-            <h4>Three findings</h4>
+            <h4>Four findings</h4>
             <ul class="styled-list">
                 <li>Compute has grown far faster than hardware. Sevilla et al. (2022) date a regime change around 2010: before it, training compute for notable systems roughly tracked Moore's law (a doubling every ~20 months); since then it has doubled roughly every six months, and a separate "large-scale" track of frontier runs sits orders of magnitude above even that. The growth is driven by investment, not cheaper chips alone.</li>
                 <li>The three inputs move together. Compute, dataset size and parameters scale in step (2.3), bounded increasingly by data and by energy and hardware supply (Session 4).</li>
+                <li>The output side is measured too. METR's <strong>time horizon</strong> metric asks how long a task (in the time it takes a skilled human) a model can complete with 50% reliability; on their software-task suite that horizon has doubled roughly every seven months since 2019, reaching about 50 minutes for frontier models by early 2025 (Kwa et al., 2025). Capability itself, not only the compute behind it, has a measured trend line.</li>
                 <li>The trends are trackable. Groups like Epoch AI maintain public datasets of model compute, parameters and data: the empirical basis for any claim about how fast the field is moving.</li>
             </ul>
             <p style="color:#555; margin-top:12px;">You will work with this data directly in the 2.5 lab. When someone says AI is accelerating, or stalling, ask <em>which measured quantity, over what window?</em></p>
@@ -125,6 +126,7 @@
             <p>• Ganguli, D., et al. (2022), "Predictability and Surprise in Large Generative Models" (<a href="https://arxiv.org/abs/2202.07785" target="_blank" rel="noopener">arXiv:2202.07785</a>): the predictable-loss / surprising-capability tension.</p>
             <p>• Srivastava, A., et al. (2022), "Beyond the Imitation Game" (BIG-Bench; <a href="https://arxiv.org/abs/2206.04615" target="_blank" rel="noopener">arXiv:2206.04615</a>): the benchmark suite behind the emergence claims.</p>
             <p>• Sevilla, J., et al. (2022), "Compute Trends Across Three Eras of Machine Learning" (<a href="https://arxiv.org/abs/2202.05924" target="_blank" rel="noopener">arXiv:2202.05924</a>): and <strong>Epoch AI</strong> (<a href="https://epoch.ai/" target="_blank" rel="noopener">epoch.ai</a>) for live trends.</p>
+            <p>• <strong>Kwa, T., West, B., et al. (2025), "Measuring AI Ability to Complete Long Software Tasks"</strong> (METR; NeurIPS 2025; <a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">arXiv:2503.14499</a>): the 50%-task-completion time horizon and its roughly seven-month doubling.</p>
             <p>• <strong>Davidson, T. (2023), "What a Compute-Centric Framework Says About Takeoff Speeds"</strong> (<a href="https://coefficientgiving.org/research/what-a-compute-centric-framework-says-about-takeoff-speeds/" target="_blank" rel="noopener">Coefficient Giving</a>, formerly Open Philanthropy; interactive model at <a href="https://takeoffspeeds.com/" target="_blank" rel="noopener">takeoffspeeds.com</a>): the quantitative takeoff framework.</p>
             <p>• <strong>Davidson, T., Hadshar, R. &amp; MacAskill, W. (2025), "Three Types of Intelligence Explosion"</strong> (<a href="https://www.forethought.org/research/three-types-of-intelligence-explosion" target="_blank" rel="noopener">Forethought</a>): the software / AI-technology / full-stack decomposition.</p>
             <p>• <strong>Epoch AI, GATE</strong> (<a href="https://epoch.ai/gate" target="_blank" rel="noopener">epoch.ai/gate</a>): an interactive integrated model of compute growth and automation, for experimenting with the assumptions yourself.</p>

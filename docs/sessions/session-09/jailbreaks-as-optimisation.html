@@ -85,7 +85,7 @@
         </div>
 
         <h2 class="section-title">The cost of the attack</h2>
-        <p>GCG is white-box and compute-heavy: it needs gradients (hence open weights, or a surrogate) and many forward passes per suffix. That is why the realistic deployment is transfer: craft on open models, fire at closed ones. It also produces gibberish suffixes, which makes the attack detectable by a perplexity filter (a defence, and an arms-race move we revisit in 9.5). GCG is not the final word. What this course takes from it: a jailbreak is a search with an objective, so "we patched the prompts we found" is never a defence against the next run of the optimiser.</p>
+        <p>GCG is white-box and compute-heavy: it needs gradients (hence open weights, or a surrogate) and many forward passes per suffix, which is why its realistic deployment is transfer: craft on open models, fire at closed ones. It also produces gibberish suffixes, which makes the attack detectable by a perplexity filter (a defence we revisit in 9.5). Neither limitation lasted. Within months, AutoDAN (Zhu et al., 2023) added a fluency term to the GCG objective and produced readable, low-perplexity suffixes that pass the perplexity filter, and PAIR (Chao et al., 2023) dropped the gradient requirement entirely: an attacker LLM refines a semantic jailbreak against the target through black-box queries alone, typically succeeding in under twenty. So an attacker today needs neither open weights nor a transfer step. What this course takes from GCG: a jailbreak is a search with an objective, so "we patched the prompts we found" is never a defence against the next run of the optimiser.</p>
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The African-lens angle: tokenisers are not neutral</span></h3>
@@ -97,7 +97,7 @@
             <li>Write the GCG objective for a target of your choice. Why optimise the negative log-likelihood of an <em>affirmative prefix</em> rather than directly maximising "harmfulness"? What does that tell you about what is easy vs hard to specify?</li>
             <li>In step 1 the gradient ranks \(|V|\) candidate tokens per position; in step 2 only a sampled batch is evaluated exactly. Why not trust the gradient's top choice? Why not exactly evaluate all \(|V|\) candidates?</li>
             <li>Given the distillation caveat, design a fairer experiment to compare two models' robustness to transferred GCG suffixes. What would you change about the surrogate?</li>
-            <li>A perplexity filter rejects high-perplexity (gibberish) inputs. Does that defeat GCG, or just move the optimiser's objective? Write the new objective the attacker would minimise.</li>
+            <li>A perplexity filter rejects high-perplexity (gibberish) inputs. Does that defeat GCG, or just move the optimiser's objective? Write the new objective the attacker would minimise, then compare it with AutoDAN's (in the readings).</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
@@ -108,6 +108,8 @@
         <div class="resource-placeholder">
             <h4>Supplementary</h4>
             <p>• <strong>Shin et al. (2020), "AutoPrompt"</strong> (<a href="https://arxiv.org/abs/2010.15980" target="_blank" rel="noopener">arXiv:2010.15980</a>). The gradient-guided prompt search GCG builds on.</p>
+            <p>• <strong>Zhu et al. (2023), "AutoDAN: Interpretable Gradient-Based Adversarial Attacks on Large Language Models"</strong> (<a href="https://arxiv.org/abs/2310.15140" target="_blank" rel="noopener">arXiv:2310.15140</a>). GCG plus a fluency objective: readable, low-perplexity suffixes that pass perplexity filters.</p>
+            <p>• <strong>Chao et al. (2023), "Jailbreaking Black Box Large Language Models in Twenty Queries" (PAIR)</strong> (<a href="https://arxiv.org/abs/2310.08419" target="_blank" rel="noopener">arXiv:2310.08419</a>). Semantic jailbreaks with black-box access only, typically in under twenty queries.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">

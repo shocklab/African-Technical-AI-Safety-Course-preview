@@ -38,13 +38,13 @@
     </header>
     <div class="content">
 <div class="intro-text">
-<h2>What We'll Cover</h2>
-<p>The previous two sessions established that AI has a real and growing environmental footprint, and that the relationship between efficiency and total consumption is complicated. This session asks: given all of that, what can you do?</p>
+<h2>What we'll cover</h2>
+<p>The previous three sub-sessions established that AI has a real and growing environmental footprint: energy and water costs per query and at scale (4.1), the infrastructure build-out and the rebound problem, where efficiency gains fail to reduce total consumption (4.2), and the critical-minerals supply chain behind the hardware itself (4.3). This session asks: given all of that, what can you do?</p>
 <p>We will look at concrete tools for measuring the carbon footprint of your own computational work, practical choices that can meaningfully reduce your impact, and the other side of the story: the ways AI is being applied to environmental challenges. The goal is to help you make informed decisions and engage critically with claims about AI and the environment from any direction.</p>
 </div>
 
 <!-- SECTION 1: MEASURING YOUR FOOTPRINT -->
-<h2 class="section-title">Measuring Your Own Footprint</h2>
+<h2 class="section-title">Measuring your own footprint</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">You cannot reduce what you do not measure. A small ecosystem of open tools has emerged to help researchers estimate and track the carbon footprint of their computational work.</p>
 
 <div class="tool-card">
@@ -52,10 +52,10 @@
 <div class="tool-url"><a href="https://codecarbon.io" target="_blank" rel="noopener">codecarbon.io</a> | <a href="https://github.com/mlco2/codecarbon" target="_blank" rel="noopener">GitHub</a></div>
 <p>The most widely used tool for tracking emissions from machine learning workloads. CodeCarbon is a Python library that monitors your GPU/CPU power draw during a computation and looks up the carbon intensity of the local electricity grid, producing an estimate in kg CO₂ equivalent.</p>
 <ul class="styled-list">
-<li><strong>Integration:</strong> Add a single decorator to your Python code; it runs in the background and produces a report when your experiment finishes</li>
-<li><strong>Grid awareness:</strong> Automatically adjusts for the carbon intensity of your local grid (or your cloud provider's region)</li>
-<li><strong>Use case:</strong> Ideal for comparing experiments: "did this architectural change reduce my compute footprint by enough to justify the performance gain?"</li>
-<li><strong>Limitation:</strong> Measures direct electricity use; does not account for embodied hardware carbon or data centre overhead beyond PUE estimates</li>
+<li>Integration: Add a single decorator to your Python code; it runs in the background and produces a report when your experiment finishes</li>
+<li>Grid awareness: Automatically adjusts for the carbon intensity of your local grid (or your cloud provider's region)</li>
+<li>Use case: Ideal for comparing experiments: "did this architectural change reduce my compute footprint by enough to justify the performance gain?"</li>
+<li>Limitation: Measures direct electricity use; does not account for embodied hardware carbon or data centre overhead beyond PUE estimates</li>
 </ul>
 </div>
 
@@ -64,10 +64,10 @@
 <div class="tool-url"><a href="https://www.green-algorithms.org" target="_blank" rel="noopener">green-algorithms.org</a></div>
 <p>A web-based calculator designed for the broader scientific computing community. If you run bioinformatics pipelines, simulations, or any compute-intensive work, Green Algorithms can estimate its footprint.</p>
 <ul class="styled-list">
-<li><strong>Inputs:</strong> Hardware type, number of cores, runtime, memory, location</li>
-<li><strong>Output:</strong> kg CO₂e, plus comparisons to everyday activities to aid communication</li>
-<li><strong>Peer-reviewed methodology:</strong> The underlying paper was published in <em>Advanced Science</em> (2021), giving it more methodological credibility than some tools</li>
-<li><strong>Particularly useful for:</strong> Non-ML researchers who want to understand the footprint of their existing computational work</li>
+<li>Inputs: Hardware type, number of cores, runtime, memory, location</li>
+<li>Output: kg CO₂e, plus comparisons to everyday activities to aid communication</li>
+<li>Peer-reviewed methodology: The underlying paper was published in <em>Advanced Science</em> (2021), giving it more methodological credibility than some tools</li>
+<li>Particularly useful for: Non-ML researchers who want to understand the footprint of their existing computational work</li>
 </ul>
 </div>
 
@@ -76,14 +76,14 @@
 <div class="tool-url"><a href="https://mlco2.github.io/impact/" target="_blank" rel="noopener">mlco2.github.io/impact/</a></div>
 <p>A simpler web-based calculator for estimating the carbon footprint of a planned ML training run, before you run it. Useful for project planning and grant applications where you want to report your expected compute footprint.</p>
 <ul class="styled-list">
-<li><strong>Inputs:</strong> Hardware, training duration, cloud provider/region</li>
-<li><strong>Output:</strong> Estimated kg CO₂e for the full training run</li>
-<li><strong>Distinction from CodeCarbon:</strong> This tool estimates in advance (before running); CodeCarbon measures in real time</li>
+<li>Inputs: Hardware, training duration, cloud provider/region</li>
+<li>Output: Estimated kg CO₂e for the full training run</li>
+<li>Distinction from CodeCarbon: This tool estimates in advance (before running); CodeCarbon measures in real time</li>
 </ul>
 </div>
 
 <div class="info-box">
-<h4>Reporting Compute Footprint in Papers</h4>
+<h4>Reporting compute footprint in papers</h4>
 <p>The "Green AI" movement (Schwartz et al., 2020) has called for academic papers to routinely report the computational cost of the research they present, both in financial and environmental terms. Some venues now encourage or require this; most do not yet mandate it. Reporting your compute footprint in your methods section:</p>
 <ul class="styled-list" style="margin-top: 8px;">
 <li>Enables reproducibility assessment (others can judge whether they have the resources to replicate your work)</li>
@@ -94,17 +94,17 @@
 </div>
 
 <!-- SECTION 2: PRACTICAL CHOICES -->
-<h2 class="section-title">Practical Choices</h2>
+<h2 class="section-title">Practical choices</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">You may not be able to influence how AI companies power their data centres, but you can make choices that meaningfully affect the footprint of your own AI use.</p>
 
 <div class="technical-detail">
-<h4>Impact of Different Choices</h4>
+<h4>Impact of different choices</h4>
 <table class="comparison-table">
 <thead>
 <tr>
 <th>Choice</th>
-<th>Potential Carbon Reduction</th>
-<th>Effort Required</th>
+<th>Potential carbon reduction</th>
+<th>Effort required</th>
 </tr>
 </thead>
 <tbody>
@@ -153,7 +153,7 @@
 </div>
 
 <div class="highlight-box">
-<h3><span style="color: #ffffff;">The Cloud Region Choice</span></h3>
+<h3><span style="color: #ffffff;">The cloud region choice</span></h3>
 <p>Research by Dodge et al. (2022, Allen Institute for AI, ACM FAccT) found that running identical AI workloads in a low-carbon electricity region vs. a high-carbon region can reduce carbon emissions by up to 80%, with zero change to the model, code, or performance.</p>
 <p style="margin-top: 15px;">Major cloud providers (AWS, Google Cloud, Azure) all allow you to specify the region where your compute runs. Choosing <em>us-west-2</em> (Oregon, with significant hydroelectric power) over <em>us-east-1</em> (Virginia, more coal/gas dependent) can make a substantial difference. The same applies to European regions: <em>eu-north-1</em> (Sweden) is among the cleanest; <em>eu-central-1</em> (Frankfurt) less so.</p>
 <p style="margin-top: 15px;">Tools like the Electricity Maps API and Google Cloud's Carbon Footprint tool can help you choose the lowest-carbon option in real time.</p>
@@ -161,7 +161,7 @@
 
 <div class="card-grid">
 <div class="card">
-<h3>Choosing the Right Model Size</h3>
+<h3>Choosing the right model size</h3>
 <p>One of the most consequential and under-appreciated choices: do you need a frontier model, or will a smaller one do?</p>
 <ul class="styled-list">
 <li>For many research tasks (data extraction, classification, summarisation, code generation), a 7B or 13B parameter model performs nearly as well as a 70B+ model</li>
@@ -171,7 +171,7 @@
 </ul>
 </div>
 <div class="card">
-<h3>Prompting vs. Compute</h3>
+<h3>Prompting vs. compute</h3>
 <p>Before investing in training or fine-tuning, it is worth asking whether better prompting could achieve the same result at a fraction of the compute cost.</p>
 <ul class="styled-list">
 <li>Well-crafted prompts can match or exceed the performance of a fine-tuned smaller model for many tasks</li>
@@ -181,23 +181,23 @@
 </ul>
 </div>
 <div class="card">
-<h3>Context Window and Iteration Costs</h3>
+<h3>Context window and iteration costs</h3>
 <p>Two less-visible sources of compute cost deserve attention: the amount of text you feed into a model, and how many times you iterate.</p>
 <ul class="styled-list">
-<li><strong>Context length scales compute:</strong> Feeding a 100-page document into a frontier model incurs compute proportional to that length; every token in context is processed on every query</li>
-<li><strong>The iteration trap:</strong> Sending a task to a cheap model, finding the result inadequate, and repeating 8–10 times may cost more than one well-structured prompt to a larger model</li>
-<li><strong>Front-load prompt quality:</strong> Investing time in a precise, well-specified prompt typically produces better results with lower total compute than cheap-model iteration</li>
-<li><strong>Agent workflows compound costs:</strong> Multi-step agent systems where AI calls tools, reads results, and generates new queries can multiply energy costs in ways that are not obvious from the interface</li>
+<li>Context length scales compute: Feeding a 100-page document into a frontier model incurs compute proportional to that length; every token in context is processed on every query</li>
+<li>The iteration trap: Sending a task to a cheap model, finding the result inadequate, and repeating 8–10 times may cost more than one well-structured prompt to a larger model</li>
+<li>Front-load prompt quality: Investing time in a precise, well-specified prompt typically produces better results with lower total compute than cheap-model iteration</li>
+<li>Agent workflows compound costs: Multi-step agent systems where AI calls tools, reads results, and generates new queries can multiply energy costs in ways that are not obvious from the interface</li>
 </ul>
 </div>
 </div>
 
 <div class="technical-detail">
-<h4>The Hidden Energy Cost of Frontier Model Features</h4>
+<h4>The hidden energy cost of frontier model features</h4>
 <p style="color: #555; margin-bottom: 15px;">Many advanced AI features are designed to improve output quality, but each carries an energy cost that is largely invisible in the user interface. The figures below are estimates based on available published evidence (noted in parentheses); some platform costs are not publicly disclosed.</p>
 <table class="comparison-table">
 <thead>
-<tr><th>Feature</th><th>What It Does</th><th>Approximate Token / Compute Overhead</th></tr>
+<tr><th>Feature</th><th>What it does</th><th>Approximate token / compute overhead</th></tr>
 </thead>
 <tbody>
 <tr>
@@ -228,58 +228,58 @@
 <tr>
 <td><strong>Large context (long documents)</strong></td>
 <td>Transformer attention scales quadratically with sequence length; doubling context roughly quadruples compute</td>
-<td>O(n²) scaling; theoretically proven, not an estimate <em>(Duman-Keles et al., COLT 2023)</em></td>
+<td>O(n²) scaling; theoretically proven, not an estimate <em>(Duman-Keles et al., ALT 2023)</em></td>
 </tr>
 </tbody>
 </table>
 <div class="info-box" style="margin-top: 20px;">
-<h4>Matching Features to Task Complexity</h4>
+<h4>Matching features to task complexity</h4>
 <p>Extended thinking and Deep Research exist because they improve results on hard problems. A Deep Research session synthesising 50 sources for a complex literature question may save many hours of manual work, and may well be the lower-energy option when your time is factored in.</p>
 <p style="margin-top: 8px;">The concern is reflexive use: enabling reasoning modes or triggering Deep Research for questions that a standard prompt would handle adequately. As with model size, the principle is the same: <em>match capability to complexity, and be intentional rather than defaulting to the most powerful available option</em>.</p>
 </div>
 </div>
 
 <!-- SECTION 3: AI FOR CLIMATE -->
-<h2 class="section-title">AI for Environmental Solutions</h2>
+<h2 class="section-title">AI for environmental solutions</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">A responsible treatment of AI's environmental impact requires engaging with both sides. AI is not only a consumer of energy; it is also being actively applied to some of the world's most pressing environmental challenges. These applications do not cancel out AI's footprint, but they are part of the full picture.</p>
 
 <div class="resource-placeholder">
-<h4>Foundational Reading: Tackling Climate Change with Machine Learning</h4>
+<h4>Foundational reading: Tackling Climate Change with Machine Learning</h4>
 <p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/1906.05433" target="_blank" rel="noopener"><strong>Rolnick et al. (2022): "Tackling Climate Change with Machine Learning"</strong></a>: ACM Computing Surveys. A landmark survey paper by 22 researchers outlining 13 areas where ML can meaningfully contribute to climate mitigation and adaptation. Essential reading for a balanced view of AI's relationship with the environment.</p>
 </div>
 
 <div class="card-grid">
 <div class="card">
-<h3>Energy Systems</h3>
+<h3>Energy systems</h3>
 <ul class="styled-list">
-<li><strong>Grid optimisation:</strong> ML can predict demand and balance supply more efficiently, enabling higher penetrations of variable renewable energy</li>
-<li><strong>DeepMind + Google:</strong> A reinforcement learning system reduced cooling energy use in Google's data centres by ~40%, a real example of AI reducing its own infrastructure's footprint</li>
-<li><strong>Smart charging:</strong> AI-coordinated EV charging can avoid peak grid demand and shift load to renewable-rich periods</li>
-<li><strong>Demand forecasting:</strong> Better predictions of energy demand reduce the need for fossil fuel peaker plants</li>
+<li>Grid optimisation: ML can predict demand and balance supply more efficiently, enabling higher penetrations of variable renewable energy</li>
+<li>DeepMind + Google: A reinforcement learning system reduced cooling energy use in Google's data centres by ~40%, a real example of AI reducing its own infrastructure's footprint</li>
+<li>Smart charging: AI-coordinated EV charging can avoid peak grid demand and shift load to renewable-rich periods</li>
+<li>Demand forecasting: Better predictions of energy demand reduce the need for fossil fuel peaker plants</li>
 </ul>
 </div>
 <div class="card">
-<h3>Climate Science and Modelling</h3>
+<h3>Climate science and modelling</h3>
 <ul class="styled-list">
-<li><strong>Weather prediction:</strong> Google DeepMind's GraphCast and NVIDIA's FourCastNet produce weather forecasts faster and at lower compute cost than traditional numerical models</li>
-<li><strong>Climate downscaling:</strong> ML emulators can produce high-resolution regional climate projections from coarser global models at a fraction of the compute cost</li>
-<li><strong>Extreme event prediction:</strong> Improved forecasting of floods, droughts, and wildfires with longer lead times</li>
-<li><strong>Carbon monitoring:</strong> Satellite imagery analysis for tracking deforestation, methane leaks, and land use change</li>
+<li>Weather prediction: Google DeepMind's GraphCast and NVIDIA's FourCastNet produce weather forecasts faster and at lower compute cost than traditional numerical models</li>
+<li>Climate downscaling: ML emulators can produce high-resolution regional climate projections from coarser global models at a fraction of the compute cost</li>
+<li>Extreme event prediction: Improved forecasting of floods, droughts, and wildfires with longer lead times</li>
+<li>Carbon monitoring: Satellite imagery analysis for tracking deforestation, methane leaks, and land use change</li>
 </ul>
 </div>
 <div class="card">
-<h3>Science and Materials</h3>
+<h3>Science and materials</h3>
 <ul class="styled-list">
-<li><strong>Materials discovery:</strong> AlphaFold's success with protein structure has inspired similar approaches for discovering new materials for batteries, solar cells, and carbon capture</li>
-<li><strong>Drug discovery:</strong> AI-accelerated drug development has the potential to address diseases exacerbated by climate change</li>
-<li><strong>Agricultural optimisation:</strong> Precision agriculture AI can reduce fertiliser use (and associated N₂O emissions) while maintaining yields</li>
-<li><strong>Carbon capture:</strong> ML can help identify and optimise direct air capture materials and processes</li>
+<li>Materials discovery: AlphaFold's success with protein structure has inspired similar approaches for discovering new materials for batteries, solar cells, and carbon capture</li>
+<li>Drug discovery: AI-accelerated drug development has the potential to address diseases exacerbated by climate change</li>
+<li>Agricultural optimisation: Precision agriculture AI can reduce fertiliser use (and associated N₂O emissions) while maintaining yields</li>
+<li>Carbon capture: ML can help identify and optimise direct air capture materials and processes</li>
 </ul>
 </div>
 </div>
 
 <div class="info-box">
-<h4>Weighing the Trade-off</h4>
+<h4>Weighing the trade-off</h4>
 <p>The existence of beneficial AI applications for climate does not automatically justify AI's overall energy footprint; that would require demonstrating that the net impact is positive, which requires careful case-by-case analysis. Some questions worth asking:</p>
 <ul class="styled-list" style="margin-top: 10px;">
 <li>Does this specific AI application require a frontier model, or could a much smaller system do the job?</li>
@@ -291,69 +291,69 @@
 </div>
 
 <!-- SECTION 4: POLICY -->
-<h2 class="section-title">The Policy Response</h2>
+<h2 class="section-title">The policy response</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Individual choices by researchers matter, but the scale of AI's environmental impact requires systemic responses. Here is where policy is currently heading.</p>
 
 <div class="card-grid">
 <div class="card">
-<h3>Disclosure Requirements</h3>
+<h3>Disclosure requirements</h3>
 <ul class="styled-list">
-<li><strong>EU AI Act:</strong> Includes provisions for transparency about compute resources and energy use for certain high-impact AI systems</li>
-<li><strong>SEC climate disclosures (US):</strong> Require large publicly-listed companies to disclose material climate risks, which can include data centre energy use</li>
-<li><strong>Voluntary frameworks:</strong> The Partnership on AI has proposed a framework for AI environmental impact disclosure; currently voluntary</li>
-<li><strong>The gap:</strong> Most disclosure regimes apply to companies, not to AI products or models specifically</li>
+<li>EU AI Act: Includes provisions for transparency about compute resources and energy use for certain high-impact AI systems</li>
+<li>SEC climate disclosures (US): Adopted in March 2024, these would have required large publicly-listed companies to disclose material climate risks, which for some would include data centre energy use. They never took effect: the Commission stayed the rules within weeks amid litigation, <a href="https://www.sec.gov/newsroom/press-releases/2025-58" target="_blank" rel="noopener">voted to abandon their legal defence</a> in March 2025 under a new administration, and <a href="https://www.sec.gov/newsroom/press-releases/2026-49-sec-proposes-rescission-climate-related-disclosure-rules" target="_blank" rel="noopener">formally proposed rescinding them</a> in June 2026. Disclosure that exists only as one agency's rule can be unwound before it ever binds</li>
+<li>Voluntary frameworks: The Partnership on AI has proposed a framework for AI environmental impact disclosure; currently voluntary</li>
+<li>The gap: Most disclosure regimes apply to companies, not to AI products or models specifically</li>
 </ul>
 </div>
 <div class="card">
-<h3>What Researchers Can Advocate For</h3>
+<h3>What researchers can advocate for</h3>
 <ul class="styled-list">
-<li><strong>Mandatory model cards:</strong> Reporting of compute, energy use, and carbon footprint alongside model releases, similar to nutrition labels</li>
-<li><strong>Journal and conference standards:</strong> Requiring compute reporting in publications, as some ML venues are beginning to implement</li>
-<li><strong>Procurement standards:</strong> Universities and research funders setting green criteria for AI services they purchase</li>
-<li><strong>Third-party verification:</strong> Supporting independent auditing of AI company environmental claims rather than relying on self-reporting</li>
+<li>Mandatory model cards: Reporting of compute, energy use, and carbon footprint alongside model releases, similar to nutrition labels</li>
+<li>Journal and conference standards: Requiring compute reporting in publications, as some ML venues are beginning to implement</li>
+<li>Procurement standards: Universities and research funders setting green criteria for AI services they purchase</li>
+<li>Third-party verification: Supporting independent auditing of AI company environmental claims rather than relying on self-reporting</li>
 </ul>
 </div>
 </div>
 
 <div class="info-box" style="margin-top: 25px;">
-<h4>Africa and the AU: The Policy Gap</h4>
-<p>The <strong>African Union Continental AI Strategy</strong> (adopted July 2024) is the continent's primary AI governance framework. Its environmental provisions are minimal but worth noting:</p>
+<h4>Africa and the AU: the policy gap</h4>
+<p>The African Union Continental AI Strategy (adopted July 2024) is the continent's primary AI governance framework. Its environmental provisions are minimal but worth noting:</p>
 <ul class="styled-list" style="margin-top: 10px;">
-<li><strong>Water scarcity acknowledged:</strong> The strategy explicitly states that data centre cooling "poses a threat to regions already facing water scarcity", directly relevant to an African context</li>
-<li><strong>High-risk AI framework:</strong> "Environmental impact" is listed as a risk dimension for high-risk AI systems, in principle requiring impact assessments</li>
-<li><strong>General principle:</strong> AI development should not harm "the environment", stated without specific implementation mechanisms</li>
-<li><strong>AU Data Policy Framework (2022):</strong> The AU's data governance framework contains no meaningful environmental provisions</li>
+<li>Water scarcity acknowledged: The strategy explicitly states that data centre cooling "poses a threat to regions already facing water scarcity", directly relevant to an African context</li>
+<li>High-risk AI framework: "Environmental impact" is listed as a risk dimension for high-risk AI systems, in principle requiring impact assessments</li>
+<li>General principle: AI development should not harm "the environment", stated without specific implementation mechanisms</li>
+<li>AU Data Policy Framework (2022): The AU's data governance framework contains no meaningful environmental provisions</li>
 </ul>
 <p style="margin-top: 12px;">A 2025 analysis by TechPolicy.Press examining 14 African AI strategies found that only three acknowledged environmental consequences at all, and that the AU's single mention of water scarcity "provides no concrete solutions or mitigation plans." This gap is significant: Africa is among the world's most climate-vulnerable regions, and countries like South Africa run electricity grids that are among the world's most carbon-intensive (historically over 80% coal). AI workloads and data centres in the region inherit that carbon intensity, yet current continental AI governance does not address this.</p>
 <p style="margin-top: 8px;">UNESCO and the World Bank have been working with AU policymakers on "Green AI" pathways, and the policy gap may narrow as the Continental Strategy moves through implementation (Phase 1: 2025–2026; Phase 2: 2028–2030). For now, it is an area where researchers (particularly those based in Africa) can meaningfully contribute to policy advocacy.</p>
 </div>
 
 <div class="resource-placeholder">
-<h4>Policy and Measurement Resources</h4>
+<h4>Policy and measurement resources</h4>
 <p style="font-style: normal; margin-top: 8px;"><a href="https://doi.org/10.1787/7babf571-en" target="_blank" rel="noopener"><strong>OECD (2022): "Measuring the Environmental Impacts of Artificial Intelligence Compute and Applications"</strong></a>: policy-focused analysis of methodological challenges and governance options.</p>
 <p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/1907.10597" target="_blank" rel="noopener"><strong>Schwartz et al. (2020): "Green AI"</strong></a> (Communications of the ACM): the foundational paper calling for the research community to report efficiency metrics alongside performance. Short and accessible.</p>
 <p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2206.05229" target="_blank" rel="noopener"><strong>Dodge et al. (2022): "Measuring the Carbon Intensity of AI in Cloud Instances"</strong></a>: the paper demonstrating the 80% emissions reduction available from cloud region choice.</p>
 </div>
 
 <!-- SECTION 5: DECISION FRAMEWORK -->
-<h2 class="section-title">A Framework for Your Own Decisions</h2>
+<h2 class="section-title">A framework for your own decisions</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Rather than a set of rules, here is a set of questions you can ask yourself when deciding how to use AI in your research.</p>
 
 <div class="decision-framework">
-<h4>Questions to Ask Before Running Compute-Intensive AI Work</h4>
+<h4>Questions to ask before running compute-intensive AI work</h4>
 <ol style="margin-left: 25px; color: #555; line-height: 2.2; font-size: 1.05em;">
-<li><strong>Do I need AI for this task?</strong> Could a simpler statistical method, a keyword search, or manual analysis achieve the same result with less compute?</li>
-<li><strong>Do I need a frontier model, and do I need its most powerful features?</strong> Would a 7B parameter open-weight model do the job? If using a frontier model, do I need extended thinking, Deep Research, or agent workflows, or will a standard prompt suffice? Have I tested simpler approaches first?</li>
-<li><strong>Can I measure the footprint?</strong> Can I add CodeCarbon to this experiment, or use the Green Algorithms calculator to estimate it?</li>
-<li><strong>Where is my compute running?</strong> If using cloud, am I in the lowest-carbon region available for this task?</li>
-<li><strong>Can I time this work?</strong> For non-urgent batch work, can I run it at low-demand grid hours or when renewable generation is high?</li>
-<li><strong>Am I caching or repeating?</strong> Am I running the same analysis multiple times unnecessarily?</li>
-<li><strong>Will I report this?</strong> If this is publishable research, will I include the compute footprint in the methods section?</li>
+<li>Do I need AI for this task? Could a simpler statistical method, a keyword search, or manual analysis achieve the same result with less compute?</li>
+<li>Do I need a frontier model, and do I need its most powerful features? Would a 7B parameter open-weight model do the job? If using a frontier model, do I need extended thinking, Deep Research, or agent workflows, or will a standard prompt suffice? Have I tested simpler approaches first?</li>
+<li>Can I measure the footprint? Can I add CodeCarbon to this experiment, or use the Green Algorithms calculator to estimate it?</li>
+<li>Where is my compute running? If using cloud, am I in the lowest-carbon region available for this task?</li>
+<li>Can I time this work? For non-urgent batch work, can I run it at low-demand grid hours or when renewable generation is high?</li>
+<li>Am I caching or repeating? Am I running the same analysis multiple times unnecessarily?</li>
+<li>Will I report this? If this is publishable research, will I include the compute footprint in the methods section?</li>
 </ol>
 </div>
 
 <div class="info-box">
-<h4>Proportionality: The Two Failure Modes</h4>
+<h4>Proportionality: the two failure modes</h4>
 <p>Two failure modes are common in discussions of AI and the environment. The first is catastrophising: treating every ChatGPT query as an environmental emergency. The second is dismissing: pointing to AI's small per-query footprint as a reason to ignore the issue entirely.</p>
 <p style="margin-top: 8px;">The proportionate response is to:</p>
 <ul class="styled-list" style="margin-top: 8px;">
@@ -370,20 +370,20 @@
 <h2>Session 4 summary: the physical substrate of scale</h2>
 <p>Across the four sub-sessions of Session 4, the picture of AI's environmental footprint is neither comforting nor catastrophic, but reflects what we know and what we don't:</p>
 <ul class="styled-list" style="margin-top: 15px;">
-<li><strong>The data are uncertain:</strong> Corporate opacity means all figures are estimates; treat them as order-of-magnitude guides</li>
-<li><strong>Critical minerals underpin all AI hardware:</strong> Silicon, cobalt, rare earth elements, and lithium are geographically concentrated, ethically contested, and environmentally costly to extract, a supply chain dimension often absent from mainstream AI debate</li>
-<li><strong>Text vs. video is not comparable:</strong> Video generation uses ~1,000× more energy than text; these are categorically different use cases</li>
-<li><strong>Location is the biggest lever:</strong> Where your compute runs determines up to 80% of its carbon footprint</li>
-<li><strong>Embodied carbon is missing from most analyses:</strong> Manufacturing hardware releases significant carbon before a single query is run</li>
-<li><strong>The Jevons paradox is real:</strong> Efficiency gains in AI have so far been outpaced by growth in deployment and model scale</li>
-<li><strong>AI can also help:</strong> Applications in climate science, energy systems, and materials research, though these do not automatically offset AI's footprint</li>
-<li><strong>Researchers can act:</strong> Model choice, cloud region, reporting, and advocacy are all within your control</li>
+<li>The data are uncertain: Corporate opacity means all figures are estimates; treat them as order-of-magnitude guides</li>
+<li>Critical minerals underpin all AI hardware: Silicon, cobalt, rare earth elements, and lithium are geographically concentrated, ethically contested, and environmentally costly to extract, a supply chain dimension often absent from mainstream AI debate</li>
+<li>Text vs. video is not comparable: Video generation uses ~1,000× more energy than text; these are categorically different use cases</li>
+<li>Location is the biggest lever: Where your compute runs determines up to 80% of its carbon footprint</li>
+<li>Embodied carbon is missing from most analyses: Manufacturing hardware releases significant carbon before a single query is run</li>
+<li>The Jevons paradox is real: Efficiency gains in AI have so far been outpaced by growth in deployment and model scale</li>
+<li>AI can also help: Applications in climate science, energy systems, and materials research, though these do not automatically offset AI's footprint</li>
+<li>Researchers can act: Model choice, cloud region, reporting, and advocacy are all within your control</li>
 </ul>
 <p style="margin-top: 20px;">See the session bridge below for where this leads in the course.</p>
 </div>
         <div class="decision-framework">
             <h4>From substrate to governance</h4>
-            <p style="color:#555; line-height:1.8;">One chain matters for Session 12: <strong>capability ← compute ← chips + energy</strong>. Each arrow is a place a governance regime could intervene and <em>verify</em>, which is why "compute governance" is one of the few technical-governance proposals with concrete, measurable hooks. And from an African vantage point: if the levers (chips, fabs, hyperscale data centres) sit elsewhere, "sovereign AI capacity" is first a question about access to this physical substrate.</p>
+            <p style="color:#555; line-height:1.8;">One chain matters for Session 12: capability ← compute ← chips + energy. Each arrow is a place a governance regime could intervene and <em>verify</em>, which is why "compute governance" is one of the few technical-governance proposals with concrete, measurable hooks. And from an African vantage point: if the levers (chips, fabs, hyperscale data centres) sit elsewhere, "sovereign AI capacity" is first a question about access to this physical substrate.</p>
             <p style="color:#555; margin-top:10px;">Next (Week 3, Sessions 5–6): how a frontier model is trained: pretraining, SFT, and the RLHF/RL fine-tuning that turns a predictor into an assistant.</p>
         </div>
     </div>
