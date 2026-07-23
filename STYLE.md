@@ -264,6 +264,27 @@ Sweeping after the fact costs ten times what writing clean costs. The 2026-07-18
 - Require a tag-balance check (every tag the page uses, including span and iframe) before the agent
   reports done.
 
+## 12. Alignment with Ben's style guide
+
+Ben edits with his own GOV.UK-based guide
+(https://gist.github.com/BenSturgeon/5424796ffd3bd2b0548501d4c1412c88), applied via his tools. It
+converges with this file on the load-bearing rules: no emphasis bold, sentence-case headings,
+everyday words, no metaphor filler (his list names robust, key, landscape, deep dive). Adopted from
+his guide into ours:
+
+- **No orphan jargon.** Every technical term gets a real one-to-two-sentence definition at first
+  use, not just an acronym expansion.
+- **Breathing room as a prior for new prose.** Shortish paragraphs, subheadings at regular
+  intervals, series broken into lists, and never bold as paragraph glue (which is §1's label-bold
+  rule from the other side).
+- **Every number needs a referent** — units, denominator, comparison. The course already holds
+  this; his guide states it well.
+
+Accepted divergences, so neither side "fixes" the other: his 15–20-word sentence cap suits docs
+and wikis; this course's textbook register runs longer sentences deliberately, and his edits that
+split overlong colon-chains are welcome without adopting the cap globally. His no-question-mark
+headings rule yields to §0's allowance for genuine question headings ("Whose constitution?").
+
 ## Sources
 
 Borrowed selectively, all MIT: [stop-slop](https://github.com/hardikpandya/stop-slop) (structural
