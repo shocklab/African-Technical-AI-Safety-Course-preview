@@ -37,6 +37,10 @@ def page_html(path):
                   r'</h2>.*?(?=<h2 class="section-title">|'
                   r'<div class="intro-text" style="margin-top:50px;">|$)',
                   "", body, flags=re.S)
+    # readings now live as standalone blocks after the intro (Mandatory/
+    # Optional restructure, 2026-07-23) -- strip them wherever they sit
+    body = re.sub(r'<div class="resource-placeholder[^"]*">.*?</div>\s*',
+                  "", body, flags=re.S)
     body = re.sub(r'<div class="intro-text" style="margin-top:50px;">.*$',
                   "", body, flags=re.S)
     body = re.sub(r"<figure>.*?</figure>", "<p><i>[figure]</i></p>", body, flags=re.S)
