@@ -44,6 +44,19 @@
             <p>One of the most consequential empirical findings in modern AI is also one of the simplest to state: make a transformer bigger, train it on more data with more compute, and its loss falls along a strikingly regular <strong>power law</strong>. This sub-session makes that precise. We write down the three scaling laws Kaplan et al. found, derive the compute-optimal trade-off that the Chinchilla paper corrected, work a budget example with real numbers, and meet the <em>data wall</em> that now bounds the whole enterprise. Then we draw out the part that matters for this course: capability is on a forecastable trajectory while safety is not, and that asymmetry is the engine behind the alignment problem.</p>
         </div>
 
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• Kaplan, J., et al. (2020), "Scaling Laws for Neural Language Models" (<a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">arXiv:2001.08361</a>): read §1 (including §1.2, Summary of Scaling Laws) and the basic power laws in §3.</p>
+            <p>• Hoffmann, J., et al. (2022), "Training Compute-Optimal Large Language Models" (Chinchilla; <a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">arXiv:2203.15556</a>): read §1 and §3 (the three estimation approaches), then skim the Chinchilla results in §4.2.</p>
+            <p>• <strong>Gwern (2020), "The Scaling Hypothesis"</strong> (<a href="https://gwern.net/scaling-hypothesis" target="_blank" rel="noopener">gwern.net</a>): the argument that scale is the main driver of progress, written in 2020 before it was consensus; read for the argument and for what the field's reaction to it shows about forecasting.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• Sevilla, J., et al. (2022), "Compute Trends Across Three Eras of Machine Learning" (<a href="https://arxiv.org/abs/2202.05924" target="_blank" rel="noopener">arXiv:2202.05924</a>): how fast training compute has grown.</p>
+            <p>• Villalobos, P., et al. (2022), "Will we run out of data? Limits of LLM scaling based on human-generated data" (<a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener">arXiv:2211.04325</a>): the data wall.</p>
+            <p>• <strong>Epoch AI</strong>: live data on model size, compute and data trends (<a href="https://epoch.ai/" target="_blank" rel="noopener">epoch.ai</a>).</p>
+        </div>
+
         <h2 class="section-title">The empirical law</h2>
         <p class="lead">Kaplan et al. (2020) measured the test loss \(L\) of language models across roughly seven orders of magnitude and found it scales as a power law in each of three quantities (model parameters \(N\), dataset size \(D\), and training compute \(C\)) whenever the other two are not the bottleneck.</p>
         <p>Written out, the three relationships are</p>
@@ -107,20 +120,6 @@
             <li>"Capability is forecastable; safety is not." Name one capability you think <em>is</em> on a predictable curve and one safety property you think is not. Say what makes the difference.</li>
             <li>If the binding constraint becomes data rather than compute, which governance levers (Session 12) lose their grip, and which become more important?</li>
         </ul>
-
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• Kaplan, J., et al. (2020), "Scaling Laws for Neural Language Models" (<a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">arXiv:2001.08361</a>).</p>
-            <p>• Hoffmann, J., et al. (2022), "Training Compute-Optimal Large Language Models" (Chinchilla; <a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">arXiv:2203.15556</a>).</p>
-            <p>• <strong>Gwern (2020), "The Scaling Hypothesis"</strong> (<a href="https://gwern.net/scaling-hypothesis" target="_blank" rel="noopener">gwern.net</a>): the argument that scale is the main driver of progress, written in 2020 before it was consensus; read for the argument and for what the field's reaction to it shows about forecasting.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• Sevilla, J., et al. (2022), "Compute Trends Across Three Eras of Machine Learning" (<a href="https://arxiv.org/abs/2202.05924" target="_blank" rel="noopener">arXiv:2202.05924</a>): how fast training compute has grown.</p>
-            <p>• Villalobos, P., et al. (2022), "Will we run out of data? Limits of LLM scaling based on human-generated data" (<a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener">arXiv:2211.04325</a>): the data wall.</p>
-            <p>• <strong>Epoch AI</strong>: live data on model size, compute and data trends (<a href="https://epoch.ai/" target="_blank" rel="noopener">epoch.ai</a>).</p>
-        </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>

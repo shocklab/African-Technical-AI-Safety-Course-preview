@@ -43,6 +43,14 @@
 <p>We will also engage with one of the most important ideas in sustainability economics: the Jevons paradox. The history of energy technology suggests that making a system more efficient does not necessarily reduce its total energy consumption. Understanding why this keeps happening, and whether AI might be different, is essential to thinking clearly about sustainable AI.</p>
 </div>
 
+<div class="resource-placeholder reading-core">
+<h4>Mandatory readings</h4>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2011.02839" target="_blank" rel="noopener"><strong>Gupta et al. (2021): "Chasing Carbon: The Elusive Environmental Footprint of Computing"</strong></a>: IEEE HPCA peer-reviewed paper introducing a lifecycle framework for computing's carbon cost. Foundational reading for understanding why operational energy figures understate the true footprint; the capex/opex lifecycle framework is §II ("Quantifying environmental impact"), with manufacturing's share quantified in §V ("Environmental impact from manufacturing").</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2309.02065" target="_blank" rel="noopener"><strong>Wright et al. (2023): "Efficiency is Not Enough: A Critical Perspective of Environmentally Sustainable AI"</strong></a>: argues that efficiency gains in AI are routinely offset by growth in scale and deployment. The most direct academic treatment of the rebound effect in AI; the rebound argument is §3 ("Discrepancy 2: Efficiency Across The Model Life Cycle"), drawn together in §5 ("Beyond Efficiency: Systems Thinking").</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2204.05149" target="_blank" rel="noopener"><strong>Patterson et al. (2022): "The Carbon Footprint of Machine Learning Training Will Plateau, Then Shrink"</strong></a> (Google): the optimist case, written by Google researchers. Read alongside Wright et al. for a balanced picture; the "4Ms" best practices are set out in §1, with the plateau case in §5 ("Overall ML Energy Consumption").</p>
+<p style="margin-top: 8px; color: #555;">On the Patterson et al. paper: the authors are Google employees writing partly about Google's own practices and infrastructure. The paper's conclusions rely on advantages (access to TPUs, renewable purchasing, efficient cooling) that are not available to most researchers or smaller AI deployments.</p>
+</div>
+
 <!-- SECTION 1: DATA CENTRES -->
 <h2 class="section-title">Inside a data centre</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">To understand AI's energy footprint, it helps to understand what a data centre is and where the energy goes.</p>
@@ -156,6 +164,11 @@
 </ul>
 </div>
 
+<div class="info-box">
+<h4>Data centres and electricity prices</h4>
+<p>The evidence points both ways. Research by the Electric Power Research Institute found that data-centre demand put downward pressure on average US retail prices through 2024: a grid's fixed costs spread over more kilowatt-hours, and average residential rates in the average state would have been about 6% higher without the data centres built from 2019 to 2024 (<a href="https://www.marketplace.org/story/2026/07/10/data-centers-lowered-electric-bills-in-some-places-for-now" target="_blank" rel="noopener">Marketplace, 2026</a>). Against that, the independent market monitor for PJM, the largest US wholesale electricity market, attributes more than $23 billion in added capacity-market costs since 2025 to existing and forecast data-centre demand (<a href="https://fortune.com/2026/07/14/data-centers-23-billion-electricity-bills/" target="_blank" rel="noopener">Fortune, 2026</a>). Fixed-cost spreading lowers average prices while supply keeps pace; capacity-auction scarcity raises them when it does not. A claim in either direction needs its market, its period and its mechanism.</p>
+</div>
+
 <!-- SECTION 3: EMBODIED CARBON -->
 <h2 class="section-title">Embodied carbon: the cost of making the hardware</h2>
 <p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Almost all analyses of AI's carbon footprint focus on electricity consumption during operation. But there is another carbon cost that is often omitted: the emissions released when manufacturing the hardware in the first place.</p>
@@ -187,11 +200,6 @@
 <li>It means that efficiency gains from newer, more capable chips are partially or fully offset by re-manufacturing costs</li>
 </ul>
 </div>
-</div>
-
-<div class="resource-placeholder">
-<h4>Key reading: embodied carbon in computing</h4>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2011.02839" target="_blank" rel="noopener"><strong>Gupta et al. (2021): "Chasing Carbon: The Elusive Environmental Footprint of Computing"</strong></a>: IEEE HPCA peer-reviewed paper introducing a lifecycle framework for computing's carbon cost. Foundational reading for understanding why operational energy figures understate the true footprint.</p>
 </div>
 
 <!-- SECTION 4: GROWTH TRAJECTORY -->
@@ -277,13 +285,6 @@
 <div class="warning-box">
 <h4>Reading the efficiency claims critically</h4>
 <p>When AI companies or optimistic commentators cite efficiency improvements (e.g. "our new model uses 44% less energy per query"), this is valuable information, but it does not tell you what happens to <em>total</em> energy use if deployment grows faster than efficiency improves. Always ask: what is the denominator? Efficiency per query, or total annual energy consumption?</p>
-</div>
-
-<div class="resource-placeholder">
-<h4>Key readings: efficiency vs. rebound</h4>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2309.02065" target="_blank" rel="noopener"><strong>Wright et al. (2023): "Efficiency is Not Enough: A Critical Perspective of Environmentally Sustainable AI"</strong></a>: argues that efficiency gains in AI are routinely offset by growth in scale and deployment. The most direct academic treatment of the rebound effect in AI.</p>
-<p style="font-style: normal; margin-top: 12px;"><a href="https://arxiv.org/abs/2204.05149" target="_blank" rel="noopener"><strong>Patterson et al. (2022): "The Carbon Footprint of Machine Learning Training Will Plateau, Then Shrink"</strong></a> (Google): the optimist case, written by Google researchers. Read alongside Wright et al. for a balanced picture.</p>
-<p style="margin-top: 8px; color: #555;">On the Patterson et al. paper: the authors are Google employees writing partly about Google's own practices and infrastructure. The paper's conclusions rely on advantages (access to TPUs, renewable purchasing, efficient cooling) that are not available to most researchers or smaller AI deployments.</p>
 </div>
 
 <!-- SECTION 6: WHAT COMPANIES ARE DOING -->

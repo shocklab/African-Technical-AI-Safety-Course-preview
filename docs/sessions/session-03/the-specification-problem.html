@@ -50,6 +50,18 @@
             <p>This sub-session is about what lives in that gap. We will: define the problem as outer alignment; watch real systems exploit misspecified objectives in sometimes alarming ways; sharpen the folk wisdom of "Goodhart's law" into four distinct failure mechanisms, with a small derivation for one of them; see experimental evidence that <em>more capable</em> agents exploit misspecification <em>more</em>, sometimes abruptly; and meet a result suggesting that a non-trivial proxy can <em>never</em> be proven safe to optimise without limit. We close by setting up why the rest of the course needs machinery beyond "just write a better reward".</p>
         </div>
 
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <a href="https://deepmind.google/blog/specification-gaming-the-flip-side-of-ai-ingenuity/" target="_blank" rel="noopener"><strong>Krakovna et al. (2020), "Specification gaming: the flip side of AI ingenuity"</strong></a> (DeepMind blog + the examples list). Short and concrete; skim the examples list and pick three favourites.</p>
+            <p>• <strong>Pan, Bhatia &amp; Steinhardt (2022), "The Effects of Reward Misspecification"</strong> (ICLR 2022; <a href="https://arxiv.org/abs/2201.03544" target="_blank" rel="noopener">arXiv:2201.03544</a>). Read for the capability-vs-gaming curves and the phase-transition phenomenon, both in §4, "How Agent Optimization Power Drives Misalignment".</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Manheim &amp; Garrabrant (2018), "Categorizing Variants of Goodhart's Law"</strong> (<a href="https://arxiv.org/abs/1803.04585" target="_blank" rel="noopener">arXiv:1803.04585</a>). The four-variant taxonomy in full.</p>
+            <p>• <strong>Skalse, Howe, Krasheninnikov &amp; Krueger (2022), "Defining and Characterizing Reward Hacking"</strong> (NeurIPS 2022; <a href="https://arxiv.org/abs/2209.13085" target="_blank" rel="noopener">arXiv:2209.13085</a>). The unhackability definition and theorem.</p>
+            <p>• <a href="https://openai.com/index/faulty-reward-functions/" target="_blank" rel="noopener"><strong>Clark &amp; Amodei (2016), "Faulty Reward Functions in the Wild"</strong></a> (OpenAI). The original CoastRunners write-up.</p>
+        </div>
+
         <h2 class="section-title">Optimising a proxy</h2>
         <p class="lead">Every trained system optimises a number. That number stands in for what we actually care about, and any optimiser worth its name will exploit the difference.</p>
         <p>It helps to name two distinct objects. The <strong>intended objective</strong> is what the designer actually wants: win the boat race, be a trustworthy research assistant, drive safely. The <strong>specified objective</strong> is the thing the system is literally trained on: the in-game score, a reward model fit to thousands of human ratings, a hand-written reward function. Training drives the system up the <em>specified</em> objective as hard as the optimiser allows. Whether that also climbs the <em>intended</em> objective depends entirely on how faithfully the specification captures the intent, and faithful capture is far harder than it looks.</p>
@@ -158,18 +170,6 @@
             <li>Is "specification gaming" a property of the AI, of the reward, or of the relationship between them? Why does the answer matter for who is responsible when it goes wrong?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <a href="https://deepmind.google/blog/specification-gaming-the-flip-side-of-ai-ingenuity/" target="_blank" rel="noopener"><strong>Krakovna et al. (2020), "Specification gaming: the flip side of AI ingenuity"</strong></a> (DeepMind blog + the examples list). Short and concrete; skim the examples list and pick three favourites.</p>
-            <p>• <strong>Pan, Bhatia &amp; Steinhardt (2022), "The Effects of Reward Misspecification"</strong> (ICLR 2022; <a href="https://arxiv.org/abs/2201.03544" target="_blank" rel="noopener">arXiv:2201.03544</a>). Read for the capability-vs-gaming curves and the phase-transition phenomenon.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Manheim &amp; Garrabrant (2018), "Categorizing Variants of Goodhart's Law"</strong> (<a href="https://arxiv.org/abs/1803.04585" target="_blank" rel="noopener">arXiv:1803.04585</a>). The four-variant taxonomy in full.</p>
-            <p>• <strong>Skalse, Howe, Krasheninnikov &amp; Krueger (2022), "Defining and Characterizing Reward Hacking"</strong> (NeurIPS 2022; <a href="https://arxiv.org/abs/2209.13085" target="_blank" rel="noopener">arXiv:2209.13085</a>). The unhackability definition and theorem.</p>
-            <p>• <a href="https://openai.com/index/faulty-reward-functions/" target="_blank" rel="noopener"><strong>Clark &amp; Amodei (2016), "Faulty Reward Functions in the Wild"</strong></a> (OpenAI). The original CoastRunners write-up.</p>
-        </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Summary &amp; what's next</h2>

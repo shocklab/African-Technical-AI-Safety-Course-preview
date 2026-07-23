@@ -44,6 +44,21 @@
             <p>We work through three landmark results (Sleeper Agents, Alignment Faking, and in-context scheming), being scrupulous about what each does and does <em>not</em> establish; the first attempt to train against scheming, and the measurement problem it ran into; the situational awareness that deception presupposes, now a measurable quantity; the epistemic problem that makes behaviour-based safety arguments fragile; and the corrigibility question, with the off-switch game and why "we can always turn it off" is not the reassurance it sounds like. We close with the in-class seminar and the brief for your failure-mode essay.</p>
         </div>
 
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Greenblatt, Denison et al. (2024), "Alignment Faking in Large Language Models"</strong> (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">arXiv:2412.14093</a>): the compliance-gap experiment and scratchpad reasoning; the prompted compliance-gap results are in §3 ("Prompting"), the RL-training results in §5 ("RL training") and the weight-exfiltration behaviour in §6 ("Anti-AI-lab behavior").</p>
+            <p>• <strong>Hubinger et al. (2024), "Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training"</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>): backdoor training is described in §3, and the persistence results in §4 ("When does RL fine-tuning train away backdoors?"), §5 (supervised fine-tuning) and §6 (adversarial training).</p>
+            <p>• <strong>Meinke et al. (2024), "Frontier Models are Capable of In-context Scheming"</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener">arXiv:2412.04984</a>): the Apollo Research evaluations described below; the evaluation designs are in §2 ("Evaluations"), the per-model results in §3 ("Results") and the doubling-down analysis in §3.2.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <a href="https://intelligence.org/files/Corrigibility.pdf" target="_blank" rel="noopener"><strong>Soares, Fallenstein, Yudkowsky &amp; Armstrong (2015), "Corrigibility"</strong></a> (AAAI-15 Workshop).</p>
+            <p>• <strong>Hadfield-Menell, Dragan, Abbeel &amp; Russell (2017), "The Off-Switch Game"</strong> (IJCAI 2017; <a href="https://arxiv.org/abs/1611.08219" target="_blank" rel="noopener">arXiv:1611.08219</a>).</p>
+            <p>• <strong>Laine et al. (2024), "The Situational Awareness Dataset (SAD) for LLMs"</strong> (NeurIPS 2024 D&amp;B; <a href="https://arxiv.org/abs/2407.04694" target="_blank" rel="noopener">arXiv:2407.04694</a>); <strong>Berglund et al. (2023)</strong>, "Taken out of context…" (<a href="https://arxiv.org/abs/2309.00667" target="_blank" rel="noopener">arXiv:2309.00667</a>).</p>
+            <p>• <strong>Sheshadri et al. (2025), "Why Do Some Language Models Fake Alignment While Others Don't?"</strong> (<a href="https://arxiv.org/abs/2506.18032" target="_blank" rel="noopener">arXiv:2506.18032</a>): the 25-model extension of Alignment Faking described below.</p>
+            <p>• <strong>Schoen et al. (2025), "Stress Testing Deliberative Alignment for Anti-Scheming Training"</strong> (<a href="https://arxiv.org/abs/2509.15541" target="_blank" rel="noopener">arXiv:2509.15541</a>; companion site <a href="https://www.antischeming.ai/" target="_blank" rel="noopener">antischeming.ai</a>): the intervention and its situational-awareness confound.</p>
+        </div>
+
         <h2 class="section-title">The empirical evidence</h2>
         <p class="lead">Three 2024 papers moved deceptive alignment from thought experiment to measurement. Read them carefully: the precise claims are narrower, and more interesting, than the headlines.</p>
         <div class="case-study">
@@ -125,21 +140,6 @@
             <li>If behavioural tests can't rule out deception, list the <em>non-behavioural</em> sources of assurance the course will pursue. Which seems most promising to you, and what is its weakness?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Greenblatt, Denison et al. (2024), "Alignment Faking in Large Language Models"</strong> (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">arXiv:2412.14093</a>): the compliance-gap experiment and scratchpad reasoning.</p>
-            <p>• <strong>Hubinger et al. (2024), "Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training"</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>).</p>
-            <p>• <strong>Meinke et al. (2024), "Frontier Models are Capable of In-context Scheming"</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener">arXiv:2412.04984</a>): the Apollo Research evaluations described above.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <a href="https://intelligence.org/files/Corrigibility.pdf" target="_blank" rel="noopener"><strong>Soares, Fallenstein, Yudkowsky &amp; Armstrong (2015), "Corrigibility"</strong></a> (AAAI-15 Workshop).</p>
-            <p>• <strong>Hadfield-Menell, Dragan, Abbeel &amp; Russell (2017), "The Off-Switch Game"</strong> (IJCAI 2017; <a href="https://arxiv.org/abs/1611.08219" target="_blank" rel="noopener">arXiv:1611.08219</a>).</p>
-            <p>• <strong>Laine et al. (2024), "The Situational Awareness Dataset (SAD) for LLMs"</strong> (NeurIPS 2024 D&amp;B; <a href="https://arxiv.org/abs/2407.04694" target="_blank" rel="noopener">arXiv:2407.04694</a>); <strong>Berglund et al. (2023)</strong>, "Taken out of context…" (<a href="https://arxiv.org/abs/2309.00667" target="_blank" rel="noopener">arXiv:2309.00667</a>).</p>
-            <p>• <strong>Sheshadri et al. (2025), "Why Do Some Language Models Fake Alignment While Others Don't?"</strong> (<a href="https://arxiv.org/abs/2506.18032" target="_blank" rel="noopener">arXiv:2506.18032</a>): the 25-model extension of Alignment Faking described above.</p>
-            <p>• <strong>Schoen et al. (2025), "Stress Testing Deliberative Alignment for Anti-Scheming Training"</strong> (<a href="https://arxiv.org/abs/2509.15541" target="_blank" rel="noopener">arXiv:2509.15541</a>; companion site <a href="https://www.antischeming.ai/" target="_blank" rel="noopener">antischeming.ai</a>): the intervention and its situational-awareness confound.</p>
-        </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 3 summary &amp; what's next</h2>
