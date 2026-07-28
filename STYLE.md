@@ -280,9 +280,35 @@ his guide into ours:
 - **Every number needs a referent** — units, denominator, comparison. The course already holds
   this; his guide states it well.
 
+### Adopted 2026-07-28, from his merged wording pass (PR #1, sessions 1–2)
+
+Jonathan reviewed the sweep and adopted it as house style. These are now authoring rules for new
+pages (§11 applies at draft time); sessions 3+ still carry the old habits, so give a session a
+sweep against this list when it next comes up for release.
+
+- **No decorative italics.** Italics are for titles of works (*Superintelligence*, *Life 3.0*)
+  and terms being introduced, not stress ("*know* whether we have succeeded", "*least* safe").
+  If the sentence loses its point without the italics, rewrite it so the stressed word lands
+  where the stress falls naturally, usually last.
+- **No standfirsts.** The `p class="lead"` one-liners go. Either the sentence says something, in
+  which case it joins the ordinary prose unstyled, or it doesn't ("A mixed room, which shapes
+  how the course is built"), in which case delete it.
+- **Split semicolon chains.** A semicolon joining two full clauses is a prompt to split into two
+  sentences. This is most of what his pass did, and the pages read better for it.
+- **Numerals for counts**: "12 weeks", "24 sessions", "5 parts", "2 peers" (GOV.UK style; "one"
+  stays a word).
+- **"versus", not "vs", in running prose.** Compact labels keep "vs" where space is doing work
+  (the reader's-checklist bold labels: "Claim vs evidence").
+- **Ranges spelled out in prose**: "Weeks 3 and 4", "6 to 8 pages", not "Weeks 3–4" or "6–8pp".
+  En-dash ranges stay in citations and page references.
+- **Part labels use numerals** ("Part 1"), not bare Roman numerals.
+- **British spelling throughout**, including "sceptic" — a stray "skeptics" survived to 2026-07
+  in 1.1, so assume more lurk in sessions 3+.
+- **Cut "just"** (§7's spirit; his sweep caught two in the Session 2 maths pages).
+
 Accepted divergences, so neither side "fixes" the other: his 15–20-word sentence cap suits docs
-and wikis; this course's textbook register runs longer sentences deliberately, and his edits that
-split overlong colon-chains are welcome without adopting the cap globally. His no-question-mark
+and wikis; this course's textbook register runs longer sentences deliberately (the
+semicolon-split rule above is the adopted part; the cap is not). His no-question-mark
 headings rule yields to §0's allowance for genuine question headings ("Whose constitution?").
 
 ## Sources
