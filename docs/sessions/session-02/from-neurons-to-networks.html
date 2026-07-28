@@ -69,7 +69,7 @@
         </div>
 
         <h2 class="section-title">A network is a parametrised function</h2>
-        <p class="lead">Strip away the biology metaphor and a neural network is just a function \( f_\theta : \mathbb{R}^n \to \mathbb{R}^m \) with a great many parameters \( \theta \).</p>
+        <p class="lead">Strip away the biology metaphor and a neural network is a function \( f_\theta : \mathbb{R}^n \to \mathbb{R}^m \) with a great many parameters \( \theta \).</p>
         <div class="technical-detail">
             <h4>From a neuron to a layer</h4>
             <p style="color:#555;">Start with a single <strong>neuron</strong>: it takes an input vector \( x \in \mathbb{R}^{d_{\text{in}}} \), forms a weighted sum with its own weight vector \( w \) and bias \( b \), and passes the result through a nonlinearity, producing one scalar: \( a = \sigma(w \cdot x + b) \). Now stack \( d_{\text{out}} \) neurons side by side and collect their weight vectors as the <em>rows</em> of a matrix \( W \). The whole <strong>layer</strong> then computes a vector in one shot:</p>
@@ -106,7 +106,7 @@
         </div>
         <div class="technical-detail">
             <h4>Gradient descent and back-propagation</h4>
-            <p style="color:#555;">The gradient \( \nabla_\theta L \) points in the direction in parameter space along which the loss rises fastest, so stepping the other way lowers it, with the learning rate \( \eta \) setting the step size. Back-propagation is just the chain rule organised so that one backward pass (costing about as much as one forward pass) yields the gradient for <em>all</em> the parameters at once, which is what makes training billion-parameter models feasible at all. Two caveats matter later. The loss surface is wildly non-convex, so this finds a <em>low-loss region</em>, not the global minimum, and which region depends on the initialisation and the order of the data. And the result is a vast array of numbers that happens to fit the data, with no guarantee of being readable: gradient descent optimises for low loss, never for interpretability. Both points come back in Session 3 and in the interpretability weeks.</p>
+            <p style="color:#555;">The gradient \( \nabla_\theta L \) points in the direction in parameter space along which the loss rises fastest, so stepping the other way lowers it, with the learning rate \( \eta \) setting the step size. Back-propagation is the chain rule organised so that one backward pass, costing about as much as one forward pass, yields the gradient for <em>all</em> the parameters at once. That is what makes training billion-parameter models feasible at all. Two caveats matter later. The loss surface is wildly non-convex, so this finds a <em>low-loss region</em>, not the global minimum, and which region depends on the initialisation and the order of the data. And the result is a vast array of numbers that happens to fit the data, with no guarantee of being readable: gradient descent optimises for low loss, never for interpretability. Both points come back in Session 3 and in the interpretability weeks.</p>
         </div>
         <div class="info-box">
             <h4>The language-model loss</h4>

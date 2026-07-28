@@ -40,7 +40,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>"AI safety" is used to mean everything from chatbot profanity filters to human extinction, which makes it nearly useless as a term until you sharpen it. This sub-session does the sharpening. We give a working definition; separate the three kinds of risk the field worries about; introduce the one distinction, safety versus capabilities, that organises almost everything that follows; lay out a map of the technical field (which is, not coincidentally, the structure of this course); sketch how the field came to exist; place this course among the others you might encounter; and say clearly what technical AI safety is <em>not</em>.</p>
+            <p>"AI safety" gets used to mean everything from chatbot profanity filters to human extinction. Used that broadly, the term is nearly useless. This sub-session sharpens it. We give a working definition, separate the three kinds of risk the field worries about, and introduce the distinction, safety versus capabilities, that organises almost everything that follows. We then map the technical field (the map is also the structure of this course), sketch how the field came to exist, place this course among the others you might encounter, and say clearly what technical AI safety is not.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
@@ -57,85 +57,86 @@
         </div>
 
         <h2 class="section-title">A working definition</h2>
-        <p class="lead">Start with something we can actually use.</p>
-        <p><strong>Technical AI safety</strong> is the study of how to build AI systems we can rely on to do what we intend (and not what we don't), and how to <em>know</em> whether we have succeeded. Three verbs in that sentence carry the weight. <em>Build</em>: it is an engineering and research discipline, about the construction and behaviour of real systems, not only a branch of ethics or policy. <em>Intend</em>: the hard part is that "what we intend" is rarely something we can write down exactly (Session 3.1). And <em>know</em>: even a system that behaves well may not be safe, if we cannot verify <em>why</em> it behaves well, a theme that drives the interpretability and evaluation weeks.</p>
+        <p><strong>Technical AI safety</strong> is the study of how to build AI systems we can rely on to do what we intend, and not what we don't, and how to know whether we have succeeded.</p>
+        <p>Three verbs in that sentence carry the weight. Build, because this is an engineering and research discipline about real systems, not only a branch of ethics or policy. Intend, because the hard part is that "what we intend" is rarely something we can write down exactly (Session 3.1). And know, because even a system that behaves well may not be safe if we cannot verify why it behaves well. That theme drives the interpretability and evaluation weeks.</p>
         <div class="info-box">
-            <h4>Technical vs sociotechnical vs governance</h4>
-            <p>This course is "technical" AI safety: the algorithms, training methods, evaluations and model internals. That is <em>not</em> a claim that the technical layer is the only one that matters. AI risk is profoundly sociotechnical, and we treat governance (Session 12), the physical/economic substrate (Session 4), and ethics (Session 8) as first-class. The "technical" label marks our centre of gravity and the cohort's comparative advantage.</p>
+            <h4>Technical, sociotechnical and governance</h4>
+            <p>This course is "technical" AI safety: the algorithms, training methods, evaluations and model internals. That is not a claim that the technical layer is the only one that matters. AI risk is profoundly sociotechnical, and we treat governance (Session 12), the physical and economic substrate (Session 4), and ethics (Session 8) as first-class topics. The "technical" label marks where our attention is concentrated, and where this cohort's advantage lies.</p>
         </div>
 
         <h2 class="section-title">Three kinds of risk</h2>
-        <p class="lead">A useful first cut. Most concrete worries fall into one of three buckets, and they call for <em>different</em> technical responses, so muddling them wastes effort.</p>
+        <p>Most concrete worries fall into one of three buckets. The buckets call for different technical responses, so muddling them wastes effort.</p>
         <div class="card-grid">
             <div class="card">
                 <h3>Misuse</h3>
-                <p>The system works exactly as intended, but a <em>person</em> directs it at harm: cyber-offence, bioweapon "uplift", fraud, targeted disinformation, surveillance. The model is a capable tool; the danger is the human wielding it. Technical responses: refusal training, dangerous-capability evaluations, structured access and monitoring.</p>
+                <p>The system works exactly as intended, but a person directs it at harm: cyber-offence, bioweapon "uplift", fraud, targeted disinformation, surveillance. The model is a capable tool; the danger is the human wielding it. The technical responses are refusal training, dangerous-capability evaluations, structured access and monitoring.</p>
             </div>
             <div class="card">
                 <h3>Misalignment</h3>
-                <p>The system pursues something other than what we intended, either because we specified the wrong objective (outer misalignment) or because it learned an unintended one (inner misalignment). No malicious user required. This is the distinctive, hardest, most "new" problem, and the centre of gravity of this course (all of Week 2).</p>
+                <p>The system pursues something other than what we intended. Either we specified the wrong objective (outer misalignment) or it learned an unintended one (inner misalignment). No malicious user is required. This is the distinctive, hardest, most new problem, and the centre of this course (all of Week 2).</p>
             </div>
             <div class="card">
                 <h3>Systemic / structural</h3>
-                <p>Harms that emerge from how AI is deployed across society: concentration of power, labour displacement, mass surveillance, environmental cost, erosion of the shared information ecosystem. No single model "fails"; the harm is a property of the system and its incentives.</p>
+                <p>Harms that emerge from how AI is deployed across society: concentration of power, labour displacement, mass surveillance, environmental cost, erosion of the shared information ecosystem. No single model fails; the harm is a property of the system and its incentives.</p>
             </div>
         </div>
         <div class="technical-detail">
             <h4>Hendrycks' four categories</h4>
-            <p style="color:#555;">Hendrycks, Mazeika &amp; Woodside's "An Overview of Catastrophic AI Risks" (2023) uses four categories, which map cleanly onto the three above: <strong>malicious use</strong> (≈ misuse), <strong>rogue AIs</strong> (≈ misalignment), and <strong>the AI race</strong> + <strong>organizational risks</strong> (two flavours of systemic/structural: competitive pressure that erodes caution, and ordinary institutional failure inside the labs building these systems). Either taxonomy is a thinking tool; the value is that they force the question <em>which kind of danger is this, and what would actually reduce it?</em></p>
+            <p style="color:#555;">Hendrycks, Mazeika &amp; Woodside's "An Overview of Catastrophic AI Risks" (2023) uses four categories, which map cleanly onto the three above. <strong>Malicious use</strong> is roughly misuse. <strong>Rogue AIs</strong> is roughly misalignment. <strong>The AI race</strong> and <strong>organizational risks</strong> are two flavours of systemic risk: competitive pressure that erodes caution, and ordinary institutional failure inside the labs building these systems. Either taxonomy is a thinking tool. Its value is that it forces the question: which kind of danger is this, and what would actually reduce it?</p>
         </div>
         <div class="info-box">
             <h4>Overlapping categories</h4>
-            <p>A misaligned model, in the hands of a malicious user, inside an organisation racing a competitor and cutting safety corners, is all three at once, and that is the realistic case. The cut is for thinking. When someone says "AI is dangerous", your first move should be to ask <em>which</em> danger they mean, because the mitigations are different and often pull in different directions.</p>
+            <p>A misaligned model, in the hands of a malicious user, inside an organisation racing a competitor and cutting safety corners, is all three at once. That is also the realistic case. The three-way cut exists for thinking, not filing. When someone says "AI is dangerous", first ask which danger they mean. The mitigations differ and often pull in different directions.</p>
         </div>
 
-        <h2 class="section-title">The organising idea: safety vs capabilities</h2>
+        <h2 class="section-title">The organising idea: safety versus capabilities</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The widening gap</span></h3>
-            <p><strong>Capabilities</strong> are what a system can do: solve problems, write code, pass exams, act in the world. <strong>Safety</strong> is whether we can rely on it to do what we want and avoid what we don't, and whether we'd <em>know</em> if it didn't. The central empirical worry of the field is that capabilities are improving fast and predictably (Session 2's scaling laws), while safety (our ability to specify objectives, verify behaviour, and retain control) is <em>not</em> keeping pace. The danger lives in the widening gap.</p>
-            <p>Almost every topic in this course is an attempt to close that gap from the safety side: better <em>specification</em> (alignment methods, Weeks 3–4), better <em>verification</em> (evaluations and interpretability, Weeks 6–8), better <em>control</em> (robustness and the control agenda, Week 5). Keep the distinction in hand; we test new ideas against it all term.</p>
+            <p><strong>Capabilities</strong> are what a system can do: solve problems, write code, pass exams, act in the world. <strong>Safety</strong> is whether we can rely on it to do what we want, and whether we would know if it did not. The central empirical worry of the field is a widening gap. Capabilities are improving fast and predictably (Session 2's scaling laws). Safety, meaning our ability to specify objectives, verify behaviour and retain control, is not keeping pace.</p>
+            <p>Almost every topic in this course tries to close that gap from the safety side: better specification (alignment methods, Weeks 3 and 4), better verification (evaluations and interpretability, Weeks 6 to 8), better control (robustness and the control agenda, Week 5). Keep the distinction in hand; we test new ideas against it all term.</p>
         </div>
         <div class="info-box">
             <h4>Differential progress</h4>
-            <p>A useful corollary: not all research is equal from a safety standpoint. Work that advances safety faster than it advances raw capability <em>narrows</em> the gap; work that does the reverse <em>widens</em> it, even if well-intentioned. This idea ("differential technological development") is why some safety researchers are careful about which capabilities their work might inadvertently push forward, and it will recur when we discuss the safety–capabilities entanglement of interpretability and evaluations.</p>
+            <p>Not all research is equal from a safety standpoint. Work that advances safety faster than raw capability narrows the gap. Work that does the reverse widens it, even if well-intentioned. This idea is called differential technological development. It is why some safety researchers are careful about which capabilities their work might push forward, and it recurs when we discuss how entangled interpretability and evaluations are with capabilities.</p>
         </div>
 
         <h2 class="section-title">A map of the technical field</h2>
-        <p class="lead">The technical problems cluster into a handful of families, which is how the course is structured. Two reference framings, a decade apart, help orient you.</p>
+        <p>The technical problems cluster into a handful of families, and the course is structured around them. Two reference framings, a decade apart, help orient you.</p>
         <div class="technical-detail">
             <h4>The classic list: "Concrete Problems in AI Safety" (Amodei et al., 2016)</h4>
-            <p style="color:#555;">The paper that made the field legible to mainstream ML named five concrete problems, all framed around an agent and its reward: <strong>(1) avoiding negative side effects</strong>, <strong>(2) avoiding reward hacking</strong>, <strong>(3) scalable oversight</strong>, <strong>(4) safe exploration</strong>, and <strong>(5) robustness to distributional shift</strong>. Nearly a decade on, items (2), (3) and (5) are central pillars of this course (Sessions 3.1, 8, 9), a sign of how durable the framing was.</p>
+            <p style="color:#555;">The paper that made the field legible to mainstream ML named five concrete problems, all framed around an agent and its reward: <strong>(1) avoiding negative side effects</strong>, <strong>(2) avoiding reward hacking</strong>, <strong>(3) scalable oversight</strong>, <strong>(4) safe exploration</strong>, and <strong>(5) robustness to distributional shift</strong>. Nearly a decade on, problems (2), (3) and (5) are central pillars of this course (Sessions 3.1, 8, 9). The framing has held up remarkably well.</p>
         </div>
         <div class="technical-detail">
             <h4>The modern framing</h4>
-            <p style="color:#555;">Ngo, Chan &amp; Mindermann's "The Alignment Problem from a Deep Learning Perspective" (2022; ICLR 2024) recasts these for the era of large pretrained models (situationally-aware policies, learned objectives, deception), which is the version we actually study. Across both, the technical work clusters into four families, which this course is built around:</p>
+            <p style="color:#555;">Ngo, Chan &amp; Mindermann's "The Alignment Problem from a Deep Learning Perspective" (2022; ICLR 2024) recasts these problems for the era of large pretrained models: situationally-aware policies, learned objectives, deception. That is the version we actually study. Across both framings, the technical work clusters into four families, and the course is built around them:</p>
             <ul class="styled-list">
-                <li><strong>Alignment:</strong> specifying and instilling the right objective (RLHF, RLAIF, Constitutional AI, scalable oversight). Weeks 3–4.</li>
-                <li><strong>Robustness &amp; control:</strong> holding up under adversarial pressure, and remaining controllable even if the model is <em>not</em> cooperative. Week 5.</li>
-                <li><strong>Evaluation &amp; governance:</strong> measuring what a system can and will do, and the mechanisms that make a safety policy enforceable. Week 6.</li>
-                <li><strong>Interpretability:</strong> reading a model's internals to understand <em>why</em> it does what it does, since behaviour alone is insufficient. Weeks 7–8.</li>
+                <li><strong>Alignment:</strong> specifying and instilling the right objective (RLHF, RLAIF, Constitutional AI, scalable oversight). Weeks 3 and 4.</li>
+                <li><strong>Robustness and control:</strong> holding up under adversarial pressure, and staying controllable even if the model is not cooperative. Week 5.</li>
+                <li><strong>Evaluation and governance:</strong> measuring what a system can and will do, and the mechanisms that make a safety policy enforceable. Week 6.</li>
+                <li><strong>Interpretability:</strong> reading a model's internals to understand why it does what it does, since behaviour alone is insufficient. Weeks 7 and 8.</li>
             </ul>
         </div>
 
         <h2 class="section-title">The field's three phases</h2>
-        <p>Concern about machines pursuing the wrong goals is old (Wiener and the cybernetics tradition, Asimov's fictional "laws"), but technical AI safety as a research field is recent and has roughly three phases. A philosophical/theoretical phase (Bostrom's <em>Superintelligence</em>, 2014; Stuart Russell's reframing of AI's goal in <em>Human Compatible</em>, 2019) set out the conceptual problem. An empirical-ML phase, kicked off by "Concrete Problems" (2016), translated it into experiments on real systems. And the current large-model phase, driven by the surprising capabilities of LLMs since ~2020, made many once-speculative concerns (deception, situational awareness) measurable, and brought governments in: the UK and US AI Safety Institutes (both renamed in 2025: the UK's is now the AI Security Institute, the US's the Center for AI Standards and Innovation, CAISI), frontier-lab safety policies, and the May 2023 CAIS one-sentence <em>Statement on AI Risk</em>, signed by many of the field's founders, that placed extinction-level risk "alongside other societal-scale risks such as pandemics and nuclear war". You are studying the field in its most empirical, and most contested, moment.</p>
+        <p>Concern about machines pursuing the wrong goals is old. Wiener and the cybernetics tradition worried about it, and Asimov wrote fictional "laws" about it. But technical AI safety as a research field is recent, and it has three rough phases.</p>
+        <p>First, a philosophical and theoretical phase. Bostrom's <em>Superintelligence</em> (2014) and Stuart Russell's reframing of AI's goal in <em>Human Compatible</em> (2019) set out the conceptual problem. Second, an empirical-ML phase, kicked off by "Concrete Problems" (2016), which translated it into experiments on real systems. Third, the current large-model phase, driven by the surprising capabilities of LLMs since about 2020. It made once-speculative concerns measurable, deception and situational awareness among them, and brought governments in: the UK and US AI Safety Institutes (both renamed in 2025: the UK's is now the AI Security Institute, the US's the Center for AI Standards and Innovation, CAISI), frontier-lab safety policies, and the May 2023 CAIS one-sentence <em>Statement on AI Risk</em>. Signed by many of the field's founders, it placed extinction-level risk "alongside other societal-scale risks such as pandemics and nuclear war". You are studying the field in its most empirical, and most contested, moment.</p>
 
         <h2 class="section-title">Where this course sits</h2>
         <div class="info-box">
             <h4>Relative to the courses you may have heard of</h4>
-            <p>There are several excellent open courses, and we draw on all of them. BlueDot's AI Safety Fundamentals is a conceptual, reading-group curriculum, great for breadth and framing. <a href="https://www.arena.education/chapter2" target="_blank" rel="noopener">ARENA</a> (the Alignment Research Engineer Accelerator) is a hands-on engineering bootcamp, and the source of several of our labs. Hendrycks' "Intro to ML Safety" is the closest technical analogue and supplies much of our backbone and problem sets. Grosse's Toronto course gives us the idealised-to-empirical sequencing and the project structure.</p>
-            <p>This course is its own synthesis: pitched at <em>mathematically minded honours students</em> (more formal where formality helps; see the optional derivation appendices), built around a <em>research project</em>, and grounded in an explicitly <em>African</em> framing the Northern courses do not carry. We point you to the others as you go; none is a prerequisite.</p>
+            <p>There are several excellent open courses, and we draw on all of them. BlueDot's AI Safety Fundamentals is a conceptual, reading-group curriculum, good for breadth and framing. <a href="https://www.arena.education/chapter2" target="_blank" rel="noopener">ARENA</a> (the Alignment Research Engineer Accelerator) is a hands-on engineering bootcamp, and the source of several of our labs. Hendrycks' "Intro to ML Safety" is the closest technical analogue and supplies much of our backbone and problem sets. Grosse's Toronto course gives us the idealised-to-empirical sequencing and the project structure.</p>
+            <p>This course is its own synthesis. It is pitched at mathematically minded honours students, so it is more formal where formality helps (see the optional derivation appendices). It is built around a research project. And it is grounded in an explicitly African framing the Northern courses do not carry. We point you to the others as you go; none is a prerequisite.</p>
         </div>
 
-        <h2 class="section-title">What technical AI safety is <em>not</em></h2>
+        <h2 class="section-title">What technical AI safety is not</h2>
         <div class="warning-box">
             <h4>Five things to keep straight</h4>
             <ul class="styled-list">
                 <li>Not only ethics. Ethics matters (Session 8), but "is it good?" is a different question from "does it do what we intended, and can we tell?".</li>
                 <li>Not only policy. Governance matters and is itself technical (Session 12), but this course's core is the systems, not the statutes.</li>
-                <li>Not science fiction. The arguments we take seriously are ones tied to evidence about real systems; where a claim cannot be tested empirically or formally, we treat it with the scepticism we'd bring to any other.</li>
-                <li>Not solved. No technique in this course "solves alignment". Each manages some part of the gap; treatment of what remains open is the aim.</li>
-                <li>Not anti-AI. Studying failure modes is how engineering disciplines make powerful technologies usable. Aerospace safety is not anti-flight. The aim is AI that is beneficial <em>and</em> reliable, including for people the technology currently serves least.</li>
+                <li>Not science fiction. We take seriously arguments tied to evidence about real systems. A claim that cannot be tested empirically or formally gets the same scepticism as any other untestable claim.</li>
+                <li>Not solved. No technique in this course "solves alignment". Each manages some part of the gap, and being clear about what remains open is the aim.</li>
+                <li>Not anti-AI. Studying failure modes is how engineering disciplines make powerful technologies usable. Aerospace safety is not anti-flight. The aim is AI that is beneficial and reliable, including for the people the technology currently serves least.</li>
             </ul>
         </div>
 

@@ -97,7 +97,7 @@
         </div>
         <div class="technical-detail">
             <h4>Step 4 — Causal mask + softmax → attention weights</h4>
-            <p style="color:#555;">For a language model predicting the next token, position \(i\) must not see the future. We set \(\tilde{S}_{ij} = -\infty\) for \(j > i\) (so those weights will become 0), then apply a row-wise <strong>softmax</strong>, the function that turns a row of real scores \(z\) into a probability distribution, \(\operatorname{softmax}(z)_j = e^{z_j} / \sum_k e^{z_k}\) (every entry positive, the whole row summing to 1):</p>
+            <p style="color:#555;">For a language model predicting the next token, position \(i\) must not see the future. We set \(\tilde{S}_{ij} = -\infty\) for \(j > i\), so those weights will become 0. Then we apply a row-wise <strong>softmax</strong>: the function that turns a row of real scores \(z\) into a probability distribution, \(\operatorname{softmax}(z)_j = e^{z_j} / \sum_k e^{z_k}\), every entry positive and the whole row summing to 1:</p>
             <div class="formula">\[ A = \operatorname{softmax}(\tilde{S} + \text{mask}) \in \mathbb{R}^{T \times T} \]</div>
             <p style="color:#555;">Each row of \(A\) is now a probability distribution over the positions at or before \(i\) (the masked future positions, sent to \(-\infty\), get weight 0), the <strong>attention pattern</strong>. These weights are explicit numbers you can plot, which is why attention is a natural entry point for interpretability.</p>
         </div>
@@ -136,7 +136,7 @@
             <h4>Per-position computation and storage</h4>
             <p style="color:#555;">After attention moves information <em>between</em> positions, a position-wise MLP does computation <em>within</em> each position, the same two-layer network applied to every row independently:</p>
             <div class="formula">\[ \operatorname{MLP}(x) = W_2 \cdot \sigma(W_1 x + b_1) + b_2 \]</div>
-            <p style="color:#555;">It up-projects to a wider hidden dimension (commonly \(4 d_{\text{model}}\)), applies a nonlinearity \(\sigma\) (GELU in GPT-2), then down-projects back. The MLP holds much of a transformer's stored "knowledge" and accounts for roughly two-thirds of a block's (non-embedding) parameters, and is, so far, harder to interpret than attention.</p>
+            <p style="color:#555;">It up-projects to a wider hidden dimension (commonly \(4 d_{\text{model}}\)), applies a nonlinearity \(\sigma\) (GELU in GPT-2), then down-projects back. The MLP holds much of a transformer's stored "knowledge" and accounts for roughly two-thirds of a block's non-embedding parameters. It is also, so far, harder to interpret than attention.</p>
         </div>
 
         <h2 class="section-title">LayerNorm and the full block</h2>

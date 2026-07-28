@@ -40,14 +40,15 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>A course that only made the case <em>for</em> its own subject would be advocacy. So this sub-session does both, and takes the second part as seriously as the first. We lay out the strongest version of the argument that misalignment deserves serious technical work, and the four background premises beneath it; then the strongest arguments against: capabilities scepticism, the "your arguments are too informal" objection, the present-harms critique (which has a real Global South dimension), and the ideological critique. We look at whether the supposed trade-off between present and long-term harms is even real, as an <em>empirical</em> question. And we set out the stance this course takes: hold each claim at the confidence the evidence supports.</p>
+            <p>A course that only made the case for its own subject would be advocacy. So this sub-session does both, and takes the second part as seriously as the first. We lay out the strongest version of the argument that misalignment deserves serious technical work, and the four background premises beneath it. Then the strongest arguments against: capabilities scepticism, the "your arguments are too informal" objection, the present-harms critique (which has a real Global South dimension), and the ideological critique. We ask whether the supposed trade-off between present and long-term harms is even real, treating that as an empirical question. And we set out the stance this course takes: hold each claim at the confidence the evidence supports.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
             <p>• <a href="https://www.scientificamerican.com/article/we-need-to-focus-on-ais-real-harms-not-imaginary-existential-risks/" target="_blank" rel="noopener"><strong>Hanna, A. &amp; Bender, E. M. (2023), "AI Causes Real Harm. Let's Focus on That over the End-of-Humanity Hype"</strong></a> (<em>Scientific American</em>): the present-harms case, stated briskly. ≈1,500 words.</p>
-            <p>• <strong>Soares, N. (2015), "Four Background Claims"</strong> (<a href="https://intelligence.org/2015/07/24/four-background-claims/" target="_blank" rel="noopener">intelligence.org</a>): the field's premises, each stated with its standard objection; the basis for the table below. ≈2,000 words.</p>
-            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈3,500 words.</p>
+            <p>• <strong>Soares, N. (2015), "Four Background Claims"</strong> (<a href="https://intelligence.org/2015/07/24/four-background-claims/" target="_blank" rel="noopener">intelligence.org</a>): the field's premises, each stated with its standard objection and response; the basis for the four claims below. ≈2,000 words.</p>
+            <p>• <strong>Narayanan, A. &amp; Kapoor, S. (2025), "AI as Normal Technology"</strong> (<a href="https://knightcolumbia.org/content/ai-as-normal-technology" target="_blank" rel="noopener">Knight First Amendment Institute</a>): the strongest systematic statement of capabilities scepticism. Read three specific parts: the untitled opening (the framework in one pass), then two sections from Part II: "Human ability is not constrained by biology" (the intelligence-versus-power reframe, aimed at background claims 2 and 3 below) and "Games provide misleading intuitions about the possibility of superintelligence" (why chess-derived intuitions mislead, aimed at claim 2). The full essay (~25,000 words) is optional below, and we return to it in Session 20. ≈3,000 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈6,500 words.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
@@ -56,75 +57,92 @@
             <p>• <strong>Bender, Gebru, McMillan-Major &amp; Shmitchell (2021), "On the Dangers of Stochastic Parrots"</strong> (FAccT 2021, pp. 610–623; DOI <a href="https://doi.org/10.1145/3442188.3445922" target="_blank" rel="noopener">10.1145/3442188.3445922</a>): critics and counterpoint; the stochastic-parrots argument.</p>
             <p>• <strong>Gebru, T. &amp; Torres, É. P. (2024), "The TESCREAL bundle…"</strong> (<em>First Monday</em> 29(4); DOI <a href="https://doi.org/10.5210/fm.v29i4.13636" target="_blank" rel="noopener">10.5210/fm.v29i4.13636</a>): the ideological critique.</p>
             <p>• <a href="https://doi.org/10.1073/pnas.2419055122" target="_blank" rel="noopener"><strong>Hoes, E. &amp; Gilardi, F. (2025), "Existential risk narratives about AI do not distract from its immediate harms"</strong></a> (<em>PNAS</em> 122(16)): the empirical counterpoint.</p>
-            <p>• <strong>Narayanan, A. &amp; Kapoor, S. (2025), "AI as Normal Technology"</strong> (<a href="https://knightcolumbia.org/content/ai-as-normal-technology" target="_blank" rel="noopener">Knight First Amendment Institute</a>): a systematic skeptical framework, arguing AI should be modelled as a normal general-purpose technology rather than an impending superintelligence; the strongest recent statement of capabilities scepticism, revisited in Session 20.</p>
+            <p>• <strong>Narayanan &amp; Kapoor, "AI as Normal Technology", the full essay</strong> (<a href="https://knightcolumbia.org/content/ai-as-normal-technology" target="_blank" rel="noopener">Knight First Amendment Institute</a>): beyond the mandatory sections, Part I argues that diffusion speed, not capability, sets the pace (its "Benchmarks do not measure real-world utility" section pairs with Sessions 2.3–2.4), and Parts III–IV (risks, policy) connect to Sessions 12 and 20.</p>
         </div>
 
         <h2 class="section-title">The case, in full</h2>
-        <p class="lead">Here is the argument as a chain of claims, each of which you can inspect and attack. The rigorous version is Session 3; this is the skeleton, so you can see where the joints are.</p>
+        <p>Here is the argument as a chain of claims, each of which you can inspect and attack. The rigorous version is Session 3. This is the skeleton, so you can see where the joints are.</p>
         <div class="technical-detail">
             <h4>The five claims</h4>
             <ul class="styled-list">
-                <li>We optimise proxies, not intentions. We cannot write "be helpful, honest and harmless" as a loss function, so we optimise measurable stand-ins (human preference, a reward model). The target is never exactly what we meant (Session 3.1).</li>
+                <li>We optimise proxies, not intentions. We cannot write "be helpful, honest and harmless" as a loss function, so we optimise measurable stand-ins: human preference, a reward model. The target is never exactly what we meant (Session 3.1).</li>
                 <li>Optimisation exploits the gap. Push hard on a proxy and the system finds the cheapest way to score, which need not be the thing you wanted. This is Goodhart's law, and it is provable, not just observed (the derivation appendix to 3.1).</li>
-                <li>The goal a model learns may differ from the one we trained on. Even a perfect proxy can yield a model with an unintended internal objective that only coincidentally matched in training: inner misalignment, demonstrated empirically (Session 3.3).</li>
-                <li>Capable systems acquire convergent sub-goals. For almost any objective, staying operational, keeping options open, and acquiring resources help, so capable optimisers tend toward self-preservation and influence (Session 3.2).</li>
-                <li>Capability is rising fast and predictably; safety is not. Scaling laws make capabilities forecastable (Session 2.3); we have no comparable handle on "won't deceive its overseer". The worry is the <em>gap</em>, and its trajectory, not any single model today.</li>
+                <li>The goal a model learns may differ from the one we trained on. Even a perfect proxy can yield a model with an unintended internal objective that only coincidentally matched during training. This is inner misalignment, demonstrated empirically (Session 3.3).</li>
+                <li>Capable systems acquire convergent sub-goals. For almost any objective, staying operational, keeping options open and acquiring resources all help. So capable optimisers tend toward self-preservation and influence (Session 3.2).</li>
+                <li>Capability is rising fast and predictably; safety is not. Scaling laws make capabilities forecastable (Session 2.3). We have no comparable handle on "won't deceive its overseer". The worry is the gap and its trajectory, not any single model today.</li>
             </ul>
         </div>
         <div class="info-box">
             <h4>The conjunction of the claims</h4>
-            <p>To get from these claims to "existential catastrophe is likely" you must conjoin several of them (plus "this scales to the whole world", "we won't fix it in time", and so on). Conjunction makes the strong conclusion <em>fragile</em>: doubt in any one link multiplies through, which is why careful estimates of catastrophic risk vary by orders of magnitude (we see Carlsmith's explicit version in Session 3.2). But conjunction also means the <em>weaker</em> conclusion ("this is a serious problem worth technical work") needs far less: even modest credence in the early links, given the stakes, is enough to justify the field. Most of this course lives at that weaker, sturdier conclusion.</p>
+            <p>To get from these claims to "existential catastrophe is likely", you must conjoin several of them, plus extras like "this scales to the whole world" and "we won't fix it in time". Conjunction makes the strong conclusion fragile. Doubt in any one link multiplies through, which is why careful estimates of catastrophic risk vary by orders of magnitude (we see Carlsmith's explicit version in Session 3.2). But conjunction also means the weaker conclusion, that this is a serious problem worth technical work, needs far less. Even modest credence in the early links, given the stakes, is enough to justify the field. Most of this course lives at that weaker, sturdier conclusion.</p>
         </div>
 
         <h2 class="section-title">Four background claims</h2>
-        <p class="lead">Beneath the five-claim chain sit older, more basic premises. Soares (2015) states four of them, together with the standard objection to each, so both sides of the argument arrive already structured. Much disagreement about the field turns out to be disagreement about one of these.</p>
-        <table class="comparison-table">
-            <thead><tr><th>Claim</th><th>The standard objection</th></tr></thead>
-            <tbody>
-                <tr><td>Humans have general intelligence: a versatile ability to solve problems across many domains.</td><td>There is no such general faculty; humans run a collection of special-purpose modules, and nothing correspondingly general will transfer to machines.</td></tr>
-                <tr><td>AI systems could become far more intelligent than humans.</td><td>Brains may have properties no machine can replicate; the algorithms may be too complex to build; or humans may already sit near the ceiling of possible intelligence.</td></tr>
-                <tr><td>Highly intelligent AI systems would substantially shape the future.</td><td>However capable, such systems would still have to work with us and integrate into our economy rather than steer around it.</td></tr>
-                <tr><td>Beneficial outcomes require deliberate design; they are not the default.</td><td>Smarter systems will be better at working out what we value, and better at acting on it.</td></tr>
-            </tbody>
-        </table>
-        <p>Read the post before class and arrive with a position: which claim carries your lowest credence, and does the paired objection actually target it? On the second claim, the outer bound is physical rather than biological: Tegmark (<em>Life 3.0</em>, ch. 6) works through the limits physics places on computation and finds them astronomically far above current hardware, so "humans are near the ceiling" is an argument that must be made on other grounds. Bostrom makes the hardware-advantage version of the same point in <em>Superintelligence</em>, ch. 3. These are discussion points, not settled premises; the in-class exercise below and the Session 20 seminar both draw on them.</p>
+        <p>Beneath the five-claim chain sit older, more basic premises. Soares (2015) states four of them, each with the standard objection and his response, so both sides of the argument arrive already structured. Much disagreement about the field turns out to be disagreement about one of these.</p>
+        <div class="card-grid">
+            <div class="card">
+                <h3>1 · Humans have general intelligence</h3>
+                <p>The claim: humans have a versatile ability to solve problems across many domains.</p>
+                <p>The objection: there is no such general faculty. Humans run a collection of special-purpose modules, and nothing correspondingly general will transfer to machines.</p>
+                <p>The response: whatever produces it, human cognition succeeds in domains evolution never prepared us for, such as spacecraft, vaccines and computers. That cross-domain reach is what matters, and a machine that matched it would have the same reach.</p>
+            </div>
+            <div class="card">
+                <h3>2 · AI could become far more intelligent than humans</h3>
+                <p>The claim: AI systems could substantially exceed human intelligence.</p>
+                <p>The objection: brains may have properties no machine can replicate; the algorithms may be too complex to build; or humans may already sit near the ceiling of possible intelligence.</p>
+                <p>The response: brains are physical systems, and no known physics privileges biological computation. Evolution worked under tight constraints (energy budgets, skull size, neuron signalling far slower than electronics) that engineered systems do not share, and machines gain speed, copying and editing advantages that biology cannot.</p>
+            </div>
+            <div class="card">
+                <h3>3 · Highly intelligent AI would shape the future</h3>
+                <p>The claim: systems far more capable than us would substantially determine what happens next.</p>
+                <p>The objection: however capable, such systems would still have to work with us and integrate into our economy rather than steer around it.</p>
+                <p>The response: intelligence is exactly what let humans, rather than chimpanzees, decide how the planet gets used. Integration with our economy is a strategy, not a law of nature. A sufficiently capable system could invent alternatives, persuade, or act faster than our institutions respond.</p>
+            </div>
+            <div class="card">
+                <h3>4 · Beneficial outcomes require deliberate design</h3>
+                <p>The claim: good outcomes from powerful AI are not the default. They must be engineered.</p>
+                <p>The objection: smarter systems will be better at working out what we value, and better at acting on it.</p>
+                <p>The response: knowing what we value is not the same as caring about it. A system optimises whatever objective it actually has, and capability does not pull that objective toward benevolence. A perfect model of human values, attached to the wrong goal, just predicts us better while pursuing something else.</p>
+            </div>
+        </div>
+        <p>Read the post before class and arrive with a position. Which claim carries your lowest credence? And does the paired objection actually target it, or does the response defuse it? On the second claim, the outer bound is physical rather than biological. Tegmark (<em>Life 3.0</em>, ch. 6) works through the limits physics places on computation and finds them astronomically far above current hardware, so "humans are near the ceiling" must be argued on other grounds. Bostrom makes the hardware-advantage version of the same point in <em>Superintelligence</em>, ch. 3. These are discussion points, not settled premises; the in-class exercise below and the Session 20 seminar both draw on them.</p>
 
         <h2 class="section-title">The strongest critics</h2>
-        <p class="lead">Take these seriously. The best critics are not careless (many are leading researchers), and they are usually disputing <em>which</em> risks deserve attention and resources, not denying that AI can do harm.</p>
+        <p>Take these seriously. The best critics are not careless, and many are leading researchers. They are usually disputing which risks deserve attention and resources, not denying that AI can do harm.</p>
         <div class="card-grid">
             <div class="card">
                 <h3>"Focus on present harms"</h3>
-                <p>Hanna &amp; Bender, and the DAIR group founded by Timnit Gebru, argue that speculative-extinction talk diverts attention, funding and regulatory energy from <em>documented</em> harms happening now, such as discrimination, exploited data-labour, surveillance and environmental cost, which fall hardest on the Global South. On this view the very framing of "x-risk" is a political act with distributional consequences.</p>
+                <p>Hanna &amp; Bender, and the DAIR group founded by Timnit Gebru, argue that speculative-extinction talk diverts attention, funding and regulatory energy from documented harms happening now. Discrimination, exploited data-labour, surveillance and environmental cost all fall hardest on the Global South. On this view the very framing of "x-risk" is a political act with distributional consequences.</p>
             </div>
             <div class="card">
                 <h3>Capabilities scepticism</h3>
-                <p>Perhaps today's systems are less capable than the hype implies: "stochastic parrots" (Bender et al., 2021) that recombine training text without understanding, and will fail in ways that don't scale to agency. If so, the dangerous-agency story is premature, and apparent "emergence" may be partly a measurement artefact (we test this directly in Session 2.4).</p>
+                <p>Perhaps today's systems are less capable than the hype implies: "stochastic parrots" (Bender et al., 2021) that recombine training text without understanding, and will fail in ways that don't scale to agency. If so, the dangerous-agency story is premature, and apparent "emergence" may be partly a measurement artefact. We test this directly in Session 2.4.</p>
             </div>
             <div class="card">
                 <h3>"The arguments are too informal"</h3>
-                <p>A methodological objection: the core arguments lean on notions (a "goal", an "optimiser", "wanting") that don't cleanly apply to a network trained by gradient descent on next-token prediction. Without rigour, the conclusions are unearned. This is a fair challenge, and one reason this course insists on formal and empirical grounding rather than intuition.</p>
+                <p>A methodological objection. The core arguments lean on notions that don't cleanly apply to a network trained by gradient descent on next-token prediction: a "goal", an "optimiser", "wanting". Without rigour, the conclusions are unearned. This is a fair challenge, and one reason this course insists on formal and empirical grounding rather than intuition.</p>
             </div>
             <div class="card">
                 <h3>The ideological critique</h3>
-                <p>Gebru &amp; Torres (2024) argue that the long-termist/x-risk milieu carries a specific bundle of ideologies (their "TESCREAL" acronym) with troubling intellectual roots, and that this shapes which questions get asked and funded. Whatever you make of it, it is a serious prompt to ask <em>who</em> set this field's agenda and <em>whose</em> concerns it centres, a question this course's African framing also presses.</p>
+                <p>Gebru &amp; Torres (2024) argue that the long-termist milieu carries a specific bundle of ideologies (their "TESCREAL" acronym) with troubling intellectual roots, and that this shapes which questions get asked and funded. Whatever you make of it, it is a serious prompt to ask who set this field's agenda and whose concerns it centres. This course's African framing presses the same question.</p>
             </div>
         </div>
 
         <h2 class="section-title">Whether the trade-off is real</h2>
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Present harms vs long-term risk: the evidence</span></h3>
-            <p>Much of the heat assumes the two concerns <em>compete</em> for a fixed pool of attention. But that is an empirical claim, and it can be tested. Hoes &amp; Gilardi (<em>PNAS</em>, 2025) ran experiments on whether exposure to existential-risk narratives reduces people's concern for AI's immediate harms, and found that it does <em>not</em> measurably crowd them out. That single study doesn't settle the funding-and-power argument (which is about institutions, not individual attitudes), but it should make you cautious about treating the trade-off as obvious in either direction.</p>
-            <p>Note too that many <em>technical</em> mitigations serve both: better evaluations catch present misuse <em>and</em> dangerous capabilities; interpretability exposes bias <em>and</em> deception; robustness work helps against today's jailbreaks <em>and</em> tomorrow's. The framing as a zero-sum fight may obscure how much of the actual work is shared.</p>
+            <h3><span style="color:#ffffff;">Present harms versus long-term risk: the evidence</span></h3>
+            <p>Much of the heat assumes the two concerns compete for a fixed pool of attention. But that is an empirical claim, and it can be tested. Hoes &amp; Gilardi (<em>PNAS</em>, 2025) ran experiments on whether exposure to existential-risk narratives reduces people's concern for AI's immediate harms. It does not measurably crowd them out. One study doesn't settle the funding-and-power argument, which is about institutions rather than individual attitudes. But it should make you cautious about treating the trade-off as obvious in either direction.</p>
+            <p>Note too that many technical mitigations serve both concerns. Better evaluations catch present misuse and dangerous capabilities. Interpretability exposes bias and deception. Robustness work helps against today's jailbreaks and tomorrow's. Framing this as a zero-sum fight obscures how much of the actual work is shared.</p>
         </div>
 
         <h2 class="section-title">The stance this course takes</h2>
         <div class="info-box">
             <h4>Three commitments</h4>
-            <p>You do not have to believe in catastrophe to find this material worth doing, and you do not have to dismiss long-term risk to take present harms seriously. The position is to (1) hold each claim at the confidence the evidence supports, a <em>probability</em>, not a verdict; (2) be able to state the other side's strongest argument before giving your own; and (3) update when the evidence does. We treat "this premise is uncertain" as a finding. That habit is <em>assessed</em>: both the failure-mode essay and the Session 20 skeptics seminar reward steelmanning over conclusion-picking.</p>
+            <p>You do not have to believe in catastrophe to find this material worth doing, and you do not have to dismiss long-term risk to take present harms seriously. The position is to (1) hold each claim at the confidence the evidence supports, as a probability rather than a verdict; (2) be able to state the other side's strongest argument before giving your own; and (3) update when the evidence does. We treat "this premise is uncertain" as a finding. That habit is assessed: both the failure-mode essay and the Session 20 sceptics seminar reward steelmanning over conclusion-picking.</p>
         </div>
         <div class="technical-detail">
             <h4>Forcing a vague claim into structure</h4>
-            <p style="color:#555;">When you find yourself agreeing or disagreeing with "AI is dangerous", force the vague claim into structure. <em>Which</em> risk type (1.2)? <em>Which</em> link in the chain above? <em>What</em> credence, and <em>what evidence</em> would move it? "I put maybe 20% on premise 3 because the empirical case for inner misalignment in LLMs is still thin" is a position you can defend and update. "AI will/won't kill us all" is a flag, not an argument. Session 3.2 shows the fully worked version of this discipline using Carlsmith's explicit credences; here, start practising it.</p>
+            <p style="color:#555;">When you find yourself agreeing or disagreeing with "AI is dangerous", force the vague claim into structure. Which risk type (1.2)? Which link in the chain above? What credence, and what evidence would move it? "I put maybe 20% on premise 3 because the empirical case for inner misalignment in LLMs is still thin" is a position you can defend and update. "AI will/won't kill us all" is a flag, not an argument. Session 3.2 shows the fully worked version of this discipline using Carlsmith's explicit credences. Here, start practising it.</p>
         </div>
 
         <div class="technical-detail">
@@ -135,13 +153,13 @@
                 <li>Given that, some agent pursues an unintended sub-goal at scale (reward hacking or goal misgeneralisation, Sessions 3.1/3.3): say 0.5.</li>
                 <li>Given that, at least one instance causes ≥$1B in damage before it is caught: say 0.3.</li>
             </ul>
-            <p style="color:#555;">Multiplying gives ≈ 0.12: "roughly one in eight, and here is exactly why", which you can argue about link by link rather than as a slogan. Change "five years" to "fifty" and every term shifts. This is the same machinery as Carlsmith's six-premise estimate (Session 3.2), only smaller; the discipline is identical, and it is what the failure-mode essay rewards. (The numbers are illustrative: supply and defend your own, and notice how much the conclusion moves when you do.)</p>
+            <p style="color:#555;">Multiplying gives about 0.12: roughly one in eight, and here is exactly why. Now you can argue about it link by link rather than as a slogan. Change "five years" to "fifty" and every term shifts. This is the same machinery as Carlsmith's six-premise estimate (Session 3.2), only smaller. The discipline is identical, and it is what the failure-mode essay rewards. (The numbers are illustrative: supply and defend your own, and notice how much the conclusion moves when you do.)</p>
         </div>
 
         <h2 class="section-title">In-class</h2>
         <div class="lab-box">
             <h4>One sentence, two halves <span class="tag">in-class</span></h4>
-            <p>Write a single sentence: <em>"The strongest reason to take misalignment seriously is … and the strongest reason to doubt it is …"</em> Force yourself to make <em>both</em> halves strong, with no strawmen on either side. We collect these, surface the themes, and revisit your own sentence in Session 20 to see whether the course changed your mind, and in which direction. Keep a copy.</p>
+            <p>Write a single sentence: <em>"The strongest reason to take misalignment seriously is … and the strongest reason to doubt it is …"</em> Make both halves strong, with no strawmen on either side. We collect these, surface the themes, and revisit your own sentence in Session 20 to see whether the course changed your mind, and in which direction. Keep a copy.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
