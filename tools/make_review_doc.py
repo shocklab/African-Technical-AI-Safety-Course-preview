@@ -66,13 +66,16 @@ def page_html(path):
                   r"<\1>", body)
     body = re.sub(r"</?div>", "", body)
     body = re.sub(r"</?span>", "", body)
-    if full:
-        # keep inline/display LaTeX verbatim through the markdown conversion:
-        # as bare text pandoc escapes every backslash and bracket
-        body = re.sub(r"\\\((.*?)\\\)", lambda m: "<code>" + m.group(1).strip() + "</code>",
-                      body, flags=re.S)
-        body = re.sub(r"\\\[(.*?)\\\]", lambda m: "<code>" + m.group(1).strip() + "</code>",
-                      body, flags=re.S)
+    # pandoc dereferences iframe src and inlines whatever it fetches (YouTube's
+    # "An error occurred" page), so replace embeds with a plain link line
+    def embed_line(m):
+        tag = m.group(0)
+        src = re.search(r'src="([^"]+)"', tag)
+        ttl = re.search(r'title="([^"]+)"', tag)
+        label = H.unescape(ttl.group(1)) if ttl else "video"
+        url = src.group(1) if src else ""
+        return f'<p>[video: {H.escape(label)} — <a href="{url}">{url}</a>]</p>'
+    body = re.sub(r"<iframe[^>]*>.*?</iframe>|<iframe[^>]*/?>", embed_line, body, flags=re.S)
     body = re.sub(r"\n{3,}", "\n\n", body)
     src = f"<p>source: {H.escape(path)}</p>\n" if full else ""
     return f"<h1>{H.escape(title)}</h1>\n{src}{body.strip()}"
