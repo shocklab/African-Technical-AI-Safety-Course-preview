@@ -1,0 +1,15 @@
+# Cerebras-GPT: measured compute-optimal training runs on the Pile.
+# Source: Dey et al. (2023), "Cerebras-GPT: Open Compute-Optimal Language Models
+# Trained on the Cerebras Wafer-Scale Cluster", arXiv:2304.03208.
+#   parameters and training tokens: Table 1 (model architecture and training details)
+#   pile_test_loss: Table 3, "Pile test xent" column, standard-parameterisation (SP) models
+# Parameter counts are the paper's headline labels, not exact counts (appendix E gives the formula).
+# The 6.7B and 13B models are omitted: their Pile losses are not reported in Table 3, and the
+# paper states the 13B loss was estimated rather than measured.
+# Training compute is deliberately NOT included: compute it yourself as C = 6ND FLOP.
+model,parameters,training_tokens,pile_test_loss
+Cerebras-GPT 111M,111000000,2200000000,2.608
+Cerebras-GPT 256M,256000000,5100000000,2.349
+Cerebras-GPT 590M,590000000,11800000000,2.181
+Cerebras-GPT 1.3B,1300000000,26300000000,1.997
+Cerebras-GPT 2.7B,2700000000,53000000000,1.834
