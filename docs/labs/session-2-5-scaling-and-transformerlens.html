@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 2.5 — Lab notebook</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+  .nb { padding:0 48px 40px; }
+  .nb .jp-Cell, .nb .cell { margin:0 0 18px; }
+  .nb pre, .nb .highlight pre { background:#f5f7f9; border:1px solid #e4e8ec; border-left:3px solid #2a5298;
+      border-radius:4px; padding:14px 16px; overflow-x:auto; font-family:var(--mono); font-size:0.82rem;
+      line-height:1.5; color:#1f2d3a; }
+  .nb .jp-InputArea-prompt, .nb .jp-OutputArea-prompt, .nb .prompt { display:none; }
+  .nb h1 { font-family:var(--display); color:var(--navy); font-size:1.9rem; margin:28px 0 10px; }
+  .nb h2 { font-family:var(--display); color:var(--navy); font-size:1.4rem; margin:34px 0 10px;
+      padding-top:14px; border-top:1px solid var(--rule); }
+  .nb h3 { font-family:var(--display); color:var(--blue); font-size:1.1rem; margin:24px 0 8px; }
+  .nb blockquote { border-left:3px solid var(--blue); background:var(--tint); margin:18px 0;
+      padding:12px 18px; color:var(--ink); }
+  .nb table { border-collapse:collapse; margin:16px 0; }
+  .nb td, .nb th { border:1px solid var(--rule); padding:6px 10px; font-size:0.9rem; }
+  .nb img { max-width:100%; height:auto; }
+  .nb-actions { margin:22px 48px 0; padding:16px 20px; background:var(--tint);
+      border-left:3px solid var(--navy); }
+  .nb-actions a { color:var(--blue); }
+  .nb-actions p { margin:0 0 6px; font-size:0.94rem; }
+  .nb-actions p:last-child { margin-bottom:0; }
+  @media (max-width:760px) { .nb { padding:0 24px 30px; } .nb-actions { margin:22px 24px 0; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Session 2.5 — Lab notebook</h1>
+        <p class="subtitle">Scaling laws and a first look inside a model</p>
+    </div>
+    <div class="nb-actions">
+        <p><strong>This is a read-only rendering.</strong> To run it:
+           <a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-2-5-scaling-and-transformerlens.ipynb"
+              target="_blank" rel="noopener">open in Google Colab</a>, or
+           <a href="session-2-5-scaling-and-transformerlens.ipynb" download>download the .ipynb</a> and upload it yourself.</p>
+        <p>The cells have no saved outputs: you run them and keep your own.
+           <a href="../sessions/session-02/lab-scaling-and-transformerlens.html">Back to the lab page</a>.</p>
+    </div>
+    <div class="nb">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>African Technical AI Safety</strong> · Week 1, Session 2.5</p>
+<p>This notebook works through the three parts of the lab:</p>
+<ol>
+<li><strong>Fit a scaling law</strong> — recover a power-law exponent from (compute, loss) points and compare it with Kaplan et al.</li>
+<li><strong>Explore the compute trends</strong> — estimate a doubling time from Epoch AI's notable-models data.</li>
+<li><strong>Open up a transformer</strong> — load GPT-2 in TransformerLens, read the residual stream, and measure the tokenisation gap between English and isiZulu.</li>
+</ol>
+<p>Everything runs on free Colab; no GPU is needed, though a free GPU runtime makes part 3 quicker.</p>
+<p><strong>What you submit:</strong> this notebook, run end to end, with your own answers written into the four <em>Your turn</em> cells.</p>
+<blockquote>
+<p>Cells marked <strong>Your turn</strong> are where you write. The code cells are meant to run as they are; break them deliberately if it helps you understand them, but keep a working copy of your answers.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Run once per Colab session (~1 min). Skip the install if running locally with the packages already present.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="n">IN_COLAB</span> <span class="o">=</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span>
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s1">'transformer_lens'</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">q</span> <span class="n">transformer_lens</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'axes.grid'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'grid.alpha'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Colab:'</span><span class="p">,</span> <span class="n">IN_COLAB</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="%E2%91%A0-Fit-a-scaling-law">① Fit a scaling law</h2><p>Kaplan et al. (2020) report that test loss falls as a power law in compute:</p>
+<p>$$L(C_{\min}) = \left(\frac{C_c^{\min}}{C_{\min}}\right)^{\alpha_C^{\min}}, \qquad \alpha_C^{\min} \approx 0.050, \quad C_c^{\min} \approx 3.1 \times 10^8 \ \text{PF-days}$$</p>
+<p>Taking logs turns that into a straight line, which is why the fit below is ordinary least squares:</p>
+<p>$$\log L = a - \alpha \log C$$</p>
+<p>Your job is to recover $\alpha$ from data and see how small it is.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># The class CSV, if your instructor distributed one: two columns, compute and loss.</span>
+<span class="c1"># Set CSV_PATH to its filename after uploading it to the Colab session.</span>
+<span class="n">CSV_PATH</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># e.g. 'scaling_runs.csv'</span>
+
+<span class="n">ALPHA_KAPLAN</span><span class="p">,</span> <span class="n">CC_KAPLAN</span> <span class="o">=</span> <span class="mf">0.050</span><span class="p">,</span> <span class="mf">3.1e8</span>   <span class="c1"># Kaplan et al. (2020), eq. 1.3; C in PF-days</span>
+
+<span class="k">if</span> <span class="n">CSV_PATH</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CSV_PATH</span><span class="p">)</span>
+    <span class="n">compute</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'class CSV (</span><span class="si">{</span><span class="n">CSV_PATH</span><span class="si">}</span><span class="s1">)'</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># No CSV: generate teaching data FROM the published law, with multiplicative</span>
+    <span class="c1"># noise standing in for run-to-run variation. These are not measured runs, so</span>
+    <span class="c1"># recovering alpha here only checks your fitting code, not the law itself.</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">compute</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>                       <span class="c1"># PF-days</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">CC_KAPLAN</span> <span class="o">/</span> <span class="n">compute</span><span class="p">)</span> <span class="o">**</span> <span class="n">ALPHA_KAPLAN</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.015</span><span class="p">,</span> <span class="n">compute</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="s1">'generated from Kaplan et al. eq. 1.3 (synthetic, not measured)'</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span><span class="si">}</span><span class="s1"> points from </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'compute spans </span><span class="si">{</span><span class="n">compute</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">compute</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1"> PF-days'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Plot on log-log axes: a power law is a straight line here, and nowhere else.</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">compute</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2a5298'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Training compute $C$ (PF-days)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Test loss $L$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Loss against compute, log–log'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Least-squares fit of log10(L) = a - alpha * log10(C).</span>
+<span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">compute</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">loss</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="n">slope</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'fitted exponent alpha = </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Kaplan et al.         = </span><span class="si">{</span><span class="n">ALPHA_KAPLAN</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">   (their alpha_C^min)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'for reference, their other two exponents: alpha_N ~ 0.076, alpha_D ~ 0.095'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'A 10x increase in compute multiplies the loss by 10^-alpha = </span><span class="si">{</span><span class="mi">10</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">-</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">,'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'i.e. it buys a </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">% reduction. The exponent is small: this is'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'why the curve is so punishing, and why frontier runs cost what they do.'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">compute</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2a5298'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'data'</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">compute</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">compute</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">grid</span><span class="p">)),</span> <span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#003A70'</span><span class="p">,</span>
+          <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'fit: slope $-</span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Training compute $C$ (PF-days)'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Test loss $L$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Fitted power law'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Extrapolate one order of magnitude past the largest run in the data.</span>
+<span class="n">C_far</span> <span class="o">=</span> <span class="n">compute</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="n">L_far</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">C_far</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'largest run in the data: C = </span><span class="si">{</span><span class="n">compute</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1"> PF-days, L = </span><span class="si">{</span><span class="n">loss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'extrapolated one OOM out: C = </span><span class="si">{</span><span class="n">C_far</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1"> PF-days, L = </span><span class="si">{</span><span class="n">L_far</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'predicted improvement: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">L_far</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">loss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Your-turn-(%E2%91%A0)">Your turn (①)</h3><p>Write <strong>one sentence</strong> on why you should distrust your own extrapolation. Session 2.4 is the
+place to look: what does a smooth loss curve fail to tell you about the capabilities that appear
+along it, and what happened to Kaplan's own compute-optimal advice when Chinchilla re-ran the
+experiment more carefully?</p>
+<p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="%E2%91%A1-Explore-the-compute-trends">② Explore the compute trends</h2><p>Epoch AI maintain a public dataset of notable AI models with, among much else, a publication date
+and an estimate of training compute. We plot compute against date on a log axis and read off a
+doubling time.</p>
+<p>Note what this measurement is and is not. Training compute is an <em>input</em>, not a capability, and the
+estimates are reconstructed from papers and reports of varying candour.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">EPOCH_CSV</span> <span class="o">=</span> <span class="s1">'https://epoch.ai/data/notable_ai_models.csv'</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">EPOCH_CSV</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span><span class="si">}</span><span class="s1"> rows from epoch.ai'</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Download failed:'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Fetch the CSV by hand from https://epoch.ai/data/notable-ai-models'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'("Download the data in CSV"), upload it to this session, and read it here.'</span><span class="p">)</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">if</span> <span class="n">models</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'columns we need:'</span><span class="p">,</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span>
+                               <span class="p">(</span><span class="s1">'Model'</span><span class="p">,</span> <span class="s1">'Publication date'</span><span class="p">,</span> <span class="s1">'Training compute (FLOP)'</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Keep the rows that have both a date and a compute estimate.</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">models</span><span class="p">[[</span><span class="s1">'Model'</span><span class="p">,</span> <span class="s1">'Publication date'</span><span class="p">,</span> <span class="s1">'Training compute (FLOP)'</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">d</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'Publication date'</span><span class="p">)</span>
+
+<span class="n">START</span> <span class="o">=</span> <span class="s1">'2010-01-01'</span>   <span class="c1"># the deep-learning era; try 2018 or 2020 and watch the answer move</span>
+<span class="n">era</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">START</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">era</span><span class="p">)</span><span class="si">}</span><span class="s1"> models from </span><span class="si">{</span><span class="n">START</span><span class="si">}</span><span class="s1"> onwards, out of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="si">}</span><span class="s1"> with usable data'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'earliest: </span><span class="si">{</span><span class="n">era</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"Model"</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">era</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"Publication date"</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'latest:   </span><span class="si">{</span><span class="n">era</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">"Model"</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">era</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">"Publication date"</span><span class="p">]</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Fit log10(compute) against time in years, then convert the slope to a doubling time.</span>
+<span class="n">years</span> <span class="o">=</span> <span class="p">(</span><span class="n">era</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">START</span><span class="p">))</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.25</span>
+<span class="n">logC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">era</span><span class="p">[</span><span class="s1">'Training compute (FLOP)'</span><span class="p">])</span>
+<span class="n">slope_yr</span><span class="p">,</span> <span class="n">icept_yr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">logC</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">doubling_months</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">slope_yr</span> <span class="o">*</span> <span class="mi">12</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'slope: </span><span class="si">{</span><span class="n">slope_yr</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> orders of magnitude per year'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'doubling time: </span><span class="si">{</span><span class="n">doubling_months</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> months'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'that is </span><span class="si">{</span><span class="mi">10</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">slope_yr</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">x per year'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">era</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">],</span> <span class="n">era</span><span class="p">[</span><span class="s1">'Training compute (FLOP)'</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
+           <span class="n">color</span><span class="o">=</span><span class="s1">'#2a5298'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'notable models'</span><span class="p">)</span>
+<span class="n">line_x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="n">era</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">era</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+<span class="n">line_years</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_x</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">START</span><span class="p">))</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.25</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_x</span><span class="p">,</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">icept_yr</span> <span class="o">+</span> <span class="n">slope_yr</span> <span class="o">*</span> <span class="n">line_years</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#003A70'</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'fit: doubling every </span><span class="si">{</span><span class="n">doubling_months</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> months'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">'log'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Publication date'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Training compute (FLOP)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Training compute of notable AI models, </span><span class="si">{</span><span class="n">START</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s1"> onwards'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># The fit is not the whole story: label the models at the top of the range and see</span>
+<span class="c1"># how much of the trend rests on a handful of frontier runs.</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">era</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">'Training compute (FLOP)'</span><span class="p">)[[</span><span class="s1">'Model'</span><span class="p">,</span> <span class="s1">'Publication date'</span><span class="p">,</span> <span class="s1">'Training compute (FLOP)'</span><span class="p">]]</span>
+<span class="n">top</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">top</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">top</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Your-turn-(%E2%91%A1)">Your turn (②)</h3><p>Two sentences, one each:</p>
+<ol>
+<li><strong>Which quantity did you actually measure?</strong> Be precise: not "AI progress", but the thing on the y-axis and how it was estimated.</li>
+<li><strong>Over what window, and what would change your answer?</strong> Re-run with <code>START = '2018-01-01'</code> and <code>'2020-01-01'</code> before you write this.</li>
+</ol>
+<p>This is the Session 1.4 reader's checklist applied to a plot you made yourself, which is the harder case.</p>
+<p><em>Your answers:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="%E2%91%A2-Open-up-a-transformer">③ Open up a transformer</h2><p>First contact with the residual-stream picture from 2.2, on a real model. GPT-2 small: 12 layers,
+12 heads, $d_{\text{model}} = 768$.</p>
+<p>The first cell downloads the weights (about 500 MB) and takes a minute or two. CPU is fine.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformer_lens</span><span class="w"> </span><span class="kn">import</span> <span class="n">HookedTransformer</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">HookedTransformer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">'gpt2'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'layers: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_layers</span><span class="si">}</span><span class="s1"> | heads/layer: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_heads</span><span class="si">}</span><span class="s1"> | '</span>
+      <span class="sa">f</span><span class="s1">'d_model: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">d_model</span><span class="si">}</span><span class="s1"> | vocab: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">d_vocab</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Feed it some prompts and read off the top predicted next tokens.</span>
+<span class="n">prompts</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'The Eiffel Tower is in the city of'</span><span class="p">,</span>
+    <span class="s1">'The capital city of South Africa is'</span><span class="p">,</span>
+    <span class="s1">'The largest city in Africa is'</span><span class="p">,</span>
+    <span class="s1">'The answer to 17 plus 25 is'</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prompts</span><span class="p">:</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>                       <span class="c1"># [batch, position, vocab]</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># distribution over the NEXT token only</span>
+    <span class="n">top_p</span><span class="p">,</span> <span class="n">top_i</span> <span class="o">=</span> <span class="n">probs</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="si">{</span><span class="n">p</span><span class="si">!r}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">prob</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">top_p</span><span class="p">,</span> <span class="n">top_i</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">item</span><span class="p">())</span><span class="si">!r:</span><span class="s1">&gt;16</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="n">prob</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   entropy: </span><span class="si">{</span><span class="o">-</span><span class="p">(</span><span class="n">probs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">probs</span><span class="o">.</span><span class="n">log</span><span class="p">())</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> nats'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Where is it confident and where is it not? Entropy is the number to watch: a peaked distribution
+(low entropy) means the model has effectively decided. Note that confidence and correctness are
+different things, which is the whole reason Session 1.4 has a checklist.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># run_with_cache captures every intermediate activation.</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s1">'The Eiffel Tower is in the city of'</span>
+<span class="n">logits</span><span class="p">,</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">run_with_cache</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="n">resid</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="s1">'resid_post'</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>     <span class="c1"># residual stream after block 0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'residual stream shape: </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">resid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">   # [batch, position, d_model]'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'tokens: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'This is the T x d matrix from 2.2: one row per token position, one column per'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'residual-stream dimension. Every block reads from it and writes back into it.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'a few other things the cache holds:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'blocks.0.attn.hook_pattern'</span><span class="p">,</span> <span class="s1">'blocks.0.hook_mlp_out'</span><span class="p">,</span> <span class="s1">'ln_final.hook_normalized'</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   </span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;34</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   </span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;34</span><span class="si">}</span><span class="s1"> (not in this build; try list(cache.keys())[:20])'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'attention pattern is [batch, head, query_pos, key_pos]: for each head, how much'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'each token attends to each earlier token.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># How the residual stream grows as it passes through the blocks.</span>
+<span class="n">norms</span> <span class="o">=</span> <span class="p">[</span><span class="n">cache</span><span class="p">[</span><span class="s1">'resid_post'</span><span class="p">,</span> <span class="n">l</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_layers</span><span class="p">)]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_layers</span><span class="p">),</span> <span class="n">norms</span><span class="p">,</span> <span class="s1">'o-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2a5298'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'block'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'mean residual-stream norm'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'The residual stream accumulates as it goes'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-tokenisation-check-(the-African-safety-thread)">The tokenisation check (the African-safety thread)</h3><p>GPT-2's tokenizer is a byte-pair-encoding vocabulary of 50,257 tokens fitted mostly to English text.
+The same sentence in a low-resource language is therefore chopped into more pieces.</p>
+<p>To measure this honestly we need <em>parallel</em> text: the same meaning in both languages. We use
+<a href="https://github.com/masakhane-io/lafand-mt">MAFAND-MT</a>, the Masakhane news translation dataset
+(Adelani et al., 2022; dataset CC BY-NC 4.0), downloaded from the source rather than reproduced here.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">MAFAND</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/masakhane-io/lafand-mt/main/data/tsv_files/en-</span><span class="si">{lang}</span><span class="s1">/dev.tsv'</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">MAFAND</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s1">'zul'</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span><span class="si">}</span><span class="s1"> parallel English–isiZulu sentence pairs'</span><span class="p">)</span>
+    <span class="n">example</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Download failed:'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Substitute your own sentence pair below: any language you know, same meaning in both.'</span><span class="p">)</span>
+    <span class="n">pairs</span><span class="p">,</span> <span class="n">example</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">'en'</span><span class="p">:</span> <span class="s1">'Type an English sentence here.'</span><span class="p">,</span>
+                            <span class="s1">'zul'</span><span class="p">:</span> <span class="s1">'Type the same sentence in your language here.'</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="n">lang</span><span class="p">,</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'English'</span><span class="p">,</span> <span class="n">example</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]),</span> <span class="p">(</span><span class="s1">'isiZulu'</span><span class="p">,</span> <span class="n">example</span><span class="p">[</span><span class="s1">'zul'</span><span class="p">])]:</span>
+    <span class="n">toks</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">toks</span><span class="p">)</span><span class="si">}</span><span class="s1"> tokens, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span><span class="si">}</span><span class="s1"> characters'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   </span><span class="si">{</span><span class="n">toks</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Across many sentence pairs, not one: the ratio is the number that matters.</span>
+<span class="k">if</span> <span class="n">pairs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">en_tok</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+    <span class="n">zu_tok</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'zul'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+    <span class="n">en_ch</span><span class="p">,</span> <span class="n">zu_ch</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">(),</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'zul'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'over </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="si">}</span><span class="s1"> parallel sentences:'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   mean tokens, English: </span><span class="si">{</span><span class="n">en_tok</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   mean tokens, isiZulu: </span><span class="si">{</span><span class="n">zu_tok</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   token ratio (isiZulu / English): </span><span class="si">{</span><span class="n">zu_tok</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">en_tok</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">x'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Characters, to check the ratio is not just longer words:'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   tokens per 100 chars, English: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">en_tok</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">en_ch</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   tokens per 100 chars, isiZulu: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">zu_tok</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">zu_ch</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">zu_tok</span> <span class="o">/</span> <span class="n">en_tok</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2a5298'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#555'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'parity'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'tokens in isiZulu ÷ tokens in English, per sentence pair'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'sentence pairs'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'The same meaning costs more tokens in isiZulu'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Optional: the same measurement across several African languages.</span>
+<span class="c1"># MAFAND covers amh, hau, ibo, kin, lug, luo, nya, pcm, sna, swa, tsn, twi, xho, yor, zul.</span>
+<span class="n">LANGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'zul'</span><span class="p">,</span> <span class="s1">'xho'</span><span class="p">,</span> <span class="s1">'yor'</span><span class="p">,</span> <span class="s1">'swa'</span><span class="p">,</span> <span class="s1">'hau'</span><span class="p">]</span>
+
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">lang</span> <span class="ow">in</span> <span class="n">LANGS</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">MAFAND</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="n">lang</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">'en'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'language'</span><span class="p">:</span> <span class="n">lang</span><span class="p">,</span> <span class="s1">'en tokens'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                     <span class="s1">'lang tokens'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">'ratio'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span> <span class="o">/</span> <span class="n">e</span><span class="p">,</span> <span class="mi">2</span><span class="p">)})</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s1">: skipped (</span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">rows</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'ratio'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Your-turn-(%E2%91%A2)">Your turn (③)</h3><p>Write a short paragraph on what the ratio you measured implies. Cover three things:</p>
+<ol>
+<li><strong>Cost</strong>: APIs bill per token and context windows are counted in tokens. What does a ratio of, say, 2x mean for a user in Durban against a user in London?</li>
+<li><strong>Quality</strong>: more tokens per word means the model sees the language in smaller, less meaningful fragments. Why would that hurt performance even before any safety question arises?</li>
+<li><strong>Safety</strong>: connect this to the Session 1.4 anchor. If a language is under-represented enough to tokenise badly, what does that predict about the amount of safety training and red-teaming it received? (Sessions 9 and 18 return to this.)</li>
+</ol>
+<p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="Submission-checklist">Submission checklist</h2><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>① fitted exponent, and your one-sentence extrapolation caveat</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>② compute-trend plot, and your two sentences on what you measured and over what window</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>③ GPT-2 top-token outputs, the residual-stream shape, the tokenisation comparison, and your paragraph</li>
+</ul>
+<p>Save the notebook with its outputs intact (Colab: <em>File → Download → .ipynb</em>) and submit it.
+Graded on completion and correctness; resubmission is allowed, because the point is mastery
+rather than one-shot performance.</p>
+<p><strong>Sources used here.</strong> Kaplan et al. (2020), <a href="https://arxiv.org/abs/2001.08361">arXiv:2001.08361</a>, for the
+power law and its exponents. <a href="https://epoch.ai/data/notable-ai-models">Epoch AI</a> for the compute trend data.
+<a href="https://github.com/TransformerLensOrg/TransformerLens">TransformerLens</a> (MIT) for model access.
+<a href="https://github.com/masakhane-io/lafand-mt">MAFAND-MT</a> (Adelani et al., 2022; CC BY-NC 4.0) for the
+parallel sentences.</p>
+</div>
+</div>
+</div>
+
+    </div>
+    <nav class="page-nav">
+        <a class="prev" href="../sessions/session-02/lab-scaling-and-transformerlens.html"><span class="nav-label">Return to</span><span class="nav-title">2.5 · Lab: scaling laws &amp; a first look inside a model</span></a>
+        <a class="home" href="../index.html"><span class="nav-title">⌂</span></a>
+        <span class="nav-empty"></span>
+    </nav>
+</div>
+</body>
+</html>
