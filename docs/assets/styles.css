@@ -167,6 +167,9 @@ code{ background:#eef2f6; padding:1px 6px; border-radius:4px; font-size:0.86em; 
 /* --- Figures --- */
 figure{ margin:32px auto; text-align:center; }
 figure img{ max-width:100%; height:auto; border:1px solid var(--rule); border-radius:6px; }
+/* Wide diagrams break out of the 880px column; at column width their labels
+   render too small to read. The caption carries a full-size link for phones. */
+figure.wide{ width:min(1240px, 96vw); margin-left:50%; transform:translateX(-50%); }
 figcaption{ color:var(--muted); font-size:0.9rem; line-height:1.55; margin:12px auto 0; max-width:62ch; }
 figcaption strong{ color:var(--blue); }
 figcaption code{ background:#eef2f6; }
