@@ -26,28 +26,32 @@ PAGE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
 <link rel="stylesheet" href="../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={{tex:{{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']],processEscapes:true}},svg:{{fontCache:'global'}},options:{{skipHtmlTags:['script','noscript','style','textarea','pre','code']}}}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
 <style>
-  .nb {{ padding:0 48px 40px; }}
-  .nb .jp-Cell, .nb .cell {{ margin:0 0 18px; }}
-  .nb pre, .nb .highlight pre {{ background:#f5f7f9; border:1px solid #e4e8ec; border-left:3px solid #2a5298;
+  .notebook {{ padding:0 48px 40px; }}
+  .notebook .jp-Cell, .notebook .cell {{ margin:0 0 18px; }}
+  .notebook pre, .notebook .highlight pre {{ background:#f5f7f9; border:1px solid #e4e8ec; border-left:3px solid #2a5298;
       border-radius:4px; padding:14px 16px; overflow-x:auto; font-family:var(--mono); font-size:0.82rem;
       line-height:1.5; color:#1f2d3a; }}
-  .nb .jp-InputArea-prompt, .nb .jp-OutputArea-prompt, .nb .prompt {{ display:none; }}
-  .nb h1 {{ font-family:var(--display); color:var(--navy); font-size:1.9rem; margin:28px 0 10px; }}
-  .nb h2 {{ font-family:var(--display); color:var(--navy); font-size:1.4rem; margin:34px 0 10px;
+  .notebook .jp-InputArea-prompt, .notebook .jp-OutputArea-prompt, .notebook .prompt {{ display:none; }}
+  .notebook h1 {{ font-family:var(--display); color:var(--navy); font-size:1.9rem; margin:28px 0 10px; }}
+  .notebook h2 {{ font-family:var(--display); color:var(--navy); font-size:1.4rem; margin:34px 0 10px;
       padding-top:14px; border-top:1px solid var(--rule); }}
-  .nb h3 {{ font-family:var(--display); color:var(--blue); font-size:1.1rem; margin:24px 0 8px; }}
-  .nb blockquote {{ border-left:3px solid var(--blue); background:var(--tint); margin:18px 0;
+  .notebook h3 {{ font-family:var(--display); color:var(--blue); font-size:1.1rem; margin:24px 0 8px; }}
+  .notebook blockquote {{ border-left:3px solid var(--blue); background:var(--tint); margin:18px 0;
       padding:12px 18px; color:var(--ink); }}
-  .nb table {{ border-collapse:collapse; margin:16px 0; }}
-  .nb td, .nb th {{ border:1px solid var(--rule); padding:6px 10px; font-size:0.9rem; }}
-  .nb img {{ max-width:100%; height:auto; }}
+  .notebook table {{ border-collapse:collapse; margin:16px 0; }}
+  .notebook td, .notebook th {{ border:1px solid var(--rule); padding:6px 10px; font-size:0.9rem; }}
+  .notebook img {{ max-width:100%; height:auto; }}
   .nb-actions {{ margin:22px 48px 0; padding:16px 20px; background:var(--tint);
       border-left:3px solid var(--navy); }}
   .nb-actions a {{ color:var(--blue); }}
   .nb-actions p {{ margin:0 0 6px; font-size:0.94rem; }}
   .nb-actions p:last-child {{ margin-bottom:0; }}
-  @media (max-width:760px) {{ .nb {{ padding:0 24px 30px; }} .nb-actions {{ margin:22px 24px 0; }} }}
+  @media (max-width:760px) {{ .notebook {{ padding:0 24px 30px; }} .nb-actions {{ margin:22px 24px 0; }} }}
 </style>
 </head>
 <body>
@@ -64,7 +68,7 @@ PAGE = """<!DOCTYPE html>
         <p>The cells have no saved outputs: you run them and keep your own.
            <a href="{back}">Back to the lab page</a>.</p>
     </div>
-    <div class="nb">
+    <div class="notebook">
 {body}
     </div>
     <nav class="page-nav">
@@ -87,6 +91,25 @@ BACKLINKS = {
 }
 
 
+def dollars_to_backslash(markup):
+    """Rewrite $…$ / $$…$$ into \\(…\\) / \\[…\\] outside code.
+
+    Notebooks use dollar delimiters, which is what Jupyter and Colab render.
+    The site's MathJax deliberately does not treat a single $ as a delimiter,
+    so currency survives (add_mathjax.py). Converting here means the notebook
+    keeps the delimiters its own tools want and the page gets the ones the
+    course config wants, with no per-page MathJax exception to maintain.
+    """
+    parts = re.split(r"(<pre\b.*?</pre>|<code\b.*?</code>)", markup, flags=re.S)
+    for i, part in enumerate(parts):
+        if part.startswith(("<pre", "<code")):
+            continue
+        part = re.sub(r"\$\$(.+?)\$\$", r"\\[\1\\]", part, flags=re.S)
+        part = re.sub(r"(?<![\\$])\$([^$\n]+?)\$", r"\\(\1\\)", part)
+        parts[i] = part
+    return "".join(parts)
+
+
 def render(nb_path):
     stem = nb_path.stem
     out = subprocess.run(
@@ -99,6 +122,7 @@ def render(nb_path):
     out = re.sub(r'<a class="anchor-link"[^>]*>.*?</a>', "", out, flags=re.S)
     # the shell already prints the title, so drop the notebook's own first h1
     out = re.sub(r"<h1[^>]*>.*?</h1>", "", out, count=1, flags=re.S)
+    out = dollars_to_backslash(out)
     back, back_title, heading, subtitle = BACKLINKS.get(
         stem, ("../index.html", "Contents", stem, "Lab notebook"))
     page = PAGE.format(title=html.escape(heading), heading=heading, subtitle=subtitle,

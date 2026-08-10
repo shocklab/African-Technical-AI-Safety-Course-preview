@@ -5,28 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Session 2.5 — Lab notebook</title>
 <link rel="stylesheet" href="../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
 <style>
-  .nb { padding:0 48px 40px; }
-  .nb .jp-Cell, .nb .cell { margin:0 0 18px; }
-  .nb pre, .nb .highlight pre { background:#f5f7f9; border:1px solid #e4e8ec; border-left:3px solid #2a5298;
+  .notebook { padding:0 48px 40px; }
+  .notebook .jp-Cell, .notebook .cell { margin:0 0 18px; }
+  .notebook pre, .notebook .highlight pre { background:#f5f7f9; border:1px solid #e4e8ec; border-left:3px solid #2a5298;
       border-radius:4px; padding:14px 16px; overflow-x:auto; font-family:var(--mono); font-size:0.82rem;
       line-height:1.5; color:#1f2d3a; }
-  .nb .jp-InputArea-prompt, .nb .jp-OutputArea-prompt, .nb .prompt { display:none; }
-  .nb h1 { font-family:var(--display); color:var(--navy); font-size:1.9rem; margin:28px 0 10px; }
-  .nb h2 { font-family:var(--display); color:var(--navy); font-size:1.4rem; margin:34px 0 10px;
+  .notebook .jp-InputArea-prompt, .notebook .jp-OutputArea-prompt, .notebook .prompt { display:none; }
+  .notebook h1 { font-family:var(--display); color:var(--navy); font-size:1.9rem; margin:28px 0 10px; }
+  .notebook h2 { font-family:var(--display); color:var(--navy); font-size:1.4rem; margin:34px 0 10px;
       padding-top:14px; border-top:1px solid var(--rule); }
-  .nb h3 { font-family:var(--display); color:var(--blue); font-size:1.1rem; margin:24px 0 8px; }
-  .nb blockquote { border-left:3px solid var(--blue); background:var(--tint); margin:18px 0;
+  .notebook h3 { font-family:var(--display); color:var(--blue); font-size:1.1rem; margin:24px 0 8px; }
+  .notebook blockquote { border-left:3px solid var(--blue); background:var(--tint); margin:18px 0;
       padding:12px 18px; color:var(--ink); }
-  .nb table { border-collapse:collapse; margin:16px 0; }
-  .nb td, .nb th { border:1px solid var(--rule); padding:6px 10px; font-size:0.9rem; }
-  .nb img { max-width:100%; height:auto; }
+  .notebook table { border-collapse:collapse; margin:16px 0; }
+  .notebook td, .notebook th { border:1px solid var(--rule); padding:6px 10px; font-size:0.9rem; }
+  .notebook img { max-width:100%; height:auto; }
   .nb-actions { margin:22px 48px 0; padding:16px 20px; background:var(--tint);
       border-left:3px solid var(--navy); }
   .nb-actions a { color:var(--blue); }
   .nb-actions p { margin:0 0 6px; font-size:0.94rem; }
   .nb-actions p:last-child { margin-bottom:0; }
-  @media (max-width:760px) { .nb { padding:0 24px 30px; } .nb-actions { margin:22px 24px 0; } }
+  @media (max-width:760px) { .notebook { padding:0 24px 30px; } .nb-actions { margin:22px 24px 0; } }
 </style>
 </head>
 <body>
@@ -43,7 +47,7 @@
         <p>The cells have no saved outputs: you run them and keep your own.
            <a href="../sessions/session-02/lab-scaling-and-transformerlens.html">Back to the lab page</a>.</p>
     </div>
-    <div class="nb">
+    <div class="notebook">
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -92,10 +96,10 @@
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="%E2%91%A0-Fit-a-scaling-law">① Fit a scaling law</h2><p>Kaplan et al. (2020) report that test loss falls as a power law in compute:</p>
-<p>$$L(C_{\min}) = \left(\frac{C_c^{\min}}{C_{\min}}\right)^{\alpha_C^{\min}}, \qquad \alpha_C^{\min} \approx 0.050, \quad C_c^{\min} \approx 3.1 \times 10^8 \ \text{PF-days}$$</p>
+<p>\[L(C_{\min}) = \left(\frac{C_c^{\min}}{C_{\min}}\right)^{\alpha_C^{\min}}, \qquad \alpha_C^{\min} \approx 0.050, \quad C_c^{\min} \approx 3.1 \times 10^8 \ \text{PF-days}\]</p>
 <p>Taking logs turns that into a straight line, which is why the fit below is ordinary least squares:</p>
-<p>$$\log L = a - \alpha \log C$$</p>
-<p>Your job is to recover $\alpha$ from data and see how small it is.</p>
+<p>\[\log L = a - \alpha \log C\]</p>
+<p>Your job is to recover \(\alpha\) from data and see how small it is.</p>
 </div>
 </div>
 </div>
@@ -324,8 +328,10 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="%E2%91%A2-Open-up-a-transformer">③ Open up a transformer</h2><p>First contact with the residual-stream picture from 2.2, on a real model. GPT-2 small: 12 layers,
-12 heads, $d_{\text{model}} = 768$.</p>
+12 heads, \(d_{\text{model}} = 768\).</p>
 <p>The first cell downloads the weights (about 500 MB) and takes a minute or two. CPU is fine.</p>
+<p>You will probably see a deprecation warning about <code>from_pretrained</code> and a note about
+unauthenticated Hugging Face requests. Both are harmless: the model loads either way.</p>
 </div>
 </div>
 </div>
