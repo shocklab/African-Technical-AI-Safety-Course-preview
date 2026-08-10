@@ -46,7 +46,7 @@
 
         <div class="lab-box">
             <h4>Setup <span class="tag">Colab — no GPU needed</span></h4>
-            <p>Allow about 90 minutes. A Google account is the only prerequisite: everything runs on the free tier, and a GPU runtime only makes part 3 quicker.</p>
+            <p>Allow about an hour, more if the exploring catches you. A Google account is the only prerequisite: everything runs on the free tier, and a GPU runtime only makes part 3 quicker.</p>
             <ol style="margin-left:25px; line-height:1.9;">
                 <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-2-5-scaling-and-transformerlens.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>. It opens read-only from GitHub, so use <em>File → Save a copy in Drive</em> before you change anything; the copy in your Drive is the one you edit and submit.</li>
                 <li>Run the first cell. It installs TransformerLens, which takes about a minute, and prints <code>Colab: True</code> when it has finished.</li>
@@ -62,7 +62,7 @@
             <p style="color:#555;">Session 2.3 gave you the law. Running the fit is the only way to feel how small its exponent is.</p>
             <p>What the notebook does: takes a set of (training compute \(C\), final loss \(L\)) points, plots them on log–log axes, where a power law is a straight line and nothing else is, then fits \(\log L = a - \alpha \log C\) by least squares and extrapolates an order of magnitude past the data. The points are generated from Kaplan's published law, which the code says plainly; set <code>CSV_PATH</code> if a CSV of measured runs is handed out in class.</p>
             <p style="color:#555;">You should see \(\alpha \approx 0.05\), matching the \(\alpha_C^{\min} \approx 0.050\) that Kaplan et al. report. Feel the size of that: a tenfold increase in compute multiplies the loss by \(10^{-\alpha} \approx 0.89\), an improvement of roughly 11%. Tenfold, for 11%.</p>
-            <p>Then explore. Hide the largest runs from the fit and predict them from the rest, which is the position every forecaster is actually in, and see how far the prediction drifts as you hide more. Turn the noise up and see whether the exponent survives. Then answer, in one sentence: why should you distrust your own extrapolation? Session 2.4 is where to look, and Chinchilla re-running Kaplan's compute-optimal experiment is the cautionary case.</p>
+            <p>Then explore. Hide the largest runs from the fit and predict them from the rest, which is the position every forecaster is actually in, and see how far the prediction drifts as you hide more. Turn the noise up and see whether the exponent survives. Then answer, in one sentence: why should you distrust your own extrapolation? Session 2.4 is where to look for what a smooth loss curve hides about capabilities, and 2.3 for the cautionary case, where Chinchilla re-ran Kaplan's compute-optimal experiment more carefully and got a different answer.</p>
         </div>
 
         <h2 class="section-title">② Explore the compute trends</h2>
@@ -111,6 +111,7 @@
             <h4>Core</h4>
             <p>• <strong>TransformerLens</strong> (MIT-licensed): docs and "Getting Started in Mech Interp" (<a href="https://github.com/TransformerLensOrg/TransformerLens" target="_blank" rel="noopener">github.com/TransformerLensOrg/TransformerLens</a>).</p>
             <p>• <strong>Epoch AI</strong>: notable-models data and trends (<a href="https://epoch.ai/" target="_blank" rel="noopener">epoch.ai</a>).</p>
+            <p>• <strong>MAFAND-MT</strong> (Adelani et al., NAACL 2022): the Masakhane news-translation dataset the tokenisation comparison uses, covering 16 African languages (<a href="https://github.com/masakhane-io/lafand-mt" target="_blank" rel="noopener">github.com/masakhane-io/lafand-mt</a>; dataset CC BY-NC 4.0, downloaded at run time rather than redistributed here).</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">

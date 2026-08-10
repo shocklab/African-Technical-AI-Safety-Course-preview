@@ -213,8 +213,9 @@ forecaster is actually in: predicting the next scale from the ones already done.
 <li>In the data cell above, raise the noise from <code>0.015</code> to <code>0.05</code> and re-run from there. Does the fitted exponent survive noisier runs?</li>
 </ul>
 <p><strong>Question.</strong> In one sentence: why should you distrust your own extrapolation? Session 2.4 is where to
-look. What does a smooth loss curve fail to tell you about the capabilities that appear along it, and
-what happened to Kaplan's compute-optimal advice when Chinchilla re-ran the experiment more carefully?</p>
+look for what a smooth loss curve fails to tell you about the capabilities that appear along it, and
+2.3 for the cautionary case: what happened to Kaplan's compute-optimal advice when Chinchilla re-ran
+the experiment more carefully.</p>
 <p><em>Your answer:</em></p>
 </div>
 </div>
@@ -644,8 +645,9 @@ that predict about how much safety training and red-teaming it received?). Sessi
     <span class="s1">'Ubuntu is a philosophy that says'</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="n">MY_ENGLISH</span> <span class="o">=</span> <span class="s1">'The children are going to school tomorrow.'</span>
-<span class="n">MY_OTHER</span>   <span class="o">=</span> <span class="s1">'Izingane zizoya esikoleni kusasa.'</span>   <span class="c1"># replace with your own language</span>
+<span class="c1"># Defaults are a real pair from the dataset above; replace them with your own.</span>
+<span class="n">MY_ENGLISH</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="s1">'en'</span><span class="p">]</span> <span class="k">if</span> <span class="n">pairs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">'Type an English sentence here.'</span>
+<span class="n">MY_OTHER</span>   <span class="o">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="s1">'zul'</span><span class="p">]</span> <span class="k">if</span> <span class="n">pairs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">'Type the same sentence in your language.'</span>
 
 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">MY_PROMPTS</span><span class="p">:</span>
     <span class="n">probs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
