@@ -52,36 +52,26 @@
                 <li>Run the first cell. It installs TransformerLens, which takes about a minute, and prints <code>Colab: True</code> when it has finished.</li>
                 <li>Work down the notebook with <em>Shift+Enter</em>, reading each cell before you run it.</li>
             </ol>
-            <p>Prefer to build it yourself? That is the better exercise. Start a blank notebook, run <code>!pip install transformer_lens</code>, and follow the three parts below; the starter notebook is then a worked answer to check against. You can also <a href="../../labs/session-2-5-scaling-and-transformerlens.html">read the whole notebook on this site</a> or <a href="../../labs/session-2-5-scaling-and-transformerlens.ipynb" download>download the .ipynb</a> for Jupyter.</p>
-            <p>The notebook runs as it stands. What you supply are the four cells marked "Your turn", which is where the thinking lives; the code is there to give you something to think about.</p>
+            <p>You can also <a href="../../labs/session-2-5-scaling-and-transformerlens.html">read the whole notebook on this site</a> before you start, or <a href="../../labs/session-2-5-scaling-and-transformerlens.ipynb" download>download the .ipynb</a> for Jupyter.</p>
+            <p>The code is written for you, so this lab is about running it and pulling at it rather than building it. Each of the three parts ends with an "Explore" cell: two or three things to change and re-run, and one short question to answer. Changing a number and watching the answer move is the whole exercise. If you would rather build it from a blank notebook, do that instead and treat this one as the worked answer; you will learn more, and it will cost you an evening.</p>
         </div>
 
         <h2 class="section-title">① Fit a scaling law</h2>
         <div class="technical-detail">
             <h4>From data to a power-law exponent</h4>
-            <p style="color:#555;">Session 2.3 gave you the law. Here you recover its exponent from points, which is the only way to feel how small that exponent is.</p>
-            <ol style="margin-left:25px; line-height:1.9;">
-                <li>Get a set of (training compute \(C\), final loss \(L\)) points. The notebook generates them from Kaplan's published law, and says so in the code: they are not measured runs, so this step tests your fitting, not the law. If a CSV of real runs is distributed in class, set <code>CSV_PATH</code> to it and everything downstream is unchanged.</li>
-                <li>Plot \(L\) against \(C\) on log–log axes. A power law is a straight line on these axes and on no others, so this plot is the check that a power law is the right model at all.</li>
-                <li>Fit \(\log L = a - \alpha \log C\) by least squares and read off \(\alpha\).</li>
-                <li>Extrapolate one order of magnitude past your largest point.</li>
-            </ol>
-            <p style="color:#555;">You should get \(\alpha \approx 0.05\), matching the \(\alpha_C^{\min} \approx 0.050\) Kaplan et al. report. If your value is far from that, the usual cause is fitting \(L\) against \(C\) rather than their logarithms. Sanity check on the size of the exponent: a tenfold increase in compute multiplies the loss by \(10^{-\alpha} \approx 0.89\), which is an improvement of roughly 11%. Tenfold, for 11%.</p>
-            <p>Write down: one sentence on why you should distrust your own extrapolation. Session 2.4 is where to look: what does a smooth loss curve fail to tell you about the capabilities that appear along it, and what happened when Chinchilla re-ran Kaplan's compute-optimal experiment more carefully?</p>
+            <p style="color:#555;">Session 2.3 gave you the law. Running the fit is the only way to feel how small its exponent is.</p>
+            <p>What the notebook does: takes a set of (training compute \(C\), final loss \(L\)) points, plots them on log–log axes, where a power law is a straight line and nothing else is, then fits \(\log L = a - \alpha \log C\) by least squares and extrapolates an order of magnitude past the data. The points are generated from Kaplan's published law, which the code says plainly; set <code>CSV_PATH</code> if a CSV of measured runs is handed out in class.</p>
+            <p style="color:#555;">You should see \(\alpha \approx 0.05\), matching the \(\alpha_C^{\min} \approx 0.050\) that Kaplan et al. report. Feel the size of that: a tenfold increase in compute multiplies the loss by \(10^{-\alpha} \approx 0.89\), an improvement of roughly 11%. Tenfold, for 11%.</p>
+            <p>Then explore. Hide the largest runs from the fit and predict them from the rest, which is the position every forecaster is actually in, and see how far the prediction drifts as you hide more. Turn the noise up and see whether the exponent survives. Then answer, in one sentence: why should you distrust your own extrapolation? Session 2.4 is where to look, and Chinchilla re-running Kaplan's compute-optimal experiment is the cautionary case.</p>
         </div>
 
         <h2 class="section-title">② Explore the compute trends</h2>
         <div class="technical-detail">
             <h4>Doubling time from Epoch AI data</h4>
             <p style="color:#555;">A second measurement, this time on real data you did not collect, which brings its own problems.</p>
-            <ol style="margin-left:25px; line-height:1.9;">
-                <li>Load Epoch AI's <a href="https://epoch.ai/data/notable-ai-models" target="_blank" rel="noopener">notable-models dataset</a>. The notebook reads the CSV straight from the URL; if that fails, the page has a "Download the data in CSV" button and you can upload the file to your session instead. The columns you need are <code>Publication date</code> and <code>Training compute (FLOP)</code>.</li>
-                <li>Keep the rows that have both, and restrict to models published from 2010 onwards. Roughly half the dataset has no compute estimate, which is itself worth noticing.</li>
-                <li>Plot compute against date with a logarithmic y-axis, fit a straight line to \(\log_{10} C\) against time, and convert the slope to a doubling time.</li>
-                <li>Re-run with the window starting in 2018 and again in 2020, and watch the answer move.</li>
-            </ol>
-            <p style="color:#555;">From 2010 you should get a doubling time of roughly 6 months, about 4x per year. Later windows give shorter times. Both are defensible; that they differ is the point.</p>
-            <p>Write down: two sentences. First, which quantity you actually measured, stated precisely: not "AI progress" but the thing on the y-axis and how it was estimated. Second, over what window, and what would change your answer. This is the Session 1.4 reader's checklist turned on a plot you made yourself, which is the harder case.</p>
+            <p>What the notebook does: reads Epoch AI's <a href="https://epoch.ai/data/notable-ai-models" target="_blank" rel="noopener">notable-models dataset</a> straight from the URL, keeps the rows that have both a publication date and a training-compute estimate, plots compute against date on a log axis, and converts the fitted slope into a doubling time. Roughly half the dataset has no compute estimate at all, which is worth noticing before you trust the half that does.</p>
+            <p style="color:#555;">From 2010 you should see a doubling time of about 6 months, near enough 4x per year, and a list of the largest runs showing how few models carry the trend.</p>
+            <p>Then explore. One cell refits over several starting years at once, so the answer moves in front of you: 2010 gives about 5.7 months, 2018 about 4.7. Another switch keeps only the largest run per quarter, which is the frontier rather than the field, and that is the number people usually quote. Then answer in two sentences: which quantity you actually measured, stated precisely, and over what window, and what would change your answer. This is the Session 1.4 checklist turned on a plot you made yourself, which is harder than turning it on someone else's.</p>
         </div>
 
         <h2 class="section-title">③ Open up a transformer</h2>
@@ -89,13 +79,9 @@
             <h4>GPT-2 small in TransformerLens</h4>
             <p style="color:#555;">Your first contact with the residual-stream picture from 2.2, on a real model: 12 layers, 12 heads, \(d_{\text{model}} = 768\). Loading the weights takes a minute or two and about 500 MB.</p>
             <div class="formula" style="text-align:left;"><code>from transformer_lens import HookedTransformer<br>model = HookedTransformer.from_pretrained("gpt2")<br>logits = model("The Eiffel Tower is in the city of")<br># inspect the next-token distribution</code></div>
-            <ol style="margin-left:25px; line-height:1.9;">
-                <li>Feed the model several prompts and read off the top five predicted next tokens with their probabilities. Ask where it is confident and where it is not, and keep confidence separate from correctness. On the Eiffel Tower prompt, GPT-2 small puts " London" slightly above " Paris": confidently wrong is a state these systems are perfectly capable of, and it is the whole reason 1.4 hands you a checklist.</li>
-                <li>Capture activations with <code>run_with_cache</code> and print the shape of the residual stream. You should see <code>(1, 11, 768)</code> for that prompt: <code>[batch, position, d_model]</code>, which is exactly the \(T \times d\) matrix from 2.2, one row per token. Print an attention pattern too, shaped <code>[batch, head, query_pos, key_pos]</code>.</li>
-                <li>Tokenise parallel English and isiZulu text with <code>model.to_str_tokens</code> and count the tokens in each. Use genuinely parallel sentences, the same meaning in both languages, or the comparison means nothing; the notebook pulls them from Masakhane's MAFAND-MT dataset. Average over a hundred or so pairs rather than trusting one sentence, and check tokens per character as well as tokens per sentence, so you know you are not simply measuring longer words.</li>
-            </ol>
-            <p style="color:#555;">Expect isiZulu to cost about 2.2x the tokens of the same meaning in English, and watch how the isiZulu words shatter into fragments: <code>UKhomishana</code> becomes <code>['UK', 'hom', 'ish', 'ana']</code>. Across languages the notebook finds roughly 2x for Swahili, isiXhosa and isiZulu, 2.5x for Hausa, and over 4x for Yoruba, whose diacritics are especially expensive. GPT-2's vocabulary of 50,257 tokens was fitted mostly to English text, and this is what that decision costs everyone else.</p>
-            <p>Write down: a short paragraph on what your ratio implies, covering cost (APIs bill per token and context windows are counted in tokens), quality (the model sees the language in smaller, less meaningful pieces), and safety (if a language is under-represented enough to tokenise badly, what does that predict about how much safety training and red-teaming it received?). Sessions 9 and 18 return to this.</p>
+            <p>What the notebook does: loads GPT-2 small, prints the top five next tokens with their probabilities for several prompts, captures activations with <code>run_with_cache</code> and prints the residual stream's shape, then tokenises parallel English and isiZulu sentences and counts the tokens in each. The sentence pairs come from Masakhane's MAFAND-MT dataset, because a tokenisation comparison only means something on genuinely parallel text, and it averages over a couple of hundred pairs rather than trusting one.</p>
+            <p style="color:#555;">Things to look at as it runs. The residual stream comes out as <code>(1, 11, 768)</code>, which is <code>[batch, position, d_model]</code>: exactly the \(T \times d\) matrix from 2.2, one row per token. On the Eiffel Tower prompt GPT-2 small puts " London" slightly above " Paris", so confidence and correctness come apart in the first thing you run. And isiZulu costs about 2.2x the tokens of the same meaning in English, with words shattering into fragments: <code>UKhomishana</code> becomes <code>['UK', 'hom', 'ish', 'ana']</code>. Across languages: roughly 2x for Swahili, isiXhosa and isiZulu, 2.5x for Hausa, over 4x for Yoruba. GPT-2's vocabulary of 50,257 tokens was fitted mostly to English, and that is what the decision costs everyone else.</p>
+            <p>Then explore. Put your own prompts through it, including ones where you know the answer and suspect the model does not, and put a sentence from a language you speak against its English translation to see where your language gets chopped hardest. Then answer with a short paragraph on what your ratio implies, covering cost (APIs bill per token, and context windows are counted in tokens), quality (the model sees the language in smaller, less meaningful pieces), and safety (if a language is under-represented enough to tokenise badly, what does that predict about how much safety training and red-teaming it received?). Sessions 9 and 18 return to this.</p>
         </div>
 
         <div class="lab-box">
@@ -112,10 +98,11 @@
             <h4>Submit</h4>
             <p>One notebook, run from top to bottom with its outputs saved, containing:</p>
             <ul class="styled-list">
-                <li>① the fitted exponent and your extrapolation caveat;</li>
-                <li>② the compute-trend plot and your two sentences;</li>
-                <li>③ the GPT-2 next-token outputs, the residual-stream shape, the tokenisation comparison and your paragraph.</li>
+                <li>① one sentence on why to distrust your extrapolation;</li>
+                <li>② two sentences on what you measured and over what window;</li>
+                <li>③ a short paragraph on cost, quality and safety, plus your own text in the last cell.</li>
             </ul>
+            <p>Three short answers, then. The reading is the work; the code is there to give you something worth reading about.</p>
             <p>In Colab, <em>File → Download → Download .ipynb</em>. Graded on completion and correctness, and resubmission is allowed, because we are after mastery rather than one-shot performance.</p>
         </div>
 

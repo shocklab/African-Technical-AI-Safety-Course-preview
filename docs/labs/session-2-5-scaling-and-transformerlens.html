@@ -59,9 +59,12 @@
 <li><strong>Open up a transformer</strong> — load GPT-2 in TransformerLens, read the residual stream, and measure the tokenisation gap between English and isiZulu.</li>
 </ol>
 <p>Everything runs on free Colab; no GPU is needed, though a free GPU runtime makes part 3 quicker.</p>
-<p><strong>What you submit:</strong> this notebook, run end to end, with your own answers written into the four <em>Your turn</em> cells.</p>
+<p>The code is written for you. Your work is to run it, poke at it, and say what you found: each part
+ends with an <em>Explore</em> cell giving you two or three things to change and re-run, and one short
+question to answer. Changing a number and watching the answer move is the point of the lab.</p>
+<p><strong>What you submit:</strong> this notebook, run end to end, with your answers typed into the three <em>Explore</em> cells.</p>
 <blockquote>
-<p>Cells marked <strong>Your turn</strong> are where you write. The code cells are meant to run as they are; break them deliberately if it helps you understand them, but keep a working copy of your answers.</p>
+<p>Nothing here is fragile. If you break a cell, <em>Runtime → Restart session</em> and run from the top.</p>
 </blockquote>
 </div>
 </div>
@@ -201,11 +204,63 @@
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Your-turn-(%E2%91%A0)">Your turn (①)</h3><p>Write <strong>one sentence</strong> on why you should distrust your own extrapolation. Session 2.4 is the
-place to look: what does a smooth loss curve fail to tell you about the capabilities that appear
-along it, and what happened to Kaplan's own compute-optimal advice when Chinchilla re-ran the
-experiment more carefully?</p>
+<h3 id="Explore-%E2%91%A0">Explore ①</h3><p>The cell below refits the law after throwing away the largest runs, which is the situation every
+forecaster is actually in: predicting the next scale from the ones already done.</p>
+<p>Things to try, one line each:</p>
+<ul>
+<li>Change <code>DROP</code> to 3, 6, 9. How far does the prediction drift as you hide more of the top?</li>
+<li>Set <code>IRREDUCIBLE = 1.8</code>, which gives the loss a floor it cannot fall below, as real curves have. Now how wrong is the extrapolation, and in which direction?</li>
+<li>In the data cell above, raise the noise from <code>0.015</code> to <code>0.05</code> and re-run from there. Does the fitted exponent survive noisier runs?</li>
+</ul>
+<p><strong>Question.</strong> In one sentence: why should you distrust your own extrapolation? Session 2.4 is where to
+look. What does a smooth loss curve fail to tell you about the capabilities that appear along it, and
+what happened to Kaplan's compute-optimal advice when Chinchilla re-ran the experiment more carefully?</p>
 <p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">DROP</span> <span class="o">=</span> <span class="mi">6</span>            <span class="c1"># how many of the largest runs to hide from the fit</span>
+<span class="n">IRREDUCIBLE</span> <span class="o">=</span> <span class="mf">0.0</span>   <span class="c1"># try 1.8: a floor the loss cannot fall below</span>
+
+<span class="c1"># An irreducible term is what real curves have (Chinchilla's L(N, D) carries one):</span>
+<span class="c1"># loss approaches a floor set by the entropy of the data rather than falling forever.</span>
+<span class="n">truth</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="n">IRREDUCIBLE</span>
+<span class="n">keep</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span> <span class="o">-</span> <span class="n">DROP</span><span class="p">)</span>
+<span class="n">b_partial</span><span class="p">,</span> <span class="n">a_partial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">compute</span><span class="p">[</span><span class="n">keep</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">truth</span><span class="p">[</span><span class="n">keep</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">predicted</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">a_partial</span> <span class="o">+</span> <span class="n">b_partial</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">compute</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'fit on the smallest </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">DROP</span><span class="si">}</span><span class="s1"> runs: alpha = </span><span class="si">{</span><span class="o">-</span><span class="n">b_partial</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'it predicts L = </span><span class="si">{</span><span class="n">predicted</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> at the largest compute'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'the actual value there is  </span><span class="si">{</span><span class="n">truth</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'error: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">predicted</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">truth</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">truth</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">IRREDUCIBLE</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="s1">'optimistic'</span> <span class="k">if</span> <span class="n">predicted</span> <span class="o">&lt;</span> <span class="n">truth</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s1">'pessimistic'</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'The fitted exponent has fallen to </span><span class="si">{</span><span class="o">-</span><span class="n">b_partial</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, and the prediction is'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">direction</span><span class="si">}</span><span class="s1">: a pure power law fitted to a curve with a floor keeps promising'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'improvement the floor will not allow. Real loss curves have such a term.'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">IRREDUCIBLE</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Almost exact, and that is the trap: these points were generated FROM a pure'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'power law, so extrapolating one back out cannot fail. Set IRREDUCIBLE = 1.8'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'and run again to see what happens when the world has a floor the law does not.'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">compute</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">truth</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="s1">'o'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2a5298'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'used for the fit'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">compute</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span> <span class="o">-</span> <span class="n">DROP</span><span class="p">:],</span> <span class="n">truth</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span> <span class="o">-</span> <span class="n">DROP</span><span class="p">:],</span> <span class="s1">'o'</span><span class="p">,</span>
+          <span class="n">color</span><span class="o">=</span><span class="s1">'#c0392b'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'hidden from the fit'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">a_partial</span> <span class="o">+</span> <span class="n">b_partial</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">grid</span><span class="p">)),</span> <span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#003A70'</span><span class="p">,</span>
+          <span class="n">label</span><span class="o">=</span><span class="s1">'extrapolated'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Training compute $C$ (PF-days)'</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Test loss $L$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Predicting the top </span><span class="si">{</span><span class="n">DROP</span><span class="si">}</span><span class="s1"> runs from the rest'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -313,13 +368,41 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Your-turn-(%E2%91%A1)">Your turn (②)</h3><p>Two sentences, one each:</p>
-<ol>
-<li><strong>Which quantity did you actually measure?</strong> Be precise: not "AI progress", but the thing on the y-axis and how it was estimated.</li>
-<li><strong>Over what window, and what would change your answer?</strong> Re-run with <code>START = '2018-01-01'</code> and <code>'2020-01-01'</code> before you write this.</li>
-</ol>
-<p>This is the Session 1.4 reader's checklist applied to a plot you made yourself, which is the harder case.</p>
+<h3 id="Explore-%E2%91%A1">Explore ②</h3><p>The cell below runs the same fit over several starting years, so you can see the answer move without
+editing anything. Run it, then read the spread.</p>
+<p>Things to try:</p>
+<ul>
+<li>Add <code>2023</code> to <code>WINDOWS</code>. Does a shorter, more recent window give a more trustworthy number or just a noisier one?</li>
+<li>Set <code>TOP_ONLY = True</code> to keep only the largest run in each calendar quarter, i.e. the frontier rather than the field. Which trend is the one people quote?</li>
+</ul>
+<p><strong>Question.</strong> Two sentences. First, which quantity you actually measured, precisely: not "AI progress"
+but the thing on the y-axis and how it was estimated. Second, over what window, and what would change
+your answer. This is the Session 1.4 checklist turned on a plot you made yourself, which is harder than
+turning it on someone else's.</p>
 <p><em>Your answers:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">WINDOWS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2018</span><span class="p">,</span> <span class="mi">2020</span><span class="p">]</span>
+<span class="n">TOP_ONLY</span> <span class="o">=</span> <span class="kc">False</span>   <span class="c1"># True: keep only the largest run per quarter (the frontier, not the field)</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">TOP_ONLY</span><span class="p">:</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">to_period</span><span class="p">(</span><span class="s1">'Q'</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">q</span><span class="p">)[</span><span class="s1">'Training compute (FLOP)'</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+
+<span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">WINDOWS</span><span class="p">:</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="n">source</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s1">-01-01'</span><span class="p">]</span>
+    <span class="n">yrs</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="s1">'Publication date'</span><span class="p">]</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s1">-01-01'</span><span class="p">))</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.25</span>
+    <span class="n">s</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="s1">'Training compute (FLOP)'</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'from </span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;4</span><span class="si">}</span><span class="s1"> models | </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> OOM/year | doubling every </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">12</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> months'</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -535,13 +618,46 @@ The same sentence in a low-resource language is therefore chopped into more piec
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Your-turn-(%E2%91%A2)">Your turn (③)</h3><p>Write a short paragraph on what the ratio you measured implies. Cover three things:</p>
-<ol>
-<li><strong>Cost</strong>: APIs bill per token and context windows are counted in tokens. What does a ratio of, say, 2x mean for a user in Durban against a user in London?</li>
-<li><strong>Quality</strong>: more tokens per word means the model sees the language in smaller, less meaningful fragments. Why would that hurt performance even before any safety question arises?</li>
-<li><strong>Safety</strong>: connect this to the Session 1.4 anchor. If a language is under-represented enough to tokenise badly, what does that predict about the amount of safety training and red-teaming it received? (Sessions 9 and 18 return to this.)</li>
-</ol>
+<h3 id="Explore-%E2%91%A2">Explore ③</h3><p>Put your own text through the model in the cell below: prompts it should find easy or hard, and a
+sentence pair in a language you speak.</p>
+<p>Things to try:</p>
+<ul>
+<li>Prompts where you know the answer and GPT-2 probably does not. Does it hedge, or is it confidently wrong?</li>
+<li>A sentence in your own language against its English translation. Where does your language get chopped hardest: names, verbs, borrowed words?</li>
+<li>Back in the multi-language cell, add <code>'amh'</code> (Amharic, a non-Latin script) to <code>LANGS</code> and compare its ratio with the Latin-script languages.</li>
+</ul>
+<p><strong>Question.</strong> A short paragraph on what your ratio implies, covering cost (APIs bill per token, and
+context windows are counted in tokens), quality (the model sees the language in smaller, less
+meaningful pieces), and safety (if a language is under-represented enough to tokenise badly, what does
+that predict about how much safety training and red-teaming it received?). Sessions 9 and 18 return to this.</p>
 <p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">MY_PROMPTS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'The capital city of Lesotho is'</span><span class="p">,</span>
+    <span class="s1">'Ubuntu is a philosophy that says'</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">MY_ENGLISH</span> <span class="o">=</span> <span class="s1">'The children are going to school tomorrow.'</span>
+<span class="n">MY_OTHER</span>   <span class="o">=</span> <span class="s1">'Izingane zizoya esikoleni kusasa.'</span>   <span class="c1"># replace with your own language</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">MY_PROMPTS</span><span class="p">:</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">top_p</span><span class="p">,</span> <span class="n">top_i</span> <span class="o">=</span> <span class="n">probs</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">tops</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">item</span><span class="p">())</span><span class="si">!r}</span><span class="s1"> </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">top_p</span><span class="p">,</span> <span class="n">top_i</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">p</span><span class="si">!r}</span><span class="se">\n</span><span class="s1">   </span><span class="si">{</span><span class="n">tops</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'English'</span><span class="p">,</span> <span class="n">MY_ENGLISH</span><span class="p">),</span> <span class="p">(</span><span class="s1">'yours'</span><span class="p">,</span> <span class="n">MY_OTHER</span><span class="p">)]:</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s1">&gt;8</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;3</span><span class="si">}</span><span class="s1"> tokens for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;3</span><span class="si">}</span><span class="s1"> characters   </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -550,9 +666,10 @@ The same sentence in a low-resource language is therefore chopped into more piec
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="Submission-checklist">Submission checklist</h2><ul>
-<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>① fitted exponent, and your one-sentence extrapolation caveat</li>
-<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>② compute-trend plot, and your two sentences on what you measured and over what window</li>
-<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>③ GPT-2 top-token outputs, the residual-stream shape, the tokenisation comparison, and your paragraph</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, top to bottom, with its output visible</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>① one sentence on why to distrust your extrapolation</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>② two sentences on what you measured and over what window</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>③ a short paragraph on cost, quality and safety, and your own text in the last cell</li>
 </ul>
 <p>Save the notebook with its outputs intact (Colab: <em>File → Download → .ipynb</em>) and submit it.
 Graded on completion and correctness; resubmission is allowed, because the point is mastery
