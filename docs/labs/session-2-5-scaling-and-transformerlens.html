@@ -205,6 +205,33 @@ constant is not.</p>
 <div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># The same authors fitted their own frontier and published it (eq. 1 of the paper):</span>
+<span class="c1">#     L(f) = (f / 5.984e22)^-0.0737 + 0.5066</span>
+<span class="c1"># Their exponent is 0.0737, not the ~0.054 you just fitted. Same runs, different answer.</span>
+<span class="n">their</span> <span class="o">=</span> <span class="p">(</span><span class="n">compute</span> <span class="o">/</span> <span class="mf">5.984e22</span><span class="p">)</span> <span class="o">**</span> <span class="o">-</span><span class="mf">0.0737</span> <span class="o">+</span> <span class="mf">0.5066</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'compute        measured   their law   difference'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">compute</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">their</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">     </span><span class="si">{</span><span class="n">l</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">      </span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">      </span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l</span><span class="si">:</span><span class="s1">+.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'The gap between 0.054 and 0.0737 is not a disagreement about the data. It is a'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'disagreement about the shape: they fit L = E + (C/Cc)^-alpha, with a floor E = 0.507,'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'while you fit a pure power law with no floor. Fitting a floor needs more points than'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'the five here: try it and the three parameters trade off against each other freely.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'So </span><span class="se">\'</span><span class="s1">the</span><span class="se">\'</span><span class="s1"> scaling exponent is not a property of the data alone. It depends on the'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'functional form you assumed before you started, which is worth remembering the next'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'time you read a headline exponent anywhere, including in this course.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Extrapolate one order of magnitude past the largest run in the data.</span>
 <span class="n">biggest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span>   <span class="c1"># not [-1]: a CSV need not arrive sorted by compute</span>
 <span class="n">C_far</span> <span class="o">=</span> <span class="n">compute</span><span class="p">[</span><span class="n">biggest</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
