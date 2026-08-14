@@ -88,6 +88,11 @@ BACKLINKS = {
          "6.5 · Lab: reward models &amp; over-optimisation",
          "Session 6.5 — Lab notebook",
          "Reward models and over-optimisation"),
+    "session-5-4-base-vs-instruct":
+        ("../sessions/session-05/lab-nanochat.html",
+         "5.4 · Lab: from base model to assistant",
+         "Session 5.4 — Lab notebook",
+         "From base model to assistant"),
     "session-2-5-scaling-and-transformerlens":
         ("../sessions/session-02/lab-scaling-and-transformerlens.html",
          "2.5 · Lab: scaling laws &amp; a first look inside a model",

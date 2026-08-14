@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 5.4 — Lab notebook</title>
+<link rel="stylesheet" href="../assets/styles.css">
+    <!-- MATHJAX-START -->
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <!-- MATHJAX-END -->
+<style>
+  .notebook { padding:0 48px 40px; }
+  .notebook .jp-Cell, .notebook .cell { margin:0 0 18px; }
+  .notebook pre, .notebook .highlight pre { background:#f5f7f9; border:1px solid #e4e8ec; border-left:3px solid #2a5298;
+      border-radius:4px; padding:14px 16px; overflow-x:auto; font-family:var(--mono); font-size:0.82rem;
+      line-height:1.5; color:#1f2d3a; }
+  .notebook .jp-InputArea-prompt, .notebook .jp-OutputArea-prompt, .notebook .prompt { display:none; }
+  .notebook h1 { font-family:var(--display); color:var(--navy); font-size:1.9rem; margin:28px 0 10px; }
+  .notebook h2 { font-family:var(--display); color:var(--navy); font-size:1.4rem; margin:34px 0 10px;
+      padding-top:14px; border-top:1px solid var(--rule); }
+  .notebook h3 { font-family:var(--display); color:var(--blue); font-size:1.1rem; margin:24px 0 8px; }
+  .notebook blockquote { border-left:3px solid var(--blue); background:var(--tint); margin:18px 0;
+      padding:12px 18px; color:var(--ink); }
+  .notebook table { border-collapse:collapse; margin:16px 0; }
+  .notebook td, .notebook th { border:1px solid var(--rule); padding:6px 10px; font-size:0.9rem; }
+  .notebook img { max-width:100%; height:auto; }
+  .nb-actions { margin:22px 48px 0; padding:16px 20px; background:var(--tint);
+      border-left:3px solid var(--navy); }
+  .nb-actions a { color:var(--blue); }
+  .nb-actions p { margin:0 0 6px; font-size:0.94rem; }
+  .nb-actions p:last-child { margin-bottom:0; }
+  @media (max-width:760px) { .notebook { padding:0 24px 30px; } .nb-actions { margin:22px 24px 0; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Session 5.4 — Lab notebook</h1>
+        <p class="subtitle">From base model to assistant</p>
+    </div>
+    <div class="nb-actions">
+        <p><strong>This is a read-only rendering.</strong> To run it:
+           <a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-5-4-base-vs-instruct.ipynb"
+              target="_blank" rel="noopener">open in Google Colab</a>, or
+           <a href="session-5-4-base-vs-instruct.ipynb" download>download the .ipynb</a> and upload it yourself.</p>
+        <p>The cells have no saved outputs: you run them and keep your own.
+           <a href="../sessions/session-05/lab-nanochat.html">Back to the lab page</a>.</p>
+    </div>
+    <div class="notebook">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>African Technical AI Safety</strong> · Week 3, Session 5.4</p>
+<p>Sessions 5.1 to 5.3 described a pipeline: pretraining makes a capable base model, supervised
+fine-tuning turns it into something that follows instructions, and later stages shape it further.
+This lab does two things with that. First you find those stages in a real, readable codebase.
+Then you put a base model and its instruction-tuned sibling side by side and work out what the
+tuning actually changed.</p>
+<p>The second part has a surprise in it, and the surprise is the point.</p>
+<p><strong>What you submit:</strong> this notebook run end to end, with your answers in the two <em>Explore</em> cells.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">textwrap</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="n">IN_COLAB</span> <span class="o">=</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span>
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s1">'transformers'</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">q</span> <span class="n">transformers</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Colab:'</span><span class="p">,</span> <span class="n">IN_COLAB</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="%E2%91%A0-Find-the-stages-in-a-real-pipeline">① Find the stages in a real pipeline</h2><p>Andrej Karpathy's <a href="https://github.com/karpathy/nanochat">nanochat</a> is a complete ChatGPT-style
+pipeline written to be read: tokenisation, pretraining, supervised fine-tuning, reinforcement
+learning, inference. Rather than hunting through it by hand, the cell below fetches the three
+scripts that matter and finds the line in each where the stage's objective lives.</p>
+<p>Searching rather than quoting line numbers is deliberate. It is an active repository with tens of
+thousands of stars, so any line number written here would be wrong within weeks.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">SCRIPTS</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/karpathy/nanochat/master/scripts/'</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_in</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">SCRIPTS</span> <span class="o">+</span> <span class="n">script</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'=== </span><span class="si">{</span><span class="n">script</span><span class="si">}</span><span class="s1">  (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="si">}</span><span class="s1"> lines)'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">context</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="n">context</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                    <span class="n">mark</span> <span class="o">=</span> <span class="s1">'&gt;'</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="k">else</span> <span class="s1">' '</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">mark</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s1">&gt;4</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="n">lines</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[:</span><span class="mi">96</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">()</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  (no line matching </span><span class="si">{</span><span class="n">pat</span><span class="si">!r}</span><span class="s1"> any more: the repo has moved on)</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="c1"># 5.1, pretraining: the whole objective, and where its targets come from</span>
+<span class="n">find_in</span><span class="p">(</span><span class="s1">'base_train.py'</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s1">'loss = model\(x, y\)'</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'= next\(train_loader\)'</span><span class="p">])</span>
+<span class="c1"># 5.2, supervised fine-tuning: the same loss, masked to the assistant's tokens only</span>
+<span class="n">find_in</span><span class="p">(</span><span class="s1">'chat_sft.py'</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s1">'Apply the loss mask from render_conversation'</span><span class="p">,</span>
+                        <span class="sa">r</span><span class="s1">'targets\[mask_targets == 0\] = -1'</span><span class="p">],</span> <span class="n">context</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># 5.3, reinforcement learning: where the training signal comes from instead</span>
+<span class="n">find_in</span><span class="p">(</span><span class="s1">'chat_rl.py'</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s1">'reward = train_task\.reward'</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'advantages'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note what the third file is. nanochat now ships <code>scripts/chat_rl.py</code>, which runs GRPO on GSM8K,
+described in its own docstring as closer to plain REINFORCE once the trust region and the PPO
+clipping are removed. That is the verifiable-rewards stage from 5.3, in about 300 readable lines,
+and the reward comes from a checker rather than from a human or a learned model.</p>
+<p><strong>Write three or four sentences</strong> mapping what you found onto the five-stage table from 5.3. Which
+stages are present in this repository, which are missing, and what does each one's objective look
+like in code?</p>
+<p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="%E2%91%A1-The-same-questions,-two-models">② The same questions, two models</h2><p>Now the experiment. <code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a
+tokeniser and a pretraining run. The second one has been through supervised fine-tuning and
+preference tuning; the first has not. Anything that differs between them is what the tuning did.</p>
+<p>The two are called differently, which is itself part of the lesson. The base model takes raw text
+and continues it. The instruct model expects a <strong>chat template</strong>: special tokens marking who is
+speaking, which its tuning taught it to expect.</p>
+<p>Loading both takes a minute or two and about 2 GB.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">BASE</span><span class="p">,</span> <span class="n">INSTRUCT</span> <span class="o">=</span> <span class="s1">'Qwen/Qwen2.5-0.5B'</span><span class="p">,</span> <span class="s1">'Qwen/Qwen2.5-0.5B-Instruct'</span>
+<span class="n">tok_b</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">BASE</span><span class="p">)</span>
+<span class="n">mod_b</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">tok_i</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">INSTRUCT</span><span class="p">)</span>
+<span class="n">mod_i</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">INSTRUCT</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="n">CAP</span> <span class="o">=</span> <span class="mi">64</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ask_base</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raw continuation: the base model just carries on from the text."""</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">tok_b</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">'pt'</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">mod_b</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">CAP</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">pad_token_id</span><span class="o">=</span><span class="n">tok_b</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ids</span><span class="p">[</span><span class="s1">'input_ids'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+    <span class="k">return</span> <span class="n">tok_b</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">tok_b</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ask_instruct</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Chat template: the tuning taught it this shape."""</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">([{</span><span class="s1">'role'</span><span class="p">:</span> <span class="s1">'user'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+                                     <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">tok_i</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">'pt'</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">mod_i</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">CAP</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">pad_token_id</span><span class="o">=</span><span class="n">tok_i</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ids</span><span class="p">[</span><span class="s1">'input_ids'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+    <span class="k">return</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'what the chat template actually looks like:</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tok_i</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">([{</span><span class="s1">'role'</span><span class="p">:</span> <span class="s1">'user'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">:</span> <span class="s1">'Hello.'</span><span class="p">}],</span>
+                                <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Explain what a neural network is, in two sentences.'</span><span class="p">,</span>
+           <span class="s1">'Summarise the plot of Romeo and Juliet.'</span><span class="p">,</span>
+           <span class="s1">'What is the capital of Kenya? Answer with one word.'</span><span class="p">,</span>
+           <span class="s2">"Translate 'good morning' into isiZulu."</span><span class="p">,</span>
+           <span class="s1">'Give me three reasons to exercise.'</span><span class="p">]</span>
+
+<span class="c1"># Greedy decoding (do_sample=False), so these outputs are deterministic: yours will match.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PROMPTS</span><span class="p">:</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">b_stop</span> <span class="o">=</span> <span class="n">ask_base</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">i</span><span class="p">,</span> <span class="n">i_stop</span> <span class="o">=</span> <span class="n">ask_instruct</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">b_stop</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i_stop</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'PROMPT    </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'BASE      </span><span class="si">{</span><span class="n">textwrap</span><span class="o">.</span><span class="n">shorten</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'INSTRUCT  </span><span class="si">{</span><span class="n">textwrap</span><span class="o">.</span><span class="n">shorten</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-to-look-at,-before-you-read-on">What to look at, before you read on</h3><p>The textbook version of this experiment says the base model will ramble and the instruct model will
+answer the question. Check whether that is what happened. On most of these prompts the base model
+answers perfectly competently.</p>
+<p>So look for the differences that are actually there:</p>
+<ul>
+<li><strong>Manner.</strong> Which model opens with "Sure!", and which uses markdown bold? Check whether the
+things you might expect to be distinctive, like numbered lists, actually are.</li>
+<li><strong>Stopping.</strong> Which one emits an end-of-text token and stops, and which runs to the cap? Count
+before you conclude.</li>
+<li><strong>The capital of Kenya.</strong> Read both answers. One is wrong, and it is not the one the story
+predicts.</li>
+<li><strong>Romeo and Juliet.</strong> One model summarises the play. The other declines, on the grounds that no
+such text exists. Which is which, and what does a refusal like that cost a user?</li>
+<li><strong>The isiZulu translation.</strong> Both produce something. If you read isiZulu, judge them. If you do
+not, notice how confident the fluent one sounds, and ask how you would have known otherwise.</li>
+<li><strong>The last line of the base model’s isiZulu answer.</strong> Read it twice. It is the most
+informative thing on the screen.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="n">MARKERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Sure'</span><span class="p">,</span> <span class="s1">'**'</span><span class="p">,</span> <span class="s1">'1.'</span><span class="p">,</span> <span class="s1">'I cannot'</span><span class="p">,</span> <span class="s2">"I'm sorry"</span><span class="p">,</span> <span class="s1">'helpful assistant'</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'prompt'</span><span class="si">:</span><span class="s2">&lt;40</span><span class="si">}{</span><span class="s1">'stops? base'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}{</span><span class="s1">'inst'</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2">    markers: base / instruct"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">bs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">is_</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="n">mb</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">MARKERS</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">b</span><span class="p">]</span>
+    <span class="n">mi</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">MARKERS</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">p</span><span class="p">[:</span><span class="mi">38</span><span class="p">]</span><span class="si">:</span><span class="s1">&lt;40</span><span class="si">}{</span><span class="nb">str</span><span class="p">(</span><span class="n">bs</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;12</span><span class="si">}{</span><span class="nb">str</span><span class="p">(</span><span class="n">is_</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;7</span><span class="si">}</span><span class="s1">    </span><span class="si">{</span><span class="n">mb</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">mi</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'stops early:  base'</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">),</span> <span class="s1">'/'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span>
+      <span class="s1">' instruct'</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">),</span> <span class="s1">'/'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-the-table-shows">What the table shows</h3><p>Three things to separate.</p>
+<p><strong>What tuning clearly changed: manner.</strong> Only the tuned model opens with "Sure!", reaches for
+markdown bold, and produces a refusal. Notice what is <em>not</em> distinctive: both models number their
+lists, and stopping early is close to a tie. The willingness to end a turn, which sounds like the
+obvious thing fine-tuning buys, is not visible here at this model size.</p>
+<p><strong>What tuning did not change: knowledge, and in one case it cost accuracy.</strong> The base model says
+Nairobi. The tuned model says Kampala, which is the capital of Uganda. The tuned model also refuses
+to summarise one of the most widely reproduced plays in the language, asserting that it cannot find
+any such text, while the model it was built from summarises it correctly. Both of these are ways of
+getting worse, and both survived a pipeline whose purpose was to make the model more useful.</p>
+<p><strong>Why the base model could answer at all.</strong> Look again at the end of its isiZulu attempt: it slides
+into <em>“You are a helpful assistant, who always provide explanation.”</em> Nobody put that there.
+It is a system prompt, memorised from pretraining, surfacing because the model is doing what a base
+model does, which is continue plausible text. The web it was trained on is full of assistant
+transcripts, so “behaving like an assistant” is already one of the styles it can imitate.
+Fine-tuning did not teach the model to answer questions. It made answering the default, in a
+particular voice, with a particular set of refusals attached.</p>
+<p>That distinction matters for the rest of the course. When a later session says a model was
+“aligned” by fine-tuning, ask what was actually moved: the behaviour, or the capability
+underneath it. Sessions 7 and 8 return to this question with sharper tools.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Explore-%E2%91%A1">Explore ②</h3><ul>
+<li><strong>Feed the base model the chat template.</strong> <code>ask_base(tok_i.apply_chat_template(...))</code>. Does the
+format alone produce assistant-shaped behaviour, or does the shape need the tuning behind it?</li>
+<li><strong>Change <code>CAP</code> to 200</strong> and re-run the Romeo and Juliet prompt on both. Does the base model
+eventually stop, or keep going?</li>
+<li><strong>Your own prompts.</strong> Try one where you know the answer and one in a language you speak. The
+isiZulu answer above is delivered with total confidence; find out whether it is right.</li>
+</ul>
+<p><strong>Question.</strong> Two or three sentences. Sort the differences you found into <em>form</em> (how the answer is
+presented) and <em>substance</em> (what the model knows or gets right). Which did fine-tuning change? A
+model that has been through this pipeline is often called "aligned": on this evidence, what does
+that word actually license you to assume, and what does it not?</p>
+<p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr/>
+<h2 id="Submission-checklist">Submission checklist</h2><ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, with output visible</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>three or four sentences mapping nanochat's scripts onto the five-stage table (①)</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the base-versus-instruct outputs, and your two or three sentences separating form from
+substance (②)</li>
+</ul>
+<p>In Colab, <em>File → Download → Download .ipynb</em>. Graded on completion and correctness; resubmission
+is allowed.</p>
+<p><strong>Sources.</strong> <a href="https://github.com/karpathy/nanochat">nanochat</a> (Karpathy, MIT). Qwen2.5-0.5B and its
+Instruct sibling, from the <a href="https://arxiv.org/abs/2412.15115">Qwen2.5 release</a>. The five-stage
+pipeline is Session 5.3.</p>
+</div>
+</div>
+</div>
+
+    </div>
+    <nav class="page-nav">
+        <a class="prev" href="../sessions/session-05/lab-nanochat.html"><span class="nav-label">Return to</span><span class="nav-title">5.4 · Lab: from base model to assistant</span></a>
+        <a class="home" href="../index.html"><span class="nav-title">⌂</span></a>
+        <span class="nav-empty"></span>
+    </nav>
+</div>
+</body>
+</html>

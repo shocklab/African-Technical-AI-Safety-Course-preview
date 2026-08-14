@@ -40,63 +40,65 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>This lab turns the pipeline of 5.1–5.3 from words into code. You'll read the stages of a complete, minimal LLM pipeline (Karpathy's <strong>nanochat</strong>), then do the experiment that makes the session click: compare a <strong>base model</strong> (completes text) with an <strong>instruction-tuned model</strong> (follows instructions) on identical prompts, and, optionally, run a tiny supervised fine-tune yourself and watch behaviour shift. Everything graded runs on free Google Colab.</p>
+            <p>This lab turns the pipeline of 5.1&ndash;5.3 from words into code, in two parts. First you find the training stages in a real, readable codebase: Karpathy's <strong>nanochat</strong>, a complete ChatGPT-style pipeline written to be read rather than skimmed. Then you put a <strong>base model</strong> beside the <strong>instruction-tuned model</strong> built from it and work out what the tuning actually changed.</p>
+            <p>The second part has a surprise in it, and the surprise is the point. The story you have been told is that base models ramble and tuned models answer. Run it and see whether that is what happens. Everything runs on free Google Colab in about two minutes of compute; the hour is for thinking about what comes out.</p>
         </div>
 
         <div class="lab-box">
-            <h4>Setup <span class="tag">Colab — no GPU needed for the core tasks</span></h4>
-            <p>Open a new Colab notebook and install the Hugging Face libraries:</p>
-            <div class="formula" style="text-align:left;"><code>!pip install "transformers&gt;=4.44" datasets torch</code></div>
-            <p>A free Colab account is the only requirement. Save the notebook; you'll submit it.</p>
+            <h4>Setup <span class="tag">Colab &mdash; no GPU needed</span></h4>
+            <ol class="styled-list">
+                <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-5-4-base-vs-instruct.ipynb" target="_blank" rel="noopener">Open the notebook in Colab</a>. It opens read-only from GitHub, so use <em>File &rarr; Save a copy in Drive</em> before you change anything; the copy in your Drive is the one you edit and submit.</li>
+                <li>Run the first cell. Colab will warn you that the notebook "was not authored by Google", which it says of anything loaded from GitHub; choose <em>Run anyway</em>.</li>
+                <li>Work down the notebook with <em>Shift+Enter</em>, reading each cell before you run it. The two models together are about 2&nbsp;GB of download and a minute of CPU.</li>
+            </ol>
+            <p>You can also <a href="../../labs/session-5-4-base-vs-instruct.html">read the whole notebook on this site</a> before you start, or <a href="../../labs/session-5-4-base-vs-instruct.ipynb" download>download the .ipynb</a> for Jupyter.</p>
+            <p>The code is written for you, so this lab is about running it and pulling at it rather than building it. Each part ends with an "Explore" cell: two or three things to change and re-run, and one short question to answer.</p>
         </div>
 
-        <h2 class="section-title">① Read the pipeline: nanochat</h2>
+        <h2 class="section-title">&#9312; Find the stages in a real pipeline</h2>
         <div class="technical-detail">
-            <h4>The whole stack in one readable repo</h4>
-            <p style="color:#555;">Andrej Karpathy's nanochat (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT-licensed) is a minimal, end-to-end ChatGPT-style pipeline (tokenisation → pretraining → supervised fine-tuning → evaluation → inference → a web chat UI) designed to be read in full. You will not run the whole thing (it targets a multi-GPU node), but you should <em>read</em> it:</p>
+            <h4>Three objectives, three files</h4>
+            <p style="color:#555;">nanochat (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT-licensed) runs tokenisation, pretraining, supervised fine-tuning, reinforcement learning, evaluation and inference. You will not run it, since it targets a multi-GPU node, but the notebook fetches the three scripts that matter and finds the line in each where that stage's objective lives:</p>
             <ul class="styled-list">
-                <li>Find the pretraining stage: locate the next-token cross-entropy loss (5.1) in the training loop.</li>
-                <li>Find the SFT stage: see how it switches to (prompt, response) data and masks the loss to the response tokens (5.2).</li>
-                <li>Note what is <em>not</em> there in a from-scratch run: no preference/RLHF stage by default; that is Session 6.</li>
+                <li><code>base_train.py</code>: pretraining is one line, <code>loss = model(x, y)</code>, where <code>y</code> is <code>x</code> shifted by one token. That is the whole of 5.1.</li>
+                <li><code>chat_sft.py</code>: fine-tuning uses the same loss, with the targets for every user token set to the ignore index. The model is trained only on the assistant's words. That is 5.2, in three lines of tensor indexing.</li>
+                <li><code>chat_rl.py</code>: the reward comes from <code>train_task.reward(...)</code>, a checker that marks a GSM8K answer right or wrong.</li>
             </ul>
-            <p style="color:#555;">Write 3–4 sentences mapping the repo's stages onto the five-stage table from 5.3. (The older, even smaller <strong>nanoGPT</strong> repo is a fine alternative for just the pretraining loop.)</p>
+            <p style="color:#555;">Note what the third file settles. nanochat does have a reinforcement learning stage: GRPO on grade-school maths, described in its own docstring as close to plain REINFORCE once the trust region and clipping come off. What it does not have is a reward model learned from human preferences. Those are different stages of the 5.3 table, and the difference is where the reward comes from: a checker that can be verified against ground truth, or a model trained to predict what a person would prefer. Session 6 is about the second kind, and about what goes wrong with it.</p>
+            <p style="color:#555;">The notebook searches for these patterns rather than quoting line numbers, because the repository is actively developed and any line number printed here would be wrong within a month. If a search comes back empty, that is information too: read the file and find where the objective moved.</p>
         </div>
 
-        <h2 class="section-title">② The experiment: base vs instruct</h2>
+        <h2 class="section-title">&#9313; The same questions, two models</h2>
         <div class="technical-detail">
-            <h4>Same prompts, two models</h4>
-            <p style="color:#555;">Load a small base model and the instruction-tuned model built from it, and probe them identically. The pair below share architecture, size, tokeniser and pretraining data; the only difference is post-training, so whatever behavioural gap you find is the post-training stack of 5.3, isolated:</p>
-            <div class="formula" style="text-align:left;"><code>from transformers import pipeline<br>base = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B")&nbsp;&nbsp;# base<br>chat = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B-Instruct")&nbsp;&nbsp;# instruct<br><br>prompt = "List three causes of the First World War."<br>print(base(prompt, max_new_tokens=80))<br><br>messages = [{"role": "user", "content": prompt}]<br>print(chat(messages, max_new_tokens=80))</code></div>
+            <h4>What fine-tuning changed, and what it did not</h4>
+            <p style="color:#555;"><code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a tokeniser and a pretraining run. The second has been through supervised fine-tuning and preference tuning; the first has not. Whatever differs between them is what post-training did, isolated. The notebook puts five prompts to both and prints the answers side by side, with greedy decoding, so your output will match the discussion exactly.</p>
             <ul class="styled-list">
-                <li>Note the two call shapes. The base model gets a raw string; the instruct model gets a <em>messages</em> list, which makes the pipeline apply its chat template (the special tokens marking user and assistant turns it was trained on, 5.2). Pass the instruct model a bare string and you are probing it outside its trained format; try it once and compare.</li>
-                <li>Give both the same three instructions (a question, a "summarise this", a "translate this"). Record what each does.</li>
-                <li>You should see the pattern from 5.1: the base model tends to <em>continue</em> the text (more questions, tangents) while the instruct model <em>answers</em>. Describe the difference in your own words; this is the SFT effect, made visible.</li>
-                <li><strong>African-safety probe:</strong> repeat one instruction in isiZulu (or another language you read). Does the gap between base and instruct widen? Note what you see: it previews Session 9.</li>
-                <li><strong>Optional era contrast:</strong> run the same prompts through <code>gpt2</code> (2019, base). The gap is far larger, but it confounds era with tuning: gpt2 differs from the Qwen pair in data, size and architecture as well as post-training. It shows how far base models themselves have come, while the matched pair above isolates what post-training adds.</li>
+                <li>Note the two call shapes. The base model gets a raw string and continues it. The instruct model gets a <strong>chat template</strong>: special tokens marking who is speaking, which its tuning taught it to expect. The notebook prints the template so you can see what those tokens are.</li>
+                <li>Check whether the textbook contrast appears. On most of these prompts the base model answers the question perfectly competently, and the differences that are really there are subtler and more interesting.</li>
+                <li>Read the two answers to "What is the capital of Kenya?" carefully. One is wrong, and it is not the one the story predicts.</li>
+                <li>One model summarises Romeo and Juliet. The other declines, asserting that no such text exists. Work out which is which, and what a refusal like that costs a user.</li>
+                <li><strong>African-language probe.</strong> Both models translate "good morning" into isiZulu, and both produce something. If you read isiZulu, judge them. If you do not, notice how confident the fluent one sounds and ask how you would have known otherwise. Session 9 comes back to this with an evaluation rather than an anecdote.</li>
+                <li>Then read the last line of the base model's isiZulu attempt twice. It is the most informative thing on the screen, and it explains why the first bullet turned out the way it did.</li>
             </ul>
-        </div>
-
-        <h2 class="section-title">③ Optional: run a tiny supervised fine-tune <span style="font-size:0.6em; color:#888; vertical-align:middle;">[GPU — optional]</span></h2>
-        <div class="technical-detail">
-            <h4>Fine-tuning on your own demonstrations</h4>
-            <p style="color:#555;">On a free Colab GPU runtime, fine-tune the small base model on a handful (10–50) of hand-written (instruction, response) pairs in one style (e.g. always answer in one short sentence) using the next-token loss masked to the response (5.2). Then re-run the prompts from ②. Even a tiny SFT set visibly nudges the model toward your demonstrated format. This is the mechanism behind "turning a base model into an assistant", in miniature; keep the dataset small and the effect will still show.</p>
+            <p style="color:#555;">The Explore cell asks you to feed the chat template to the base model, raise the token cap, and try prompts in a language you speak. The question at the end asks you to sort what you found into form and substance: which of these differences is about how an answer is presented, and which is about what the model knows or gets right. A model that has been through this pipeline is routinely called "aligned". On this evidence, decide what that word licenses you to assume.</p>
         </div>
 
         <div class="lab-box">
             <h4>Submit</h4>
-            <p>Your Colab notebook with: the nanochat stage-mapping (①), the base-vs-instruct comparison table + your description of the difference + the isiZulu probe (②), and, if attempted, the tiny SFT before/after (③). Graded on completion and the quality of your observations; resubmission allowed.</p>
+            <p>Your notebook, run end to end with output visible: the nanochat stage-mapping (&#9312;), and the base-versus-instruct comparison with your two or three sentences separating form from substance (&#9313;). Graded on completion and the quality of your observations; resubmission allowed.</p>
         </div>
 
         <h2 class="section-title">Tools &amp; references</h2>
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
-            <p>• <strong>Karpathy, nanochat</strong> (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT): the readable full pipeline; <strong>nanoGPT</strong> (<a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener">github.com/karpathy/nanoGPT</a>) for the pretraining loop alone.</p>
-            <p>• <a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener"><strong>Hugging Face Transformers</strong></a> docs: <code>pipeline</code> and the model hub.</p>
+            <p>&bull; <strong>Karpathy, nanochat</strong> (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT): the readable full pipeline; <strong>nanoGPT</strong> (<a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener">github.com/karpathy/nanoGPT</a>) for the pretraining loop alone.</p>
+            <p>&bull; <strong>Qwen Team, Qwen2.5 Technical Report</strong> (<a href="https://arxiv.org/abs/2412.15115" target="_blank" rel="noopener">arXiv:2412.15115</a>): the models used in &#9313;, including what the post-training actually consisted of.</p>
+            <p>&bull; <a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener"><strong>Hugging Face Transformers</strong></a> docs: <code>generate</code>, chat templates and the model hub.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 5 summary &amp; what's next</h2>
-            <p>An LLM is built in stages: web-scale self-supervised pretraining yields a capable but unaligned base model (5.1); supervised fine-tuning on demonstrations makes it follow instructions but can only imitate, never select the <em>better</em> answer (5.2); the full post-training stack shapes the assistant as a thin proxy-driven layer over a vast base, with a distinct misalignment opening at every stage (5.3); and you've now seen the base→instruct shift in code (5.4).</p>
+            <p>An LLM is built in stages: web-scale self-supervised pretraining yields a capable but unaligned base model (5.1); supervised fine-tuning on demonstrations makes it follow instructions but can only imitate, never select the <em>better</em> answer (5.2); the full post-training stack shapes the assistant as a thin proxy-driven layer over a vast base, with a distinct misalignment opening at every stage (5.3); and you have now read those stages as code and measured what the last of them changed, which is less than the usual story claims (5.4).</p>
             <p><strong>Next (Session 6):</strong> the stage that breaks through SFT's ceiling, <strong>RLHF</strong>. We learn a reward model from human <em>preferences</em>, optimise the policy against it with a KL leash, and confront the price: optimising a learned proxy invites the Goodhart failures of Session 3.1: reward hacking and sycophancy.</p>
         </div>
 
