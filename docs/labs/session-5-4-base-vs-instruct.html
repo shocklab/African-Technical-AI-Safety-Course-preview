@@ -56,8 +56,9 @@
 fine-tuning turns it into something that follows instructions, and later stages shape it further.
 This lab does two things with that. First you find those stages in a real, readable codebase.
 Then you put a base model and its instruction-tuned sibling side by side and work out what the
-tuning actually changed.</p>
-<p>The second part has a surprise in it, and the surprise is the point.</p>
+tuning changed.</p>
+<p>The usual account of that second part is that base models ramble and tuned models answer. Run it
+before you decide whether that is what happens.</p>
 <p><strong>What you submit:</strong> this notebook run end to end, with your answers in the two <em>Explore</em> cells.</p>
 </div>
 </div>
@@ -88,8 +89,8 @@ tuning actually changed.</p>
 pipeline written to be read: tokenisation, pretraining, supervised fine-tuning, reinforcement
 learning, inference. Rather than hunting through it by hand, the cell below fetches the three
 scripts that matter and finds the line in each where the stage's objective lives.</p>
-<p>Searching rather than quoting line numbers is deliberate. It is an active repository with tens of
-thousands of stars, so any line number written here would be wrong within weeks.</p>
+<p>The cell searches for patterns instead of quoting line numbers: nanochat has tens of thousands of
+stars and is actively developed, so any line number printed here would be wrong within weeks.</p>
 </div>
 </div>
 </div>
@@ -130,10 +131,10 @@ thousands of stars, so any line number written here would be wrong within weeks.
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note what the third file is. nanochat now ships <code>scripts/chat_rl.py</code>, which runs GRPO on GSM8K,
-described in its own docstring as closer to plain REINFORCE once the trust region and the PPO
-clipping are removed. That is the verifiable-rewards stage from 5.3, in about 300 readable lines,
-and the reward comes from a checker rather than from a human or a learned model.</p>
+<p>nanochat ships <code>scripts/chat_rl.py</code>, which runs GRPO on GSM8K, described in its own docstring as
+close to plain REINFORCE once the trust region and the PPO clipping come off. That is the
+verifiable-rewards stage from 5.3 in about 300 lines, and its reward comes from a checker rather
+than from a human or a learned model.</p>
 <p><strong>Write three or four sentences</strong> mapping what you found onto the five-stage table from 5.3. Which
 stages are present in this repository, which are missing, and what does each one's objective look
 like in code?</p>
@@ -148,8 +149,8 @@ like in code?</p>
 <h2 id="%E2%91%A1-The-same-questions,-two-models">② The same questions, two models</h2><p>Now the experiment. <code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a
 tokeniser and a pretraining run. The second one has been through supervised fine-tuning and
 preference tuning; the first has not. Anything that differs between them is what the tuning did.</p>
-<p>The two are called differently, which is itself part of the lesson. The base model takes raw text
-and continues it. The instruct model expects a <strong>chat template</strong>: special tokens marking who is
+<p>The two take their input differently. The base model gets raw text and continues it. The instruct
+model expects a <strong>chat template</strong>: special tokens marking who is
 speaking, which its tuning taught it to expect.</p>
 <p>Loading both takes a minute or two and about 2 GB.</p>
 </div>
@@ -223,23 +224,20 @@ speaking, which its tuning taught it to expect.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-to-look-at,-before-you-read-on">What to look at, before you read on</h3><p>The textbook version of this experiment says the base model will ramble and the instruct model will
-answer the question. Check whether that is what happened. On most of these prompts the base model
-answers perfectly competently.</p>
-<p>So look for the differences that are actually there:</p>
+<h3 id="What-to-look-at">What to look at</h3><p>Check whether the contrast promised at the top appeared. On most of these prompts the base model
+answers competently.</p>
+<p>So look for the differences that are there:</p>
 <ul>
 <li><strong>Manner.</strong> Which model opens with "Sure!", and which uses markdown bold? Check whether the
 things you might expect to be distinctive, like numbered lists, actually are.</li>
-<li><strong>Stopping.</strong> Which one emits an end-of-text token and stops, and which runs to the cap? Count
-before you conclude.</li>
+<li><strong>Stopping.</strong> Which one emits an end-of-text token and stops, and which runs to the cap?</li>
 <li><strong>The capital of Kenya.</strong> Read both answers. One is wrong, and it is not the one the story
 predicts.</li>
 <li><strong>Romeo and Juliet.</strong> One model summarises the play. The other declines, on the grounds that no
 such text exists. Which is which, and what does a refusal like that cost a user?</li>
 <li><strong>The isiZulu translation.</strong> Both produce something. If you read isiZulu, judge them. If you do
 not, notice how confident the fluent one sounds, and ask how you would have known otherwise.</li>
-<li><strong>The last line of the base model’s isiZulu answer.</strong> Read it twice. It is the most
-informative thing on the screen.</li>
+<li><strong>The last line of the base model’s isiZulu answer.</strong> Nothing in the prompt asked for it.</li>
 </ul>
 </div>
 </div>
@@ -268,26 +266,24 @@ informative thing on the screen.</li>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-the-table-shows">What the table shows</h3><p>Three things to separate.</p>
-<p><strong>What tuning clearly changed: manner.</strong> Only the tuned model opens with "Sure!", reaches for
-markdown bold, and produces a refusal. Notice what is <em>not</em> distinctive: both models number their
-lists, and stopping early is close to a tie. The willingness to end a turn, which sounds like the
-obvious thing fine-tuning buys, is not visible here at this model size.</p>
-<p><strong>What tuning did not change: knowledge, and in one case it cost accuracy.</strong> The base model says
-Nairobi. The tuned model says Kampala, which is the capital of Uganda. The tuned model also refuses
-to summarise one of the most widely reproduced plays in the language, asserting that it cannot find
-any such text, while the model it was built from summarises it correctly. Both of these are ways of
-getting worse, and both survived a pipeline whose purpose was to make the model more useful.</p>
-<p><strong>Why the base model could answer at all.</strong> Look again at the end of its isiZulu attempt: it slides
-into <em>“You are a helpful assistant, who always provide explanation.”</em> Nobody put that there.
-It is a system prompt, memorised from pretraining, surfacing because the model is doing what a base
-model does, which is continue plausible text. The web it was trained on is full of assistant
-transcripts, so “behaving like an assistant” is already one of the styles it can imitate.
-Fine-tuning did not teach the model to answer questions. It made answering the default, in a
-particular voice, with a particular set of refusals attached.</p>
-<p>That distinction matters for the rest of the course. When a later session says a model was
-“aligned” by fine-tuning, ask what was actually moved: the behaviour, or the capability
-underneath it. Sessions 7 and 8 return to this question with sharper tools.</p>
+<h3 id="What-the-table-shows">What the table shows</h3><p>Only the tuned model opens with "Sure!", reaches for markdown bold, and produces a refusal. Both
+models number their lists, and stopping early is close to a tie. The willingness to end a turn,
+which sounds like the obvious thing fine-tuning buys, is not visible here at this model size.</p>
+<p>Knowledge went the other way. The base model says Nairobi; the tuned model says Kampala, which is
+the capital of Uganda. The tuned model also refuses to summarise one of the most widely reproduced
+plays in the language, asserting that it cannot find any such text, while the model it was built
+from summarises it correctly. Both are ways of getting worse, and both survived a pipeline whose
+purpose was to make the model more useful.</p>
+<p>Now look again at the end of the base model’s isiZulu attempt. It slides into “You are a
+helpful assistant, who always provide explanation.” Nothing in the prompt asked for that. It is
+a system prompt memorised from pretraining. A base model continues plausible text, and the web it
+trained on is full of assistant transcripts, so behaving like an assistant is already one of the
+styles it can imitate. Fine-tuning did not teach
+the model to answer questions. It made answering the default, in a particular voice, with a
+particular set of refusals attached.</p>
+<p>When a later session says a model was “aligned” by fine-tuning, ask what moved: the
+behaviour, or the capability underneath it. Session 9.3 pushes that question further, and 9.4 has
+you measure the gap in isiZulu.</p>
 </div>
 </div>
 </div>
@@ -305,7 +301,7 @@ isiZulu answer above is delivered with total confidence; find out whether it is 
 <p><strong>Question.</strong> Two or three sentences. Sort the differences you found into <em>form</em> (how the answer is
 presented) and <em>substance</em> (what the model knows or gets right). Which did fine-tuning change? A
 model that has been through this pipeline is often called "aligned": on this evidence, what does
-that word actually license you to assume, and what does it not?</p>
+that word license you to assume, and what does it not?</p>
 <p><em>Your answer:</em></p>
 </div>
 </div>

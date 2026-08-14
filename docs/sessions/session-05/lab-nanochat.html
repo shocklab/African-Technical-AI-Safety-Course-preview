@@ -40,8 +40,8 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>This lab turns the pipeline of 5.1&ndash;5.3 from words into code, in two parts. First you find the training stages in a real, readable codebase: Karpathy's <strong>nanochat</strong>, a complete ChatGPT-style pipeline written to be read rather than skimmed. Then you put a <strong>base model</strong> beside the <strong>instruction-tuned model</strong> built from it and work out what the tuning actually changed.</p>
-            <p>The second part has a surprise in it, and the surprise is the point. The story you have been told is that base models ramble and tuned models answer. Run it and see whether that is what happens. Everything runs on free Google Colab in about two minutes of compute; the hour is for thinking about what comes out.</p>
+            <p>This lab turns the pipeline of 5.1&ndash;5.3 from words into code, in two parts. First you find the training stages in a real, readable codebase: Karpathy's <strong>nanochat</strong>, a complete ChatGPT-style pipeline written to be read. Then you put a <strong>base model</strong> beside the <strong>instruction-tuned model</strong> built from it and work out what the tuning changed.</p>
+            <p>The usual account of that second part is that base models ramble and tuned models answer. Run it before you decide whether that is what happens. Everything runs on free Google Colab in about two minutes of compute; the hour is for thinking about what comes out.</p>
         </div>
 
         <div class="lab-box">
@@ -60,25 +60,25 @@
             <h4>Three objectives, three files</h4>
             <p style="color:#555;">nanochat (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT-licensed) runs tokenisation, pretraining, supervised fine-tuning, reinforcement learning, evaluation and inference. You will not run it, since it targets a multi-GPU node, but the notebook fetches the three scripts that matter and finds the line in each where that stage's objective lives:</p>
             <ul class="styled-list">
-                <li><code>base_train.py</code>: pretraining is one line, <code>loss = model(x, y)</code>, where <code>y</code> is <code>x</code> shifted by one token. That is the whole of 5.1.</li>
+                <li><code>base_train.py</code>: pretraining is one line, <code>loss = model(x, y)</code>, where <code>y</code> is <code>x</code> shifted by one token. That one line is the pretraining objective of 5.1.</li>
                 <li><code>chat_sft.py</code>: fine-tuning uses the same loss, with the targets for every user token set to the ignore index. The model is trained only on the assistant's words. That is 5.2, in three lines of tensor indexing.</li>
                 <li><code>chat_rl.py</code>: the reward comes from <code>train_task.reward(...)</code>, a checker that marks a GSM8K answer right or wrong.</li>
             </ul>
-            <p style="color:#555;">Note what the third file settles. nanochat does have a reinforcement learning stage: GRPO on grade-school maths, described in its own docstring as close to plain REINFORCE once the trust region and clipping come off. What it does not have is a reward model learned from human preferences. Those are different stages of the 5.3 table, and the difference is where the reward comes from: a checker that can be verified against ground truth, or a model trained to predict what a person would prefer. Session 6 is about the second kind, and about what goes wrong with it.</p>
-            <p style="color:#555;">The notebook searches for these patterns rather than quoting line numbers, because the repository is actively developed and any line number printed here would be wrong within a month. If a search comes back empty, that is information too: read the file and find where the objective moved.</p>
+            <p style="color:#555;">nanochat does have a reinforcement learning stage: GRPO on grade-school maths, described in its own docstring as close to plain REINFORCE once the trust region and clipping come off. What it does not have is a reward model learned from human preferences. Those are different stages of the 5.3 table, and the difference is where the reward comes from: a checker that can be verified against ground truth, or a model trained to predict what a person would prefer. Session 6 is about the second kind, and about what goes wrong with it.</p>
+            <p style="color:#555;">The notebook searches for these patterns rather than quoting line numbers, because the repository is actively developed and any line number printed here would be wrong within a month. If a search comes back empty, read the file and find where the objective moved.</p>
         </div>
 
         <h2 class="section-title">&#9313; The same questions, two models</h2>
         <div class="technical-detail">
-            <h4>What fine-tuning changed, and what it did not</h4>
+            <h4>The matched pair</h4>
             <p style="color:#555;"><code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a tokeniser and a pretraining run. The second has been through supervised fine-tuning and preference tuning; the first has not. Whatever differs between them is what post-training did, isolated. The notebook puts five prompts to both and prints the answers side by side, with greedy decoding, so your output will match the discussion exactly.</p>
             <ul class="styled-list">
                 <li>Note the two call shapes. The base model gets a raw string and continues it. The instruct model gets a <strong>chat template</strong>: special tokens marking who is speaking, which its tuning taught it to expect. The notebook prints the template so you can see what those tokens are.</li>
-                <li>Check whether the textbook contrast appears. On most of these prompts the base model answers the question perfectly competently, and the differences that are really there are subtler and more interesting.</li>
-                <li>Read the two answers to "What is the capital of Kenya?" carefully. One is wrong, and it is not the one the story predicts.</li>
+                <li>Check whether the textbook contrast appears. On most of these prompts the base model answers the question competently, and the differences that are there are smaller and easier to miss.</li>
+                <li>Read the two answers to "What is the capital of Kenya?". One is wrong, and it is not the one the story predicts.</li>
                 <li>One model summarises Romeo and Juliet. The other declines, asserting that no such text exists. Work out which is which, and what a refusal like that costs a user.</li>
-                <li><strong>African-language probe.</strong> Both models translate "good morning" into isiZulu, and both produce something. If you read isiZulu, judge them. If you do not, notice how confident the fluent one sounds and ask how you would have known otherwise. Session 9 comes back to this with an evaluation rather than an anecdote.</li>
-                <li>Then read the last line of the base model's isiZulu attempt twice. It is the most informative thing on the screen, and it explains why the first bullet turned out the way it did.</li>
+                <li><strong>African-language probe.</strong> Both models translate "good morning" into isiZulu, and both produce something. If you read isiZulu, judge them. If you do not, notice how confident the fluent one sounds and ask how you would have known otherwise. Session 9.4 turns this into a measurement.</li>
+                <li>Then read the last line of the base model's isiZulu attempt. Nothing in the prompt asked for it, and it explains why the first bullet turned out as it did.</li>
             </ul>
             <p style="color:#555;">The Explore cell asks you to feed the chat template to the base model, raise the token cap, and try prompts in a language you speak. The question at the end asks you to sort what you found into form and substance: which of these differences is about how an answer is presented, and which is about what the model knows or gets right. A model that has been through this pipeline is routinely called "aligned". On this evidence, decide what that word licenses you to assume.</p>
         </div>
@@ -92,7 +92,7 @@
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
             <p>&bull; <strong>Karpathy, nanochat</strong> (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT): the readable full pipeline; <strong>nanoGPT</strong> (<a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener">github.com/karpathy/nanoGPT</a>) for the pretraining loop alone.</p>
-            <p>&bull; <strong>Qwen Team, Qwen2.5 Technical Report</strong> (<a href="https://arxiv.org/abs/2412.15115" target="_blank" rel="noopener">arXiv:2412.15115</a>): the models used in &#9313;, including what the post-training actually consisted of.</p>
+            <p>&bull; <strong>Qwen Team, Qwen2.5 Technical Report</strong> (<a href="https://arxiv.org/abs/2412.15115" target="_blank" rel="noopener">arXiv:2412.15115</a>): the models used in &#9313;, including what the post-training consisted of.</p>
             <p>&bull; <a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener"><strong>Hugging Face Transformers</strong></a> docs: <code>generate</code>, chat templates and the model hub.</p>
         </div>
 
