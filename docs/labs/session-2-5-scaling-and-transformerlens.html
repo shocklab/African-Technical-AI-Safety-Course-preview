@@ -523,6 +523,38 @@ unauthenticated Hugging Face requests. Both are harmless: the model loads either
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Before believing any of that: TransformerLens prepends a beginning-of-text token to your</span>
+<span class="c1"># prompt by default. It is the '&lt;|endoftext|&gt;' you saw in the token list. Take it away.</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s1">'The Eiffel Tower is in the city of'</span>
+
+<span class="n">context</span> <span class="o">=</span> <span class="s1">'I visited France last summer. '</span> <span class="o">+</span> <span class="n">text</span>
+
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">prepend</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'bare, token prepended'</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                               <span class="p">(</span><span class="s1">'bare, prompt alone   '</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                               <span class="p">(</span><span class="s1">'with context         '</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]:</span>
+    <span class="n">toks</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_tokens</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">prepend_bos</span><span class="o">=</span><span class="n">prepend</span><span class="p">)</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">toks</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">paris</span> <span class="o">=</span> <span class="n">probs</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">to_single_token</span><span class="p">(</span><span class="s1">' Paris'</span><span class="p">)]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">london</span> <span class="o">=</span> <span class="n">probs</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">to_single_token</span><span class="p">(</span><span class="s1">' London'</span><span class="p">)]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1">:  Paris </span><span class="si">{</span><span class="n">paris</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">   London </span><span class="si">{</span><span class="n">london</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">   -&gt;  '</span>
+          <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">chr</span><span class="p">(</span><span class="mi">39</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"London"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">chr</span><span class="p">(</span><span class="mi">39</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">london</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">paris</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nb">chr</span><span class="p">(</span><span class="mi">39</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"Paris"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">chr</span><span class="p">(</span><span class="mi">39</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'The bare prompt flips on a token you never typed. One ordinary sentence of context'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'settles it: the model is not ignorant about the Eiffel Tower, the bare prompt was.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'A claim about what a model knows turned on setup nobody chose deliberately, which'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'is the evaluation problem of Session 11 arriving early.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
