@@ -45,48 +45,45 @@
         </div>
 
         <div class="lab-box">
-            <h4>Setup <span class="tag">Colab — core tasks run on CPU</span></h4>
-            <p>Open a Colab notebook and install:</p>
-            <div class="formula" style="text-align:left;"><code>!pip install "transformers&gt;=4.44" datasets torch</code></div>
-            <p>For the reward model, use a small base such as <code>distilbert-base-uncased</code> or <code>gpt2</code> with a scalar head; for preference data, take a small slice of an open set (e.g. the Anthropic HH-RLHF dataset on the Hugging Face Hub). Save the notebook to submit.</p>
+            <h4>Setup <span class="tag">Colab — no GPU needed</span></h4>
+            <p>Allow about an hour. The notebook is roughly five minutes of computing on a free CPU runtime; the rest is reading what comes out.</p>
+            <ol style="margin-left:25px; line-height:1.9;">
+                <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-6-5-reward-models.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then <em>File → Save a copy in Drive</em> before you change anything.</li>
+                <li>Colab warns that the notebook "was not authored by Google", as it does for anything loaded from GitHub. Choose <em>Run anyway</em>.</li>
+                <li>Work down with <em>Shift+Enter</em>. You can also <a href="../../labs/session-6-5-reward-models.html">read the whole notebook here</a> or <a href="../../labs/session-6-5-reward-models.ipynb" download>download the .ipynb</a>.</li>
+            </ol>
+            <p>The code is written for you. Your work is in the three "Explore" cells: parameters to change, and short questions to answer.</p>
         </div>
 
         <h2 class="section-title">① Train a reward model</h2>
         <div class="technical-detail">
             <h4>Bradley–Terry, in code</h4>
-            <ul class="styled-list">
-                <li>Load a few thousand preference pairs \((x, y_w, y_l)\). Build a model that maps a (prompt, response) to a scalar \(r_\phi(x,y)\) (a transformer with a linear reward head).</li>
-                <li>Train with the Bradley–Terry loss from 6.2: <code>loss = -F.logsigmoid(r_w - r_l).mean()</code>, i.e. \(\mathcal{L} = -\,\mathbb{E}[\log \sigma(r_\phi(x,y_w) - r_\phi(x,y_l))]\).</li>
-                <li>Evaluate on a held-out split: what fraction of pairs does it rank correctly (reward of the preferred response higher)? Report this <em>preference accuracy</em>: a well-trained RM on an easy split scores well above chance but rarely near 100%.</li>
-            </ul>
+            <p style="color:#555;">Session 6.2 gave you the loss. Here you fit it, and find out how good a reward model actually is.</p>
+            <p>What the notebook does: appoints a <strong>gold</strong> scorer to stand in for human judgement, generates completions from GPT-2, labels pairs of them by gold, and trains a small <strong>proxy</strong> reward model on those labels with \(\mathcal{L} = -\mathbb{E}[\log \sigma(r_\phi(y_w) - r_\phi(y_l))]\). The design is Gao, Schulman and Hilton's: if you define the truth, you can measure how far a proxy strays from it. With real human preferences you never can, which is the whole difficulty.</p>
+            <p style="color:#555;">You should see a held-out preference accuracy near 0.70. Published reward models reach about the same on real human preferences, so the toy is closer to the real thing than it has any right to be.</p>
         </div>
 
-        <h2 class="section-title">② Watch over-optimisation: best-of-<em>n</em></h2>
+        <h2 class="section-title">② Optimise the proxy, and measure the pressure</h2>
         <div class="technical-detail">
-            <h4>Best-of-<em>n</em> as a stand-in for RL</h4>
-            <p style="color:#555;">Best-of-\(n\) is the cheapest possible "optimiser": sample \(n\) responses from a base model, score them all with your reward model, and keep the highest-scoring one. As \(n\) grows you are optimising harder against the proxy, which is what RL does without the RL. The experiment:</p>
-            <ul class="styled-list">
-                <li>For a set of prompts, generate \(n\) responses each for \(n = 1, 2, 4, 8, 16, \dots\) and select the top by your reward model. Plot the selected response's proxy reward against \(n\) (or against \(\sqrt{\ln n}\), the over-optimisation axis).</li>
-                <li>Now score the <em>same</em> selected responses with a different, held-out judge of "true" quality: a second reward model, a stronger model used as an LLM-judge, or your own ratings on a small sample. Plot this "gold" score on the same axis.</li>
-                <li>You should see the signature of Goodhart (6.4): the proxy score rises monotonically with \(n\), while the gold score rises then plateaus or falls. Identify the \(n\) at which they diverge; that is over-optimisation, made with your own hands.</li>
-            </ul>
+            <h4>Best-of-<em>n</em> and the KL axis</h4>
+            <p>Best-of-\(n\) is the cheapest optimiser available: sample \(n\) responses, keep the one the proxy scores highest. Its distance from the base policy has a closed form, \(\mathrm{KL} = \log n - (n-1)/n\), so optimisation pressure goes on the x-axis in nats, the same axis as 6.3's KL leash.</p>
+            <p style="color:#555;">You should see the proxy score climb steadily with \(n\). You should also see the gold score climb, and <strong>not</strong> turn over. That is the honest outcome, not a broken experiment: at \(n = 32\) you have reached about 2.5 nats, while Gao et al. fitted their curves on data to \(n = 1{,}000\) (about 6 nats) and validated at \(n = 60{,}000\) (about 10). Best-of-\(n\) on a CPU cannot get near the region where the turnover happens.</p>
+            <p>So the notebook does the next best thing, and the more useful one. It fits Gao's published functional form for best-of-\(n\), \(R(d) = d(\alpha - \beta d)\), to your own points and solves for where that parabola peaks: the \(n\) at which more optimisation would start to hurt. It is a prediction from 2.5 nats of data about a region ten times further out, which is precisely the move Session 2.5 taught you to distrust.</p>
+            <p>Then explore, and find out how much to distrust it. Change the seed and re-run: two runs of this notebook predicted the turnover at \(n \approx 25\) and \(n \approx 125\), a fivefold disagreement from the same experiment. Weaken the proxy and see whether the predicted peak moves closer, as Gao's finding about model size would suggest. And cut the number of prompts, which makes the curve look far more dramatic while telling you strictly less.</p>
+            <p>Write down, in a sentence or two: you have a proxy and no gold, which is the real situation. What do you do to avoid running off the end of the curve, and what does it cost you?</p>
         </div>
 
-        <h2 class="section-title">③ Optional: a real RLHF step <span style="font-size:0.6em; color:#888; vertical-align:middle;">[GPU — optional]</span></h2>
+        <h2 class="section-title">③ Whose preferences does the judge encode?</h2>
         <div class="technical-detail">
-            <h4>ARENA Chapter 2</h4>
-            <p style="color:#555;">On a free Colab GPU, work through the RLHF notebook in <a href="https://www.arena.education/chapter2" target="_blank" rel="noopener">ARENA</a> (Chapter 2): a reward model plus a policy-gradient/PPO step on a small model and a toy objective, with the KL penalty (6.3) in place. Watch what happens to sample quality and to the KL as you train, and try setting the KL coefficient \(\beta\) to zero to see the policy run off into the reward model's blind spots.</p>
-        </div>
-
-        <h2 class="section-title">African-safety probe</h2>
-        <div class="info-box">
-            <h4>Whose preferences does the reward model encode?</h4>
-            <p>Construct a handful of preference pairs in isiZulu (or another language you read): a clearly-better and a clearly-worse response to the same prompt. Score them with an off-the-shelf reward model (or your trained one). Does it rank them sensibly, or does its accuracy collapse outside English? Note what you find: a reward model that can't judge a language has nothing useful to teach the policy there, a concrete instance of the evaluation-representativeness problem we take up in Session 11.</p>
+            <h4>The same sentence, two languages</h4>
+            <p>The gold model stands in for human judgement. The last part asks which humans. It scores the same sentences in English and in isiZulu, taken from MAFAND-MT so that meaning is held fixed and only the language changes.</p>
+            <p style="color:#555;">You should see the judge give the <em>same sentence</em> a different verdict about a third of the time, score isiZulu far more negatively on average (0.10 against 0.41), and be <strong>more</strong> confident when doing it. A reward model built on such a judge would be systematically wrong about an entire language while reporting no difficulty at all.</p>
+            <p>Then write a short paragraph: if this were a real reward model aligning a deployed assistant, what would that pattern do to speakers of the language it scores badly? Session 1.4's isiZulu guardrail failures come out of pipelines built exactly this way.</p>
         </div>
 
         <div class="lab-box">
             <h4>Submit</h4>
-            <p>Your Colab notebook with: the reward model's held-out preference accuracy (①); the best-of-\(n\) plot showing proxy vs gold and your identified divergence point, with a sentence linking it to Goodhart (②); the African-language probe result; and, if attempted, the ARENA RLHF observations (③). Graded on completion and the quality of your analysis; resubmission allowed.</p>
+            <p>One notebook, run top to bottom with outputs visible, containing the proxy's held-out accuracy, your proxy-versus-gold measurements and the predicted turnover from at least two seeds, your sentence or two on what to do without a gold standard, and your paragraph on the language gap. Graded on completion and correctness; resubmission allowed.</p>
         </div>
 
         <h2 class="section-title">Tools &amp; references</h2>

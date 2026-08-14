@@ -83,6 +83,11 @@ PAGE = """<!DOCTYPE html>
 
 # which lesson page each notebook belongs to
 BACKLINKS = {
+    "session-6-5-reward-models":
+        ("../sessions/session-06/lab-rlhf.html",
+         "6.5 · Lab: reward models &amp; over-optimisation",
+         "Session 6.5 — Lab notebook",
+         "Reward models and over-optimisation"),
     "session-2-5-scaling-and-transformerlens":
         ("../sessions/session-02/lab-scaling-and-transformerlens.html",
          "2.5 · Lab: scaling laws &amp; a first look inside a model",
