@@ -50,7 +50,19 @@
             <p>This sub-session motivates the RLHF pipeline. We recall why SFT stalls, introduce the central idea (learn from preferences, not demonstrations), trace its short but consequential history (from Atari to InstructGPT), and lay out the three-step pipeline the next sub-sessions unpack. Throughout, keep one question live: what does optimising a <em>model of what humans approve of</em> incentivise, as opposed to optimising for what is actually good?</p>
         </div>
 
-        <h2 class="section-title">The wall, restated</h2>
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Christiano et al. (2017), "Deep Reinforcement Learning from Human Preferences"</strong> (NeurIPS 2017; <a href="https://arxiv.org/abs/1706.03741" target="_blank" rel="noopener">arXiv:1706.03741</a>): read §2 (Preliminaries and Method), which sets up the problem and gives the comparison-based method in full. The experiments are worth skimming for the Atari and simulated-robotics results. ≈1,700 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,700 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Stiennon et al. (2020), "Learning to summarize from human feedback"</strong> (<a href="https://arxiv.org/abs/2009.01325" target="_blank" rel="noopener">arXiv:2009.01325</a>): the bridge from control tasks to language, with unusually careful data-collection detail.</p>
+            <p>• <strong>Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF"</strong> (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): RLHF as actually deployed, at length.</p>
+        </div>
+
+<h2 class="section-title">The wall, restated</h2>
         <p class="lead">Recall the asymmetry from Session 5.2: for most of what we want from an assistant, <em>judging</em> is far easier than <em>producing</em>.</p>
         <p>You may not be able to write the ideal answer to an open-ended question, or the perfectly calibrated, honest response. But shown two attempts, you can usually say which is better. SFT cannot use that ability: its loss, "make this target more likely", needs a single demonstration to imitate and has no way to encode "A &gt; B". So SFT inherits three limits: it caps at demonstration quality, it can't express comparative judgement, and it has no negative signal (Session 5.2). The opening is obvious in hindsight: build the training signal out of the <em>comparisons</em> humans can reliably give, not the demonstrations they struggle to author.</p>
 
@@ -107,19 +119,7 @@
             <li>The pipeline replaces "imitate a human" with "optimise a model of human approval". List the assumptions hidden in that substitution.</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Christiano et al. (2017), "Deep Reinforcement Learning from Human Preferences"</strong> (NeurIPS 2017; <a href="https://arxiv.org/abs/1706.03741" target="_blank" rel="noopener">arXiv:1706.03741</a>).</p>
-            <p>• <strong>Ouyang et al. (2022), "Training language models to follow instructions with human feedback"</strong> (InstructGPT; <a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): now read the full three-step pipeline.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Stiennon et al. (2020), "Learning to summarize from human feedback"</strong> (NeurIPS 2020; <a href="https://arxiv.org/abs/2009.01325" target="_blank" rel="noopener">arXiv:2009.01325</a>).</p>
-            <p>• <strong>Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF"</strong> (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>).</p>
-        </div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>Step 2 is where human judgements become a number. Sub-session 6.2 builds the reward model (the Bradley–Terry preference model and its loss) and names the proxy we are about to optimise.</p>
         </div>

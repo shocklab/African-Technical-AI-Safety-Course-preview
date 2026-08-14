@@ -44,7 +44,20 @@
             <p>RLHF is the alignment method deployed at scale, and it is deeply imperfect. This sub-session is the account: a taxonomy of where RLHF breaks (Casper et al.), the quantitative law of reward-model <strong>over-optimisation</strong> (Gao et al.; Goodhart, measured), and the empirical case of <strong>sycophancy</strong> (Sharma et al.). Behind these sits one structural limit that shapes the rest of the course: human feedback cannot supervise behaviour humans cannot evaluate. None of this makes RLHF useless; it means we should be precise about what its "alignment" guarantees.</p>
         </div>
 
-        <h2 class="section-title">A map of the failures</h2>
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Casper et al. (2023), "Open Problems and Fundamental Limitations of RLHF"</strong> (TMLR; <a href="https://arxiv.org/abs/2307.15217" target="_blank" rel="noopener">arXiv:2307.15217</a>): read §3.2 (challenges with the reward model) and §3.3 (challenges with the policy). §3.1, on human feedback itself, is the natural next section if you want the whole picture. ≈2,100 words.</p>
+            <p>• <strong>Sharma et al. (2023/2024), "Towards Understanding Sycophancy in Language Models"</strong> (ICLR 2024; <a href="https://arxiv.org/abs/2310.13548" target="_blank" rel="noopener">arXiv:2310.13548</a>): read §3.1, where assistants give biased feedback depending on what the user signals they want. Short and unsettling. ≈350 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈2,450 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Gao, Schulman &amp; Hilton (2023), "Scaling Laws for Reward Model Overoptimization"</strong> (ICML 2023; <a href="https://arxiv.org/abs/2210.10760" target="_blank" rel="noopener">arXiv:2210.10760</a>): the measured over-optimisation curves behind this page, and the ones you reproduce in the 6.5 lab.</p>
+            <p>• <strong>Casper et al. (2023)</strong> (<a href="https://arxiv.org/abs/2307.15217" target="_blank" rel="noopener">arXiv:2307.15217</a>), §4: what to do about it, including the framing of RLHF as one layer of a defence in depth.</p>
+        </div>
+
+<h2 class="section-title">A map of the failures</h2>
         <p class="lead">Casper et al. (2023), "Open Problems and Fundamental Limitations of RLHF", organise the problems into three buckets, one per component of the pipeline.</p>
         <div class="card-grid">
             <div class="card"><h3>Human feedback</h3><p>Evaluators are fallible and can pursue the wrong goal: they reward what looks good, are inconsistent, and can be fooled. Collecting data trades cost against quality; and, deepest of all, humans struggle to oversee behaviour <em>more capable than their own</em>.</p></div>
@@ -101,18 +114,7 @@
             <li>State the superhuman-oversight ceiling precisely. Which later technique (Session 7 or 8) most directly attacks it, and does it escape the ceiling or just push it back?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Casper et al. (2023), "Open Problems and Fundamental Limitations of RLHF"</strong> (TMLR; <a href="https://arxiv.org/abs/2307.15217" target="_blank" rel="noopener">arXiv:2307.15217</a>): read the three-bucket taxonomy.</p>
-            <p>• <strong>Sharma et al. (2023/2024), "Towards Understanding Sycophancy in Language Models"</strong> (ICLR 2024; <a href="https://arxiv.org/abs/2310.13548" target="_blank" rel="noopener">arXiv:2310.13548</a>).</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Gao, Schulman &amp; Hilton (2023), "Scaling Laws for Reward Model Overoptimization"</strong> (ICML 2023; <a href="https://arxiv.org/abs/2210.10760" target="_blank" rel="noopener">arXiv:2210.10760</a>).</p>
-        </div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>Sub-session 6.5 makes these failures tangible: in a Colab lab you'll train a reward model from preference pairs, then watch over-optimisation happen (true quality peaking and falling) using best-of-\(n\) as a cheap stand-in for RL.</p>
         </div>

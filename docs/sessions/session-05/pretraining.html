@@ -49,7 +49,20 @@
             <p>Everything a frontier model can do begins with <strong>pretraining</strong>: one enormous run of self-supervised next-token prediction over web-scale text. This sub-session pins down the objective (it is the cross-entropy from Session 2.1, now at scale), explains why it is called "self-supervised", describes what such a run produces (a <strong>base model</strong>), and why that base model, for all its capability, is <em>not</em> yet a safe, instruction-following assistant. That gap is what Sessions 5.2–6 exist to close.</p>
         </div>
 
-        <h2 class="section-title">The objective: self-supervised next-token prediction</h2>
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong><a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html" target="_blank" rel="noopener">Sutton, R. (2019), "The Bitter Lesson"</a></strong> (essay, incompleteideas.net): one page, and the argument the rest of the session rests on: general methods that scale beat hand-built structure. Read the whole thing. ≈1,100 words.</p>
+            <p>• <strong>Brown et al. (2020), "Language Models are Few-Shot Learners"</strong> (GPT-3; NeurIPS 2020; <a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">arXiv:2005.14165</a>): read §1 (Introduction), which sets out in-context learning and why scale changed what a language model is for. The results sections are a reference, not a read. ≈2,000 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈3,100 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong><a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf" target="_blank" rel="noopener">Radford et al. (2019), "Language Models are Unsupervised Multitask Learners"</a></strong> (GPT-2; OpenAI technical report): the base-model-as-multitask-learner framing, one generation earlier.</p>
+            <p>• <strong>Brown et al. (2020)</strong> (<a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">arXiv:2005.14165</a>), §3 onwards: the benchmark results, if you want to see how few-shot performance was actually measured.</p>
+        </div>
+
+<h2 class="section-title">The objective: self-supervised next-token prediction</h2>
         <p class="lead">There is no human labelling here. The text labels itself: for every position, the "correct answer" is the token that came next.</p>
         <p>Take a corpus of text, tokenise it (Session 2.2), and slide over it. At each position \(i\) the model sees the tokens so far, \(t_{&lt;i}\), and outputs a distribution \(p_\theta(\cdot \mid t_{&lt;i})\) over the vocabulary; the training signal is how much probability it placed on the token \(t_i\) that followed. Averaged over the corpus, the loss is exactly the cross-entropy from Session 2.1:</p>
         <div class="formula">\[ L(\theta) = -\frac{1}{T} \sum_{i} \log p_\theta\!\left(t_i \mid t_{&lt;i}\right). \]</div>
@@ -101,18 +114,7 @@
             <li>Why is "the model can do X (latently) but is trained not to" a more accurate (and more worrying) description than "the model can't do X"?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Brown et al. (2020), "Language Models are Few-Shot Learners"</strong> (GPT-3; NeurIPS 2020; <a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">arXiv:2005.14165</a>): read the abstract + the in-context-learning setup.</p>
-            <p>• <a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html" target="_blank" rel="noopener"><strong>Sutton, R. (2019), "The Bitter Lesson"</strong></a> (essay, incompleteideas.net): one page; the scale-wins thesis.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf" target="_blank" rel="noopener"><strong>Radford et al. (2019), "Language Models are Unsupervised Multitask Learners"</strong></a> (GPT-2; OpenAI technical report): the base-model-as-multitask-learner framing.</p>
-        </div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>A base model completes text but won't reliably follow instructions. Sub-session 5.2 covers the first fix (supervised fine-tuning) and, just as importantly, what it <em>can't</em> do, which is why Session 6 reaches for reinforcement learning.</p>
         </div>

@@ -43,7 +43,19 @@
             <p>A base model completes text; we want a model that <em>follows instructions</em>. The first and simplest fix is <strong>supervised fine-tuning</strong> (SFT): keep training with the same next-token objective, but now on curated examples of the behaviour we want. This sub-session explains how SFT works, how <em>instruction tuning</em> makes it generalise to unseen tasks, and the structural limit that no amount of SFT can overcome, which is what motivates RLHF (Session 6).</p>
         </div>
 
-        <h2 class="section-title">Supervised fine-tuning, mechanically</h2>
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Ouyang et al. (2022), "Training language models to follow instructions with human feedback"</strong> (InstructGPT; NeurIPS 2022; <a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): read §3.1 to §3.4, which cover the high-level method, the dataset, the task distribution and how the demonstrations were collected. This is the paper the whole week turns on; you will return to §3.5 in Session 6.2. ≈1,350 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,350 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Wei et al. (2022), "Finetuned Language Models Are Zero-Shot Learners"</strong> (FLAN; ICLR 2022; <a href="https://arxiv.org/abs/2109.01652" target="_blank" rel="noopener">arXiv:2109.01652</a>): instruction tuning generalising to tasks never seen in fine-tuning.</p>
+            <p>• <strong>Chung et al. (2022), "Scaling Instruction-Finetuned Language Models"</strong> (<a href="https://arxiv.org/abs/2210.11416" target="_blank" rel="noopener">arXiv:2210.11416</a>): the same idea at scale, across 1,800 tasks.</p>
+        </div>
+
+<h2 class="section-title">Supervised fine-tuning, mechanically</h2>
         <p class="lead">SFT is not a new algorithm. It is the <em>same</em> cross-entropy training as pretraining, on different, chosen data.</p>
         <p>We assemble a dataset of <strong>demonstrations</strong>: prompts paired with high-quality target responses, written or curated by people. Then we continue training the base model with the next-token loss, but compute it only over the <em>response</em> tokens \(y\) given the prompt \(x\):</p>
         <div class="formula">\[ L_{\text{SFT}}(\theta) = -\, \mathbb{E}_{(x,y)\sim \mathcal{D}}\left[ \sum_{i} \log p_\theta\!\left(y_i \mid x,\, y_{&lt;i}\right) \right]. \]</div>
@@ -96,18 +108,7 @@
             <li>"Judging is easier than producing." Is that always true? Construct a case where it isn't, and say what that would mean for RLHF.</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Ouyang et al. (2022), "Training language models to follow instructions with human feedback"</strong> (InstructGPT; NeurIPS 2022; <a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): §3 for the SFT step (we return to the rest in Session 6).</p>
-            <p>• <strong>Wei et al. (2022), "Finetuned Language Models Are Zero-Shot Learners"</strong> (FLAN; ICLR 2022; <a href="https://arxiv.org/abs/2109.01652" target="_blank" rel="noopener">arXiv:2109.01652</a>).</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Chung et al. (2022), "Scaling Instruction-Finetuned Language Models"</strong> (<a href="https://arxiv.org/abs/2210.11416" target="_blank" rel="noopener">arXiv:2210.11416</a>).</p>
-        </div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>We now have the two ends: a pretrained base model and a supervised fine-tune. Sub-session 5.3 assembles the full post-training stack, shows where each behaviour (and each opportunity for misalignment) is shaped, and distinguishes a base model from the aligned assistant you talk to.</p>
         </div>

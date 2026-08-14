@@ -44,7 +44,19 @@
             <p>The reward model is the hinge of RLHF: it converts a pile of "response A is better than B" judgements into a function \(r_\phi(x,y)\) that scores any response, which the policy can then be optimised against. This sub-session derives that function from the classic <strong>Bradley–Terry</strong> model of paired comparisons, writes down its training loss, and names what it is: a <em>learned, scalar proxy</em> for human approval, with all the Goodhart exposure of Session 3.1 built in.</p>
         </div>
 
-        <h2 class="section-title">From comparisons to a score</h2>
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Ouyang et al. (2022), InstructGPT</strong> (<a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): read §3.5 (Models). You read §3.1 to §3.4 in Session 5.2; this is the part that trains the reward model, and the loss on this page is theirs. ≈1,000 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,000 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong><a href="https://www.jstor.org/stable/2334029" target="_blank" rel="noopener">Bradley, R. A. &amp; Terry, M. E. (1952), "Rank Analysis of Incomplete Block Designs: I"</a></strong> (<em>Biometrika</em> 39(3/4), 324–345): the original paired-comparison model, seventy years before anyone applied it to a chatbot.</p>
+            <p>• <strong>Stiennon et al. (2020)</strong> (<a href="https://arxiv.org/abs/2009.01325" target="_blank" rel="noopener">arXiv:2009.01325</a>): reward modelling for summarisation, with the data-collection detail most papers omit.</p>
+        </div>
+
+<h2 class="section-title">From comparisons to a score</h2>
         <p class="lead">We collect data of one shape: a prompt \(x\), two candidate responses, and a human's judgement of which is better.</p>
         <p>Write the preferred ("winning") response \(y_w\) and the dispreferred ("losing") one \(y_l\). We want a scalar reward function \(r_\phi(x,y)\), a neural network with parameters \(\phi\), such that better responses get higher scores. The question is how to turn discrete "A beats B" judgements into a continuous score. The standard answer borrows a seventy-year-old model from statistics.</p>
         <div class="technical-detail">
@@ -104,18 +116,7 @@
             <li>A single scalar must rank a helpful-but-blunt answer against a polite-but-evasive one. Who decided that trade-off, and where in the pipeline?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Ouyang et al. (2022), InstructGPT</strong> (<a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): §3 reward-model training (the loss above is theirs).</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <a href="https://www.jstor.org/stable/2334029" target="_blank" rel="noopener"><strong>Bradley, R. A. &amp; Terry, M. E. (1952), "Rank Analysis of Incomplete Block Designs: I"</strong></a> (<em>Biometrika</em> 39(3/4), 324–345): the original paired-comparison model.</p>
-            <p>• <strong>Stiennon et al. (2020)</strong> (<a href="https://arxiv.org/abs/2009.01325" target="_blank" rel="noopener">arXiv:2009.01325</a>): reward modelling for summarisation, with careful data-collection detail.</p>
-        </div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>With a reward model in hand, sub-session 6.3 optimises the policy against it, and explains the KL "leash" that stops the optimiser from running off into the reward model's blind spots, plus PPO and the simpler DPO alternative.</p>
         </div>

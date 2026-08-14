@@ -43,7 +43,22 @@
             <p>We have the pieces: pretraining (5.1) and supervised fine-tuning (5.2). This sub-session assembles the whole pipeline, names what each stage contributes to the model you talk to, and, connecting back to Session 3, pinpoints where each stage opens a door to misalignment. Capabilities come from pretraining; the "assistant" is a thin, post-trained layer on top; and every layer is an imperfect proxy for what we meant.</p>
         </div>
 
-        <div class="info-box">
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>DeepSeek-AI (2025), "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"</strong> (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">arXiv:2501.12948</a>): read §2 to §2.2, which describe GRPO and the reward design behind R1-Zero. This is the verifiable-rewards stage in its clearest published form: rewards computed by a checker rather than a human or a learned model. ≈900 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈900 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Ouyang et al. (2022), InstructGPT</strong> (<a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): Figure 2 is the canonical three-stage pipeline diagram, worth a second look now that you have the whole stack in view.</p>
+            <p>• <strong>Lambert et al. (2024), "Tülu 3: Pushing Frontiers in Open Language Model Post-Training"</strong> (<a href="https://arxiv.org/abs/2411.15124" target="_blank" rel="noopener">arXiv:2411.15124</a>): the open post-training recipe that named reinforcement learning with verifiable rewards.</p>
+            <p>• <strong>Yue et al. (2025), "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?"</strong> (<a href="https://arxiv.org/abs/2504.13837" target="_blank" rel="noopener">arXiv:2504.13837</a>): the pass@k evidence that current RLVR may elicit base-model capability rather than extend it.</p>
+            <p>• <strong>Guan et al. (2024), "Deliberative Alignment: Reasoning Enables Safer Language Models"</strong> (<a href="https://arxiv.org/abs/2412.16339" target="_blank" rel="noopener">arXiv:2412.16339</a>): training models to reason over a written safety specification; the specification itself is Session 7.5.</p>
+            <p>• Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF" (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): the helpful/harmless framing of the post-training stages, read fully in Session 6.</p>
+        </div>
+
+<div class="info-box">
             <h4>Core material</h4>
             <p>The reference text for this sub-session and all of Session 6 is Nathan Lambert's open textbook <a href="https://rlhfbook.com/" target="_blank" rel="noopener"><em>Reinforcement Learning from Human Feedback</em></a> (rlhfbook.com): chapter-length treatments of instruction tuning, reward modelling, policy optimisation and reinforcement learning with verifiable rewards, updated as the field moves. Read the chapters alongside the sub-sessions that name each stage.</p>
         </div>
@@ -133,21 +148,7 @@
             <li>If you could only strengthen <em>one</em> stage for safety, which would you choose, and what would you be giving up?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Ouyang et al. (2022), "Training language models to follow instructions with human feedback"</strong> (InstructGPT; <a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): the canonical three-stage pipeline diagram.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF" (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): the helpful/harmless framing of the post-training stages (read fully in Session 6).</p>
-            <p>• <strong>Lambert et al. (2024), "Tülu 3: Pushing Frontiers in Open Language Model Post-Training"</strong> (<a href="https://arxiv.org/abs/2411.15124" target="_blank" rel="noopener">arXiv:2411.15124</a>): the open post-training recipe that named reinforcement learning with verifiable rewards.</p>
-                    <p>• <strong>DeepSeek-AI (2025), "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"</strong> (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">arXiv:2501.12948</a>): the RL-heavy post-training recipe that produced an open reasoning model; read against the stack above.</p>
-            <p>• <strong>Yue et al. (2025), "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?"</strong> (<a href="https://arxiv.org/abs/2504.13837" target="_blank" rel="noopener">arXiv:2504.13837</a>): the pass@k evidence that current RLVR may elicit base-model capability rather than extend it.</p>
-            <p>• <strong>Guan et al. (2024), "Deliberative Alignment: Reasoning Enables Safer Language Models"</strong> (<a href="https://arxiv.org/abs/2412.16339" target="_blank" rel="noopener">arXiv:2412.16339</a>): training models to reason explicitly about a written safety specification, a newer layer of the stack; the specification itself is Session 7.5.</p>
-</div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>Sub-session 5.4 makes the pipeline concrete: in a Colab lab you'll walk through Karpathy's <strong>nanochat</strong>, run a tiny supervised fine-tune, and see for yourself the difference between a base model that <em>completes</em> and a fine-tuned one that <em>complies</em>.</p>
         </div>

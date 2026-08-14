@@ -44,7 +44,20 @@
             <p>We have a policy (the SFT model) and a reward model \(r_\phi\). Step 3 of RLHF optimises the policy to score highly under \(r_\phi\). This sub-session writes down the actual objective (reward <em>minus</em> a KL penalty), explains why that penalty (the "leash") is doing the real safety work, sketches <strong>PPO</strong>, the RL algorithm that performs the optimisation, and introduces <strong>DPO</strong>, which reaches a similar place without explicit RL. The recurring theme: how hard you optimise a proxy is itself a safety dial.</p>
         </div>
 
-        <h2 class="section-title">The RLHF objective</h2>
+        
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Schulman et al. (2017), "Proximal Policy Optimization Algorithms"</strong> (PPO; <a href="https://arxiv.org/abs/1707.06347" target="_blank" rel="noopener">arXiv:1707.06347</a>): read §3 (Clipped Surrogate Objective). Short, and it is the one idea from PPO you need: keep the policy update small by clipping the probability ratio. ≈550 words.</p>
+            <p>• <strong>Rafailov et al. (2023), "Direct Preference Optimization"</strong> (NeurIPS 2023; <a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">arXiv:2305.18290</a>): read §4 (Direct Preference Optimization), the derivation that removes the separate reward model. ≈1,050 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,600 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Bai et al. (2022)</strong> (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): the reward-versus-\(\sqrt{\mathrm{KL}}\) relationship and how the KL penalty behaves in practice.</p>
+            <p>• <strong>Rafailov et al. (2023)</strong> (<a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">arXiv:2305.18290</a>), §5: the theoretical analysis, including why a language model is secretly a reward model.</p>
+        </div>
+
+<h2 class="section-title">The RLHF objective</h2>
         <p class="lead">Naïvely, we'd just maximise expected reward. That is the way to get burned by the proxy, so we add a brake.</p>
         <p>Let \(\pi_\theta\) be the policy we are training and \(\pi_{\text{ref}}\) the frozen SFT model we started from. The standard RLHF objective maximises expected reward on prompts \(x\) and sampled responses \(y\sim\pi_\theta\), <em>penalised</em> by how far the policy has drifted from \(\pi_{\text{ref}}\), measured by Kullback–Leibler divergence:</p>
         <div class="formula">\[ \max_{\theta}\; \mathbb{E}_{x,\; y\sim\pi_\theta(\cdot\mid x)}\big[\, r_\phi(x,y) \,\big] \;-\; \beta\, \mathrm{KL}\!\big( \pi_\theta(\cdot\mid x)\,\big\|\,\pi_{\text{ref}}(\cdot\mid x) \big). \]</div>
@@ -95,18 +108,7 @@
             <li>DPO removes the explicit reward model and RL loop. Which RLHF risks does that remove, which does it leave untouched, and why?</li>
         </ul>
 
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Schulman et al. (2017), "Proximal Policy Optimization Algorithms"</strong> (PPO; <a href="https://arxiv.org/abs/1707.06347" target="_blank" rel="noopener">arXiv:1707.06347</a>): the clipped-objective idea (skim).</p>
-            <p>• <strong>Rafailov et al. (2023), "Direct Preference Optimization"</strong> (NeurIPS 2023; <a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">arXiv:2305.18290</a>): the closed-form alternative.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Bai et al. (2022)</strong> (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): the reward-vs-\(\sqrt{\mathrm{KL}}\) relationship and the role of the KL penalty in practice.</p>
-        </div>
-
-        <div class="intro-text" style="margin-top:50px;">
+<div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
             <p>We can now train an assistant with RLHF. Sub-session 6.4 asks the safety question head-on: what goes wrong? Reward hacking, over-optimisation, sycophancy, and the deeper limit that human feedback cannot supervise superhuman behaviour.</p>
         </div>
