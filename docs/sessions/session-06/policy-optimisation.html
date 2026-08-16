@@ -57,6 +57,19 @@
             <p>• <strong>Rafailov et al. (2023)</strong> (<a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">arXiv:2305.18290</a>), §5: the theoretical analysis, including why a language model is secretly a reward model.</p>
         </div>
 
+        <div class="technical-detail">
+            <h4>A short primer on reinforcement learning</h4>
+            <p style="color:#555;">If you have not met RL before, this is what Session 6 assumes. Supervised learning shows the model the right answer and asks it to copy. Reinforcement learning never shows the right answer: the model produces something, receives a score, and adjusts so that higher-scoring behaviour becomes more likely. Session 3.3 wrote that down formally as a Markov decision process, with states, actions and a reward function. Here is the same vocabulary for a language model.</p>
+            <ul class="styled-list">
+                <li><strong>The policy</strong> is the model. Given a prompt it defines a probability distribution over the next token, so producing a response means sampling a sequence of choices from it. Training changes those probabilities, which is why it is written \(\pi_\theta\): a distribution with the weights \(\theta\) as its parameters.</li>
+                <li><strong>An episode</strong> is one prompt and one complete response. The thing being judged is the whole answer, not a token.</li>
+                <li><strong>The reward</strong> is a single number for that whole response, and it arrives at the end. Nothing tells you which token was the good one.</li>
+                <li><strong>The update</strong> raises the probability of the tokens in responses that scored well, and lowers it for those that scored badly.</li>
+            </ul>
+            <p style="color:#555;">The difficulty sits in that last step. One number for a response of two hundred tokens is a thin signal, and it arrives only after the fact. Two devices deal with it, and both appear below. A <strong>baseline</strong> changes the question from "was this good?" to "was this better than expected?", since a score of 7 means one thing if you usually score 3 and another if you usually score 9; the gap between what you got and what was expected is the <strong>advantage</strong>, and a second network, the critic, is trained to predict that expectation. Separately, each update is estimated from a small sample of responses, so a large step on that estimate can wreck the policy. Keeping the step small is the problem PPO exists to solve.</p>
+            <p style="color:#555;">Why go to this trouble when supervised fine-tuning is so much simpler? Because RL needs only to score an answer, where supervised learning needs someone to have produced one. That is the argument of 6.1, and it is what lets a model learn from preferences instead of demonstrations.</p>
+        </div>
+
 <h2 class="section-title">The RLHF objective</h2>
         <p class="lead">Naïvely, we'd just maximise expected reward. That is the way to get burned by the proxy, so we add a brake.</p>
         <p>Let \(\pi_\theta\) be the policy we are training and \(\pi_{\text{ref}}\) the frozen SFT model we started from. The standard RLHF objective maximises expected reward on prompts \(x\) and sampled responses \(y\sim\pi_\theta\), <em>penalised</em> by how far the policy has drifted from \(\pi_{\text{ref}}\), measured by Kullback–Leibler divergence:</p>

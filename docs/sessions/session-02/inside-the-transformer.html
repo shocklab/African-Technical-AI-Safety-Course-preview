@@ -120,7 +120,7 @@
 
         <figure>
             <img src="../../assets/img/session-2-2b-attention-heatmap.jpg" alt="Attention-weight heatmap for the sentence 'The Eiffel Tower is in the city of'. Rows are query positions and columns are key positions, forming a lower-triangular grid because each position can attend only to itself and earlier positions, with the upper triangle blank. The first token 'The' attends entirely to itself with weight 1.0. The final position 'of' places its largest weights on the 'Eiffel' and 'Tower' columns, showing that it reads from 'Eiffel Tower' to predict the next word.">
-            <figcaption><strong>Figure 2.2b.</strong> The attention weights A for one head on "…the Eiffel Tower is in the city of ___". Rows are queries, columns are keys; the lower-triangular shape is the causal mask. The final position reads most strongly from "Eiffel Tower": the routing described above, made concrete. (Illustrative weights.)</figcaption>
+            <figcaption><strong>Figure 2.2b.</strong> The attention weights A for one head on "…the Eiffel Tower is in the city of ___". Rows are queries, columns are keys; the lower-triangular shape is the causal mask. The final position reads most strongly from "Eiffel Tower": the routing described above. (Illustrative weights.)</figcaption>
         </figure>
 
         <h2 class="section-title">Multi-head attention</h2>

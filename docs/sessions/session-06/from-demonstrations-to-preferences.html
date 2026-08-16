@@ -62,7 +62,7 @@
             <p>• <strong>Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF"</strong> (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): RLHF as actually deployed, at length.</p>
         </div>
 
-<h2 class="section-title">The wall, restated</h2>
+<h2 class="section-title">Judging is easier than producing</h2>
         <p class="lead">Recall the asymmetry from Session 5.2: for most of what we want from an assistant, <em>judging</em> is far easier than <em>producing</em>.</p>
         <p>You may not be able to write the ideal answer to an open-ended question, or the perfectly calibrated, honest response. But shown two attempts, you can usually say which is better. SFT cannot use that ability: its loss, "make this target more likely", needs a single demonstration to imitate and has no way to encode "A &gt; B". So SFT inherits three limits: it caps at demonstration quality, it can't express comparative judgement, and it has no negative signal (Session 5.2). The opening is obvious in hindsight: build the training signal out of the <em>comparisons</em> humans can reliably give, not the demonstrations they struggle to author.</p>
 

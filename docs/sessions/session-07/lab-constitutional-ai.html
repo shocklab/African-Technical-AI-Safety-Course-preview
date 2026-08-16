@@ -66,7 +66,7 @@
         <p>Generate two responses to each of several prompts. For each pair, hand both to the model with a sampled principle and ask which is better, reading the choice off as in 7.2. Two things to do properly:</p>
         <ul class="styled-list">
             <li><strong>Position-swap:</strong> ask twice with the order flipped and check whether the model changes its mind. How often does it? That rate is the position bias you read about, measured on your own model.</li>
-            <li><strong>Agreement with you:</strong> label the same pairs yourself first, then compute how often the model's preference matches yours. That agreement number <em>is</em> the reliability of the RLAIF signal, made tangible: a low number means the reward model you would train on these labels is learning your model's quirks, not your values.</li>
+            <li><strong>Agreement with you:</strong> label the same pairs yourself first, then compute how often the model's preference matches yours. That agreement number <em>is</em> the reliability of the RLAIF signal: a low number means the reward model you would train on these labels is learning your model's quirks, not your values.</li>
         </ul>
 
         <div class="case-study">
