@@ -66,7 +66,34 @@
         <p class="lead">Recall the asymmetry from Session 5.2: for most of what we want from an assistant, <em>judging</em> is far easier than <em>producing</em>.</p>
         <p>You may not be able to write the ideal answer to an open-ended question, or the perfectly calibrated, honest response. But shown two attempts, you can usually say which is better. SFT cannot use that ability: its loss, "make this target more likely", needs a single demonstration to imitate and has no way to encode "A &gt; B". So SFT inherits three limits: it caps at demonstration quality, it can't express comparative judgement, and it has no negative signal (Session 5.2). The opening is obvious in hindsight: build the training signal out of the <em>comparisons</em> humans can reliably give, not the demonstrations they struggle to author.</p>
 
-        <h2 class="section-title">The idea: optimise for what humans prefer</h2>
+                <div class="technical-detail">
+            <h4>A short primer on reinforcement learning</h4>
+            <p style="color:#555;">If you have not met reinforcement learning before, this is what the rest of Session 6 assumes. Nothing in this box is about language models. The translation to them comes at the end.</p>
+            <p style="color:#555;">In supervised learning every training example carries the right answer and the model is asked to reproduce it. Reinforcement learning has no right answers. An <strong>agent</strong> observes the <strong>state</strong> of its environment, chooses an <strong>action</strong>, and the environment responds with a new state and a number, the <strong>reward</strong>. Nothing says what the agent should have done. It learns by trying things and doing more of whatever scores well. Session 3.2 set this up formally as a Markov decision process.</p>
+            <p style="color:#555;">Take a program learning to play a board game. The state is the position, the actions are the legal moves, and the reward is \(+1\) for a win and \(-1\) for a loss, delivered once, at the end. Two difficulties appear immediately, and they are the difficulties of the whole field. The reward is <strong>sparse and delayed</strong>: fifty moves produce a single number, long after most of them were played. And that number has to be shared out among those fifty moves, which is the problem of <strong>credit assignment</strong>. The game was lost; nothing tells you which move lost it.</p>
+            <p style="color:#555;">Four terms carry most of the weight.</p>
+            <ul class="styled-list">
+                <li><strong>Policy</strong>: the rule that picks an action in a given state, usually as a probability spread over the available actions. This is the thing being learned.</li>
+                <li><strong>Episode</strong>: one complete run from start to finish. One game.</li>
+                <li><strong>Return</strong>: the total reward collected over an episode.</li>
+                <li><strong>Value</strong>, and the <strong>advantage</strong> built from it. Value is how well the agent does from a given position on average, under its current policy. It matters because "was that good?" turns out to be the wrong question: winning from a position you were already expected to win from teaches nothing. The useful question is whether the outcome beat expectation, and the gap between what happened and what was expected is the advantage. A second model, the <strong>critic</strong>, is trained to supply the expectation.</li>
+            </ul>
+            <p style="color:#555;">The update follows from that: make actions that turned out better than expected more likely, and actions that turned out worse less likely. Because "better than expected" is itself estimated from a handful of episodes, a large step on that estimate can wreck a policy that was working. Keeping each step small is the problem PPO solves in 6.3.</p>
+            <p style="color:#555;">Now the translation. This session is that same loop with the board game swapped out.</p>
+            <table class="comparison-table">
+                <thead><tr><th>In reinforcement learning</th><th>In this session</th></tr></thead>
+                <tbody>
+                    <tr><td>agent</td><td>the language model being trained</td></tr>
+                    <tr><td>state</td><td>the prompt, plus whatever has been generated so far</td></tr>
+                    <tr><td>action</td><td>emitting the next token</td></tr>
+                    <tr><td>episode</td><td>one prompt and one complete response</td></tr>
+                    <tr><td>reward</td><td>a single number for the finished response, from the reward model of 6.2</td></tr>
+                </tbody>
+            </table>
+            <p style="color:#555;">Both difficulties transfer intact. A response of two hundred tokens earns one score, arriving only at the end, with nothing to say which token earned it. And the reason to take on that trouble, when supervised fine-tuning is so much simpler, is the asymmetry above: reinforcement learning needs only to score an answer, where supervised learning needs someone to have produced one.</p>
+        </div>
+
+<h2 class="section-title">The idea: optimise for what humans prefer</h2>
         <div class="info-box">
             <h4>The idea</h4>
             <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are cheaper and more reliable than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
