@@ -52,7 +52,7 @@
                 <li>Work down the notebook with <em>Shift+Enter</em>, reading each cell before you run it. The two models together are about 2&nbsp;GB of download and a minute of CPU.</li>
             </ol>
             <p>You can also <a href="../../labs/session-5-4-base-vs-instruct.html">read the whole notebook on this site</a> before you start, or <a href="../../labs/session-5-4-base-vs-instruct.ipynb" download>download the .ipynb</a> for Jupyter.</p>
-            <p>The code is written for you, so this lab is about running it and pulling at it rather than building it. Each part ends with an "Explore" cell: two or three things to change and re-run, and one short question to answer.</p>
+            <p>The code is written for you, so this lab is about running it and pulling at it rather than building it. The second part ends with an "Explore" cell: two or three things to change and re-run, and one short question to answer. The first ends with a written question.</p>
         </div>
 
         <h2 class="section-title">&#9312; Find the stages in a real pipeline</h2>
@@ -77,7 +77,7 @@
                 <li>Check whether the textbook contrast appears. On most of these prompts the base model answers the question competently, and the differences that are there are smaller and easier to miss.</li>
                 <li>Read the two answers to "What is the capital of Kenya?". One is wrong, and it is not the one the story predicts.</li>
                 <li>One model summarises Romeo and Juliet. The other declines, asserting that no such text exists. Work out which is which, and what a refusal like that costs a user.</li>
-                <li><strong>African-language probe.</strong> Both models translate "good morning" into isiZulu, and both produce something. If you read isiZulu, judge them. If you do not, notice how confident the fluent one sounds and ask how you would have known otherwise. Session 9.4 turns this into a measurement.</li>
+                <li>Both models translate "good morning" into isiZulu, and both produce something. If you read isiZulu, judge them. If you do not, notice how confident the fluent one sounds and ask how you would have known otherwise. Session 9.4 turns this into a measurement.</li>
                 <li>Then read the last line of the base model's isiZulu attempt. Nothing in the prompt asked for it, and it explains why the first bullet turned out as it did.</li>
             </ul>
             <p style="color:#555;">The Explore cell asks you to feed the chat template to the base model, raise the token cap, and try prompts in a language you speak. The question at the end asks you to sort what you found into form and substance: which of these differences is about how an answer is presented, and which is about what the model knows or gets right. A model that has been through this pipeline is routinely called "aligned". On this evidence, decide what that word licenses you to assume.</p>

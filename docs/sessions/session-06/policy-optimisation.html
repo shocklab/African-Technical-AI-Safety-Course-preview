@@ -61,7 +61,7 @@
         <p class="lead">Naïvely, we'd just maximise expected reward. That is the way to get burned by the proxy, so we add a brake.</p>
         <p>Let \(\pi_\theta\) be the policy we are training and \(\pi_{\text{ref}}\) the frozen SFT model we started from. The standard RLHF objective maximises expected reward on prompts \(x\) and sampled responses \(y\sim\pi_\theta\), <em>penalised</em> by how far the policy has drifted from \(\pi_{\text{ref}}\), measured by Kullback–Leibler divergence:</p>
         <div class="formula">\[ \max_{\theta}\; \mathbb{E}_{x,\; y\sim\pi_\theta(\cdot\mid x)}\big[\, r_\phi(x,y) \,\big] \;-\; \beta\, \mathrm{KL}\!\big( \pi_\theta(\cdot\mid x)\,\big\|\,\pi_{\text{ref}}(\cdot\mid x) \big). \]</div>
-        <p>The coefficient \(\beta\) sets the strength of the leash. With \(\beta=0\) the policy is free to chase reward anywhere; large \(\beta\) keeps it almost identical to the SFT model. RLHF lives in between.</p>
+        <p>Kullback&ndash;Leibler divergence measures how far one distribution has moved from another: \(\mathrm{KL}(\pi_\theta\|\pi_{\text{ref}}) = \mathbb{E}_{y\sim\pi_\theta}\big[\log \pi_\theta(y\mid x) - \log \pi_{\text{ref}}(y\mid x)\big]\), the average log-ratio the policy assigns to its own samples against what the reference model would have assigned. It is zero when the two agree everywhere and grows as they separate. It is not symmetric, and this direction punishes the policy for putting weight where the reference model puts almost none. Its unit is the nat, which is what the 6.5 lab reports. The coefficient \(\beta\) sets the strength of the leash. With \(\beta=0\) the policy is free to chase reward anywhere; large \(\beta\) keeps it almost identical to the SFT model. RLHF lives in between.</p>
 
         <h2 class="section-title">The KL penalty</h2>
         <div class="highlight-box">
@@ -74,7 +74,7 @@
         </div>
         <div class="technical-detail">
             <h4>Worked example: what β buys</h4>
-            <p style="color:#555;">Use that regularity. Model the reward gained as \(R(d) = \sqrt{d}\), where \(d = \mathrm{KL}\) measures how far the policy has moved from \(\pi_{\text{ref}}\). The penalised objective is then \(\sqrt{d} - \beta d\); setting its derivative to zero gives \(\tfrac{1}{2\sqrt{d}} = \beta\), so the optimiser settles at \(d^{*} = \tfrac{1}{4\beta^{2}}\), reaching reward \(\sqrt{d^{*}} = \tfrac{1}{2\beta}\). Read the consequence straight off: \(\beta = 0.5\) sends the policy to \(d^{*}=1\), while dropping \(\beta\) to \(0.25\) lets it run out to \(d^{*}=4\): halving the leash quadruples the distance travelled and doubles the reward collected. So \(\beta\) is not a vague stability knob; it sets, quantitatively, how hard you optimise the proxy. The twist 6.4 adds is the one this toy omits: the <em>true</em> reward does not climb like \(\sqrt{d}\) forever; it peaks and turns down, so pushing \(d^{*}\) higher eventually makes the model worse even as the proxy reward keeps rising.</p>
+            <p style="color:#555;">Use that regularity. Model the reward gained as \(R(d) = d\), where \(d = \sqrt{\mathrm{KL}}\) measures how far the policy has moved from \(\pi_{\text{ref}}\); the square root is the convention throughout this literature, and 6.4 and the lab use the same \(d\). The KL penalty costs \(\beta\,\mathrm{KL} = \beta d^{2}\), so the penalised objective is \(d - \beta d^{2}\); setting its derivative to zero gives \(1 = 2\beta d\), so the optimiser settles at \(d^{*} = \tfrac{1}{2\beta}\), reaching reward \(\tfrac{1}{2\beta}\). Read the consequence straight off: \(\beta = 0.5\) sends the policy to \(d^{*}=1\), while dropping \(\beta\) to \(0.25\) lets it run out to \(d^{*}=2\), four times the KL distance: halving the leash quadruples the distance travelled and doubles the reward collected. So \(\beta\) is not a vague stability knob; it sets, quantitatively, how hard you optimise the proxy. The twist 6.4 adds is the one this toy omits: the <em>true</em> reward does not climb like \(\sqrt{d}\) forever; it peaks and turns down, so pushing \(d^{*}\) higher eventually makes the model worse even as the proxy reward keeps rising.</p>
         </div>
 
         <div class="case-study">
@@ -97,7 +97,7 @@
         </div>
         <div class="info-box">
             <h4>DPO and the preference signal</h4>
-            <p>It is tempting to read DPO as "RLHF without the danger". It isn't. DPO still fits the model to human preference comparisons and still pushes it toward what raters preferred; sycophancy and over-optimisation (6.4) arise from the <em>preference signal</em>, not specifically from PPO. The lesson generalises: simplifying the optimiser doesn't remove the gap between "what raters prefer" and "what is good".</p>
+            <p>It is tempting to read DPO as "RLHF without the danger". It isn't. DPO still fits the model to human preference comparisons and still pushes it toward what raters preferred; sycophancy and over-optimisation (6.4) arise from the <em>preference signal</em>, not specifically from PPO. Simplifying the optimiser doesn't remove the gap between "what raters prefer" and "what is good".</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>

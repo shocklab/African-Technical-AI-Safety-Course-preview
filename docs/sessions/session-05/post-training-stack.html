@@ -46,7 +46,7 @@
         
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
-            <p>• <strong>DeepSeek-AI (2025), "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"</strong> (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">arXiv:2501.12948</a>): read §2 to §2.2, which describe GRPO and the reward design behind R1-Zero. This is the verifiable-rewards stage in its clearest published form: rewards computed by a checker rather than a human or a learned model. ≈900 words.</p>
+            <p>• <strong>DeepSeek-AI (2025), "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"</strong> (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">arXiv:2501.12948</a>): read §2 to §2.2, which describe GRPO and the reward design behind R1-Zero. This is the verifiable-rewards stage in its clearest published form: rewards computed by a checker rather than a human or a learned model. The GRPO objective in §2.1 leans on machinery we only build in 6.3 (policy gradients, a reference policy, a KL penalty), so read past those equations for now and spend your time on §2.2's reward design, which needs none of it. ≈900 words.</p>
             <p style="margin-top:10px; color:#666;">Total mandatory load: ≈900 words.</p>
         </div>
         <div class="resource-placeholder">
@@ -125,7 +125,7 @@
         <h2 class="section-title">Base vs aligned models</h2>
         <div class="info-box">
             <h4>The alignment layer can be removed</h4>
-            <p>Because alignment is a thin fine-tune, it can be largely <em>undone</em>: a few hundred fine-tuning steps can strip the safety behaviours off an open-weights model and recover much of the base model's unfiltered capability. This is central to the open-weights debate (Session 12): releasing weights releases the capability, and the safety layer that ships with it is not a durable lock. It also sharpens the Global-South thread: the languages and contexts least represented in the (English-centric) alignment layer are where it is thinnest to begin with.</p>
+            <p>Because alignment is a thin fine-tune, it can be largely <em>undone</em>: a few hundred fine-tuning steps can strip the safety behaviours off an open-weights model and recover much of the base model's unfiltered capability. This is central to the open-weights debate (Sessions 10.2 and 10.4): releasing weights releases the capability, and the safety layer that ships with it is not a durable lock. It also sharpens the Global-South thread: the languages and contexts least represented in the (English-centric) alignment layer are where it is thinnest to begin with.</p>
         </div>
 
         <h2 class="section-title">A worked trace: one request through the stack</h2>

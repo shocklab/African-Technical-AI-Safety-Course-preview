@@ -99,7 +99,7 @@ why over-optimisation is hard to notice in practice.</p>
 <hr/>
 <h2 id="%E2%91%A0-Appoint-a-gold-standard">① Appoint a gold standard</h2><p>Our stand-in for "what humans really want" is a sentiment classifier: a response is <em>good</em> if it
 reads as positive. That is a toy notion of quality, and saying so plainly matters. What makes it
-useful is that it is <strong>fixed, known, and hidden from the proxy</strong>, which is the structure of the real
+useful is that it is fixed, known, and hidden from the proxy, which is the structure of the real
 problem: your reward model is trained on samples of human judgement and then optimised as though it
 were the judgement itself.</p>
 <p>One detail with real consequences. We score with the <strong>logit difference</strong>, not the probability.
@@ -226,7 +226,7 @@ it in five minutes.</p>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A2-Optimise-against-the-proxy,-and-measure-the-pressure">③ Optimise against the proxy, and measure the pressure</h2><p><strong>Best-of-\(n\)</strong> is the cheapest optimiser there is: sample \(n\) responses, keep whichever the proxy
+<h2 id="%E2%91%A2-Optimising-against-the-proxy">③ Optimising against the proxy</h2><p><strong>Best-of-\(n\)</strong> is the cheapest optimiser there is: sample \(n\) responses, keep whichever the proxy
 likes most. Raising \(n\) raises the optimisation pressure, and best-of-\(n\) has the rare virtue that
 the pressure has a closed form:</p>
 <p>\[\mathrm{KL} = \log n - \frac{n-1}{n}\]</p>
@@ -240,7 +240,7 @@ sample masquerading as an average, and it will jump around.</p>
 <blockquote>
 <p><strong>What you should expect to see.</strong> The proxy score will climb with \(n\), reliably. The gold score
 will climb too. You are unlikely to see gold turn over and fall, and the next cell explains why
-that is the honest outcome rather than a broken experiment.</p>
+that is the expected outcome rather than a broken experiment.</p>
 </blockquote>
 </div>
 </div>
@@ -277,7 +277,7 @@ that is the honest outcome rather than a broken experiment.</p>
 <div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-python"><pre><span></span><span class="n">NS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">NS</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">N_MAX</span><span class="p">]</span>
 <span class="n">REPEATS</span> <span class="o">=</span> <span class="mi">40</span>
 
 <span class="n">proxy_curve</span><span class="p">,</span> <span class="n">gold_curve</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -307,29 +307,63 @@ that is the honest outcome rather than a broken experiment.</p>
 <div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-python"><pre><span></span><span class="c1"># Gao et al. fit best-of-n with R(d) = d(alpha - beta d), where d is the KL and R(0) := 0.</span>
-<span class="c1"># It is a downward parabola, so it has a peak: the point where more optimisation starts to hurt.</span>
-<span class="c1"># Fit it to YOUR points and solve for that peak.</span>
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Gao et al. measure optimisation by d = sqrt(KL), NOT by the KL itself, and fit</span>
+<span class="c1"># R(d) = d(alpha - beta d) with R(0) := 0. The square root is not decoration: fit a</span>
+<span class="c1"># downward parabola in the wrong variable and you will invent curvature that is not there.</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">kl</span><span class="p">)</span>
 <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gold_curve</span><span class="p">)</span> <span class="o">-</span> <span class="n">gold_curve</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>         <span class="c1"># R(0) := 0, as in the paper</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">kl</span><span class="p">,</span> <span class="o">-</span><span class="n">kl</span> <span class="o">**</span> <span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'fitted alpha = </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, beta = </span><span class="si">{</span><span class="n">beta</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'fitted alpha = </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, beta = </span><span class="si">{</span><span class="n">beta</span><span class="si">:</span><span class="s1">+.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">beta</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">peak_kl</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span>
-    <span class="n">n_needed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">peak_kl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>                   <span class="c1"># KL ~ log n - 1 for large n</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'predicted peak at KL = </span><span class="si">{</span><span class="n">peak_kl</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> nats, which needs n of about </span><span class="si">{</span><span class="n">n_needed</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">peak_d</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span>
+    <span class="n">peak_kl</span> <span class="o">=</span> <span class="n">peak_d</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">peak_kl</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>                                 <span class="c1"># past anything Gao et al. validated</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'predicted peak at d = </span><span class="si">{</span><span class="n">peak_d</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, i.e. KL = </span><span class="si">{</span><span class="n">peak_kl</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> nats. That is far'</span><span class="p">)</span>
+        <span class="n">digits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">peak_kl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'beyond the 10 nats the published form was checked at, and needs an n of about'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">digits</span><span class="si">}</span><span class="s1"> digits. The fit has not located a peak; it has run out of curvature and'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'put the vertex somewhere off the map.'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_needed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">peak_kl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>               <span class="c1"># KL ~ log n - 1 for large n</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'predicted peak at d = </span><span class="si">{</span><span class="n">peak_d</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, i.e. KL = </span><span class="si">{</span><span class="n">peak_kl</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> nats, n of about </span><span class="si">{</span><span class="n">n_needed</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'beta came out negative: your points show no curvature at all, so the form cannot'</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'locate a peak. That is a legitimate outcome and worth reporting as one.'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'beta came out negative, so the fitted parabola turns the wrong way and has no peak'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'at any positive distance. Over the range you covered, gold reward is still rising'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'and shows no sign of bending down. That is a result about your data. Report it.'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'You measured out to </span><span class="si">{</span><span class="n">kl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> nats. Gao et al. fitted this form on data to n = 1,000'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'(about 6 nats) and then validated it at n = 60,000 (about 10 nats). Best-of-n on a CPU'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'cannot reach that: n = 1,000 here would be 20,000 generations per prompt.'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'So the turnover in 6.4 is real and you cannot see it from here. What you can do is fit'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'the published form to your own data and extrapolate, which is exactly the move Session'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'2.5 told you to distrust. Explore ③ asks you to find out how much to distrust it.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'the published form to your own data and extrapolate, which Session 2.5 told you to'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'distrust. Explore ③ asks you to find out how much to distrust it.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># The picture the numbers describe. Proxy and gold are shifted to start at zero so they</span>
+<span class="c1"># share an axis; the dashed line is Gao's form with YOUR fitted alpha and beta.</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">proxy_curve</span><span class="p">)</span> <span class="o">-</span> <span class="n">proxy_curve</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'o-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'proxy (what you optimise)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="s1">'s-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'gold (what you actually want)'</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.35</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">grid</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">grid</span><span class="p">),</span> <span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'grey'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Gao's form, fitted"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">nn</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">NS</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">'n=</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">'offset points'</span><span class="p">,</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$d = \sqrt{\mathrm</span><span class="si">{KL}</span><span class="s1">}$  (optimisation pressure)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'score, relative to $n=1$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Best-of-$n$: what you optimise against what you want'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -340,8 +374,9 @@ that is the honest outcome rather than a broken experiment.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Explore-%E2%91%A2">Explore ③</h3><ul>
 <li>Change <code>SEED</code> to 1, then 2, re-run from the config cell, and write down the predicted peak each
-time. Two runs of this notebook gave predictions of \(n \approx 25\) and \(n \approx 125\): the same
-experiment, a fivefold disagreement about where the danger starts.</li>
+time. Three runs of this notebook, changing nothing but the seed, gave: no peak at all (the fit
+bent the wrong way), a peak at 5.3 nats (\(n \approx 544\)), and a peak at 55 nats (an \(n\) of 24
+digits). The same experiment, three incompatible answers about where the danger starts.</li>
 <li>Change <code>N_PAIRS</code> to 100 and <code>PROJ_DIM</code> to 16, making the proxy worse. Does the predicted peak move
 closer, as Gao's finding that better reward models over-optimise later would suggest?</li>
 <li>Cut <code>EVAL_PROMPTS</code> to the first four and re-run. The curve gets more dramatic. It is not more
@@ -373,14 +408,24 @@ parallel news corpus, so the meaning is held fixed and only the language changes
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">MAFAND</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/masakhane-io/lafand-mt/'</span>
           <span class="s1">'main/data/tsv_files/en-zul/dev.tsv'</span><span class="p">)</span>
-<span class="n">pairs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">MAFAND</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">pairs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">MAFAND</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'download failed:'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Falling back to a few hand-written pairs so the section still runs.'</span><span class="p">)</span>
+    <span class="n">pairs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'en'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'The service was good.'</span><span class="p">,</span> <span class="s1">'The food was cold.'</span><span class="p">],</span>
+                             <span class="s1">'zul'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Insizakalo ibinhle.'</span><span class="p">,</span> <span class="s1">'Ukudla bekubandayo.'</span><span class="p">]})</span>
+
+<span class="c1"># the non-English column is named for the language, so pick it up generically:</span>
+<span class="c1"># swapping en-zul for en-yor in the URL then needs no other change</span>
+<span class="n">OTHER</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">pairs_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">'en'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">gold_prob</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">gold_tok</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">'pt'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">gold_m</span><span class="p">(</span><span class="o">**</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">logits</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
-<span class="n">en</span> <span class="o">=</span> <span class="n">gold_prob</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]));</span> <span class="n">zu</span> <span class="o">=</span> <span class="n">gold_prob</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="s1">'zul'</span><span class="p">]))</span>
+<span class="n">en</span> <span class="o">=</span> <span class="n">gold_prob</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]));</span> <span class="n">zu</span> <span class="o">=</span> <span class="n">gold_prob</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="n">OTHER</span><span class="p">]))</span>
 <span class="n">agree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">en</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">zu</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">))</span>
 <span class="n">conf</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">))</span>
 
@@ -392,7 +437,7 @@ parallel news corpus, so the meaning is held fixed and only the language changes
 <span class="n">flips</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">en</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">zu</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">))[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">3</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">flips</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"EN </span><span class="si">{</span><span class="n">en</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">pairs_df</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="mi">86</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ZU </span><span class="si">{</span><span class="n">zu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">pairs_df</span><span class="p">[</span><span class="s1">'zul'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="mi">86</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">OTHER</span><span class="o">.</span><span class="n">upper</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">zu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">pairs_df</span><span class="p">[</span><span class="n">OTHER</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="mi">86</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -401,7 +446,7 @@ parallel news corpus, so the meaning is held fixed and only the language changes
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A3">Explore ④</h3><p>The judge does not merely do worse in isiZulu. It is just as <strong>confident</strong> and it disagrees with
+<h3 id="Explore-%E2%91%A3">Explore ④</h3><p>The judge does not merely do worse in isiZulu. It is just as confident, and it disagrees with
 itself about the same sentence. A reward model built on such a judge would be systematically wrong
 about an entire language while reporting no difficulty at all.</p>
 <p>Things to try:</p>
@@ -425,7 +470,8 @@ anchor: the guardrails that fail in isiZulu are trained by exactly this kind of 
 <h2 id="Submission-checklist">Submission checklist</h2><ul>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, top to bottom, with output visible</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the proxy's held-out preference accuracy (②)</li>
-<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the proxy-versus-gold plot, and where your gold curve peaked (③)</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the proxy-versus-gold plot, and what your fit does or does not say about a peak (③)</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the predicted peak from at least two seeds (③)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>one or two sentences on what to do with a proxy and no gold (③)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>a short paragraph on what the language gap would mean in deployment (④)</li>
 </ul>

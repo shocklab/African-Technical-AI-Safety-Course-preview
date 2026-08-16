@@ -101,8 +101,16 @@ stars and is actively developed, so any line number printed here would be wrong 
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">SCRIPTS</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/karpathy/nanochat/master/scripts/'</span>
 
+<span class="n">SOURCES</span> <span class="o">=</span> <span class="p">{}</span>                      <span class="c1"># kept so you can read a file when a search misses</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">find_in</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">src</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">SCRIPTS</span> <span class="o">+</span> <span class="n">script</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">SCRIPTS</span> <span class="o">+</span> <span class="n">script</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'could not fetch </span><span class="si">{</span><span class="n">script</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Read it on GitHub instead: '</span> <span class="o">+</span> <span class="n">SCRIPTS</span> <span class="o">+</span> <span class="n">script</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">SOURCES</span><span class="p">[</span><span class="n">script</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'=== </span><span class="si">{</span><span class="n">script</span><span class="si">}</span><span class="s1">  (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="si">}</span><span class="s1"> lines)'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">pat</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
@@ -122,7 +130,7 @@ stars and is actively developed, so any line number printed here would be wrong 
 <span class="n">find_in</span><span class="p">(</span><span class="s1">'chat_sft.py'</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s1">'Apply the loss mask from render_conversation'</span><span class="p">,</span>
                         <span class="sa">r</span><span class="s1">'targets\[mask_targets == 0\] = -1'</span><span class="p">],</span> <span class="n">context</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1"># 5.3, reinforcement learning: where the training signal comes from instead</span>
-<span class="n">find_in</span><span class="p">(</span><span class="s1">'chat_rl.py'</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s1">'reward = train_task\.reward'</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'advantages'</span><span class="p">])</span>
+<span class="n">find_in</span><span class="p">(</span><span class="s1">'chat_rl.py'</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s1">'reward = train_task\.reward'</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'advantages = '</span><span class="p">],</span> <span class="n">context</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -266,6 +274,33 @@ not, notice how confident the fluent one sounds, and ask how you would have know
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Explore-%E2%91%A1">Explore ②</h3><ul>
+<li><strong>Feed the base model the chat template.</strong> <code>ask_base(tok_i.apply_chat_template(...))</code>. Does the
+format alone produce assistant-shaped behaviour, or does the shape need the tuning behind it?</li>
+<li><strong>Change <code>CAP</code> to 200</strong> and re-run the Romeo and Juliet prompt on both. Does the base model
+eventually stop, or keep going?</li>
+<li><strong>Your own prompts.</strong> Try one where you know the answer and one in a language you speak. The
+isiZulu answer above is delivered with total confidence; find out whether it is right.</li>
+</ul>
+<p><strong>Question.</strong> Two or three sentences. Sort the differences you found into <em>form</em> (how the answer is
+presented) and <em>substance</em> (what the model knows or gets right). Which did fine-tuning change? A
+model that has been through this pipeline is often called "aligned": on this evidence, what does
+that word license you to assume, and what does it not?</p>
+<p><em>Your answer:</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Answer the Explore question above before reading on. This section works through the same
+sort, so reading it first does the work for you.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="What-the-table-shows">What the table shows</h3><p>Only the tuned model opens with "Sure!", reaches for markdown bold, and produces a refusal. Both
 models number their lists, and stopping early is close to a tie. The willingness to end a turn,
 which sounds like the obvious thing fine-tuning buys, is not visible here at this model size.</p>
@@ -290,25 +325,6 @@ you measure the gap in isiZulu.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A1">Explore ②</h3><ul>
-<li><strong>Feed the base model the chat template.</strong> <code>ask_base(tok_i.apply_chat_template(...))</code>. Does the
-format alone produce assistant-shaped behaviour, or does the shape need the tuning behind it?</li>
-<li><strong>Change <code>CAP</code> to 200</strong> and re-run the Romeo and Juliet prompt on both. Does the base model
-eventually stop, or keep going?</li>
-<li><strong>Your own prompts.</strong> Try one where you know the answer and one in a language you speak. The
-isiZulu answer above is delivered with total confidence; find out whether it is right.</li>
-</ul>
-<p><strong>Question.</strong> Two or three sentences. Sort the differences you found into <em>form</em> (how the answer is
-presented) and <em>substance</em> (what the model knows or gets right). Which did fine-tuning change? A
-model that has been through this pipeline is often called "aligned": on this evidence, what does
-that word license you to assume, and what does it not?</p>
-<p><em>Your answer:</em></p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="Submission-checklist">Submission checklist</h2><ul>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, with output visible</li>
@@ -316,8 +332,8 @@ that word license you to assume, and what does it not?</p>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the base-versus-instruct outputs, and your two or three sentences separating form from
 substance (②)</li>
 </ul>
-<p>In Colab, <em>File → Download → Download .ipynb</em>. Graded on completion and correctness; resubmission
-is allowed.</p>
+<p>In Colab, <em>File → Download → Download .ipynb</em>. Graded on completion and the quality of your
+observations; resubmission is allowed.</p>
 <p><strong>Sources.</strong> <a href="https://github.com/karpathy/nanochat">nanochat</a> (Karpathy, MIT). Qwen2.5-0.5B and its
 Instruct sibling, from the <a href="https://arxiv.org/abs/2412.15115">Qwen2.5 release</a>. The five-stage
 pipeline is Session 5.3.</p>

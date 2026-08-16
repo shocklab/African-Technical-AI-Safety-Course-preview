@@ -35,13 +35,13 @@
     <header>
         <div class="week-badge">Week 3 • Session 6.5</div>
         <h1>Lab: reward models &amp; over-optimisation</h1>
-        <p>Train a reward model from preferences, then watch Goodhart happen with your own model</p>
+        <p>Train a reward model from preferences, then put a number on Goodhart with your own model</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>This lab makes Session 6 concrete and Colab-friendly. You'll train a small <strong>reward model</strong> on preference pairs and check it ranks held-out pairs correctly; then use <strong>best-of-\(n\)</strong> sampling as a cheap, RL-free stand-in for policy optimisation and <em>watch over-optimisation happen</em>: a proxy score that keeps rising while true quality peaks and falls (6.4). An optional GPU track runs a real RLHF step in ARENA.</p>
+            <p>This lab makes Session 6 concrete and Colab-friendly. You'll train a small <strong>reward model</strong> on preference pairs and check it ranks held-out pairs correctly; then use <strong>best-of-\(n\)</strong> sampling as a cheap, RL-free stand-in for policy optimisation and <em>measure the pressure that drives over-optimisation</em>: a proxy score that keeps rising while true quality peaks and falls (6.4). An optional GPU track runs a real RLHF step in ARENA.</p>
         </div>
 
         <div class="lab-box">
@@ -63,13 +63,13 @@
             <p style="color:#555;">You should see a held-out preference accuracy near 0.70. Published reward models reach about the same on real human preferences, so the toy is closer to the real thing than it has any right to be.</p>
         </div>
 
-        <h2 class="section-title">② Optimise the proxy, and measure the pressure</h2>
+        <h2 class="section-title">② Optimising the proxy</h2>
         <div class="technical-detail">
             <h4>Best-of-<em>n</em> and the KL axis</h4>
             <p>Best-of-\(n\) is the cheapest optimiser available: sample \(n\) responses, keep the one the proxy scores highest. Its distance from the base policy has a closed form, \(\mathrm{KL} = \log n - (n-1)/n\), so optimisation pressure goes on the x-axis in nats, the same axis as 6.3's KL leash.</p>
-            <p style="color:#555;">You should see the proxy score climb steadily with \(n\). You should also see the gold score climb, and <strong>not</strong> turn over. That is the honest outcome, not a broken experiment: at \(n = 32\) you have reached about 2.5 nats, while Gao et al. fitted their curves on data to \(n = 1{,}000\) (about 6 nats) and validated at \(n = 60{,}000\) (about 10). Best-of-\(n\) on a CPU cannot get near the region where the turnover happens.</p>
-            <p>So the notebook does the next best thing, and the more useful one. It fits Gao's published functional form for best-of-\(n\), \(R(d) = d(\alpha - \beta d)\), to your own points and solves for where that parabola peaks: the \(n\) at which more optimisation would start to hurt. It is a prediction from 2.5 nats of data about a region ten times further out, which is precisely the move Session 2.5 taught you to distrust.</p>
-            <p>Then explore, and find out how much to distrust it. Change the seed and re-run: two runs of this notebook predicted the turnover at \(n \approx 25\) and \(n \approx 125\), a fivefold disagreement from the same experiment. Weaken the proxy and see whether the predicted peak moves closer, as Gao's finding about model size would suggest. And cut the number of prompts, which makes the curve look far more dramatic while telling you strictly less.</p>
+            <p style="color:#555;">You should see the proxy score climb steadily with \(n\). You should also see the gold score climb, and not turn over. That is the expected outcome, not a broken experiment: at \(n = 32\) you have reached about 2.5 nats, while Gao et al. fitted their curves on data to \(n = 1{,}000\) (about 6 nats) and validated at \(n = 60{,}000\) (about 10). Best-of-\(n\) on a CPU cannot get near the region where the turnover happens.</p>
+            <p>So the notebook does the next best thing, and the more useful one. It fits Gao's published functional form for best-of-\(n\), \(R(d) = d(\alpha - \beta d)\), to your own points and solves for where that parabola peaks: the \(n\) at which more optimisation would start to hurt. It is a prediction from 2.5 nats of data about a region four times further out, which is what Session 2.5 taught you to distrust.</p>
+            <p>Then explore, and find out how much to distrust it. Change the seed and re-run: three runs of this notebook, changing nothing but the seed, gave no peak at all, a peak at 5.3 nats (\(n \approx 544\)) and a peak at 55 nats (an \(n\) of 25 digits). Weaken the proxy and see whether the predicted peak moves closer, as Gao's finding about model size would suggest. And cut the number of prompts, which makes the curve look far more dramatic while telling you strictly less.</p>
             <p>Write down, in a sentence or two: you have a proxy and no gold, which is the real situation. What do you do to avoid running off the end of the curve, and what does it cost you?</p>
         </div>
 
@@ -77,7 +77,7 @@
         <div class="technical-detail">
             <h4>The same sentence, two languages</h4>
             <p>The gold model stands in for human judgement. The last part asks which humans. It scores the same sentences in English and in isiZulu, taken from MAFAND-MT so that meaning is held fixed and only the language changes.</p>
-            <p style="color:#555;">You should see the judge give the <em>same sentence</em> a different verdict about a third of the time, score isiZulu far more negatively on average (0.10 against 0.41), and be <strong>more</strong> confident when doing it. A reward model built on such a judge would be systematically wrong about an entire language while reporting no difficulty at all.</p>
+            <p style="color:#555;">You should see the judge give the <em>same sentence</em> a different verdict about a third of the time, score isiZulu far more negatively on average (0.10 against 0.41), and be more confident when doing it. A reward model built on such a judge would be systematically wrong about an entire language while reporting no difficulty at all.</p>
             <p>Then write a short paragraph: if this were a real reward model aligning a deployed assistant, what would that pattern do to speakers of the language it scores badly? Session 1.4's isiZulu guardrail failures come out of pipelines built exactly this way.</p>
         </div>
 

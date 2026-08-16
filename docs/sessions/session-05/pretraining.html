@@ -98,7 +98,7 @@
         <p>Frontier corpora are assembled from web crawls, books, code, and curated collections, then heavily processed: de-duplication (repeated text distorts what the model "believes" is likely), quality filtering, and removal of the most toxic material. None of this is neutral. Every choice (which languages, which sources, what counts as "low quality") shapes what the model is good at and whose world it represents. Three consequences matter for safety:</p>
         <div class="card-grid">
             <div class="card"><h3>The data is the values</h3><p>A base model has no values we designed; it has the statistical shadow of its corpus. Over-represent one register, dialect or worldview and the model treats it as the default. The web's heavy skew toward English and the Global North is therefore baked in <em>before</em> any alignment, the deepest root of the multilingual safety gap (Session 1.4).</p></div>
-            <div class="card"><h3>Data is an attack surface</h3><p>Because the model imitates its data, whoever can place text in the corpus can, in principle, shape behaviour: <em>data poisoning</em>. A handful of crafted documents can plant associations or backdoors that survive into the deployed model (we return to this with the control agenda, Session 10).</p></div>
+            <div class="card"><h3>Data is an attack surface</h3><p>Because the model imitates its data, whoever can place text in the corpus can, in principle, shape behaviour: <em>data poisoning</em>. A handful of crafted documents can plant associations or backdoors that survive into the deployed model (poisoning and its defences are Session 9.5).</p></div>
             <div class="card"><h3>High-quality text is finite</h3><p>The Chinchilla result (Session 2.3) made data a first-class scaling resource, and high-quality human text is a bounded supply. This pressure toward synthetic and lower-quality data is itself a safety variable: the corpus is getting harder to vet just as it matters more.</p></div>
         </div>
         <div class="info-box">
@@ -116,7 +116,7 @@
 
 <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>A base model completes text but won't reliably follow instructions. Sub-session 5.2 covers the first fix (supervised fine-tuning) and, just as importantly, what it <em>can't</em> do, which is why Session 6 reaches for reinforcement learning.</p>
+            <p>A base model completes text but won't reliably follow instructions. Sub-session 5.2 covers the first fix (supervised fine-tuning) and what it <em>can't</em> do, which is why Session 6 reaches for reinforcement learning.</p>
         </div>
 
     </div>
