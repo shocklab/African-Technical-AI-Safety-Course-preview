@@ -108,6 +108,45 @@
             <p style="color:#555;">You have already seen an implementation. <code>scripts/chat_rl.py</code>, the file you searched in the 5.4 lab, runs GRPO on grade-school maths, and its docstring is candid about how much it strips out: no KL term, no ratio and clip (it stays on-policy, so the ratio is 1), and the plain difference \(r_i - \operatorname{mean}(r)\) in place of the division by the standard deviation. What survives all that is the group baseline.</p>
         </div>
         <div class="technical-detail">
+            <h4>Reading the objective</h4>
+            <p style="color:#555;">Here is the whole thing, as §2.2.1 of the paper writes it. Nothing in it is new. It is the pieces above, assembled.</p>
+            <div class="formula">\[ \mathcal{J}(\theta) \;=\; \mathbb{E}\Big[\, q \sim P(Q),\;\; \{o_i\}_{i=1}^{G} \sim \pi_{\theta_{\text{old}}}(O \mid q) \,\Big]\; \frac{1}{G}\sum_{i=1}^{G} \Big( \min\big(\rho_i A_i,\; \operatorname{clip}(\rho_i,\, 1-\varepsilon,\, 1+\varepsilon)\, A_i\big) \;-\; \beta\, \mathbb{D}_{\mathrm{KL}}\!\left(\pi_\theta \,\|\, \pi_{\text{ref}}\right) \Big) \qquad \rho_i = \frac{\pi_\theta(o_i \mid q)}{\pi_{\theta_{\text{old}}}(o_i \mid q)} \]</div>
+            <p style="color:#555;">Work from the outside in.</p>
+            <ul class="styled-list">
+                <li><strong>The expectation.</strong> The bracket after \(\mathbb{E}\) is a list of what you are averaging over, not a product of two quantities. Read it as an instruction: draw a question \(q\) from your pool of training questions \(P(Q)\), then draw a group of \(G\) answers \(\{o_1,\dots,o_G\}\) to that one question from \(\pi_{\theta_{\text{old}}}\). One question, \(G\) answers, and the objective is the average over many such draws. \(G\) is a small number in practice, 8 or 64.</li>
+                <li><strong>The group average.</strong> \(\frac{1}{G}\sum_i\) says each of those \(G\) answers contributes one term, weighted equally. This is the sum whose mean also defines \(A_i\), which is why the group has to be sampled before anything else can be computed.</li>
+                <li><strong>The ratio \(\rho_i\).</strong> The probability the policy being trained assigns to answer \(o_i\), over the probability the sampling policy assigned to the same text. At the first gradient step on a batch the two are the same network, so \(\rho_i = 1\) exactly. It drifts away from 1 as you take further steps on that same batch, and that drift is the only reason \(\pi_{\theta_{\text{old}}}\) appears at all.</li>
+                <li><strong>The advantage \(A_i\).</strong> The group-relative score from above: how far this answer beat its siblings, in standard deviations.</li>
+            </ul>
+            <p style="color:#555;">That leaves the two terms inside the sum.</p>
+        </div>
+        <div class="technical-detail">
+            <h4>The min and the clip</h4>
+            <p style="color:#555;">The usual gloss, that clipping holds the ratio inside \(1 \pm \varepsilon\), is not quite what the expression does. Take \(\varepsilon = 0.2\) and tabulate the bracketed term for a good answer and a bad one:</p>
+            <table class="comparison-table">
+                <thead><tr><th>\(\rho_i\)</th><th>\(A_i = +1\) (good answer)</th><th>\(A_i = -1\) (bad answer)</th></tr></thead>
+                <tbody>
+                    <tr><td>0.5</td><td>0.50</td><td>&minus;0.80</td></tr>
+                    <tr><td>0.8</td><td>0.80</td><td>&minus;0.80</td></tr>
+                    <tr><td>1.0</td><td>1.00</td><td>&minus;1.00</td></tr>
+                    <tr><td>1.2</td><td>1.20</td><td>&minus;1.20</td></tr>
+                    <tr><td>1.5</td><td><strong>1.20</strong></td><td>&minus;1.50</td></tr>
+                    <tr><td>2.0</td><td><strong>1.20</strong></td><td>&minus;2.00</td></tr>
+                </tbody>
+            </table>
+            <p style="color:#555;">For a good answer the objective stops rising once \(\rho_i\) passes \(1.2\), so there is nothing to gain by pushing its probability higher. For a bad answer it stops falling once \(\rho_i\) drops below \(0.8\), so there is no extra credit for crushing it further. But look at the bottom right: if an update raises the probability of a bad answer, the penalty keeps growing without limit.</p>
+            <p style="color:#555;">That asymmetry is deliberate. The \(\min\) always takes the pessimistic branch, which makes the whole expression a lower bound on the improvement you are trying to make. Moving in the direction you want buys nothing beyond the band; moving in the direction you do not want is punished in full. "Trust region" names that, rather than a symmetric clamp.</p>
+            <p style="color:#555;">Then \(-\beta\,\mathbb{D}_{\mathrm{KL}}(\pi_\theta \| \pi_{\text{ref}})\) is the leash from earlier on this page. Note that the objective now carries two different reference points doing two different jobs: \(\rho_i\) compares against \(\pi_{\theta_{\text{old}}}\), a snapshot from minutes ago, to keep the optimiser stable; the KL compares against \(\pi_{\text{ref}}\), frozen since the start of training, to keep the model close to the one that was aligned.</p>
+        </div>
+        <div class="technical-detail">
+            <h4>Why the KL term does not look like a KL</h4>
+            <p style="color:#555;">The paper does not write the KL as an expected log-ratio. It writes, with \(r = \pi_{\text{ref}}(o_i \mid q) / \pi_\theta(o_i \mid q)\),</p>
+            <div class="formula">\[ \mathbb{D}_{\mathrm{KL}}(\pi_\theta \,\|\, \pi_{\text{ref}}) \;\approx\; r - \log r - 1 \]</div>
+            <p style="color:#555;">which is not a typo and not a different divergence. It is an estimator of the same KL, due to Schulman, and it has two properties the obvious estimator lacks. Averaged over samples from \(\pi_\theta\) it is unbiased, and it is never negative, whereas \(-\log r\) is unbiased but goes negative on individual samples, which is awkward for a quantity you are reporting as a distance. It is also far quieter: on a small worked example with a true KL of \(0.0253\), both estimators recover it, but the variance of \(r - \log r - 1\) is about two hundred times smaller.</p>
+            <p style="color:#555;">Do it once by hand: expand \(r - \log r - 1\) around \(r = 1\) and you get \(\tfrac{1}{2}(r-1)^2\) to leading order, which is why it is small and positive whenever the two policies nearly agree.</p>
+        </div>
+
+        <div class="technical-detail">
             <h4>The pass@k debate</h4>
             <p style="color:#555;">How much does this stage add? Yue et al. (2025) compare RLVR-trained models against the base models they were built from, at large sampling budgets, and find the base model often matches or overtakes the RL-trained one on pass@\(k\) (the chance that at least one of \(k\) independent samples is correct) as \(k\) grows. Read that way, current RLVR mostly improves which solutions get selected from the range a base model could already reach, rather than extending that range.</p>
             <p style="color:#555;">The debate is open, and it bears on 5.3's claim that the alignment layer is thin: if RL on verifiable rewards elicits rather than extends, then much of what a reasoning model does was already in the base model, waiting to be sampled well. Session 10 returns to this when it asks what open-weight release actually releases.</p>
