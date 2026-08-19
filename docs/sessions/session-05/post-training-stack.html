@@ -46,14 +46,12 @@
         
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
-            <p>• <strong>DeepSeek-AI (2025), "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"</strong> (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">arXiv:2501.12948</a>): read §2.1 (Overview) and §2.2.2 (Reward Modeling). This is the verifiable-rewards stage in its clearest published form: rewards computed by a checker rather than a human or a learned model, in this case a rule that marks the answer right or wrong and a rule that checks the output format. Skip §2.2.1, which states the GRPO objective and leans on machinery we only build in 6.3 (policy gradients, a reference policy, a KL penalty). ≈300 words.</p>
-            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈300 words.</p>
+            <p>• <strong>Ouyang et al. (2022), InstructGPT</strong> (<a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): §3 and Figure 2, the three-stage pipeline diagram. You read §3.1 to §3.4 in 5.2; re-read the section opening and the figure now that the whole stack is in view. ≈600 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈600 words.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
-            <p>• <strong>Ouyang et al. (2022), InstructGPT</strong> (<a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">arXiv:2203.02155</a>): Figure 2 is the canonical three-stage pipeline diagram, worth a second look now that you have the whole stack in view.</p>
             <p>• <strong>Lambert et al. (2024), "Tülu 3: Pushing Frontiers in Open Language Model Post-Training"</strong> (<a href="https://arxiv.org/abs/2411.15124" target="_blank" rel="noopener">arXiv:2411.15124</a>): the open post-training recipe that named reinforcement learning with verifiable rewards.</p>
-            <p>• <strong>Yue et al. (2025), "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?"</strong> (<a href="https://arxiv.org/abs/2504.13837" target="_blank" rel="noopener">arXiv:2504.13837</a>): the pass@k evidence that current RLVR may elicit base-model capability rather than extend it.</p>
             <p>• <strong>Guan et al. (2024), "Deliberative Alignment: Reasoning Enables Safer Language Models"</strong> (<a href="https://arxiv.org/abs/2412.16339" target="_blank" rel="noopener">arXiv:2412.16339</a>): training models to reason over a written safety specification; the specification itself is Session 7.5.</p>
             <p>• Bai et al. (2022), "Training a Helpful and Harmless Assistant with RLHF" (<a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener">arXiv:2204.05862</a>): the helpful/harmless framing of the post-training stages, read fully in Session 6.</p>
         </div>
@@ -101,11 +99,11 @@
             <p>A verifier is still a proxy. A unit-test suite covers the cases its author thought of, so a policy optimised against it learns to pass those cases (special-casing the visible tests, exploiting the checking harness) rather than to be correct in general; an exact-match checker rewards the right number reached by wrong working. Session 3.1's lesson transfers unchanged: replace the learned reward model with a programmatic one and reward-model hacking becomes <em>verifier hacking</em>, harder where the check is tight (a full proof checker), routine where it is loose (a thin test suite).</p>
         </div>
         <div class="info-box">
-            <h4>Two limits</h4>
-            <p>First, the stage exists only where a check does. Helpfulness, honesty in open conversation, a good summary for a patient: none of these has a verifier, so RLVR runs beside preference optimisation rather than replacing it, each shaping a different slice of behaviour. Second, it is contested how much RLVR adds. Yue et al. (2025) compare RLVR-trained models with their own base models at large sampling budgets and find the base model often matches or overtakes the RL model on pass@\(k\) as \(k\) grows: on that evidence, current RLVR mostly improves the selection of solutions the base model could already reach, rather than extending what it can reach. The debate is open, and it bears directly on the claim at the top of this page: how much of what a "reasoning" model does was already in its base model.</p>
+            <h4>Where the stage stops</h4>
+            <p style="color:#555;">The stage exists only where a check does. Helpfulness, honesty in open conversation, a good summary for a patient: none of these has a verifier, so RLVR runs beside preference optimisation rather than replacing it, each shaping a different slice of behaviour. How much it adds even where it does apply is contested, and 6.3 takes that argument up once you have the algorithm in hand.</p>
         </div>
 
-        <h2 class="section-title">Where misalignment enters</h2>
+<h2 class="section-title">Where misalignment enters</h2>
         <p class="lead">Re-read the pipeline through Session 3's lens and each stage is a place the gap between objective and intent can open.</p>
         <div class="technical-detail">
             <h4>One failure mode per layer</h4>
