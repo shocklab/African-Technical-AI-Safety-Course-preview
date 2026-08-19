@@ -79,8 +79,20 @@ already called the page "interpretability and sovereignty" — but for that reas
 adjudication (all pages agree), two policies Jonathan set govern the winner: **"and" over "&"** in
 titles, and **the contents page carries the full title**, never an abbreviation (the abbreviations are
 what made the index lie; see above). Adjudication rule when zones disagree: apply §0 to the FULLEST
-form, then use the winner in all three zones. Residue Jonathan has not yet ruled on: ~20 older titles
-still use "&" (13 sub-sessions, 7 session groups); they were internally consistent so never surfaced.
+form, then use the winner in all three zones. **Ruled 2026-08-16.** The 11 remaining `&` titles were converted to "and", so the and-over-ampersand
+policy now holds across every title in the course (136 replacements, including the nav on sibling pages
+and the BACKLINKS table in `tools/render_notebooks.py`). Two "X and Y" compounds were renamed in the
+same pass: 8.2 "Ethical frameworks and the four lenses" became **"Four ethical lenses"** (its sections
+are "The ethics gap" and "Four philosophical lenses", so the lenses *were* the frameworks), and 9.5
+became **"Indirect injection, poisoning and defences"**, losing only the "the state of" gloss.
+
+**Two candidates found by grep did not survive reading the pages, and are deliberately kept:** 20.2
+"The meaning critique and present harms" covers Bender and Koller's octopus *and* Stochastic Parrots;
+20.3 "Open problems and calibration" covers the field's admitted unsolved problems *and* how confident
+to be. Both are honest two-topic labels of the same shape as "Deception and corrigibility". **The
+compound is a tell only when the second half is a gloss, or when one noun phrase would cover the whole
+page.** A census of the 79 titles found 29 with an "and"; most are legitimate on that test, so do not
+bulk-rename them.
 
 ## 1. Density budgets, measured — not per-paragraph rules
 
