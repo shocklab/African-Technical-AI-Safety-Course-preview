@@ -88,7 +88,7 @@
             <p>Your notebook, run end to end with output visible: the nanochat stage-mapping (&#9312;), and the base-versus-instruct comparison with your two or three sentences separating form from substance (&#9313;). Graded on completion and the quality of your observations; resubmission allowed.</p>
         </div>
 
-        <h2 class="section-title">Tools &amp; references</h2>
+        <h2 class="section-title">Tools and references</h2>
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
             <p>&bull; <strong>Karpathy, nanochat</strong> (<a href="https://github.com/karpathy/nanochat" target="_blank" rel="noopener">github.com/karpathy/nanochat</a>, MIT): the readable full pipeline; <strong>nanoGPT</strong> (<a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener">github.com/karpathy/nanoGPT</a>) for the pretraining loop alone.</p>
@@ -97,7 +97,7 @@
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
-            <h2>Session 5 summary &amp; what's next</h2>
+            <h2>Session 5 summary and what's next</h2>
             <p>An LLM is built in stages: web-scale self-supervised pretraining yields a capable but unaligned base model (5.1); supervised fine-tuning on demonstrations makes it follow instructions but can only imitate, never select the <em>better</em> answer (5.2); the full post-training stack shapes the assistant as a thin proxy-driven layer over a vast base, with a distinct misalignment opening at every stage (5.3); and you have now read those stages as code and measured what the last of them changed, which is less than the usual story claims (5.4).</p>
             <p><strong>Next (Session 6):</strong> the stage that breaks through SFT's ceiling, <strong>RLHF</strong>. We learn a reward model from human <em>preferences</em>, optimise the policy against it with a KL leash, and confront the price: optimising a learned proxy invites the Goodhart failures of Session 3.1: reward hacking and sycophancy.</p>
         </div>

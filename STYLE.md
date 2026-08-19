@@ -86,6 +86,13 @@ same pass: 8.2 "Ethical frameworks and the four lenses" became **"Four ethical l
 are "The ethics gap" and "Four philosophical lenses", so the lenses *were* the frameworks), and 9.5
 became **"Indirect injection, poisoning and defences"**, losing only the "the state of" gloss.
 
+**The and-over-ampersand policy has two exemptions, learned by breaking them.** It governs titles and
+section headings only. It does NOT govern (a) **author citations**, where the house convention is `&`
+by 28 uses to 12, nor (b) **names quoted verbatim from a source**. A heading-wide sweep on 2026-08-16
+converted four of each and had to be reverted, including "Equity & Inclusion by Design", which is
+inquiry 4 of the RIA Just AI framework and had been verified word-for-word against the source PDF.
+Changing it was a misquote, not a style fix. Check the corpus convention before any mechanical sweep.
+
 **Two candidates found by grep did not survive reading the pages, and are deliberately kept:** 20.2
 "The meaning critique and present harms" covers Bender and Koller's octopus *and* Stochastic Parrots;
 20.3 "Open problems and calibration" covers the field's admitted unsolved problems *and* how confident
