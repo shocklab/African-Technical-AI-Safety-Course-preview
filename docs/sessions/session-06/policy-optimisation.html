@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 6.3 — Policy optimisation and the KL leash</title>
+    <title>Session 6.3 — Policy optimisation</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -20,7 +20,7 @@
     <ul>
       <li><a href="from-demonstrations-to-preferences.html">6.1 · From demonstrations to preferences</a></li>
       <li><a href="the-reward-model.html">6.2 · The reward model</a></li>
-      <li><span class="tn-current">6.3 · Policy optimisation and the KL leash</span></li>
+      <li><span class="tn-current">6.3 · Policy optimisation</span></li>
       <li><a href="limits-of-rlhf.html">6.4 · The limits of RLHF</a></li>
       <li><a href="lab-rlhf.html">6.5 · Lab: reward models &amp; over-optimisation</a></li>
     </ul>
@@ -34,7 +34,7 @@
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 3 • Session 6.3</div>
-        <h1>Policy optimisation and the KL leash</h1>
+        <h1>Policy optimisation</h1>
         <p>How we push the model toward high reward without letting it run off into the reward model's blind spots</p>
     </header>
     <div class="content">
@@ -86,7 +86,7 @@
 
                 <figure class="wide">
             <img src="../../assets/img/session-6-3-ppo-loop.svg" alt="Flow diagram of one RLHF training step, in two parts. Above a dashed line: a prompt x feeds the policy pi-theta, the model being trained, started from the SFT model; pi-theta produces a response y; y is sent to two places at once, the reward model r-phi learned from human preferences in 6.2, and the frozen SFT model pi-ref, which is never updated and is the anchor the leash pulls back to. Both feed an objective, r-phi of x and y minus beta times the KL divergence between pi-theta and pi-ref, annotated: beta is the safety dial, small beta chases the proxy, large beta stays close to pi-ref. An arrow loops back to the policy, labelled update theta to raise the objective, then repeat. Below the dashed line, a separately marked panel headed PPO's bookkeeping, read past this on a first pass: sampling is expensive, so PPO reuses one batch for several gradient steps, which is the only reason a third policy exists. Four boxes in sequence: pi-old, a frozen copy of pi-theta the batch was sampled from; the probability ratio rho equals pi-theta of y over pi-old of y, how far theta has drifted; clip, holding rho inside one plus or minus epsilon so one batch cannot move theta far; and the advantage A-hat, was this response better than expected. An arrow returns to pi-old, labelled refresh pi-old every few steps and go again. Two notes: pi-old is not pi-ref, since pi-old is refreshed constantly and only keeps the update stable while pi-ref is frozen for the whole run and is what the KL penalty measures against; and better than expected needs a baseline, supplied by a second network, the critic, trained alongside the policy. A legend names the three policies and their one job each."/>
-            <figcaption><strong>One RLHF step, with PPO's own machinery separated out below the line.</strong> A response is sampled, scored by the reward model, and compared against the frozen reference; the policy then moves to raise reward minus \(\beta\) times the distance it has travelled. That loop is what 6.4, the 6.5 lab and Sessions 7 and 10 all build on, and it is what you need from this page. The panel below the line is how PPO keeps each update small, and you can read past it: DPO, later on this page, reaches a similar place without any of it. On a small screen, <a href="../../assets/img/session-6-3-ppo-loop.svg" target="_blank" rel="noopener">open the diagram full size</a>.</figcaption>
+            <figcaption><strong>One RLHF step, with PPO's own machinery separated out below the line.</strong> A response is sampled, scored by the reward model, and compared against the frozen reference; the policy then moves to raise reward minus \(\beta\) times the distance it has travelled. That loop is what 6.4, the 6.5 lab and Sessions 7 and 10 all build on. The panel below the line is how PPO keeps each update small, and you can read past it: DPO, later on this page, reaches a similar place without any of it. On a small screen, <a href="../../assets/img/session-6-3-ppo-loop.svg" target="_blank" rel="noopener">open the diagram full size</a>.</figcaption>
         </figure>
 
 <h2 class="section-title">PPO, briefly</h2>
@@ -104,13 +104,13 @@
             <p style="color:#555;">For a question \(q\), sample a group of \(G\) responses from the current policy and score them all. The advantage of response \(i\) is then measured against its own group:</p>
             <div class="formula">\[ A_i \;=\; \frac{r_i - \operatorname{mean}(r_1,\dots,r_G)}{\operatorname{std}(r_1,\dots,r_G)} \]</div>
             <p style="color:#555;">A response that beat the others in its group gets a positive advantage and is made more likely; one that lagged them is made less likely. Everything else carries over from PPO unchanged: the same clipped probability ratio keeps each step small, and the same \(\beta\,\mathrm{KL}(\pi_\theta \,\|\, \pi_{\text{ref}})\) leash holds the policy near the reference model. Only the baseline changed, from a learned prediction to the mean of a handful of siblings.</p>
-            <p style="color:#555;">That is why this is the algorithm behind the reasoning models of 5.3's stage 4. When the reward is a checker rather than a person, sampling twenty attempts at the same maths problem costs almost nothing, so a group is cheap to come by, and the thing PPO spends a whole extra network estimating can be read straight off the sample. Sampling many answers per question also suits a task where most attempts fail and only the occasional one succeeds.</p>
+            <p style="color:#555;">It is the algorithm behind the reasoning models of 5.3's stage 4. When the reward is a checker rather than a person, sampling twenty attempts at the same maths problem costs almost nothing, so a group is cheap to come by, and what PPO spends an extra network estimating can be read straight off the sample. Sampling many answers per question also suits a task where most attempts fail and only the occasional one succeeds.</p>
             <p style="color:#555;">You have already seen an implementation. <code>scripts/chat_rl.py</code>, the file you searched in the 5.4 lab, runs GRPO on grade-school maths, and its docstring is candid about how much it strips out: no KL term, no ratio and clip (it stays on-policy, so the ratio is 1), and the plain difference \(r_i - \operatorname{mean}(r)\) in place of the division by the standard deviation. What survives all that is the group baseline.</p>
         </div>
         <div class="technical-detail">
             <h4>The pass@k debate</h4>
-            <p style="color:#555;">How much does this stage actually add? Yue et al. (2025) compare RLVR-trained models against the base models they were built from, at large sampling budgets, and find the base model often matches or overtakes the RL-trained one on pass@\(k\) (the chance that at least one of \(k\) independent samples is correct) as \(k\) grows. Read that way, current RLVR mostly improves which solutions get selected from the range a base model could already reach, rather than extending that range.</p>
-            <p style="color:#555;">The debate is open, and it bears directly on 5.3's claim that the alignment layer is thin: if RL on verifiable rewards elicits rather than extends, then a reasoning model's headline capability was largely present in the base model, waiting to be sampled well. Session 10 returns to this when it asks what open-weight release actually releases.</p>
+            <p style="color:#555;">How much does this stage add? Yue et al. (2025) compare RLVR-trained models against the base models they were built from, at large sampling budgets, and find the base model often matches or overtakes the RL-trained one on pass@\(k\) (the chance that at least one of \(k\) independent samples is correct) as \(k\) grows. Read that way, current RLVR mostly improves which solutions get selected from the range a base model could already reach, rather than extending that range.</p>
+            <p style="color:#555;">The debate is open, and it bears on 5.3's claim that the alignment layer is thin: if RL on verifiable rewards elicits rather than extends, then much of what a reasoning model does was already in the base model, waiting to be sampled well. Session 10 returns to this when it asks what open-weight release actually releases.</p>
         </div>
 
 <h2 class="section-title">DPO: preference optimisation without RL</h2>

@@ -20,7 +20,7 @@
     <ul>
       <li><span class="tn-current">6.1 · From demonstrations to preferences</span></li>
       <li><a href="the-reward-model.html">6.2 · The reward model</a></li>
-      <li><a href="policy-optimisation.html">6.3 · Policy optimisation and the KL leash</a></li>
+      <li><a href="policy-optimisation.html">6.3 · Policy optimisation</a></li>
       <li><a href="limits-of-rlhf.html">6.4 · The limits of RLHF</a></li>
       <li><a href="lab-rlhf.html">6.5 · Lab: reward models &amp; over-optimisation</a></li>
     </ul>
@@ -53,7 +53,7 @@
         
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
-            <p>• <strong>Christiano et al. (2017), "Deep Reinforcement Learning from Human Preferences"</strong> (NeurIPS 2017; <a href="https://arxiv.org/abs/1706.03741" target="_blank" rel="noopener">arXiv:1706.03741</a>): read §2 (Preliminaries and Method), which sets up the problem and gives the comparison-based method in full. The experiments are worth skimming for the Atari and simulated-robotics results. ≈1,700 words.</p>
+            <p>• <strong>Christiano et al. (2017), "Deep Reinforcement Learning from Human Preferences"</strong> (NeurIPS 2017; <a href="https://arxiv.org/abs/1706.03741" target="_blank" rel="noopener">arXiv:1706.03741</a>): read §2 (Preliminaries and Method), which sets up the problem and gives the comparison-based method in full. Skim the experiments for the Atari and simulated-robotics results. ≈1,700 words.</p>
             <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,700 words.</p>
         </div>
         <div class="resource-placeholder">
@@ -70,13 +70,13 @@
             <h4>A short primer on reinforcement learning</h4>
             <p style="color:#555;">If you have not met reinforcement learning before, this is what the rest of Session 6 assumes. Nothing in this box is about language models. The translation to them comes at the end.</p>
             <p style="color:#555;">In supervised learning every training example carries the right answer and the model is asked to reproduce it. Reinforcement learning has no right answers. An <strong>agent</strong> observes the <strong>state</strong> of its environment, chooses an <strong>action</strong>, and the environment responds with a new state and a number, the <strong>reward</strong>. Nothing says what the agent should have done. It learns by trying things and doing more of whatever scores well. Session 3.2 set this up formally as a Markov decision process.</p>
-            <p style="color:#555;">Take a program learning to play a board game. The state is the position, the actions are the legal moves, and the reward is \(+1\) for a win and \(-1\) for a loss, delivered once, at the end. Two difficulties appear immediately, and they are the difficulties of the whole field. The reward is <strong>sparse and delayed</strong>: fifty moves produce a single number, long after most of them were played. And that number has to be shared out among those fifty moves, which is the problem of <strong>credit assignment</strong>. The game was lost; nothing tells you which move lost it.</p>
-            <p style="color:#555;">Four terms carry most of the weight.</p>
+            <p style="color:#555;">Take a program learning to play a board game. The state is the position, the actions are the legal moves, and the reward is \(+1\) for a win and \(-1\) for a loss, delivered once, at the end. Two difficulties appear immediately. The reward is <strong>sparse and delayed</strong>: fifty moves produce a single number, long after most of them were played. And that number has to be shared out among those fifty moves, which is the problem of <strong>credit assignment</strong>. The game was lost; nothing tells you which move lost it.</p>
+            <p style="color:#555;">The vocabulary is small.</p>
             <ul class="styled-list">
                 <li><strong>Policy</strong>: the rule that picks an action in a given state, usually as a probability spread over the available actions. This is the thing being learned.</li>
                 <li><strong>Episode</strong>: one complete run from start to finish. One game.</li>
                 <li><strong>Return</strong>: the total reward collected over an episode.</li>
-                <li><strong>Value</strong>, and the <strong>advantage</strong> built from it. Value is how well the agent does from a given position on average, under its current policy. It matters because "was that good?" turns out to be the wrong question: winning from a position you were already expected to win from teaches nothing. The useful question is whether the outcome beat expectation, and the gap between what happened and what was expected is the advantage. A second model, the <strong>critic</strong>, is trained to supply the expectation.</li>
+                <li><strong>Value</strong>, and the <strong>advantage</strong> built from it. Value is how well the agent does from a given position on average, under its current policy. Value matters because "was that good?" is the wrong question: winning from a position you were already expected to win from teaches nothing. The useful question is whether the outcome beat expectation, and the gap between what happened and what was expected is the advantage. A second model, the <strong>critic</strong>, is trained to supply the expectation.</li>
             </ul>
             <p style="color:#555;">The update follows from that: make actions that turned out better than expected more likely, and actions that turned out worse less likely. Because "better than expected" is itself estimated from a handful of episodes, a large step on that estimate can wreck a policy that was working. Keeping each step small is the problem PPO solves in 6.3.</p>
             <p style="color:#555;">Now the translation. This session is that same loop with the board game swapped out.</p>
