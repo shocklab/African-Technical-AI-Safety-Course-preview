@@ -73,7 +73,7 @@
         </div>
         <div class="technical-detail">
             <h4>The functional form</h4>
-            <p style="color:#555;">Measuring optimisation by the distance \(d=\sqrt{\mathrm{KL}}\) from the initial policy (the same axis as Bai's reward-vs-\(\sqrt{\mathrm{KL}}\) law, 6.3), the gold reward follows simple shapes: for best-of-\(n\) sampling \(R(d) = d\,(\alpha - \beta d)\) and for RL \(R(d) = d\,(\alpha - \beta \log d)\). Both are humped: increasing, then turning over. Two findings matter for safety: the over-optimisation point is <em>predictable</em> from the fitted coefficients, and larger reward models over-optimise less and later. Better proxies buy you more optimisation before Goodhart bites, but do not abolish it.</p>
+            <p style="color:#555;">Measuring optimisation by the distance \(d=\sqrt{\mathrm{KL}}\) from the initial policy (the same axis as Bai's reward-vs-\(\sqrt{\mathrm{KL}}\) law, 6.3), the gold reward follows simple shapes: for best-of-\(n\) sampling (draw \(n\) responses, keep whichever the proxy scores highest, which is the cheap stand-in for RL you will use in 6.5) \(R(d) = d\,(\alpha - \beta d)\) and for RL \(R(d) = d\,(\alpha - \beta \log d)\). Both are humped: increasing, then turning over. Two findings matter for safety: the over-optimisation point is <em>predictable</em> from the fitted coefficients, and larger reward models over-optimise less and later. Better proxies buy you more optimisation before Goodhart bites, but do not abolish it.</p>
         </div>
         <div class="technical-detail">
             <h4>The peak, by the numbers</h4>
