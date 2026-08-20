@@ -73,6 +73,14 @@
         <h2 class="section-title">The cost of training</h2>
         <p>To turn this into a budgeting question we need the cost of training. A useful rule of thumb is that one forward-and-backward pass costs about six floating-point operations per parameter per token (two for the forward pass, roughly four for the backward pass), so total training compute is</p>
         <div class="formula">\[ C \approx 6\,N\,D \quad \text{(FLOPs)}. \]</div>
+        <div class="warning-box">
+            <h4>The active parameter count</h4>
+            <p>The six in \(6ND\) comes from counting operations per parameter per token, which assumes every parameter is used on every token. In a dense transformer that holds. In a <strong>mixture-of-experts</strong> model (2.2) it does not: the router sends each token through a small fraction of the feed-forward parameters, so the compute is set by the <strong>active</strong> parameter count, not the total.</p>
+            <p>The gap is not a rounding error. Mixtral 8x7B holds 47&nbsp;billion parameters and uses about 13&nbsp;billion per token, so putting the total into \(6ND\) overstates its training compute by roughly a factor of three and a half. On models with more experts the factor is larger. Most models at the frontier are now sparse, so this is the common case rather than the exception.</p>
+            <p>Two things follow. When you see a compute estimate, check which \(N\) went into it. And a sparse model and a dense model with the same total parameter count are not comparable, on cost or on capability: they differ in what they can store and in what they spend to use it. The Chinchilla trade-off below is still a trade-off, but the axis you are trading along is active parameters against tokens.</p>
+            <p>The models in the 2.5 lab are all dense, so \(6ND\) is the right rule there.</p>
+        </div>
+
         <p>With \(N\) in parameters and \(D\) in tokens, a fixed budget \(C\) buys a hyperbola of choices: a big model on little data, or a small model on lots of data, or anything between. The natural question is where on that curve the loss is lowest, and for years the field answered it wrong.</p>
 
         <h2 class="section-title">Compute-optimal training: Chinchilla</h2>

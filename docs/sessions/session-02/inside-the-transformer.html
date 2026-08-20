@@ -139,7 +139,15 @@
             <p style="color:#555;">It up-projects to a wider hidden dimension (commonly \(4 d_{\text{model}}\)), applies a nonlinearity \(\sigma\) (GELU in GPT-2), then down-projects back. The MLP holds much of a transformer's stored "knowledge" and accounts for roughly two-thirds of a block's non-embedding parameters. It is also, so far, harder to interpret than attention.</p>
         </div>
 
-        <h2 class="section-title">LayerNorm and the full block</h2>
+                <div class="technical-detail">
+            <h4>Mixture of experts</h4>
+            <p style="color:#555;">That last figure, the MLP holding most of a block's parameters, is what the following design exploits, and most frontier models now use it.</p>
+            <p style="color:#555;">If you want a model to know more, you need more parameters. If every parameter is used on every token, more parameters means proportionally more computation, for training and for every query afterwards. A <strong>mixture-of-experts</strong> layer breaks that link. In place of one MLP it holds \(E\) copies of it, the <strong>experts</strong>, plus a small network called the <strong>router</strong>. For each token the router scores the experts and sends that token through only the best \(k\) of them, commonly \(k = 2\). Parameters grow with \(E\); computation per token grows with \(k\).</p>
+            <p style="color:#555;">Mixtral 8x7B is the clearest open example. Each layer has 8 experts, the router picks 2 per token, and the model holds 47&nbsp;billion parameters while using about 13&nbsp;billion on any given token. The arithmetic in the name does not work (8 &times; 7 is not 47), because only the feed-forward blocks are replicated. Attention, embeddings and the norms are shared across experts, so the sparsity sits precisely in the part of the block that stores knowledge, and not in the part that moves information between positions.</p>
+            <p style="color:#555;">Two consequences to carry forward. The router is learned along with everything else, and left alone it tends to collapse onto a handful of popular experts, so these models are trained with an extra term that pushes load to spread out. And the question "how big is this model" now has two different correct answers, one for capacity and one for cost. 2.3 shows what that does to the compute arithmetic.</p>
+        </div>
+
+<h2 class="section-title">LayerNorm and the full block</h2>
         <div class="technical-detail">
             <h4>One transformer block</h4>
             <p style="color:#555;">A block wraps attention and MLP with <strong>LayerNorm</strong> (which rescales each position's vector to zero mean and unit variance, stabilising training) and adds each sub-layer's output back to its input. Modern transformers use the <em>pre-norm</em> arrangement:</p>
