@@ -54,6 +54,13 @@
             <p>Put rough numbers on it. Suppose one comparison takes a human rater 30 seconds of careful reading. A 100,000-comparison preference set is then about 830 hours of labelling: months of one person's full-time work, or a sizeable paid crowd, before a single policy update. An LLM labeller returns the same 100,000 judgements in the time it takes to run the inference, at an estimated tenth of the cost. The pressure behind the pivot is scale and price: the AI labels arrive faster and cheaper than human labelling can manage, whatever their quality. What that speed costs in reliability is the question 7.3 takes up.</p>
         </div>
 
+        <div class="case-study">
+            <h4>The labour behind the number</h4>
+            <p style="color:#555;">Those 830 hours are a throughput figure here, and a price. They are also somebody's working month. Session 6.1 carries the case: this labelling is often subcontracted, paid at a fraction of what the contracting lab pays for the time, and the material is chosen for being harmful.</p>
+            <p style="color:#555;">That gives the pivot to AI feedback an argument in its favour which the cost framing does not capture. Fewer people have to read this material at all.</p>
+            <p style="color:#555;">The same framing hides a cost on the other side. The humans being removed are the ones whose judgement was the justification for the method in the first place. "Human feedback" is where the legitimacy came from, so automating it does not only make the pipeline faster, it removes the part that made the result answerable to anyone outside the lab. That worry is separate from the reliability question 7.3 takes up, and it survives even if the AI labels turn out to be every bit as good: the question stops being "are these judgements accurate" and becomes "whose judgements are these". 7.2 and 7.4 are where the course tries to answer it.</p>
+        </div>
+
         <h2 class="section-title">Let a model give the feedback</h2>
         <p class="lead">Replace the human labeller with a model that judges responses against a written list of principles.</p>
         <p>The idea, introduced by Bai et al. (2022) under the name <strong>Constitutional AI</strong>, is disarmingly simple. Instead of paying people to rank responses for harmlessness, you write down a handful of principles ("choose the response that is least harmful", "that is least likely to be discriminatory", and so on) and you ask a capable model to do the ranking by those principles. The model's judgements become the preference data; everything downstream (reward model, policy optimisation) is the Session 6 machinery, unchanged. Only the label source changed.</p>
