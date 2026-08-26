@@ -114,17 +114,18 @@ Those three numbers are a better lab than the page currently describes and shoul
   in a satisfactory fashion? Options are: (1). yes (2). no"), same class of finding as 5.4's
   system-prompt leak. Possibly usable.
 
-**1.5B was never measured, and the attempt was killed.** `probe5.py` hung at 94 MB of a ~3 GB
-download on every attempt, leaving a `.incomplete` blob in the HF cache. Three orphaned
-processes were still sitting there doing nothing when the session paused; they have been
-killed. Clear the partial download before retrying:
+**1.5B was never measured, and the attempts have been killed and cleaned up.** Every run that
+touched `Qwen2.5-1.5B-Instruct` hung at 94 MB of a ~3 GB download. Two `probe2.py` processes
+were still alive 40 minutes later with the `.incomplete` blob held open; both were killed and
+the partial download has been deleted, so a retry starts clean.
 
-    rm -rf ~/.cache/huggingface/hub/models--Qwen--Qwen2.5-1.5B-Instruct
-
-Two things went wrong and are worth not repeating. `nohup ... &` inside a backgrounded tool
-call gets its child killed, so run the script directly. And the stall itself was never
-diagnosed: check whether it is the HF rate limit (the unauthenticated-requests warning appears
-on every run) before assuming the network.
+Three things went wrong and are worth not repeating. `nohup ... &` inside a backgrounded tool
+call gets its child killed, so run the script directly. The stall itself was never diagnosed:
+check whether it is the HF rate limit (the unauthenticated-requests warning appears on every
+run) before blaming the network. And when hunting strays, `ps aux | grep probeN` matches the
+shell running the grep, because the search string is in its own command line: check
+`ps -eo pid,etime,args` for real `python3` processes instead, and `lsof +D` on the cache
+directory to find what is actually holding a download open.
 
 None of this blocks the build. Swapping the model is a one-line change to the generator, so
 nothing built on 0.5B is wasted if 1.5B later turns out to rescue critique-and-revise.
