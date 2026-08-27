@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.6 — Lab: build a tiny Constitutional-AI loop</title>
+    <title>Session 7.6 — Lab: a constitution and the judge that applies it</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -23,7 +23,7 @@
       <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF and self-rewarding</a></li>
       <li><a href="whose-constitution.html">7.4 · Whose constitution? Democratic and African perspectives</a></li>
       <li><a href="model-specifications.html">7.5 · Model specifications</a></li>
-      <li><span class="tn-current">7.6 · Lab: build a tiny Constitutional-AI loop</span></li>
+      <li><span class="tn-current">7.6 · Lab: a constitution and the judge that applies it</span></li>
     </ul>
   </details>
   <div class="tn-links">
@@ -34,63 +34,78 @@
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Week 4 • Session 7.6</div>
-        <h1>Lab: build a tiny Constitutional-AI loop</h1>
-        <p>Critique-and-revise, AI preference labelling, and an in-language safety probe, by hand in Colab</p>
+        <div class="week-badge">Week 4 &bull; Session 7.6</div>
+        <h1>Lab: a constitution and the judge that applies it</h1>
+        <p>Measure what an AI judge is actually responding to, then check the instrument before trusting it</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
-            <h2>What you'll build</h2>
-            <p>You will run the two moves at the heart of Constitutional AI on a small open model: a critique-and-revise loop, and an AI preference-labelling step. Then you will do the thing the papers mostly skip: measure how the model's safety judgement holds up <em>outside English</em>. The core is CPU-friendly and runs on the free Colab tier; the real RL step is an optional GPU extension that reuses your Session 6.5 machinery. Task 4 is a natural seed for a research project.</p>
+            <h2>What we'll cover</h2>
+            <p>Session 7.2 built the Constitutional AI pipeline and 7.3 asked whether replacing human labels with a written document escapes the evaluation ceiling or simply moves it. This lab puts numbers on that second question, using the smallest model that will run on a free Colab CPU. You will measure how much an AI judge's verdict depends on the <strong>order</strong> the options are listed in, how well it separates a safe answer from a harmful one once that is corrected for, and how much the <strong>principle</strong> you hand it actually changes its mind. Then you will check whether it can read isiZulu well enough for any of this to mean anything in isiZulu. Parts of it fail, and the failures carry as much as the successes.</p>
         </div>
 
+        <div class="lab-box">
+            <h4>Setup <span class="tag">Colab &mdash; no GPU needed</span></h4>
+            <p>Allow about an hour. The notebook is roughly three minutes of computing on a free CPU runtime, plus a couple of minutes to download two 0.5B models; the rest is reading what comes out.</p>
+            <ol style="margin-left:25px; line-height:1.9;">
+                <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-7-6-constitutional-ai.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then <em>File &rarr; Save a copy in Drive</em> before you change anything.</li>
+                <li>The first time you run a cell, Colab warns that the notebook "was not authored by Google", as it does for anything loaded from GitHub. Choose <em>Run anyway</em>.</li>
+                <li>Work down with <em>Shift+Enter</em>. You can also <a href="../../labs/session-7-6-constitutional-ai.html">read the whole notebook here</a> or <a href="../../labs/session-7-6-constitutional-ai.ipynb" download>download the .ipynb</a>.</li>
+            </ol>
+            <p>The code is written for you. Your work is in the three "Explore" cells: parameters to change, and short questions to answer.</p>
+        </div>
+
+        <h2 class="section-title">&#9312; The constitution, and critique-and-revise</h2>
         <div class="technical-detail">
-            <h4>Setup</h4>
-            <p style="color:#555;">Open the Colab notebook and load a small instruction-tuned model (a 1–3B open model is plenty; what matters is the loop). Everything in Tasks 1–4 is prompting and bookkeeping, so it runs on CPU; you do not train anything until the optional extension. Reuse the harm-prompt handling conventions from the 6.5 lab.</p>
+            <h4>Why the loop has to start from a base model</h4>
+            <p>Phase 1 of 7.2 has the model answer a prompt, criticise its own answer against one sampled principle, and rewrite it. The notebook loads two models, and the reason is the first thing worth noticing: the instruction-tuned Qwen refuses these prompts outright, which leaves nothing to critique. Bai et al. start Phase 1 from a <em>helpful-only</em> model for exactly that reason. You need a model that will answer badly before you can teach it to answer better.</p>
+            <p style="color:#555;">You should see the loop fail. At 0.5B the critiques tend to contradict themselves and the revisions do not improve on the originals. That is a real limit of the scale you can run for free rather than a flaw in the method: Bai et al. used a 52B model. Knowing which parts of a paper survive being shrunk by two orders of magnitude, and which do not, is worth as much as reproducing them.</p>
         </div>
 
-        <h2 class="section-title">Task 1 — write a mini-constitution</h2>
-        <p>Write 3–5 principles in plain language, each a single sentence of the form "choose the response that…". Cover at least one harm you care about and one positive behaviour (helpfulness, clarity). Keep them short: you will be sampling one at a time, as the real method does. Record them at the top of your notebook; they are the rubric for everything that follows.</p>
+        <h2 class="section-title">&#9313; The judge, and what it is actually responding to</h2>
+        <div class="technical-detail">
+            <h4>Reading a soft label off two tokens</h4>
+            <p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is better. The answer is not read from generated text but from the model's own probabilities on the tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives the soft label which 7.2's Bradley-Terry loss consumes. One forward pass per judgement and no generation, so this part is fast. Eight requests are supplied, each with a safe answer and a harmful one written to be clearly different, and each pair is judged twice, once in each order.</p>
+            <p style="color:#555;">You should see a mean preference for whichever answer is listed <em>first</em> of <strong>0.846</strong>. If content were driving the verdict, that number would sit near 0.5, because the safe answer occupies slot A half the time. Correct for position by averaging each pair over both orders and the judge picks the safe answer <strong>0.456</strong> of the time, against a chance rate of 0.5. Position moves this judge a long way; content moves it slightly the wrong way. Every soft label in the table looks confident, and the confidence is mostly a preference for the letter A.</p>
+            <p>7.3 lists position bias among the failure modes of these judges and notes that Lee et al. score each pair twice to correct for it. You have just measured why they bother.</p>
+            <p>Write two or three sentences. If a preference model were trained on labels from this judge, what would it learn? Say precisely what the label would encode, and what it would not.</p>
+        </div>
 
-        <h2 class="section-title">Task 2 — critique-and-revise</h2>
-        <p>Pick a mildly harmful prompt (the 6.5 conventions apply: nothing dangerous; "how do I get back at a coworker" is plenty). Then run the loop:</p>
-        <ul class="styled-list">
-            <li><strong>Answer:</strong> have the model respond to the prompt directly, with no safety framing.</li>
-            <li><strong>Critique:</strong> sample one principle and ask the same model to critique its own answer by that principle: where does it fall short?</li>
-            <li><strong>Revise:</strong> ask it to rewrite the answer in light of the critique.</li>
-            <li><strong>Compare:</strong> put the original and revised answers side by side. Did the revision improve, over-correct into a useless refusal, or miss the point? Note which.</li>
-        </ul>
+        <h2 class="section-title">&#9314; Does the constitution actually do anything?</h2>
+        <div class="technical-detail">
+            <h4>The same pairs, the opposite principle</h4>
+            <p>This is the claim the whole method rests on: one short document, applied to millions of judgements, decides what the model is trained toward. It is testable in a single cell. The same eight pairs go to the same judge under a second principle that asks for the opposite of the first, so if the constitution is doing any work the preference should fall.</p>
+            <p style="color:#555;">You should see it fall from 0.456 to 0.422. The principle moves the judge by <strong>0.034</strong>, while the order of the options moves it by <strong>0.693</strong>: a factor of twenty, on the same scale and the same eight pairs.</p>
+            <p>Then explore. Try a sharper principle that names the exact behaviour in these pairs, an empty principle as the control this comparison needs, and a self-contradictory constitution that pulls both ways in one string.</p>
+            <p>Session 7.4 asks whose values a constitution encodes. On this evidence, write two or three sentences on what you would need to establish about a given system before that question is worth arguing about.</p>
+        </div>
 
-        <h2 class="section-title">Task 3 — AI preference labelling</h2>
-        <p>Generate two responses to each of several prompts. For each pair, hand both to the model with a sampled principle and ask which is better, reading the choice off as in 7.2. Two things to do properly:</p>
-        <ul class="styled-list">
-            <li><strong>Position-swap:</strong> ask twice with the order flipped and check whether the model changes its mind. How often does it? That rate is the position bias you read about, measured on your own model.</li>
-            <li><strong>Agreement with you:</strong> label the same pairs yourself first, then compute how often the model's preference matches yours. That agreement number <em>is</em> the reliability of the RLAIF signal: a low number means the reward model you would train on these labels is learning your model's quirks, not your values.</li>
-        </ul>
-
+        <h2 class="section-title">&#9315; Before asking whether it is worse in isiZulu</h2>
         <div class="case-study">
-            <h4>Task 4 — the African-safety probe</h4>
-            <p>Repeat Task 3's labelling in isiZulu (or another language you read), using the same prompts translated over with NLLB or a public translator of your choice; record which tool you used. Compute the model's agreement with your labels in-language, and compare it to the English number. Does the agreement collapse? Does the model start refusing to judge, mis-parsing the options, or labelling at chance? One confound to rule out before you interpret the gap: translation adds noise of its own, so weak agreement can reflect a poor translation rather than a weak judge; back-translate a few prompts, or have a speaker check them, to separate the two. Whatever you find, you have measured the 7.4 ceiling with your own hands: the point at which the automated safety signal stops being trustworthy as you move away from English. Write down the gap: it is a strong starting point for a Session 11 evaluation or a full project.</p>
+            <h4>Check the instrument before you explain the difference</h4>
+            <p>The obvious next question is whether this judge is worse in a low-resource language, and it is the question 7.4 is built around. It is also a question you can easily answer wrongly. Translate the pairs, watch agreement drop, and there are at least three explanations available: the judge is worse at judging in isiZulu, the translation introduced noise of its own, or the judge cannot read isiZulu at all and is responding to something else entirely. Only the first is the one people usually report.</p>
+            <p>So the notebook measures the third before touching the first, using the same <code>(A</code> / <code>(B</code> machinery on a task with a known right answer: given an isiZulu sentence from MAFAND-MT, pick its English translation out of two candidates.</p>
+            <p style="color:#555;">You should see <strong>0.512</strong>, which is chance. A score at chance is not a null result; it is the answer to a more useful question than the one you set out to ask. It says that <em>this</em> model, at this size, cannot be used to investigate the language question at all, and that anyone who ran the isiZulu comparison without this control would have produced a number, believed it, and reported a language gap their instrument could not have detected. Sessions 9.4 and 11.5 come back to it with larger models and a proper evaluation protocol.</p>
+            <p>Then write a short paragraph. Suppose a paper reported that its AI feedback pipeline worked less well in low-resource languages. What would you want to see before believing it, and which of your measurements above is the one you would ask them for?</p>
         </div>
 
-        <div class="info-box">
-            <h4>Optional GPU extension</h4>
-            <p>If you want the full loop, distil your Task-3 AI labels into a small reward model and run one short PPO (or DPO) step against it, reusing the 6.5 / ARENA RLHF code. You will not get a dramatically better model from a handful of labels; the goal is to feel the whole pipeline run on signal a <em>model</em> generated, and to see the over-optimisation exposure of 6.4 reappear on an AI-made proxy.</p>
+        <div class="lab-box">
+            <h4>Submit</h4>
+            <p>One notebook, run top to bottom with outputs visible, containing: your reading of the critique-and-revise transcript (&#9312;); the two judge numbers and what a preference model trained on them would learn (&#9313;); the principle swing set against the position effect (&#9314;); and the comprehension control with what you would ask a paper for (&#9315;). Graded on completion and the quality of your observations; resubmission allowed.</p>
         </div>
 
-        <h2 class="section-title">What to submit</h2>
-        <p>One Colab notebook containing: your mini-constitution (Task 1); the before/after critique-and-revise example with your one-line verdict (Task 2); your position-bias rate and model-versus-you agreement number (Task 3); and the in-language agreement, the English–isiZulu gap, and a short description of how the failure looked (Task 4). Graded on completion and the quality of your observations; resubmission allowed.</p>
-
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder">
+        <h2 class="section-title">Tools and references</h2>
+        <div class="resource-placeholder reading-core">
             <h4>Reference</h4>
-            <p>• Re-use the critique/label mechanics from <strong>Bai et al. (2022)</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>, §3–4) and the labelling-prompt details in <strong>Lee et al. (2023)</strong> (<a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">arXiv:2309.00267</a>, appendices).</p>
+            <p>&bull; <strong>Bai et al. (2022)</strong>, <a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">Constitutional AI</a> (arXiv:2212.08073): the method you are running in miniature, and the source of the helpful-only starting point in &#9312;.</p>
+            <p>&bull; <strong>Lee et al. (2023)</strong>, <a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">RLAIF</a> (arXiv:2309.00267): the position-bias correction you reproduce in &#9313;.</p>
+            <p>&bull; <a href="https://github.com/masakhane-io/lafand-mt" target="_blank" rel="noopener"><strong>MAFAND-MT</strong></a> (Adelani et al., 2022; CC BY-NC 4.0): the parallel sentences behind the comprehension control in &#9315;.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>That closes Week 4's first session. Session 8 takes up the two questions this one raised: can model-assisted oversight scale (8.1), and whose values is any of it steering toward (8.2–8.4)?</p>
+            <p>That closes Week 4's first session. Session 8 takes up the two questions this one raised: can model-assisted oversight scale (8.1), and whose values is any of it steering toward (8.2&ndash;8.4)?</p>
         </div>
 
     </div>

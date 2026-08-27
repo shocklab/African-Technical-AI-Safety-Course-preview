@@ -83,6 +83,11 @@ PAGE = """<!DOCTYPE html>
 
 # which lesson page each notebook belongs to
 BACKLINKS = {
+    "session-7-6-constitutional-ai":
+        ("../sessions/session-07/lab-constitutional-ai.html",
+         "7.6 · Lab: a constitution and the judge that applies it",
+         "Session 7.6 — Lab notebook",
+         "A constitution and the judge that applies it"),
     "session-6-5-reward-models":
         ("../sessions/session-06/lab-rlhf.html",
          "6.5 · Lab: reward models and over-optimisation",
