@@ -90,7 +90,7 @@
         <p>A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement: better than a non-expert in some places, worse in others, and capable of being wrong in correlated, systematic ways that a diverse crowd of humans would not be. Swapping the labeller does not, on its own, let you supervise a task neither the human nor the model can evaluate; it moves the ceiling from "what a human rater can tell" to "what the feedback model can tell", which is a different ceiling, not the absence of one. Whether AI feedback can ever <em>raise</em> the ceiling (supervise a model more capable than its supervisor) is an open empirical question that depends on the capability in play, and it is the subject of the scalable-oversight menu (debate, amplification, recursive reward modelling, weak-to-strong) in Session 8.1. Self-rewarding is one bet that the loop can climb; the failure modes above are the reasons to hold that bet at a calibrated credence.</p>
         <div class="info-box">
             <h4>The African lens</h4>
-            <p>AI feedback inherits the base model's competence profile, and that profile is steeply tilted toward high-resource languages. So the feedback model judges most confidently in English and worst in low-resource African languages, which means the cheap, infinitely-scalable safety signal that is replacing human labour is least trustworthy where human labour is also scarcest. A self-judging loop in isiZulu compounds two weaknesses: a weaker generator and a weaker judge, feeding each other. That is the measurable edge of "whose feedback?", and 7.4 makes it the heart of the session.</p>
+            <p>The tilt 7.1 flagged can now be given a size. Lee et al.'s labeller agrees with human raters about 78% of the time at its best, and that figure is measured in English; it is not a constant of the method but a property of a model reading the language it knows best. Since AI feedback inherits the base model's competence profile, the cheap and infinitely scalable safety signal now replacing human labour is least trustworthy exactly where human labour is scarcest too. A self-judging loop in isiZulu compounds two weaknesses at once, a weaker generator and a weaker judge, each unable to catch the other. What that costs the people on the other end is 7.4.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -104,12 +104,13 @@
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Lee et al. (2023), "RLAIF vs. RLHF: Scaling RL from Human Feedback with AI Feedback"</strong> (<a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">arXiv:2309.00267</a>): the head-to-head, the same-size result, and the AI-labeller agreement numbers.</p>
-            <p>• <strong>Yuan et al. (2024), "Self-Rewarding Language Models"</strong> (<a href="https://arxiv.org/abs/2401.10020" target="_blank" rel="noopener">arXiv:2401.10020</a>): the model-as-its-own-judge loop, iterative DPO, and the "superhuman feedback" motivation.</p>
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Lee et al. (2023), "RLAIF vs. RLHF: Scaling RL from Human Feedback with AI Feedback"</strong> (<a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">arXiv:2309.00267</a>): read §3.1 for how the labeller is prompted and §3.3 for how "AI Labeler Alignment" is defined, then §5 for the head-to-head, the same-size result and the alignment numbers themselves (§5.2 and §5.4 hold the tables). ≈2,200 words.</p>
+            <p>• <strong>Yuan et al. (2024), "Self-Rewarding Language Models"</strong> (<a href="https://arxiv.org/abs/2401.10020" target="_blank" rel="noopener">arXiv:2401.10020</a>): read §1 for the "superhuman feedback" motivation and §2 for the model-as-its-own-judge loop and its iterative DPO. ≈1,900 words. The results in §3.2 are worth a look but are not required.</p>
+                    <p style="margin-top:10px; color:#666;">Total mandatory load: ≈4,100 words.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
+            <h4>Optional readings</h4>
             <p>• <strong>Wataoka et al. (2024), "Self-Preference Bias in LLM-as-a-Judge"</strong> (<a href="https://arxiv.org/abs/2410.21819" target="_blank" rel="noopener">arXiv:2410.21819</a>): the perplexity/familiarity mechanism, with GPT-4 as the strongest case.</p>
             <p>• <strong>Sharma et al. (2023), "Towards Understanding Sycophancy in Language Models"</strong> (<a href="https://arxiv.org/abs/2310.13548" target="_blank" rel="noopener">arXiv:2310.13548</a>): preference data rewards agreement over correctness (recap from 6.4).</p>
             <p>• <strong>Gao et al. (2022), "Scaling Laws for Reward Model Overoptimization"</strong> (<a href="https://arxiv.org/abs/2210.10760" target="_blank" rel="noopener">arXiv:2210.10760</a>): over-optimisation, now of an AI proxy (recap from 6.4).</p>

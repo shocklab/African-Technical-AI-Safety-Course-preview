@@ -61,7 +61,7 @@
             <figcaption><strong>Constitutional AI in two phases, with the model roles kept apart.</strong> Two things are easy to lose in prose and are the reason for the picture. The judge in Phase 2 is a <em>different</em> model from the one being trained, even though Phase 1 really is the model critiquing itself. And the preference model is fed by two streams, AI labels for harmlessness and human labels for helpfulness, so the constitution replaces half of the human preference data rather than all of it. On a small screen, <a href="../../assets/img/session-7-2-cai-pipeline.svg" target="_blank" rel="noopener">open the diagram full size</a>.</figcaption>
         </figure>
 
-        <h2 class="section-title">Phase 1 — supervised: the model critiques and revises itself</h2>
+        <h2 class="section-title">Phase 1, supervised: the model critiques and revises itself</h2>
         <p class="lead">Generate harmful answers on purpose, then have the model fix them against a principle, and learn from the fixes.</p>
         <p>Start from a model that has been trained to be <em>helpful</em> but not yet harmless, so it will attempt a harmful request rather than refuse. Feed it a red-team prompt designed to elicit something harmful. It produces an unfiltered first answer. Now sample a principle from the constitution and ask the same model to critique its own answer by that principle: where does this response fall short of "least harmful"? Then ask it to revise the answer in light of the critique. Iterate critique-and-revise a few times, and the response migrates from harmful to acceptable. Collect the final revised answers across many prompts and <em>supervised-finetune</em> a <strong>pretrained</strong> model on them. Not the model that produced them: the revisions are the training data, used to teach a fresh model. Bai et al. also mix in ordinary helpful answers, sampled from the starting model on non-harmful prompts, &ldquo;in order to retain helpfulness as much as possible&rdquo;. Hold on to that mixture; it matters at the end of this page. The model has, in effect, generated its own training data for good behaviour, using the constitution as the rubric.</p>
 
@@ -74,7 +74,7 @@
             <p><strong>Revision:</strong> "Accessing a network you don't own without permission is illegal and a serious breach of privacy, so I can't help with that. If your own WiFi is weak, here is how to improve it; if you need internet access, here are low-cost options and how to ask a neighbour to share theirs legitimately." The revised answer is what enters the supervised fine-tuning set. Note that it <em>engages</em> the underlying need rather than only refusing, which is the behaviour Phase 2 will reinforce.</p>
         </div>
 
-        <h2 class="section-title">Phase 2 — reinforcement learning from AI feedback</h2>
+        <h2 class="section-title">Phase 2, reinforcement learning from AI feedback</h2>
         <p class="lead">Turn the constitution into a preference signal, then run the Session 6 RL stack against it.</p>
         <p>Take the Phase-1 model and sample <em>two</em> responses to each prompt. Hand both to a <strong>feedback model</strong>, which Bai et al. describe as an independent model, typically a pretrained one, rather than the model being trained, together with a sampled principle, formatted as a multiple-choice question: "Consider principle P. Which is better, response (A) or response (B)?" The feedback model's answer is read off as a <em>soft</em> label: the probability it places on the token "(A)" versus "(B)",</p>
         <div class="formula">\[ p_A = \frac{P(\text{``(A)''})}{P(\text{``(A)''}) + P(\text{``(B)''})}, \]</div>
@@ -110,11 +110,12 @@
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>). §3 and §4 are the mechanism above: §3 is critique-and-revise and the supervised stage, §4 is the RL stage. (§2 is a separate evaluation of whether models can supervise HHH at all, and is not what this page describes.)</p>
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>). §3 and §4 are the mechanism above: §3 is critique-and-revise and the supervised stage (≈1,900 words), §4 is the RL stage (≈2,400). (§2 is a separate evaluation of whether models can supervise HHH at all, and is not what this page describes.)</p>
+                    <p style="margin-top:10px; color:#666;">Total mandatory load: ≈4,300 words.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
+            <h4>Optional readings</h4>
             <p>• <strong>Anthropic (2023), "Claude's Constitution"</strong> (<a href="https://www.anthropic.com/news/claudes-constitution" target="_blank" rel="noopener">anthropic.com/news/claudes-constitution</a>): the production constitution published for Claude in May 2023, with the verbatim principles and their sources. A separate, later document from the paper's research principles (those are in Bai et al.'s Appendix C), and the live <code>/constitution</code> page now serves a later rewrite again, so cite this post for the 2023 version.</p>
             <p>• <strong>Glaese et al. (2022), "Improving alignment of dialogue agents… (Sparrow)"</strong> (<a href="https://arxiv.org/abs/2209.14375" target="_blank" rel="noopener">arXiv:2209.14375</a>): the rule-based dialogue safety work several constitutional principles draw on.</p>
         </div>

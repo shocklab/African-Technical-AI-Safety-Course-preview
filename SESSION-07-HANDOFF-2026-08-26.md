@@ -181,3 +181,42 @@ resolve and all 15 arXiv IDs match their cited titles and authors. One reviewer 
 **false positive**: 7.3's "the authors expect the effect to saturate" IS supported — Yuan et al.
 say "While this effect likely saturates in real-world settings" twice, outside the Limitations
 section where the reviewer looked.
+
+---
+
+## RESOLVED 2026-08-27
+
+All of the above is done and pushed to `dev-origin/dev` and `preview/main`. Session 7 remains
+unreleased, so none of it is student-visible yet.
+
+**The 7.6 lab** is built, executed and published: notebook, rendered HTML, and the page
+rewritten around it. Verified end to end on a real free Colab runtime (13.6 GB, 2 vCPU, torch
+2.11.0, transformers 5.15.0, Python 3.13.15), where every figure reproduced the local run
+exactly. The page's timing estimate was wrong and is corrected from the measured run: about six
+minutes, not three, with a 40-second model download rather than "a couple of minutes". The
+procedure is now a skill, `colab-lab-check`, so labs 9.4, 11.5, 14 and 16.1 get the same check.
+
+**The readings conversion** is done across 7.1 to 7.5, Core/Supplementary to Mandatory/Optional
+with per-item counts and stated totals. Boundaries were added to 7.3, 7.4 and 7.5, which were
+the three that described a paper instead of naming sections. Every count was re-measured from
+the papers rather than carried over. **Mandatory load fell from 44,517 to about 18,550 words, a
+58% cut with no paper dropped.** Per sub-session: 7.1 ≈2,800, 7.2 ≈4,300, 7.3 ≈4,100,
+7.4 ≈2,600, 7.5 ≈4,700.
+
+All three citation traps were confirmed against the papers and handled:
+- Casper: now cites §3.1 (≈2,400) with a note that §3 entire is ≈5,200 and covers ground 6.4 did.
+- Lee's appendices: 7.6 now names Appendix A (≈350) rather than "appendices", of which there are fourteen.
+- Huang: the US-only admission is quoted from §7, with an explicit note that it is *not* in §5
+  Limitations. Verified verbatim: "we acknowledge the limitations of focusing solely on the U.S. public".
+
+**The structural items** are fixed:
+- 7.1 no longer pre-states 7.3's verdict. It poses the escape-or-relocate question and leaves the
+  answer to 7.3.
+- The African-lens point ran three times in near-identical words. 7.1 now flags it, 7.3 gives it a
+  measured size (Lee's labeller peaks at 78% agreement, in English), and 7.4 keeps the payoff. The
+  duplicated promise that "7.4 makes it the centre/heart of the session" is gone from 7.3.
+- 7.5 is no longer orphaned: 7.1's framing is now three questions, not two, with the third
+  ("does the document bind anything?") pointing at 7.5.
+
+**Still open, and Jonathan's call:** Session 7 is the only session carrying both an in-class
+paired activity and a lab. Not addressed here.

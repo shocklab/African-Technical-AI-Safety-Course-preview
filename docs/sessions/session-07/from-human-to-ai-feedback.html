@@ -42,7 +42,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Session 6 ended at a wall: RLHF can only align a model as far as its human raters can tell good from bad, and those raters are slow and expensive. This sub-session is about the dominant industrial response: have a <em>model</em> supply the feedback, steered by a short written list of principles called a <strong>constitution</strong>. We set out what gets automated, what stays human, and the two questions the rest of the session has to answer. The mechanism itself is 7.2; here we establish the motivation and sharpen the claims so they can be tested rather than swallowed.</p>
+            <p>Session 6 ended at a wall: RLHF can only align a model as far as its human raters can tell good from bad, and those raters are slow and expensive. This sub-session is about the dominant industrial response: have a <em>model</em> supply the feedback, steered by a short written list of principles called a <strong>constitution</strong>. We set out what gets automated, what stays human, and the three questions the rest of the session has to answer. The mechanism itself is 7.2; here we establish the motivation and sharpen the claims so they can be tested rather than swallowed.</p>
         </div>
 
         <h2 class="section-title">The wall at the end of Session 6</h2>
@@ -82,13 +82,14 @@
         </div>
         <p>Sharpening the claim this way is not pedantry. If you believe the constitution is the only human input, then "whose values?" reduces to "who wrote these few lines?" (a small, fixable question). Once you see the human fingerprints all through the stack, you realise the constitution is the visible tip of a much larger set of choices, most of them made in a handful of Northern labs. The narrow reading is comforting; the accurate reading is the course's whole argument.</p>
 
-        <h2 class="section-title">Two questions this session has to answer</h2>
-        <p class="lead">Automating the feedback raises one technical question and one normative one. The session is organised around them.</p>
-        <p>The technical question: does AI feedback <em>escape</em> the evaluation ceiling, or merely <em>relocate</em> it? A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement, which is better than a non-expert in some places and worse in others, and which can be wrong in correlated, systematic ways a crowd of humans would not be. We weigh this in 7.3, and the preview is: by default it relocates the ceiling rather than removing it, and whether it can ever raise it is an empirical question that depends on the capability in play. The full menu of methods that try to raise it (debate, amplification, weak-to-strong) is Session 8.1.</p>
+        <h2 class="section-title">Three questions this session has to answer</h2>
+        <p class="lead">Automating the feedback raises a technical question, a normative one and a practical one. The session is organised around them.</p>
+        <p>The technical question: does AI feedback <em>escape</em> the evaluation ceiling, or merely <em>relocate</em> it? A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement instead. That is certainly a <em>different</em> bound; whether it is a higher one is the thing to settle rather than assume, and 7.3 settles it against the evidence. The menu of methods that try to raise the ceiling outright (debate, amplification, weak-to-strong) is Session 8.1.</p>
         <p>The normative question: <em>whose</em> principles? A constitution is a single, explicit value commitment applied to millions of judgements. Writing it down makes the values auditable, which is progress over a reward model's implicit, buried preferences. It also makes one blind spot scale to everyone who uses the model. Who should write it, and what happens to the people that the writers do not represent, is 7.4. That is where this session becomes <em>African</em> technical AI safety rather than a recap of an Anthropic paper.</p>
+        <p>The practical question: does the document bind anything? A constitution is a piece of writing, and writing only governs a deployed system if the system actually follows it. 7.5 turns to the specifications the labs publish for production models, and to what an independent audit finds when it checks a shipped model against its own stated rules.</p>
         <div class="info-box">
             <h4>The African lens</h4>
-            <p>"Whose principles?" has a default answer that the market has already given: the principles are written in English, by and for a Northern user base, and applied worldwide. The same is true one layer down: the feedback model judges most confidently in the languages it was trained best on, which are not African ones. So both the rule and the judge that applies it are tilted before any African user appears. 7.4 makes it the centre of the session, and Session 8.4 supplies the formal argument that there is no neutral way to aggregate the values left out.</p>
+            <p>"Whose principles?" has a default answer that the market has already given: the principles are written in English, by and for a Northern user base, and applied worldwide. The same is true one layer down, of the model that applies them: 7.3 puts a number on that. So both the rule and the judge are tilted before any African user appears, which is why 7.4 is the centre of this session rather than an appendix to it. Session 8.4 supplies the formal argument that there is no neutral way to aggregate the values left out.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -101,12 +102,13 @@
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>). Read the abstract and §1 for the motivation and the "only human oversight is a constitution" framing; the mechanism is 7.2.</p>
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>). Read the abstract and §1 for the motivation and the "only human oversight is a constitution" framing; the mechanism is 7.2. ≈2,800 words.</p>
+                    <p style="margin-top:10px; color:#666;">Total mandatory load: ≈2,800 words.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Casper et al. (2023), "Open Problems and Fundamental Limitations of RLHF"</strong> (<a href="https://arxiv.org/abs/2307.15217" target="_blank" rel="noopener">arXiv:2307.15217</a>): the catalogue of RLHF limits from 6.4; §3 on feedback quality is the wall this session climbs over (or relocates).</p>
+            <h4>Optional readings</h4>
+            <p>• <strong>Casper et al. (2023), "Open Problems and Fundamental Limitations of RLHF"</strong> (<a href="https://arxiv.org/abs/2307.15217" target="_blank" rel="noopener">arXiv:2307.15217</a>): the catalogue of RLHF limits from 6.4. Read §3.1, on the difficulty of getting good human feedback: that is the wall this session climbs over, or relocates. ≈2,400 words. (§3 as a whole runs to about 5,200 and covers the reward model and the policy as well, which 6.4 already dealt with.)</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
