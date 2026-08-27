@@ -77,7 +77,7 @@
         <h2 class="section-title">Phase 2, reinforcement learning from AI feedback</h2>
         <p class="lead">Turn the constitution into a preference signal, then run the Session 6 RL stack against it.</p>
         <p>Take the Phase-1 model and sample <em>two</em> responses to each prompt. Hand both to a <strong>feedback model</strong>, which Bai et al. describe as an independent model, typically a pretrained one, rather than the model being trained, together with a sampled principle, formatted as a multiple-choice question: "Consider principle P. Which is better, response (A) or response (B)?" The feedback model's answer is read off as a <em>soft</em> label: the probability it places on the token "(A)" versus "(B)",</p>
-        <div class="formula">\[ p_A = \frac{P(\text{``(A)''})}{P(\text{``(A)''}) + P(\text{``(B)''})}, \]</div>
+        <div class="formula">\[ p_A = \frac{P(\text{“(A)”})}{P(\text{“(A)”}) + P(\text{“(B)”})}, \]</div>
         <p>A probability cannot be fed to 6.2&rsquo;s loss, which needs a winner and a loser, so the soft form is used instead:</p>
         <div class="formula">\[ \mathcal{L}(\phi) = -\,\mathbb{E}\Big[\, p_A \log \sigma\big(r_\phi(y_A) - r_\phi(y_B)\big) \;+\; (1 - p_A)\, \log \sigma\big(r_\phi(y_B) - r_\phi(y_A)\big) \Big] \]</div>
         <p>Set \(p_A\) to 1 or 0 and it collapses back to exactly the loss in 6.2. The soft label lets a hesitant judgement move the reward model less far than a confident one.</p>
