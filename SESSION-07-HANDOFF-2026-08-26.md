@@ -199,9 +199,18 @@ procedure is now a skill, `colab-lab-check`, so labs 9.4, 11.5, 14 and 16.1 get 
 **The readings conversion** is done across 7.1 to 7.5, Core/Supplementary to Mandatory/Optional
 with per-item counts and stated totals. Boundaries were added to 7.3, 7.4 and 7.5, which were
 the three that described a paper instead of naming sections. Every count was re-measured from
-the papers rather than carried over. **Mandatory load fell from 44,517 to about 18,550 words, a
-58% cut with no paper dropped.** Per sub-session: 7.1 ≈2,800, 7.2 ≈4,300, 7.3 ≈4,100,
-7.4 ≈2,600, 7.5 ≈4,700.
+the papers rather than carried over. **Mandatory load fell from 44,517 to about 10,200 words, a
+77% cut with no paper dropped.** Per sub-session: 7.1 ≈900, 7.2 ≈1,750, 7.3 ≈1,950,
+7.4 ≈2,600, 7.5 ≈3,000.
+
+A first pass reached 18,550 by naming sections. A second pass, on Jonathan's call that this
+was still too heavy, took it to 10,200 on the principle that the pages are textbook-depth and
+already report datasets, training setups and results tables, so the mandatory reading should
+only be what the page cannot substitute for: the authors' own words where the claim is made
+and the method is specified. Everything removed moved to Optional rather than being dropped.
+7.4 was deliberately left whole, at Jonathan's instruction, because it is the session's
+normative payoff and cutting Huang §4.3 would have kept the US-only admission while dropping
+the results it qualifies.
 
 All three citation traps were confirmed against the papers and handled:
 - Casper: now cites §3.1 (≈2,400) with a note that §3 entire is ≈5,200 and covers ground 6.4 did.
