@@ -9,12 +9,12 @@ draft and still had four label-on-box collisions that only appeared on screen.
 
 Design intent, following Jonathan's depth rule for the PPO figure: the reader needs
 the two phases, the fact that the Phase-2 judge is NOT the model being trained, and
-the two data streams meeting at ONE preference model. Everything drawn in the muted
+the two data streams meeting at one preference model. Everything drawn in the muted
 style is detail they can pass over.
 
 Every claim here is from Bai et al. (2212.08073), checked rather than recalled:
   - Phase 1 starts from a helpful RLHF model that critiques and revises ITS OWN output
-  - SL-CAI finetunes a PRETRAINED model on the revisions, mixed with helpful samples
+  - SL-CAI finetunes a pretrained model on the revisions, mixed with helpful samples
     "in order to retain helpfulness as much as possible"
   - the Phase-2 judge is "an independent model, called the feedback model
     (typically a pretrained LM)"
@@ -77,7 +77,7 @@ txt(390, 244, "repeat a few times", 11, MONO, MUTED)
 box(470, 126, 158, 68, "Final revisions", ["the harmless answers"], stroke=MUTED)
 box(470, 214, 158, 68, "Helpful samples", ["from the same model,", "on ordinary prompts"], stroke=MUTED, dash="5 4")
 
-box(676, 152, 190, 96, "Fine-tune a", ["PRETRAINED model", "on both sets: not the", "model that wrote them"], stroke=NAVY, tsize=14.5)
+box(676, 152, 190, 96, "Supervised fine-tuning", ["on both sets, of a", "pretrained model: not", "the one that wrote them"], stroke=NAVY, tsize=14.5)
 box(910, 166, 156, 68, "SL-CAI", ["the Phase-1 model"], stroke=NAVY)
 
 arr([(212, 142), (256, 158)], colour=GREEN)
@@ -93,12 +93,12 @@ add(f'<rect x="238" y="360" width="{W-272}" height="300" rx="8" fill="{TINT}" st
 txt(258, 384, "PHASE 2 · REINFORCEMENT LEARNING (RL-CAI)", 10.5, MONO, MUTED, "start", ls=1)
 
 box(258, 398, 158, 68, "SL-CAI", ["samples two answers", "to each prompt"], stroke=NAVY)
-box(258, 500, 158, 92, "Feedback model", ["a SEPARATE model,", "typically a pretrained", "one. Not the trainee."], stroke=GOLD, fill=WARM)
+box(258, 500, 158, 92, "Feedback model", ["a separate model,", "typically a pretrained", "one. Not the trainee."], stroke=GOLD, fill=WARM)
 box(470, 442, 176, 78, "Soft label", ["p(A) from the option", "log-probabilities"], stroke=MUTED)
 
 box(694, 398, 196, 72, "AI comparisons", ["harmlessness"], stroke=GOLD, fill=WARM)
 box(694, 496, 196, 72, "Human comparisons", ["helpfulness"], stroke=GREEN, fill=COOL)
-box(938, 434, 128, 100, "One", ["preference", "model", "(hybrid)"], stroke=NAVY, tsize=14.5)
+box(938, 434, 128, 100, "Preference model", ["one hybrid model:", "AI harmlessness,", "human helpfulness"], stroke=NAVY, tsize=13)
 
 arr([(416, 432), (468, 460)], colour=NAVY)
 arr([(416, 528), (468, 500)], colour=GOLD)
@@ -109,7 +109,7 @@ arr([(890, 526), (936, 500)], colour=GREEN)
 
 add(f'<path d="M1002 534 L1002 618 L248 618 L248 432 L254 432" fill="none" stroke="{NAVY}" stroke-width="1.6" marker-end="url(#ah-{NAVY.lstrip("#")})"/>')
 txt(676, 612, "optimise SL-CAI against it with PPO, under the KL leash of 6.3", 11.5, MONO, NAVY)
-txt(676, 644, "the constitution never appears at this stage: it is already inside the reward model", 12, SERIF, MUTED)
+txt(676, 644, "the constitution does not appear in the RL step itself: it is already inside the reward model", 12, SERIF, MUTED)
 
 # ---------- legend ----------
 txt(34, 700, "WHICH MODEL IS WHICH", 10.5, MONO, MUTED, "start", ls=1)
@@ -117,7 +117,7 @@ for i, (col, fillc, name, role) in enumerate([
         (BLUE, "#ffffff", "Helpful-only model", "writes and revises in Phase 1"),
         (NAVY, "#ffffff", "The model being trained", "pretrained → SL-CAI → RL-CAI"),
         (GOLD, WARM, "Feedback model", "judges in Phase 2; never trained here"),
-        (GREEN, COOL, "Human input", "the constitution, and helpfulness labels")]):
+        (GREEN, COOL, "Human input", "the constitution and the helpfulness labels")]):
     y = 720 + (i // 2) * 40
     x = 34 + (i % 2) * 600
     add(f'<rect x="{x}" y="{y}" width="13" height="13" rx="2" fill="{fillc}" stroke="{col}" stroke-width="1.8"/>')
