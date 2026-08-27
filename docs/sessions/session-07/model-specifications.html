@@ -19,16 +19,16 @@
     <summary>Session 7</summary>
     <ul>
       <li><a href="from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
-      <li><a href="constitutional-ai.html">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</a></li>
+      <li><a href="constitutional-ai.html">7.2 · Constitutional AI</a></li>
       <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF and self-rewarding</a></li>
-      <li><a href="whose-constitution.html">7.4 · Whose constitution? Democratic and African perspectives</a></li>
+      <li><a href="whose-constitution.html">7.4 · Whose constitution?</a></li>
       <li><span class="tn-current">7.5 · Model specifications</span></li>
-      <li><a href="lab-constitutional-ai.html">7.6 · Lab: a constitution and the judge that applies it</a></li>
+      <li><a href="lab-constitutional-ai.html">7.6 · Lab: measuring an AI judge</a></li>
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="whose-constitution.html">← <span class="tn-title">7.4 · Whose constitution? Democratic and African perspectives</span></a>
-    <a class="tn-next" href="lab-constitutional-ai.html"><span class="tn-title">7.6 · Lab: a constitution and the judge that applies it</span> →</a>
+    <a class="tn-prev" href="whose-constitution.html">← <span class="tn-title">7.4 · Whose constitution?</span></a>
+    <a class="tn-next" href="lab-constitutional-ai.html"><span class="tn-title">7.6 · Lab: measuring an AI judge</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -50,7 +50,7 @@
         <p>Publication, versioning and precision each matter separately. Publication turns a developer's intentions into a commitment that outsiders can test, which is what makes the SpecEval audit below possible at all. Versioning makes changes into public events: when a rule is added, renamed or weakened between versions, the diff is visible, and the sequence of versions becomes a record of how the developer's view of good behaviour has moved. Precision is the hard part. A spec earns nothing by listing virtues; its job is to resolve conflicts (a developer instruction against a user request, a helpful answer against an information hazard), and it does that with an explicit priority ordering and worked hard cases.</p>
 
         <h2 class="section-title">The OpenAI Model Spec</h2>
-        <p class="lead">A versioned public document, first published in May 2024 and rewritten several times since, stating the behaviour OpenAI intends its models to have.</p>
+        <p>A versioned public document, first published in May 2024 and rewritten several times since, stating the behaviour OpenAI intends its models to have.</p>
         <p>The first version organised its content into three categories: <em>objectives</em>, broad goals such as assisting the developer and end user and benefiting humanity; <em>rules</em>, hard constraints such as following the chain of command and complying with applicable laws; and <em>defaults</em>, behaviours such as asking clarifying questions, which hold unless someone with the authority to do so overrides them. Its chain of command ranked platform above developer above user above tool. The version current as this page is written (dated 18 December 2025, dedicated to the public domain under CC0) arranges the material differently: after an overview, a definitions section and the chain of command, the substance sits in behavioural sections named "Stay in bounds", "Seek the truth together", "Do the best work" and "Use appropriate style", followed by a set of under-18 principles. OpenAI states that it trains its models to align to the spec's principles, while acknowledging that production models do not yet fully reflect it: the document is the target, and the gap between target and model is an empirical quantity, which is the subject of the audit two sections down.</p>
         <div class="info-box">
             <h4>Instruction levels in the current spec</h4>
@@ -66,7 +66,7 @@
         </div>
 
         <h2 class="section-title">Auditing adherence</h2>
-        <p class="lead">A published spec is a testable claim about the deployed model, and SpecEval is the first systematic test.</p>
+        <p>A published spec is a testable claim about the deployed model, and SpecEval is the first systematic test.</p>
         <p>Providers publish behaviour specifications; they rarely verify, in public, that their models follow them. <strong>SpecEval</strong> (Ahmed, Klyman, Zeng, Koyejo and Liang, 2025) is an automated framework for auditing models against their own providers' published specifications. The pipeline has three stages: parse the provider's spec into individual behavioural statements; generate targeted prompts designed to probe each statement; and judge the model's responses for compliance, using the provider's own models as the judges. The standard it applies is three-way consistency, between the specification, the model's outputs, and the provider's models acting as evaluators. Across 16 models from six developers, evaluated against more than 100 behavioural statements, the audit finds systematic inconsistencies, with compliance gaps of up to 20%.</p>
         <p>Using the provider's own models as judges removes the defence that an outside auditor misread the spec: when a developer's published document, its deployed model and its own model-as-judge disagree at rates up to one case in five, the inconsistency is internal to the provider. Read the figure with 7.3 in mind. The judge is an LLM, so the audit inherits the judge failure modes catalogued there (position bias, and a pull toward whatever the judge already finds fluent), and a measured 20% gap could overstate or understate true non-adherence. That uncertainty is itself the finding's sting: the same class of models whose judgement providers trust to generate training signal against these documents, in Constitutional AI, in RLAIF, in Deliberative Alignment, cannot cleanly certify adherence to them either.</p>
 
@@ -98,7 +98,7 @@
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
-            <p>• <strong>Model Spec: Red-line principles, General principles and Specific risks</strong> (≈800 words): the layer above the chain of command, worth reading if you want the whole authority structure rather than the part the exercise uses.</p>
+            <p>• <strong>Model Spec: Red-line principles, General principles and Specific risks</strong> (≈800 words): the layer above the chain of command, read it if you want the whole authority structure rather than the part the exercise uses.</p>
             <p>• <strong>SpecEval, §4.1 and §4.3</strong> (≈900 words): the experimental setup, and the qualitative analysis of where models depart from their own specifications.</p>
             <p>• <strong>Zvi Mowshowitz (2025), "On OpenAI's Model Spec 2.0"</strong> (<a href="https://thezvi.substack.com/p/on-openais-model-spec-20" target="_blank" rel="noopener">thezvi.substack.com</a>): a close critical reading; note that it reviews the February 2025 revision, not the current version, so check its complaints against today's text.</p>
             <p>• <strong>Guan et al. (2024), "Deliberative Alignment: Reasoning Enables Safer Language Models"</strong> (<a href="https://arxiv.org/abs/2412.16339" target="_blank" rel="noopener">arXiv:2412.16339</a>): training o-series models to recall and reason over the safety specifications before answering.</p>
@@ -106,15 +106,15 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 7.6 is the lab: a constitution and the judge that applies it, in Colab. You run critique-and-revise, then measure how much of an AI judge's verdict comes from the principle it was handed and how much from the order the options were listed in. The last part is a control rather than a result: before asking whether the judge is worse in isiZulu, you check whether it can read isiZulu at all.</p>
+            <p>Sub-session 7.6 is the lab, in Colab. You run critique-and-revise, then measure how much of an AI judge's verdict comes from the principle it was handed and how much from the order the options were listed in. The last part is a control rather than a result: before asking whether the judge is worse in isiZulu, you check whether it can read isiZulu at all.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">
-  <a class="prev" href="whose-constitution.html"><span class="nav-label">← Previous</span><span class="nav-title">7.4 · Whose constitution? Democratic and African perspectives</span></a>
+  <a class="prev" href="whose-constitution.html"><span class="nav-label">← Previous</span><span class="nav-title">7.4 · Whose constitution?</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.6 · Lab: a constitution and the judge that applies it</span></a>
+  <a class="next" href="lab-constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.6 · Lab: measuring an AI judge</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

@@ -30,7 +30,7 @@ def _s(l):
     o = "\n".join(l).split("\n")
     return [x + "\n" for x in o[:-1]] + [o[-1]]
 
-M("# Session 7.6 — Lab: a constitution, and the judge that applies it",
+M("# Session 7.6 — Lab: measuring an AI judge",
   "",
   "**African Technical AI Safety** · Week 4, Session 7.6",
   "",
@@ -62,7 +62,7 @@ C("import importlib.util, sys, time",
   "print('Colab:', IN_COLAB)")
 
 M("---",
-  "## ① The constitution, and critique-and-revise",
+  "## ① Critique-and-revise",
   "",
   "A **constitution** is a short list of written principles. In Phase 1 of 7.2 the model answers a",
   "prompt, criticises its own answer against one sampled principle, and rewrites it. The revisions",
@@ -70,7 +70,7 @@ M("---",
   "",
   "Two models load below, and the reason is the first thing worth noticing. The instruction-tuned",
   "model refuses these prompts outright, which leaves nothing to critique. Bai et al. start Phase 1",
-  "from a *helpful-only* model for exactly that reason: you need a model that will answer badly",
+  "from a *helpful-only* model for that reason: you need a model that will answer badly",
   "before you can teach it to answer better. The base model plays that role here.",
   "",
   "About 2 GB of download and a minute of loading.")
@@ -135,7 +135,7 @@ M("### What to look at",
   "The rest of the lab measures the half that does survive.")
 
 M("---",
-  "## ② The judge, and what it is actually responding to",
+  "## ② The judge",
   "",
   "Phase 2 hands a **feedback model** two candidate answers and a principle, and asks which is",
   "better. The answer is not read from generated text but from the model's own probabilities on the",
@@ -335,7 +335,7 @@ C("MAFAND = ('https://raw.githubusercontent.com/masakhane-io/lafand-mt/'",
   "    else:",
   "        print('Above chance, so a judging comparison in', LANG, 'is at least worth attempting.')")
 
-M("### What the control tells you, and what it does not",
+M("### What the control shows",
   "",
   "A score at chance is not a null result. It is the answer to a different and more useful question",
   "than the one you set out to ask.",
@@ -386,7 +386,7 @@ M("---",
 
 nb = {"cells": cells,
       "metadata": {"colab": {"provenance": [], "toc_visible": True,
-                             "name": "Session 7.6 — a constitution and the judge that applies it"},
+                             "name": "Session 7.6 — measuring an AI judge"},
                    "kernelspec": {"display_name": "Python 3", "name": "python3"},
                    "language_info": {"name": "python"}},
       "nbformat": 4, "nbformat_minor": 0}

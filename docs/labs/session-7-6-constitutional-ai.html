@@ -37,7 +37,7 @@
 <div class="container">
     <div class="header">
         <h1>Session 7.6 — Lab notebook</h1>
-        <p class="subtitle">A constitution and the judge that applies it</p>
+        <p class="subtitle">Measuring an AI judge</p>
     </div>
     <div class="nb-actions">
         <p><strong>This is a read-only rendering.</strong> To run it:
@@ -91,12 +91,12 @@ whether it can read isiZulu well enough for any of this to mean anything in isiZ
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A0-The-constitution,-and-critique-and-revise">① The constitution, and critique-and-revise</h2><p>A <strong>constitution</strong> is a short list of written principles. In Phase 1 of 7.2 the model answers a
+<h2 id="%E2%91%A0-Critique-and-revise">① Critique-and-revise</h2><p>A <strong>constitution</strong> is a short list of written principles. In Phase 1 of 7.2 the model answers a
 prompt, criticises its own answer against one sampled principle, and rewrites it. The revisions
 become supervised training data.</p>
 <p>Two models load below, and the reason is the first thing worth noticing. The instruction-tuned
 model refuses these prompts outright, which leaves nothing to critique. Bai et al. start Phase 1
-from a <em>helpful-only</em> model for exactly that reason: you need a model that will answer badly
+from a <em>helpful-only</em> model for that reason: you need a model that will answer badly
 before you can teach it to answer better. The base model plays that role here.</p>
 <p>About 2 GB of download and a minute of loading.</p>
 </div>
@@ -183,7 +183,7 @@ shrinking by two orders of magnitude, and which do not, is worth as much as repr
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A1-The-judge,-and-what-it-is-actually-responding-to">② The judge, and what it is actually responding to</h2><p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is
+<h2 id="%E2%91%A1-The-judge">② The judge</h2><p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is
 better. The answer is not read from generated text but from the model's own probabilities on the
 tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives a soft label rather than a hard
 vote, which is what 7.2's Bradley-Terry loss consumes.</p>
@@ -412,7 +412,7 @@ read the language, and no isiZulu judging result from this model means anything.
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-the-control-tells-you,-and-what-it-does-not">What the control tells you, and what it does not</h3><p>A score at chance is not a null result. It is the answer to a different and more useful question
+<h3 id="What-the-control-shows">What the control shows</h3><p>A score at chance is not a null result. It is the answer to a different and more useful question
 than the one you set out to ask.</p>
 <p>It does not show that AI feedback works equally well in every language. It shows that <em>this</em>
 model, at this size, cannot be used to investigate the question, and that anyone who ran the
@@ -461,7 +461,7 @@ CC BY-NC 4.0) for the parallel sentences. The pipeline is Session 7.2.</p>
 
     </div>
     <nav class="page-nav">
-        <a class="prev" href="../sessions/session-07/lab-constitutional-ai.html"><span class="nav-label">Return to</span><span class="nav-title">7.6 · Lab: a constitution and the judge that applies it</span></a>
+        <a class="prev" href="../sessions/session-07/lab-constitutional-ai.html"><span class="nav-label">Return to</span><span class="nav-title">7.6 · Lab: measuring an AI judge</span></a>
         <a class="home" href="../index.html"><span class="nav-title">⌂</span></a>
         <span class="nav-empty"></span>
     </nav>

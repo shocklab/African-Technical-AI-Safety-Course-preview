@@ -19,16 +19,16 @@
     <summary>Session 7</summary>
     <ul>
       <li><span class="tn-current">7.1 · From human to AI feedback</span></li>
-      <li><a href="constitutional-ai.html">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</a></li>
+      <li><a href="constitutional-ai.html">7.2 · Constitutional AI</a></li>
       <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF and self-rewarding</a></li>
-      <li><a href="whose-constitution.html">7.4 · Whose constitution? Democratic and African perspectives</a></li>
+      <li><a href="whose-constitution.html">7.4 · Whose constitution?</a></li>
       <li><a href="model-specifications.html">7.5 · Model specifications</a></li>
-      <li><a href="lab-constitutional-ai.html">7.6 · Lab: a constitution and the judge that applies it</a></li>
+      <li><a href="lab-constitutional-ai.html">7.6 · Lab: measuring an AI judge</a></li>
     </ul>
   </details>
   <div class="tn-links">
     <a class="tn-prev" href="../session-06/lab-rlhf.html">← <span class="tn-title">6.5 · Lab: reward models and over-optimisation</span></a>
-    <a class="tn-next" href="constitutional-ai.html"><span class="tn-title">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</span> →</a>
+    <a class="tn-next" href="constitutional-ai.html"><span class="tn-title">7.2 · Constitutional AI</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -42,12 +42,12 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Session 6 ended at a wall: RLHF can only align a model as far as its human raters can tell good from bad, and those raters are slow and expensive. This sub-session is about the dominant industrial response: have a <em>model</em> supply the feedback, steered by a short written list of principles called a <strong>constitution</strong>. We set out what gets automated, what stays human, and the three questions the rest of the session has to answer. The mechanism itself is 7.2; here we establish the motivation and sharpen the claims so they can be tested rather than swallowed.</p>
+            <p>Session 6 ended at a wall: RLHF can only align a model as far as its human raters can tell good from bad, and those raters are slow and expensive. This sub-session is about the dominant industrial response: have a model supply the feedback, steered by a short written list of principles called a <strong>constitution</strong>. We set out what gets automated, what stays human, and the three questions the rest of the session has to answer. The mechanism itself is 7.2; here we establish the motivation and sharpen the claims so they can be tested rather than swallowed.</p>
         </div>
 
         <h2 class="section-title">The wall at the end of Session 6</h2>
-        <p class="lead">Two limits closed in on RLHF at once: an <em>evaluation</em> limit and a <em>throughput</em> limit.</p>
-        <p>The evaluation limit is the one we derived in 6.4. A reward model is trained to predict which response a human labeller prefers, so it can only ever encode preferences a human could express from looking at the response. Where the labeller cannot reliably judge (a long proof, a subtle factual error, a security flaw buried in plausible code), the signal is noise, and optimising against noise rewards whatever <em>looks</em> right to a non-expert. That ceiling does not lift by collecting more labels of the same kind. It is a property of who is doing the judging.</p>
+        <p>Two limits closed in on RLHF at once: an <em>evaluation</em> limit and a <em>throughput</em> limit.</p>
+        <p>The evaluation limit is the one we derived in 6.4. A reward model is trained to predict which response a human labeller prefers, so it can only ever encode preferences a human could express from looking at the response. Where the labeller cannot reliably judge (a long proof, a subtle factual error, a security flaw buried in plausible code), the signal is noise, and optimising against noise rewards whatever looks right to a non-expert. That ceiling does not lift by collecting more labels of the same kind. It is a property of who is doing the judging.</p>
         <p>The throughput limit is more mundane and just as binding. Frontier preference datasets run to hundreds of thousands of human comparisons; each one is a person reading two responses and deciding. That is slow, costly, and hard to scale to every new capability, language, and harm you would like to cover. Lee et al. estimate AI preference labelling at more than ten times cheaper than human annotation. It returns labels in seconds, not days. When a method is both cheaper and faster by an order of magnitude, the field moves whether or not the quality question is settled. Part of this session is insisting we keep asking the quality question anyway.</p>
         <div class="info-box">
             <h4>The throughput gap in numbers</h4>
@@ -62,30 +62,30 @@
         </div>
 
         <h2 class="section-title">Let a model give the feedback</h2>
-        <p class="lead">Replace the human labeller with a model that judges responses against a written list of principles.</p>
+        <p>Replace the human labeller with a model that judges responses against a written list of principles.</p>
         <p>The idea, introduced by Bai et al. (2022) under the name <strong>Constitutional AI</strong>, is disarmingly simple. Instead of paying people to rank responses for harmlessness, you write down a handful of principles ("choose the response that is least harmful", "that is least likely to be discriminatory", and so on) and you ask a capable model to do the ranking by those principles. The model's judgements become the preference data; everything downstream (reward model, policy optimisation) is the Session 6 machinery, unchanged. Only the label source changed.</p>
         <p>It helps to be exact about what is and is not automated, because the marketing and the mechanism diverge here.</p>
         <div class="technical-detail">
             <h4>Automated and human inputs</h4>
             <ul class="styled-list">
                 <li><strong>Automated:</strong> the per-comparison judgement. A model decides which of two responses better satisfies a principle, and does so at machine speed and cost.</li>
-                <li><strong>Still human:</strong> the <em>principles themselves</em>. Someone writes the constitution and chooses what goes in it. Also still human: the base model's pretraining data, the helpfulness preference data (which in Constitutional AI stays human-labelled), the red-team prompts the method trains on, and the decision to ship. The human role moves <em>up a level</em>, from labelling instances to writing the rule the labeller applies.</li>
+                <li><strong>Still human:</strong> the principles themselves. Someone writes the constitution and chooses what goes in it. Also still human: the base model's pretraining data, the helpfulness preference data (which in Constitutional AI stays human-labelled), the red-team prompts the method trains on, and the decision to ship. The human role moves up a level, from labelling instances to writing the rule the labeller applies.</li>
             </ul>
         </div>
         <p>That relocation is the appeal: writing a hundred principles once is far cheaper than collecting a hundred thousand labels, and a principle is auditable in a way a pile of individual judgements is not. It is also the worry, which is why the next claim deserves scrutiny.</p>
 
         <h2 class="section-title">"The only human oversight is the constitution"</h2>
-        <p>Bai et al. describe their method as training a harmless assistant "without any human labels identifying harmful outputs", where "the only human oversight is provided through a list of rules or principles". Read literally that is a striking claim, and it is worth holding up to the light rather than nodding along, in the model-student spirit of Session 1.</p>
+        <p>Bai et al. describe their method as training a harmless assistant "without any human labels identifying harmful outputs", where "the only human oversight is provided through a list of rules or principles". Read literally that is a striking claim, and so hold it up to the light rather than nodding along, in the model-student spirit of Session 1.</p>
         <div class="warning-box">
             <h4>Is the constitution the only human input?</h4>
-            <p>No. The authors' phrase is about the <em>harmlessness labels</em> specifically, not the whole pipeline. The base model was pretrained on human text and fine-tuned for helpfulness on human preference data; the feedback model that applies the constitution is itself a product of earlier human alignment; the red-team prompts, the principle wording, and the choice of which principles to include are all human acts. So the constitution is not the only human fingerprint; it is the only place where humans label <em>harmfulness directly</em>. The accurate statement is narrower and more interesting: the method removes humans from the harmfulness <em>labelling loop</em> while concentrating their influence in a small, visible document. Whether that is reassuring or alarming is what 7.4 takes up.</p>
+            <p>No. The authors' phrase is about the harmlessness labels specifically, not the whole pipeline. The base model was pretrained on human text and fine-tuned for helpfulness on human preference data; the feedback model that applies the constitution is itself a product of earlier human alignment; the red-team prompts, the principle wording, and the choice of which principles to include are all human acts. So the constitution is not the only human fingerprint; it is the only place where humans label harmfulness directly. The accurate statement is narrower and more interesting: the method removes humans from the harmfulness labelling loop while concentrating their influence in a small, visible document. Whether that is reassuring or alarming is what 7.4 takes up.</p>
         </div>
         <p>Sharpening the claim this way is not pedantry. If you believe the constitution is the only human input, then "whose values?" reduces to "who wrote these few lines?" (a small, fixable question). Once you see the human fingerprints all through the stack, you realise the constitution is the visible tip of a much larger set of choices, most of them made in a handful of Northern labs. The narrow reading is comforting; the accurate reading is the course's whole argument.</p>
 
         <h2 class="section-title">Three questions this session has to answer</h2>
-        <p class="lead">Automating the feedback raises a technical question, a normative one and a practical one. The session is organised around them.</p>
-        <p>The technical question: does AI feedback <em>escape</em> the evaluation ceiling, or merely <em>relocate</em> it? A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement instead. That is certainly a <em>different</em> bound; whether it is a higher one is the thing to settle rather than assume, and 7.3 settles it against the evidence. The menu of methods that try to raise the ceiling outright (debate, amplification, weak-to-strong) is Session 8.1.</p>
-        <p>The normative question: <em>whose</em> principles? A constitution is a single, explicit value commitment applied to millions of judgements. Writing it down makes the values auditable, which is progress over a reward model's implicit, buried preferences. It also makes one blind spot scale to everyone who uses the model. Who should write it, and what happens to the people that the writers do not represent, is 7.4. That is where this session becomes <em>African</em> technical AI safety rather than a recap of an Anthropic paper.</p>
+        <p>Automating the feedback raises a technical question, a normative one and a practical one. The session is organised around them.</p>
+        <p>The technical question: does AI feedback <em>escape</em> the evaluation ceiling, or merely <em>relocate</em> it? A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement instead. That is certainly a different bound; whether it is a higher one is the thing to settle rather than assume, and 7.3 settles it against the evidence. The menu of methods that try to raise the ceiling outright (debate, amplification, weak-to-strong) is Session 8.1.</p>
+        <p>The normative question: whose principles? A constitution is a single, explicit value commitment applied to millions of judgements. Writing it down makes the values auditable, which is progress over a reward model's implicit, buried preferences. It also makes one blind spot scale to everyone who uses the model. Who should write it, and what happens to the people that the writers do not represent, is 7.4. That is where this session becomes African technical AI safety rather than a recap of an Anthropic paper.</p>
         <p>The practical question: does the document bind anything? A constitution is a piece of writing, and writing only governs a deployed system if the system actually follows it. 7.5 turns to the specifications the labs publish for production models, and to what an independent audit finds when it checks a shipped model against its own stated rules.</p>
         <div class="info-box">
             <h4>The African lens</h4>
@@ -96,8 +96,8 @@
         <ul class="styled-list">
             <li>State the evaluation ceiling from 6.4 in one sentence. Why does swapping a human labeller for an AI one not, by itself, lift it?</li>
             <li>"The only human oversight is the constitution." List three human inputs to a Constitutional-AI model that this phrase glosses over. Does naming them weaken the method, or only describe it accurately?</li>
-            <li>Writing principles down instead of collecting labels makes values <em>auditable</em> but also makes one choice <em>scale</em>. Which property matters more, and to whom?</li>
-            <li>If AI feedback is ten times cheaper and returns in seconds, what would have to be true about its <em>quality</em> for the trade to be a bad one anyway?</li>
+            <li>Writing principles down instead of collecting labels makes values auditable but also makes one choice scale. Which property matters more, and to whom?</li>
+            <li>If AI feedback is ten times cheaper and returns in seconds, what would have to be true about its quality for the trade to be a bad one anyway?</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
@@ -122,7 +122,7 @@
 <nav class="page-nav">
   <a class="prev" href="../session-06/lab-rlhf.html"><span class="nav-label">← Previous</span><span class="nav-title">6.5 · Lab: reward models and over-optimisation</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</span></a>
+  <a class="next" href="constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.2 · Constitutional AI</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.6 — Lab: a constitution and the judge that applies it</title>
+    <title>Session 7.6 — Lab: measuring an AI judge</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -19,11 +19,11 @@
     <summary>Session 7</summary>
     <ul>
       <li><a href="from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
-      <li><a href="constitutional-ai.html">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</a></li>
+      <li><a href="constitutional-ai.html">7.2 · Constitutional AI</a></li>
       <li><a href="rlaif-and-self-rewarding.html">7.3 · RLAIF and self-rewarding</a></li>
-      <li><a href="whose-constitution.html">7.4 · Whose constitution? Democratic and African perspectives</a></li>
+      <li><a href="whose-constitution.html">7.4 · Whose constitution?</a></li>
       <li><a href="model-specifications.html">7.5 · Model specifications</a></li>
-      <li><span class="tn-current">7.6 · Lab: a constitution and the judge that applies it</span></li>
+      <li><span class="tn-current">7.6 · Lab: measuring an AI judge</span></li>
     </ul>
   </details>
   <div class="tn-links">
@@ -35,7 +35,7 @@
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 4 &bull; Session 7.6</div>
-        <h1>Lab: a constitution and the judge that applies it</h1>
+        <h1>Lab: measuring an AI judge</h1>
         <p>Measure what an AI judge is actually responding to, then check the instrument before trusting it</p>
     </header>
     <div class="content">
@@ -59,7 +59,7 @@
         <h2 class="section-title">&#9312; The constitution, and critique-and-revise</h2>
         <div class="technical-detail">
             <h4>Why the loop has to start from a base model</h4>
-            <p>Phase 1 of 7.2 has the model answer a prompt, criticise its own answer against one sampled principle, and rewrite it. The notebook loads two models, and the reason is the first thing worth noticing: the instruction-tuned Qwen refuses these prompts outright, which leaves nothing to critique. Bai et al. start Phase 1 from a <em>helpful-only</em> model for exactly that reason. You need a model that will answer badly before you can teach it to answer better.</p>
+            <p>Phase 1 of 7.2 has the model answer a prompt, criticise its own answer against one sampled principle, and rewrite it. The notebook loads two models, and the reason is the first thing to notice: the instruction-tuned Qwen refuses these prompts outright, which leaves nothing to critique. Bai et al. start Phase 1 from a <em>helpful-only</em> model for that reason. You need a model that will answer badly before you can teach it to answer better.</p>
             <p style="color:#555;">You should see the loop fail. At 0.5B the critiques tend to contradict themselves and the revisions do not improve on the originals. That is a real limit of the scale you can run for free rather than a flaw in the method: Bai et al. used a 52B model. Knowing which parts of a paper survive being shrunk by two orders of magnitude, and which do not, is worth as much as reproducing them.</p>
         </div>
 
@@ -67,7 +67,7 @@
         <div class="technical-detail">
             <h4>Reading a soft label off two tokens</h4>
             <p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is better. The answer is not read from generated text but from the model's own probabilities on the tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives the soft label which 7.2's Bradley-Terry loss consumes. One forward pass per judgement and no generation, so this part is fast. Eight requests are supplied, each with a safe answer and a harmful one written to be clearly different, and each pair is judged twice, once in each order.</p>
-            <p style="color:#555;">You should see a mean preference for whichever answer is listed <em>first</em> of <strong>0.846</strong>. If content were driving the verdict, that number would sit near 0.5, because the safe answer occupies slot A half the time. Correct for position by averaging each pair over both orders and the judge picks the safe answer <strong>0.456</strong> of the time, against a chance rate of 0.5. Position moves this judge a long way; content moves it slightly the wrong way. Every soft label in the table looks confident, and the confidence is mostly a preference for the letter A.</p>
+            <p style="color:#555;">You should see a mean preference for whichever answer is listed first of 0.846. If content were driving the verdict, that number would sit near 0.5, because the safe answer occupies slot A half the time. Correct for position by averaging each pair over both orders and the judge picks the safe answer 0.456 of the time, against a chance rate of 0.5. Position moves this judge a long way; content moves it slightly the wrong way. Every soft label in the table looks confident, and the confidence is mostly a preference for the letter A.</p>
             <p>7.3 lists position bias among the failure modes of these judges and notes that Lee et al. score each pair twice to correct for it. You have just measured why they bother.</p>
             <p>Write two or three sentences. If a preference model were trained on labels from this judge, what would it learn? Say precisely what the label would encode, and what it would not.</p>
         </div>
@@ -76,7 +76,7 @@
         <div class="technical-detail">
             <h4>The same pairs, the opposite principle</h4>
             <p>This is the claim the whole method rests on: one short document, applied to millions of judgements, decides what the model is trained toward. It is testable in a single cell. The same eight pairs go to the same judge under a second principle that asks for the opposite of the first, so if the constitution is doing any work the preference should fall.</p>
-            <p style="color:#555;">You should see it fall from 0.456 to 0.422. The principle moves the judge by <strong>0.034</strong>, while the order of the options moves it by <strong>0.693</strong>: a factor of twenty, on the same scale and the same eight pairs.</p>
+            <p style="color:#555;">You should see it fall from 0.456 to 0.422. The principle moves the judge by 0.034, while the order of the options moves it by 0.693: a factor of twenty, on the same scale and the same eight pairs.</p>
             <p>Then explore. Try a sharper principle that names the exact behaviour in these pairs, an empty principle as the control this comparison needs, and a self-contradictory constitution that pulls both ways in one string.</p>
             <p>Session 7.4 asks whose values a constitution encodes. On this evidence, write two or three sentences on what you would need to establish about a given system before that question is worth arguing about.</p>
         </div>
@@ -86,7 +86,7 @@
             <h4>Check the instrument before you explain the difference</h4>
             <p>The obvious next question is whether this judge is worse in a low-resource language, and it is the question 7.4 is built around. It is also a question you can easily answer wrongly. Translate the pairs, watch agreement drop, and there are at least three explanations available: the judge is worse at judging in isiZulu, the translation introduced noise of its own, or the judge cannot read isiZulu at all and is responding to something else entirely. Only the first is the one people usually report.</p>
             <p>So the notebook measures the third before touching the first, using the same <code>(A</code> / <code>(B</code> machinery on a task with a known right answer: given an isiZulu sentence from MAFAND-MT, pick its English translation out of two candidates.</p>
-            <p style="color:#555;">You should see <strong>0.512</strong>, which is chance. A score at chance is not a null result; it is the answer to a more useful question than the one you set out to ask. It says that <em>this</em> model, at this size, cannot be used to investigate the language question at all, and that anyone who ran the isiZulu comparison without this control would have produced a number, believed it, and reported a language gap their instrument could not have detected. Sessions 9.4 and 11.5 come back to it with larger models and a proper evaluation protocol.</p>
+            <p style="color:#555;">You should see 0.512, which is chance. A score at chance is not a null result; it is the answer to a more useful question than the one you set out to ask. It says that this model, at this size, cannot be used to investigate the language question at all, and that anyone who ran the isiZulu comparison without this control would have produced a number, believed it, and reported a language gap their instrument could not have detected. Sessions 9.4 and 11.5 come back to it with larger models and a proper evaluation protocol.</p>
             <p>Then write a short paragraph. Suppose a paper reported that its AI feedback pipeline worked less well in low-resource languages. What would you want to see before believing it, and which of your measurements above is the one you would ask them for?</p>
         </div>
 

@@ -19,16 +19,16 @@
     <summary>Session 7</summary>
     <ul>
       <li><a href="from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
-      <li><a href="constitutional-ai.html">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</a></li>
+      <li><a href="constitutional-ai.html">7.2 · Constitutional AI</a></li>
       <li><span class="tn-current">7.3 · RLAIF and self-rewarding</span></li>
-      <li><a href="whose-constitution.html">7.4 · Whose constitution? Democratic and African perspectives</a></li>
+      <li><a href="whose-constitution.html">7.4 · Whose constitution?</a></li>
       <li><a href="model-specifications.html">7.5 · Model specifications</a></li>
-      <li><a href="lab-constitutional-ai.html">7.6 · Lab: a constitution and the judge that applies it</a></li>
+      <li><a href="lab-constitutional-ai.html">7.6 · Lab: measuring an AI judge</a></li>
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="constitutional-ai.html">← <span class="tn-title">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</span></a>
-    <a class="tn-next" href="whose-constitution.html"><span class="tn-title">7.4 · Whose constitution? Democratic and African perspectives</span> →</a>
+    <a class="tn-prev" href="constitutional-ai.html">← <span class="tn-title">7.2 · Constitutional AI</span></a>
+    <a class="tn-next" href="whose-constitution.html"><span class="tn-title">7.4 · Whose constitution?</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -46,11 +46,11 @@
         </div>
 
         <h2 class="section-title">Plain RLAIF</h2>
-        <p class="lead">RLAIF is the RLHF pipeline of Session 6 with one substitution: an LLM judge in place of the human labeller.</p>
+        <p>RLAIF is the RLHF pipeline of Session 6 with one substitution: an LLM judge in place of the human labeller.</p>
         <p>Strip Constitutional AI of its self-critique phase and you are left with the general recipe. Sample response pairs, have a model rank them, train a reward model on those rankings, optimise the policy against it. The constitution, if present, is the rubric handed to the judge; without one, the judge is prompted with a task description ("which response is more helpful and honest?"). The two refinements from 7.2 are both in play, and one originates here rather than in Constitutional AI: chain-of-thought reasoning before the judgement, Bai et al.'s device, raises agreement with humans; and scoring each pair in both orders to cancel position bias is the fix Lee et al. (2023, next section) introduced. One variant drops the separate reward model entirely: <strong>direct RLAIF</strong> asks the LLM judge for a score on every response during RL and uses that as the reward, trading the cost of querying a large model in the loop for freedom from a reward model that can go stale.</p>
 
         <h2 class="section-title">Does AI feedback match human feedback?</h2>
-        <p class="lead">Lee et al. (2023) ran the head-to-head that Constitutional AI never did, and the answer is broadly yes.</p>
+        <p>Lee et al. (2023) ran the head-to-head that Constitutional AI never did, and the answer is broadly yes.</p>
         <p>On three tasks (summarisation, helpful dialogue, harmless dialogue) they compared RLAIF against RLHF with human evaluators judging the output. RLAIF and RLHF were preferred over the supervised baseline at statistically indistinguishable rates (71% vs 73% on summarisation, 63% vs 64% on helpful dialogue). On harmlessness, RLAIF came out ahead, scoring 88% harmless against RLHF's 76%. Head-to-head, humans preferred the two equally. For a method that removes human labelling from the loop, "as good as, sometimes better" is a strong result.</p>
         <div class="info-box">
             <h4>AI agreement and the human noise floor</h4>
@@ -59,22 +59,22 @@
         <p>The result that rules out the easy explanation is the same-size one. You might think RLAIF only works because a big, capable labeller is distilling its knowledge into a smaller policy. So Lee et al. ran it with the labeller the <em>same size</em> as the policy: it still improved over the baseline (68% preferred over the supervised model). They pushed further to a case where the labeller and the initial policy were the <em>exact same checkpoint</em> (a model judging responses from itself) and still saw gains. That rules out distillation from a stronger teacher: the model is bootstrapping on its own judgement, which sets up the next idea.</p>
 
         <h2 class="section-title">Self-rewarding: the model as its own teacher</h2>
-        <p class="lead">If a model can judge its own outputs, why not let it generate its own training signal and iterate?</p>
+        <p>If a model can judge its own outputs, why not let it generate its own training signal and iterate?</p>
         <p>Yuan et al. (2024) take the bootstrapping to its conclusion. A single model plays two roles: it generates candidate responses, and it scores them by prompting itself as an LLM-as-a-judge. The highest- and lowest-scored responses form a preference pair, the model is trained on those pairs with DPO (the closed-form preference objective from 6.3), and the whole loop repeats, each round producing a model that is both a better responder and a better judge. The motivation is stated bluntly in the paper's first line: to reach <em>superhuman</em> agents, "future models require superhuman feedback", and a frozen, human-trained reward model can never provide it because it is capped at human performance. Across three iterations a fine-tuned Llama-2-70B climbed the AlpacaEval 2.0 leaderboard past Claude 2, Gemini Pro, and GPT-4 0613.</p>
         <div class="warning-box">
             <h4>The authors' own cautions</h4>
-            <p>The paper is careful, and you should be too. The gains were shown over three iterations in one setting; the authors expect the effect to <em>saturate</em>, and flag that response length grew across iterations, while longer answers are known to inflate both human and AI preference scores, so some of the "improvement" may be the judge rewarding verbosity. A model that improves by judging itself is also a model with no external check on the direction it improves <em>in</em>. The mechanism that makes it powerful (closing the loop between generating and judging) is the mechanism the rest of this page worries about.</p>
+            <p>The paper is careful, and you should be too. The gains were shown over three iterations in one setting; the authors expect the effect to <em>saturate</em>, and flag that response length grew across iterations, while longer answers are known to inflate both human and AI preference scores, so some of the "improvement" may be the judge rewarding verbosity. A model that improves by judging itself is also a model with no external check on the direction it improves in. The mechanism that makes it powerful (closing the loop between generating and judging) is the mechanism the rest of this page worries about.</p>
         </div>
 
         <h2 class="section-title">The failure modes of AI feedback</h2>
-        <p class="lead">Removing the human removes a check. Four failure modes follow, and they are not hypothetical.</p>
+        <p>Removing the human removes a check. Four failure modes follow.</p>
         <div class="technical-detail">
             <h4>Self-preference bias</h4>
-            <p style="color:#555;">An LLM judge tends to over-rate its own outputs. The important subtlety, from Wataoka et al. (2024): the driver is <em>not</em> self-recognition. The judge prefers text with <strong>low perplexity</strong> (text it finds familiar, that it would have been likely to write) regardless of whether it generated it. Because a model's own outputs are the low-perplexity texts, self-preference falls out as a side effect. GPT-4 showed the strongest effect of the models tested. The consequence for RLAIF: a self-judging loop systematically rewards its own style, narrowing the model toward whatever it already finds fluent.</p>
+            <p style="color:#555;">An LLM judge tends to over-rate its own outputs. The important subtlety, from Wataoka et al. (2024): the driver is not self-recognition. The judge prefers text with <strong>low perplexity</strong> (text it finds familiar, that it would have been likely to write) regardless of whether it generated it. Because a model's own outputs are the low-perplexity texts, self-preference falls out as a side effect. GPT-4 showed the strongest effect of the models tested. The consequence for RLAIF: a self-judging loop systematically rewards its own style, narrowing the model toward whatever it already finds fluent.</p>
         </div>
         <div class="technical-detail">
             <h4>Inherited and amplified sycophancy</h4>
-            <p style="color:#555;">Sharma et al. (2023) showed that human preference data already rewards <em>agreement</em>: responses that flatter the user or concede to pushback are preferred even when they are wrong (6.4). An AI judge trained to mimic human preferences inherits this bias, and a self-rewarding loop can amplify it: the model learns that agreeable answers score well, judges accordingly, and trains on its own judgement. The preference signal rewards telling people what they want to hear, and automating it does nothing to fix that.</p>
+            <p style="color:#555;">Sharma et al. (2023) showed that human preference data already rewards agreement: responses that flatter the user or concede to pushback are preferred even when they are wrong (6.4). An AI judge trained to mimic human preferences inherits this bias, and a self-rewarding loop can amplify it: the model learns that agreeable answers score well, judges accordingly, and trains on its own judgement. The preference signal rewards telling people what they want to hear, and automating it does nothing to fix that.</p>
         </div>
         <div class="technical-detail">
             <h4>Over-optimising an AI proxy</h4>
@@ -82,23 +82,22 @@
         </div>
         <div class="technical-detail">
             <h4>The closed loop: model collapse</h4>
-            <p style="color:#555;">Train models on data generated by models, across generations, and quality can degrade: rare patterns vanish and the distribution narrows, a phenomenon Shumailov et al. (2024, <em>Nature</em>) call <strong>model collapse</strong>. Treat this as an argument <em>by analogy</em>, not a demonstrated property of any single RLAIF run: it is a warning about what closing the data loop tends to do, and self-rewarding training closes that loop. Whether a given scheme collapses depends on how much fresh signal still enters from outside.</p>
+            <p style="color:#555;">Train models on data generated by models, across generations, and quality can degrade: rare patterns vanish and the distribution narrows, a phenomenon Shumailov et al. (2024, <em>Nature</em>) call <strong>model collapse</strong>. Treat this as an argument by analogy, not a demonstrated property of any single RLAIF run: it is a warning about what closing the data loop tends to do, and self-rewarding training closes that loop. Whether a given scheme collapses depends on how much fresh signal still enters from outside.</p>
         </div>
 
         <h2 class="section-title">Escape, or relocate?</h2>
-        <p class="lead">The verdict: by default, AI feedback relocates the oversight ceiling rather than removing it.</p>
-        <p>A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement: better than a non-expert in some places, worse in others, and capable of being wrong in correlated, systematic ways that a diverse crowd of humans would not be. Swapping the labeller does not, on its own, let you supervise a task neither the human nor the model can evaluate; it moves the ceiling from "what a human rater can tell" to "what the feedback model can tell", which is a different ceiling, not the absence of one. Whether AI feedback can ever <em>raise</em> the ceiling (supervise a model more capable than its supervisor) is an open empirical question that depends on the capability in play, and it is the subject of the scalable-oversight menu (debate, amplification, recursive reward modelling, weak-to-strong) in Session 8.1. Self-rewarding is one bet that the loop can climb; the failure modes above are the reasons to hold that bet at a calibrated credence.</p>
+                <p>A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement: better than a non-expert in some places, worse in others, and capable of being wrong in correlated, systematic ways that a diverse crowd of humans would not be. Swapping the labeller does not, on its own, let you supervise a task neither the human nor the model can evaluate; it moves the ceiling from "what a human rater can tell" to "what the feedback model can tell", which is a different ceiling, not the absence of one. Whether AI feedback can ever raise the ceiling (supervise a model more capable than its supervisor) is an open empirical question that depends on the capability in play, and it is the subject of the scalable-oversight menu (debate, amplification, recursive reward modelling, weak-to-strong) in Session 8.1. Self-rewarding is one bet that the loop can climb; the failure modes above are the reasons to hold that bet at a calibrated credence.</p>
         <div class="info-box">
             <h4>The African lens</h4>
-            <p>The tilt 7.1 flagged can now be given a size. Lee et al.'s labeller agrees with human raters about 78% of the time at its best, and that figure is measured in English; it is not a constant of the method but a property of a model reading the language it knows best. Since AI feedback inherits the base model's competence profile, the cheap and infinitely scalable safety signal now replacing human labour is least trustworthy exactly where human labour is scarcest too. A self-judging loop in isiZulu compounds two weaknesses at once, a weaker generator and a weaker judge, each unable to catch the other. What that costs the people on the other end is 7.4.</p>
+            <p>The tilt 7.1 flagged can now be given a size. Lee et al.'s labeller agrees with human raters about 78% of the time at its best, and that figure is measured in English; it is not a constant of the method but a property of a model reading the language it knows best. Since AI feedback inherits the base model's competence profile, the cheap and infinitely scalable safety signal now replacing human labour is least trustworthy where human labour is scarcest too. A self-judging loop in isiZulu compounds two weaknesses at once, a weaker generator and a weaker judge, each unable to catch the other. What that costs the people on the other end is 7.4.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>An AI judge agrees with humans about as often as humans agree with each other (~78% vs ~73–77%). Does that make it a <em>good</em> judge, or only an <em>unfalsifiable</em> one on these tasks?</li>
-            <li>The same-size and same-checkpoint results rule out "it's just distillation". What <em>do</em> they show, and what would model collapse predict if you iterated them indefinitely?</li>
-            <li>Wataoka et al. find self-preference is driven by perplexity, not self-recognition. Why does that mechanism make the bias <em>harder</em> to remove than if the model were recognising its own text?</li>
-            <li>Give a concrete task where AI feedback plausibly <em>raises</em> the oversight ceiling, and one where it cannot. What distinguishes them?</li>
+            <li>An AI judge agrees with humans about as often as humans agree with each other (~78% vs ~73–77%). Does that make it a good judge, or only an <em>unfalsifiable</em> one on these tasks?</li>
+            <li>The same-size and same-checkpoint results rule out "it's just distillation". What do they show, and what would model collapse predict if you iterated them indefinitely?</li>
+            <li>Wataoka et al. find self-preference is driven by perplexity, not self-recognition. Why does that mechanism make the bias harder to remove than if the model were recognising its own text?</li>
+            <li>Give a concrete task where AI feedback plausibly raises the oversight ceiling, and one where it cannot. What distinguishes them?</li>
             <li>Self-rewarding closes the generate–judge loop on purpose. Name one external source of fresh signal you would insist on keeping in the loop, and why.</li>
         </ul>
 
@@ -127,9 +126,9 @@
     </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">
-  <a class="prev" href="constitutional-ai.html"><span class="nav-label">← Previous</span><span class="nav-title">7.2 · Constitutional AI: critique, revise, and RL from AI feedback</span></a>
+  <a class="prev" href="constitutional-ai.html"><span class="nav-label">← Previous</span><span class="nav-title">7.2 · Constitutional AI</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="whose-constitution.html"><span class="nav-label">Next →</span><span class="nav-title">7.4 · Whose constitution? Democratic and African perspectives</span></a>
+  <a class="next" href="whose-constitution.html"><span class="nav-label">Next →</span><span class="nav-title">7.4 · Whose constitution?</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>
