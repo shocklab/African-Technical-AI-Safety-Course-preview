@@ -91,4 +91,5 @@ subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-sandbox", "--run-al
                 "--virtual-time-budget=60000", "--no-pdf-header-footer",
                 f"--print-to-pdf={pdf}", tmp.as_uri()], check=True,
                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+tmp.unlink(missing_ok=True)
 print(f"  -> {pdf.name}  ({pdf.stat().st_size/1e6:.1f} MB)")
