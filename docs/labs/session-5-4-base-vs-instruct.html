@@ -74,7 +74,7 @@ before you decide whether that is what happens.</p>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">q</span> <span class="n">transformers</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
-<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'Colab:'</span><span class="p">,</span> <span class="n">IN_COLAB</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -160,7 +160,7 @@ preference tuning; the first has not. Anything that differs between them is what
 <p>The two take their input differently. The base model gets raw text and continues it. The instruct
 model expects a <strong>chat template</strong>: special tokens marking who is
 speaking, which its tuning taught it to expect.</p>
-<p>Loading both takes a minute or two and about 2 GB.</p>
+<p>Loading both takes a minute or two: 1.9 GB of download and about 3.7 GB of RAM once resident.</p>
 </div>
 </div>
 </div>
@@ -180,20 +180,24 @@ speaking, which its tuning taught it to expect.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">ask_base</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Raw continuation: the base model just carries on from the text."""</span>
     <span class="n">ids</span> <span class="o">=</span> <span class="n">tok_b</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">'pt'</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">mod_b</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">CAP</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">mod_b</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">CAP</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
                          <span class="n">pad_token_id</span><span class="o">=</span><span class="n">tok_b</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">)</span>
     <span class="n">new</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ids</span><span class="p">[</span><span class="s1">'input_ids'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
-    <span class="k">return</span> <span class="n">tok_b</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">tok_b</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">mod_b</span><span class="o">.</span><span class="n">generation_config</span><span class="o">.</span><span class="n">eos_token_id</span>
+    <span class="n">stops</span> <span class="o">=</span> <span class="p">{</span><span class="n">tok_b</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">}</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">e</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">e</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">tok_b</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="nb">bool</span><span class="p">(</span><span class="n">stops</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ask_instruct</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Chat template: the tuning taught it this shape."""</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">([{</span><span class="s1">'role'</span><span class="p">:</span> <span class="s1">'user'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
                                      <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ids</span> <span class="o">=</span> <span class="n">tok_i</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">'pt'</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">mod_i</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">CAP</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">mod_i</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">CAP</span><span class="p">,</span> <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
                          <span class="n">pad_token_id</span><span class="o">=</span><span class="n">tok_i</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">)</span>
     <span class="n">new</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ids</span><span class="p">[</span><span class="s1">'input_ids'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
-    <span class="k">return</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">mod_i</span><span class="o">.</span><span class="n">generation_config</span><span class="o">.</span><span class="n">eos_token_id</span>
+    <span class="n">stops</span> <span class="o">=</span> <span class="p">{</span><span class="n">tok_i</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">}</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">e</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">e</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="nb">bool</span><span class="p">(</span><span class="n">stops</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">'what the chat template actually looks like:</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">tok_i</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">([{</span><span class="s1">'role'</span><span class="p">:</span> <span class="s1">'user'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">:</span> <span class="s1">'Hello.'</span><span class="p">}],</span>
@@ -222,8 +226,8 @@ speaking, which its tuning taught it to expect.</p>
     <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">b_stop</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i_stop</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'PROMPT    </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'BASE      </span><span class="si">{</span><span class="n">textwrap</span><span class="o">.</span><span class="n">shorten</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'INSTRUCT  </span><span class="si">{</span><span class="n">textwrap</span><span class="o">.</span><span class="n">shorten</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'BASE     '</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'INSTRUCT '</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -236,7 +240,7 @@ speaking, which its tuning taught it to expect.</p>
 answers competently.</p>
 <p>So look for the differences that are there:</p>
 <ul>
-<li><strong>Manner.</strong> Which model opens with "Sure!", and which uses markdown bold? Check whether the
+<li><strong>Manner.</strong> Which model opens with "Sure,"? Check whether the
 things you might expect to be distinctive, like numbered lists, actually are.</li>
 <li><strong>Stopping.</strong> Which one emits an end-of-text token and stops, and which runs to the cap?</li>
 <li><strong>The capital of Kenya.</strong> Read both answers. One is wrong, and it is not the one the story
@@ -255,7 +259,8 @@ not, notice how confident the fluent one sounds, and ask how you would have know
 <div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-python"><pre><span></span><span class="n">MARKERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Sure'</span><span class="p">,</span> <span class="s1">'**'</span><span class="p">,</span> <span class="s1">'1.'</span><span class="p">,</span> <span class="s1">'I cannot'</span><span class="p">,</span> <span class="s2">"I'm sorry"</span><span class="p">,</span> <span class="s1">'helpful assistant'</span><span class="p">]</span>
+<div class="highlight hl-python"><pre><span></span><span class="c1"># substring matches: '1.' will also catch a decimal, 'Sure' will catch 'Surely'</span>
+<span class="n">MARKERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Sure'</span><span class="p">,</span> <span class="s1">'**'</span><span class="p">,</span> <span class="s1">'1.'</span><span class="p">,</span> <span class="s1">'I cannot'</span><span class="p">,</span> <span class="s2">"I'm sorry"</span><span class="p">,</span> <span class="s1">'helpful assistant'</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'prompt'</span><span class="si">:</span><span class="s2">&lt;40</span><span class="si">}{</span><span class="s1">'stops? base'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}{</span><span class="s1">'inst'</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2">    markers: base / instruct"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">bs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">is_</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
@@ -275,7 +280,8 @@ not, notice how confident the fluent one sounds, and ask how you would have know
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Explore-%E2%91%A1">Explore ②</h3><ul>
-<li><strong>Feed the base model the chat template.</strong> <code>ask_base(tok_i.apply_chat_template(...))</code>. Does the
+<li><strong>Feed the base model the chat template.</strong> Use <code>ask_base(tok_i.apply_chat_template(msg, tokenize=False, add_generation_prompt=True))</code>. Without those two arguments you get
+tensors rather than a string and it raises. Does the
 format alone produce assistant-shaped behaviour, or does the shape need the tuning behind it?</li>
 <li><strong>Change <code>CAP</code> to 200</strong> and re-run the Romeo and Juliet prompt on both. Does the base model
 eventually stop, or keep going?</li>
@@ -301,13 +307,13 @@ sort, so reading it first does the work for you.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-the-table-shows">What the table shows</h3><p>Only the tuned model opens with "Sure!", reaches for markdown bold, and produces a refusal. Both
+<h3 id="What-the-table-shows">What the table shows</h3><p>Only the tuned model opens with "Sure," and produces a refusal. Neither reaches for markdown bold, which is worth knowing: the tuned model does produce it under its shipped generation config, which sets a repetition penalty of 1.1, and the effect disappears once both models are decoded identically. Both
 models number their lists, and stopping early is close to a tie. The willingness to end a turn,
 which sounds like the obvious thing fine-tuning buys, is not visible here at this model size.</p>
 <p>Knowledge went the other way. The base model says Nairobi; the tuned model says Kampala, which is
 the capital of Uganda. The tuned model also refuses to summarise one of the most widely reproduced
 plays in the language, asserting that it cannot find any such text, while the model it was built
-from summarises it correctly. Both are ways of getting worse, and both survived a pipeline whose
+from does summarise it, though not accurately: it places the action in "the early 1590s", which is roughly when the play was written rather than when it is set. Both are ways of getting worse, and both survived a pipeline whose
 purpose was to make the model more useful.</p>
 <p>Now look again at the end of the base model’s isiZulu attempt. It slides into “You are a
 helpful assistant, who always provide explanation.” Nothing in the prompt asked for that. It is
