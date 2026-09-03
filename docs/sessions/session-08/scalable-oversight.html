@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 8.1 — The supervision gap and scalable oversight</title>
+    <title>Session 8.1 — Scalable oversight</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -18,10 +18,10 @@
   <details class="tn-menu">
     <summary>Session 8</summary>
     <ul>
-      <li><span class="tn-current">8.1 · The supervision gap and scalable oversight</span></li>
+      <li><span class="tn-current">8.1 · Scalable oversight</span></li>
       <li><a href="ethical-frameworks-four-lenses.html">8.2 · Four ethical lenses</a></li>
-      <li><a href="ubuntu-relational-ethics.html">8.3 · Ubuntu, relational ethics and the Just AI framework</a></li>
-      <li><a href="whose-values.html">8.4 · Whose values? Preference aggregation and the alignment target</a></li>
+      <li><a href="ubuntu-relational-ethics.html">8.3 · Ubuntu and relational ethics</a></li>
+      <li><a href="whose-values.html">8.4 · Whose values?</a></li>
     </ul>
   </details>
   <div class="tn-links">
@@ -33,7 +33,7 @@
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 4 • Session 8.1</div>
-        <h1>The supervision gap and scalable oversight</h1>
+        <h1>Scalable oversight</h1>
         <p>How do you train and check a system that may know more than you do?</p>
     </header>
     <div class="content">
@@ -50,7 +50,7 @@
         </div>
 
         <h2 class="section-title">The supervision gap</h2>
-        <p class="lead">The problem reduces to one constraint: you can only optimise what you can evaluate.</p>
+        <p>The problem reduces to one constraint: you can only optimise what you can evaluate.</p>
         <p>Every training signal we have met comes from an evaluator. Pre-training is graded by the next token; RLHF is graded by a human's preference (Session 6). So the quality of an aligned model is bounded by the quality of the judgement used to train it. RLHF works because of an asymmetry we noted in 6.1: for most current tasks, <em>judging</em> an answer is easier than <em>producing</em> one, so a human rater is a competent grader even of outputs they could not have written. Scalable oversight is about the regime where that asymmetry runs out: evaluating the answer is itself beyond the unaided human.</p>
         <div class="info-box">
             <h4>Unaided human checking at the frontier</h4>
@@ -66,7 +66,7 @@
         </div>
 
         <h2 class="section-title">Five ways to amplify a limited overseer</h2>
-        <p class="lead">The proposals differ in <em>how</em> they extend the overseer, but share one aim: keep the human anchored to the truth while the model does the heavy lifting.</p>
+        <p>The proposals differ in <em>how</em> they extend the overseer, but share one aim: keep the human anchored to the truth while the model does the heavy lifting.</p>
         <div class="card-grid">
             <div class="card">
                 <h3>Task decomposition (iterated amplification)</h3>
@@ -120,17 +120,19 @@
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Burns et al. (2023), "Weak-to-Strong Generalization"</strong> (<a href="https://arxiv.org/abs/2312.09390" target="_blank" rel="noopener">arXiv:2312.09390</a>).</p>
-            <p>• <strong>Irving, Christiano &amp; Amodei (2018), "AI Safety via Debate"</strong> (<a href="https://arxiv.org/abs/1805.00899" target="_blank" rel="noopener">arXiv:1805.00899</a>).</p>
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Burns et al. (2023), "Weak-to-Strong Generalization"</strong> (<a href="https://arxiv.org/abs/2312.09390" target="_blank" rel="noopener">arXiv:2312.09390</a>): read pp. 1–7, the setup and the headline result. ≈2,300 words. The paper runs to 50 pages, most of it appendices.</p>
+            <p>• <strong>Irving, Christiano &amp; Amodei (2018), "AI Safety via Debate"</strong> (<a href="https://arxiv.org/abs/1805.00899" target="_blank" rel="noopener">arXiv:1805.00899</a>): read §1 and the opening of §2, the debate game itself. ≈1,750 words.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈4,050 words.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Bowman et al. (2022), "Measuring Progress on Scalable Oversight for Large Language Models"</strong> (<a href="https://arxiv.org/abs/2211.03540" target="_blank" rel="noopener">arXiv:2211.03540</a>). The sandwiching paradigm.</p>
-            <p>• <strong>Christiano, Shlegeris &amp; Amodei (2018), "Supervising Strong Learners by Amplifying Weak Experts"</strong> (<a href="https://arxiv.org/abs/1810.08575" target="_blank" rel="noopener">arXiv:1810.08575</a>). Iterated amplification.</p>
-            <p>• <strong>Leike et al. (2018), "Scalable Agent Alignment via Reward Modeling"</strong> (<a href="https://arxiv.org/abs/1811.07871" target="_blank" rel="noopener">arXiv:1811.07871</a>). Recursive reward modelling.</p>
-            <p>• <strong>Saunders et al. (2022), "Self-critiquing Models for Assisting Human Evaluators"</strong> (<a href="https://arxiv.org/abs/2206.05802" target="_blank" rel="noopener">arXiv:2206.05802</a>).</p>
-            <p>• <strong>Bai et al. (2022), "Constitutional AI: Harmlessness from AI Feedback"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>). Taken up in Session 7.</p>
+            <h4>Optional readings</h4>
+            <p>• <strong>Irving et al., §5</strong> (≈2,300 words): ten reasons to worry about debate, written by its proposers. The most useful part of the paper for a safety course, and the first thing to read if you go further.</p>
+            <p>• <strong>Bowman et al. (2022), "Measuring Progress on Scalable Oversight"</strong> (<a href="https://arxiv.org/abs/2211.03540" target="_blank" rel="noopener">arXiv:2211.03540</a>): the sandwiching paradigm. ≈7,400 words.</p>
+            <p>• <strong>Christiano, Shlegeris &amp; Amodei (2018), "Supervising Strong Learners by Amplifying Weak Experts"</strong> (<a href="https://arxiv.org/abs/1810.08575" target="_blank" rel="noopener">arXiv:1810.08575</a>): iterated amplification. ≈4,400 words.</p>
+            <p>• <strong>Leike et al. (2018), "Scalable Agent Alignment via Reward Modeling"</strong> (<a href="https://arxiv.org/abs/1811.07871" target="_blank" rel="noopener">arXiv:1811.07871</a>): recursive reward modelling. ≈13,500 words.</p>
+            <p>• <strong>Saunders et al. (2022), "Self-critiquing Models for Assisting Human Evaluators"</strong> (<a href="https://arxiv.org/abs/2206.05802" target="_blank" rel="noopener">arXiv:2206.05802</a>): ≈8,800 words.</p>
+            <p>• <strong>Bai et al. (2022), "Constitutional AI"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>): taken up in Session 7.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
