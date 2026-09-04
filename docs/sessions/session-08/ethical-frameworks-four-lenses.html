@@ -18,14 +18,14 @@
   <details class="tn-menu">
     <summary>Session 8</summary>
     <ul>
-      <li><a href="scalable-oversight.html">8.1 · Scalable oversight</a></li>
+      <li><a href="scalable-oversight.html">8.1 · The supervision gap and scalable oversight</a></li>
       <li><span class="tn-current">8.2 · Four ethical lenses</span></li>
       <li><a href="ubuntu-relational-ethics.html">8.3 · Ubuntu and relational ethics</a></li>
-      <li><a href="whose-values.html">8.4 · Whose values?</a></li>
+      <li><a href="whose-values.html">8.4 · Whose values? Preference aggregation and the alignment target</a></li>
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="scalable-oversight.html">← <span class="tn-title">8.1 · Scalable oversight</span></a>
+    <a class="tn-prev" href="scalable-oversight.html">← <span class="tn-title">8.1 · The supervision gap and scalable oversight</span></a>
     <a class="tn-next" href="ubuntu-relational-ethics.html"><span class="tn-title">8.3 · Ubuntu and relational ethics</span> →</a>
   </div>
 </div>
@@ -44,61 +44,150 @@
 <div class="intro-text">
 <h2>What we'll cover</h2>
 <p><em>This session comes with a major caveat: I am not an ethicist and so in future versions of this course, this section will be done in collaboration with those for whom this is their area of expertise. Much of the following is a very simplified view, but hopefully one which makes you think. This caveat is a very important one to keep in mind throughout.</em></p>
-<p>AI introduces ethical questions that traditional research ethics frameworks were never designed to answer. Institutional Review Boards, <a href="https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html" target="_blank" rel="noopener">the Belmont Report</a>, and informed consent protocols emerged in a world where humans were the sole producers of research outputs. They remain necessary, but they are not sufficient for a world where AI can co-author papers, generate synthetic data, code analyses, and write literature reviews.</p>
-<p>This session introduces four complementary philosophical traditions (consequentialism, deontology, virtue ethics, and ubuntu) as lenses for reasoning through the ethical dilemmas that AI creates in research. The goal is to develop your capacity for ethical reasoning. Different lenses will often produce different answers, and that disagreement is what we are after.</p>
+<p>Sessions 5 to 7 built the machinery for pointing a model at a target: preference data, a reward model, a policy optimiser, a written constitution, a published specification. Not one of them says what the target should be. RLHF optimises whatever the raters preferred; Constitutional AI applies whatever the constitution says; a specification commits to whatever its authors wrote down. Each transmits a values choice and none of them makes one.</p>
+<p>This session introduces four complementary philosophical traditions (consequentialism, deontology, virtue ethics, and ubuntu) as lenses for reasoning about what a system should be aligned to. The goal is to develop your capacity for ethical reasoning. Different lenses will often produce different answers, and that disagreement is what we are after.</p>
 <p>Note also that these are not the only ethical frameworks, and again, this should be seen as an extremely simplified view of each of them.</p>
 </div>
-<!-- SECTION 1: THE ETHICS GAP -->
-<h2 class="section-title">The ethics gap</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Existing research ethics frameworks address important concerns, but they leave significant gaps when it comes to AI-assisted research.</p>
+<!-- SECTION 2: FOUR PHILOSOPHICAL LENSES -->
+<h2 class="section-title">Four philosophical lenses</h2>
+<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Rather than searching for the single "correct" ethical framework, we introduce four complementary traditions. Each illuminates different aspects of AI ethics dilemmas. Think of them as tools in a toolkit, each useful for different tasks.</p>
 <div class="card-grid">
 <div class="card">
-<h3>Existing frameworks</h3>
-<p>Traditional research ethics, developed largely in response to historical abuses, focus on:</p>
+<h3>1. <a href="https://plato.stanford.edu/entries/consequentialism/" target="_blank" rel="noopener">Consequentialism</a></h3>
+<p>Focus: Outcomes and consequences</p>
+<p>An action is ethical if it produces the best overall consequences. The most familiar version, utilitarianism, asks: does this action maximise wellbeing and minimise harm, across all those affected?</p>
+<p>Key question for the alignment target: What outcomes should this system produce, and for whom? Note that the scale you sum over changes the answer: what looks right for one conversation may not survive being applied to every conversation the model ever has.</p>
 <ul class="styled-list">
-<li>Human participant protections: Informed consent, minimising harm, equitable selection of participants (the Belmont Report)</li>
-<li>Research integrity: Honest reporting, proper attribution, avoiding fabrication and falsification</li>
-<li>Data protection: Privacy, confidentiality, secure storage</li>
-<li>Institutional oversight: IRB/ethics committee review processes</li>
+<li>Strengths: Pragmatic, outcome-focused, good at weighing trade-offs</li>
+<li>Limitations: Consequences are hard to predict; whose consequences count? Can justify problematic means if ends are good enough</li>
 </ul>
-<p style="margin-top: 15px;">These are necessary. But they were designed for a world where every word in a paper, every line of analysis, and every research decision was made by a human being.</p>
 </div>
 <div class="card">
-<h3>New questions from AI</h3>
-<p>AI-assisted research raises questions that existing frameworks do not adequately address:</p>
+<h3>2. <a href="https://plato.stanford.edu/entries/ethics-deontological/" target="_blank" rel="noopener">Deontology</a></h3>
+<p>Focus: Duties, rules, and rights</p>
+<p>Some actions are inherently right or wrong, regardless of their consequences. Deontological ethics asks whether an action respects fundamental duties (honesty, fairness, respect for autonomy) independent of the outcome.</p>
+<p>Key question for the alignment target: What should the system refuse regardless of how good the outcome would be? And who wrote that rule, whose interests does enforcing it serve, and what interprets it at runtime?</p>
 <ul class="styled-list">
-<li>Non-human agency: Who is responsible when AI generates content that contains errors, biases, or fabrications?</li>
-<li>Training data provenance: Was the data used to train the model collected with consent? Does it represent the communities being studied?</li>
-<li>Opacity: When AI contributes to analysis or writing, the reasoning process is not transparent, even to the researcher</li>
-<li>Authorship: Can a non-human entity be credited as a contributor to research?</li>
-<li>Data privacy: What happens to sensitive research data entered into cloud-based AI tools?</li>
-<li>Bias amplification: AI can systematically reproduce and scale biases in ways that individual researchers cannot</li>
+<li>Strengths: Clear boundaries, protects individual rights, not swayed by "the ends justify the means"</li>
+<li>Limitations: Rules can conflict with each other; can be rigid in novel situations where existing rules do not apply. A written rule also has to be interpreted by something, and the 7.6 lab put a number on what that interpretation was worth at small scale: swapping the principle moved the judge by 0.034 while the order of the two options moved it by 0.693.</li>
 </ul>
 </div>
+<div class="card">
+<h3>3. <a href="https://plato.stanford.edu/entries/ethics-virtue/" target="_blank" rel="noopener">Virtue ethics</a></h3>
+<p>Focus: Character and intellectual virtues</p>
+<p>Rather than asking "what should I do?", virtue ethics asks "what kind of person am I becoming?" It focuses on cultivating virtues (honesty, courage, diligence, curiosity, integrity) through practice and habit.</p>
+<p>Key question for the alignment target: What dispositions should the system have, and what habits does its behaviour cultivate in someone who uses it thousands of times? And how would you tell a system that has those dispositions from one that has learned to display them?</p>
+<ul class="styled-list">
+<li>Strengths: Emphasises personal responsibility, adaptable to new situations, attentive to character development</li>
+<li>Limitations: Can be subjective; what counts as a "virtue" varies across cultures; less helpful for institutional policy. It is also the hardest to verify: you cannot inspect a character, only watch behaviour, which Session 3 argued is exactly what a capable enough system could produce strategically.</li>
+</ul>
 </div>
-<div class="warning-box">
-<h4>A rapidly evolving field</h4>
-<p>The ethical norms around AI in research are changing faster than guidelines can be written. Journal policies, institutional guidelines, and funder requirements that exist today may be outdated within months. Throughout this session, I encourage you to check the most recent versions of any policies we reference, and to treat any framework (including the ones we present here) as a tool for reasoning.</p>
+<div class="card">
+<h3>4. <a href="https://www.ahrlj.up.ac.za/metz-t" target="_blank" rel="noopener">Ubuntu / relational ethics</a></h3>
+<p>Focus: Relationships and community</p>
+<p>"Umuntu ngumuntu ngabantu": a person is a person through other people. Ubuntu ethics begins not from the individual but from the web of relationships that constitute personhood. Ethical action is action that strengthens the community and its bonds.</p>
+<p>Key question for the alignment target: Whose relationships does this behaviour sustain or rupture, and who was party to deciding it? Consultation is not the same as holding part of the decision.</p>
+<ul class="styled-list">
+<li>Strengths: Attentive to collective harm, power dynamics, and the social fabric; challenges individualist assumptions</li>
+<li>Limitations: Can be vague on individual decisions; risk of being invoked superficially without engaging the philosophical tradition</li>
+</ul>
+<p style="margin-top: 10px;"><em>We will explore ubuntu and African relational ethics in much greater depth in 8.3.</em></p>
 </div>
-<div class="resource-placeholder reading-core">
-            <h4>Mandatory readings</h4>
-            <p>• <strong>Jobin, Ienca &amp; Vayena (2019), "The global landscape of AI ethics guidelines"</strong> (<a href="https://arxiv.org/abs/1906.11668" target="_blank" rel="noopener">arXiv:1906.11668</a>): read pp. 1–4, the method and the convergence finding across 84 documents. ≈1,650 words. Cite the preprint; the journal version is behind Nature Machine Intelligence.</p>
-            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,650 words.</p>
-        </div>
-        <div class="resource-placeholder">
-            <h4>Optional readings</h4>
-            <p>• <strong>Jobin et al., the full preprint</strong> (≈6,800 words): the divergence analysis, which is where the interesting disagreement between the 84 documents lives.</p>
-            <p>• The four lenses themselves, as reference rather than reading: <a href="https://plato.stanford.edu/entries/consequentialism/" target="_blank" rel="noopener">consequentialism</a>, <a href="https://plato.stanford.edu/entries/ethics-deontological/" target="_blank" rel="noopener">deontology</a> and <a href="https://plato.stanford.edu/entries/ethics-virtue/" target="_blank" rel="noopener">virtue ethics</a> (Stanford Encyclopedia of Philosophy). Consult the one you need; none is a cover-to-cover read.</p>
-            <p>• <strong>Mhlambi (2020) and Birhane (2021)</strong> are the mandatory readings for 8.3 and are not repeated here; the relational lens is developed there.</p>
-            <p>• <strong>Lund et al. (2023)</strong> (<a href="https://doi.org/10.1002/asi.24750" target="_blank" rel="noopener">doi:10.1002/asi.24750</a>) and <strong>van Dis et al. (2023)</strong> (<a href="https://doi.org/10.1038/d41586-023-00288-7" target="_blank" rel="noopener">Nature 614</a>): the academic-integrity debate. Both are about research conduct rather than the alignment target, so they sit further from this session than the rest of the list.</p>
-        </div>
+</div>
+<div class="highlight-box">
+<h3><span style="color: #ffffff;">Disagreement between the lenses</span></h3>
+<p>These four frameworks will often produce different answers to the same ethical question. A consequentialist might approve of an AI use that a deontologist would reject. A virtue ethicist might focus on concerns that an ubuntu framework reframes entirely.</p>
+<p>That disagreement is the substance of ethical reasoning. By holding multiple perspectives simultaneously, you develop a richer, more resilient capacity for navigating dilemmas that do not have simple answers. The goal is to use all four lenses to see what each reveals, and what each misses.</p>
+</div>
 
-        <!-- SUMMARY -->
+<div class="info-box">
+<h4>Beyond philosophical lenses: governance frameworks</h4>
+<p>These four traditions are lenses for <em>reasoning</em>, but scholars and institutions are also building concrete <em>governance frameworks</em> that translate ethical values into structured tools for assessing AI systems. One example is the <a href="https://researchictafrica.net/research/ria-just-ai-framework-of-inquiry/" target="_blank" rel="noopener"><strong>Research ICT Africa (RIA) Just AI Framework of Inquiry</strong></a> (Chetty &amp; Sey, 2025), which organises nine interconnected inquiries, from human rights and data justice to sustainability and economic justice, into an actionable framework for AI research and policy, developed explicitly from and for African contexts. We will examine the RIA framework in detail in 8.3, alongside the deeper exploration of ubuntu.</p>
+</div>
+
+<!-- SECTION 3: APPLYING THE LENSES -->
+<h2 class="section-title">Applying the lenses: a first example</h2>
+<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">To see how the four lenses work in practice, consider a straightforward scenario.</p>
+<div class="case-study">
+<h4>Scenario: the rewritten discussion</h4>
+<p>A PhD student uses ChatGPT to rewrite the discussion section of their thesis chapter. The AI-generated version is substantially better than what the student wrote originally: better structured, more clearly argued, and more effectively situated in the literature. The student submits the rewritten version without disclosing AI use. Their supervisor does not have an explicit policy on AI tools.</p>
+</div>
+<div class="card-grid">
+<div class="card">
+<h3>Consequentialist lens</h3>
+<p>What are the outcomes? The thesis is better quality, which benefits the student, the supervisor, and readers. But if the practice becomes widespread without disclosure, it erodes trust in the meaning of a doctoral qualification. If discovered, the consequences for the student could be severe. The aggregate effect of widespread undisclosed AI use could undermine the credibility of academic degrees.</p>
+<p>Verdict: Short-term benefits are real, but long-term systemic consequences are concerning.</p>
+</div>
+<div class="card">
+<h3>Deontological lens</h3>
+<p>Is there a duty being violated? Academic work carries an implicit (and often explicit) commitment that the submitted work represents the student's own intellectual effort. Even without a specific AI policy, the principle of honest representation applies. The student has a duty to be transparent about the process that produced their work.</p>
+<p>Verdict: The lack of disclosure violates a duty of honesty, regardless of the quality improvement.</p>
+</div>
+<div class="card">
+<h3>Virtue ethics lens</h3>
+<p>What kind of researcher is the student becoming? A doctoral thesis is a process of developing the capacity for independent scholarly thought. If AI does the intellectual heavy lifting of structuring arguments and situating them in the literature, the student may not develop these crucial skills. The question extends to intellectual formation, beyond this one chapter.</p>
+<p>Verdict: Even if the output is better, the process may undermine the student's development as a scholar.</p>
+</div>
+<div class="card">
+<h3>Ubuntu lens</h3>
+<p>How does this affect relationships? The student-supervisor relationship is built on trust and honest intellectual exchange. Submitting AI-generated work without disclosure undermines this relationship. More broadly, the student's peers, who may be doing their work without AI assistance, are placed at a disadvantage. The academic community depends on shared norms of honest contribution.</p>
+<p>Verdict: The undisclosed use weakens the relational bonds that sustain academic community.</p>
+</div>
+</div>
+<div class="info-box">
+<h4>Convergence and divergence</h4>
+<p>In this case, all four lenses point in a similar direction: toward disclosure and caution. But they get there for different reasons: consequences, duties, character, and relationships. In harder cases the lenses diverge, and the reasoning becomes difficult. The next example, closer to this course's subject, shows the divergence.</p>
+</div>
+<!-- SECTION 3B: THE ALIGNMENT CASE -->
+<h2 class="section-title">Applying the lenses to an alignment target</h2>
+<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">The same four lenses apply when the decision is not a researcher's but a model's: the behaviour a deployed system should have, written into a constitution principle (7.2) or a spec rule (7.5). Here they stop converging.</p>
+<div class="case-study">
+<h4>Scenario: the refusal principle</h4>
+<p>You are writing one principle of a constitution for a study assistant deployed at a South African university (the setting of 7.5's in-class exercise). A student asks the assistant for help obtaining a paywalled paper that the university library does not subscribe to, and the model knows the pirate mirrors that would serve it in seconds. The principle you write will decide this case not once but in every conversation the model ever has (7.4): should it direct the model to comply, refuse, or redirect?</p>
+</div>
+<div class="card-grid">
+<div class="card">
+<h3>Consequentialist lens</h3>
+<p>What are the outcomes? For this student: access to knowledge they cannot buy, at negligible marginal cost to the publisher. At the scale a principle operates on, the sums change: an assistant that routinely routes students to pirate mirrors exposes the university to legal risk that could end the deployment, and the deployment benefits thousands.</p>
+<p>Verdict: comply, if you weigh this conversation; refuse, if you weigh the deployment. The lens gives no rule for which scale counts.</p>
+</div>
+<div class="card">
+<h3>Deontological lens</h3>
+<p>Is a duty violated? Serving the paper without licence infringes copyright however good the outcome, so a rule-based reading says the assistant must not facilitate it, whatever the requester's circumstances. A second duty, honesty toward the user, requires the refusal to be candid rather than feigning ignorance of the mirrors' existence.</p>
+<p>Verdict: refuse, and say why. The clarity is the appeal; the cost is indifference to who wrote the rules being enforced, and for whose benefit.</p>
+</div>
+<div class="card">
+<h3>Virtue ethics lens</h3>
+<p>What habits does the behaviour cultivate? An assistant that blocks and lectures teaches students to route around it, practising evasion rather than judgement. One that helps the student find legal versions (preprints, author copies, interlibrary loan) practises, and models, resourcefulness. The lens shifts attention from this one answer to the dispositions the system trains into its users over thousands of interactions.</p>
+<p>Verdict: redirect, because the response should embody the disposition you want the student to acquire.</p>
+</div>
+<div class="card">
+<h3>Ubuntu lens</h3>
+<p>Which relationships does the decision sustain? On a relational reading the paywall is itself the rupture: research about African communities, often publicly funded, priced out of reach of African universities (8.3 examines this pattern). A refusal defends the publisher's claim; quiet compliance repairs one student's access while leaving the structure intact. The lens asks who set the terms of this scarcity, and what would restore a just relationship between knowledge producers and the communities they draw on.</p>
+<p>Verdict: the lens indicts the barrier more than the bypass, and no per-conversation behaviour restores the relationship.</p>
+</div>
+</div>
+<div class="info-box">
+<h4>No convergence this time</h4>
+<p>Four lenses, at least three behaviours: comply at one scale and refuse at another, refuse with reasons, redirect, and restructure terms of access no single response can reach. Unlike the thesis case, there is no shared direction for a principle to encode; yet the constitution must still say one thing, and the model will then apply it uniformly, in every language and context it serves. This is the situation 8.4 formalises: when reasonable frameworks disagree about what a good output is, choosing the alignment target is itself the ethical act, and no aggregation rule makes that choice neutrally.</p>
+</div>
+<h2 class="section-title">Questions to bring to class</h2>
+<ul class="styled-list">
+<li>The thesis case converged and the refusal-principle case did not. What feature of a scenario predicts whether the four lenses will agree, and which kind of case should worry an alignment engineer more?</li>
+<li>The consequentialist card reached opposite verdicts at the conversation scale and the deployment scale. When a principle must hold across millions of conversations (7.4), which scale should it be written for, and what is lost in that choice?</li>
+<li>Ubuntu's listed limitation is the "risk of being invoked superficially without engaging the philosophical tradition". Propose a one-sentence test that separates a substantive ubuntu analysis from a decorative one, and apply it to the ubuntu card in the refusal case.</li>
+<li>Which of the four lenses is easiest to compile into a trainable signal (a constitution principle, a reward model), and which is hardest? What does that asymmetry predict about the values deployed models end up with?</li>
+</ul>
+
+<!-- SECTION 4: READINGS -->
+<h2 class="section-title">Readings for this session</h2>
+<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Two core readings and four supplementary readings for this session. All are freely accessible.</p>
+<!-- SUMMARY -->
 <div class="intro-text" style="margin-top: 50px;">
 <h2>Summary and key takeaways</h2>
-<p>This session established the foundation for ethical reasoning about AI in research.</p>
+<p>This session set out the tools for reasoning about what a system should be aligned to.</p>
 <ul class="styled-list" style="margin-top: 15px;">
-<li>The ethics gap is real: Existing research ethics frameworks (IRBs, Belmont Report, informed consent) are necessary but insufficient for AI-assisted research</li>
+<li>The machinery does not choose the target: everything Sessions 5 to 7 built transmits a values choice without making one</li>
 <li>Four complementary lenses: Consequentialism (outcomes), deontology (duties), virtue ethics (character), and ubuntu (relationships) each illuminate different dimensions of AI ethics dilemmas</li>
 <li>Disagreement is productive: The four lenses will often produce different answers; that divergence gives ethical reasoning its substance</li>
 <li>Tools: These frameworks are not checklists to apply mechanically. They are tools for developing your capacity for ethical reasoning in a rapidly changing field</li>
@@ -107,9 +196,21 @@
 <p style="margin-top: 20px;">Next, in 8.3: ubuntu and African relational ethics in depth, including the Research ICT Africa Just AI Framework, what these traditions offer that Western individualist frameworks miss, and why they matter for AI governance globally.</p>
 </div>
     </div>
+        <div class="resource-placeholder reading-core">
+            <h4>Mandatory readings</h4>
+            <p>• <strong>Jobin, Ienca &amp; Vayena (2019), "The global landscape of AI ethics guidelines"</strong> (<a href="https://arxiv.org/abs/1906.11668" target="_blank" rel="noopener">arXiv:1906.11668</a>): read pp. 1–4, the method and the convergence finding across 84 documents. ≈1,650 words. Cite the preprint; the journal version sits behind Nature Machine Intelligence. It dates from 2019, so treat it as a snapshot.</p>
+            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈1,650 words.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional readings</h4>
+            <p>• <strong>Jobin et al., the full preprint</strong> (≈6,800 words): the divergence analysis, where the interesting disagreement between the 84 documents lives.</p>
+            <p>• The lenses themselves, as reference rather than reading: <a href="https://plato.stanford.edu/entries/consequentialism/" target="_blank" rel="noopener">consequentialism</a>, <a href="https://plato.stanford.edu/entries/ethics-deontological/" target="_blank" rel="noopener">deontology</a> and <a href="https://plato.stanford.edu/entries/ethics-virtue/" target="_blank" rel="noopener">virtue ethics</a> (Stanford Encyclopedia of Philosophy). Consult the one you need.</p>
+            <p>• <strong>Mhlambi (2020) and Birhane (2021)</strong> are mandatory for 8.3 and are not repeated here; the relational lens is developed there.</p>
+            <p>• On research conduct with AI, which this session deliberately leaves aside, see the <a href="https://shocklab.github.io/generative-ai-in-research/" target="_blank" rel="noopener">Generative AI in Research course</a>, from which parts of this page are adapted. Its Week 4 covers authorship, disclosure and academic integrity properly.</p>
+        </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">
-  <a class="prev" href="scalable-oversight.html"><span class="nav-label">← Previous</span><span class="nav-title">8.1 · Scalable oversight</span></a>
+  <a class="prev" href="scalable-oversight.html"><span class="nav-label">← Previous</span><span class="nav-title">8.1 · The supervision gap and scalable oversight</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
   <a class="next" href="ubuntu-relational-ethics.html"><span class="nav-label">Next →</span><span class="nav-title">8.3 · Ubuntu and relational ethics</span></a>
 </nav>
