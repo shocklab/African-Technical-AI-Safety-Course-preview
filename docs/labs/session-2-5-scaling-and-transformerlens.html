@@ -6,7 +6,7 @@
 <title>Session 2.5 — Lab notebook</title>
 <link rel="stylesheet" href="../assets/styles.css">
     <!-- MATHJAX-START -->
-    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <!-- MATHJAX-END -->
 <style>
@@ -48,8 +48,7 @@
            <a href="../sessions/session-02/lab-scaling-and-transformerlens.html">Back to the lab page</a>.</p>
     </div>
     <div class="notebook">
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>African Technical AI Safety</strong> · Week 1, Session 2.5</p>
 <p>This notebook works through the three parts of the lab:</p>
@@ -63,15 +62,12 @@
 ends with an <em>Explore</em> cell giving you two or three things to change and re-run, and one short
 question to answer. Changing a number and watching the answer move is the point of the lab.</p>
 <p><strong>What you submit:</strong> this notebook, run end to end, with your answers typed into the three <em>Explore</em> cells.</p>
-<blockquote>
-<p>Nothing here is fragile. If you break a cell, <em>Runtime → Restart session</em> and run from the top.</p>
-</blockquote>
+<p>If an experiment leaves the notebook in an inconsistent state, restart the session and run from the top. Record download or dependency errors with your submission.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Run once per Colab session (~1 min). Skip the install if running locally with the packages already present.</span>
@@ -89,29 +85,41 @@ question to answer. Changing a number and watching the answer move is the point 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'axes.grid'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'grid.alpha'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'Colab:'</span><span class="p">,</span> <span class="n">IN_COLAB</span><span class="p">)</span>
+<span class="c1"># Record the environment used for this run; results can vary across versions.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span><span class="o">,</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Python:'</span><span class="p">,</span> <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span> <span class="s1">'| CPUs:'</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'torch'</span><span class="p">,</span> <span class="s1">'transformers'</span><span class="p">,</span> <span class="s1">'transformer_lens'</span><span class="p">,</span> <span class="s1">'numpy'</span><span class="p">,</span> <span class="s1">'pandas'</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">PackageNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'RAM GB:'</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'GPU available:'</span><span class="p">,</span> <span class="nb">__import__</span><span class="p">(</span><span class="s1">'torch'</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A0-Fit-a-scaling-law">① Fit a scaling law</h2><p>Kaplan et al. (2020) report that test loss falls as a power law in compute:</p>
-<p>\[L(C_{\min}) = \left(\frac{C_c^{\min}}{C_{\min}}\right)^{\alpha_C^{\min}}, \qquad \alpha_C^{\min} \approx 0.050, \quad C_c^{\min} \approx 3.1 \times 10^8 \ \text{PF-days}\]</p>
+<h2 id="①-Fit-a-scaling-law">① Fit a scaling law<a class="anchor-link" href="#%E2%91%A0-Fit-a-scaling-law">¶</a></h2><p>Kaplan et al. (2020) report that test loss falls as a power law in compute:</p>
+<p>$$L(C_{\min}) = \left(\frac{C_c^{\min}}{C_{\min}}\right)^{\alpha_C^{\min}}, \qquad \alpha_C^{\min} \approx 0.050, \quad C_c^{\min} \approx 3.1 \times 10^8 \ \text{PF-days}$$</p>
 <p>Taking logs turns that into a straight line, which is why the fit below is ordinary least squares:</p>
-<p>\[\log L = a - \alpha \log C\]</p>
-<p>Kaplan states \(C_c\) in PF-days and the data below is in FLOP (1 PF-day = \(8.64 \times 10^{19}\) FLOP).
-That changes the intercept \(a\) but not the slope, so \(\alpha\) is comparable across the two and the
+<p>$$\log L = a - \alpha \log C$$</p>
+<p>Kaplan states $C_c$ in PF-days and the data below is in FLOP (1 PF-day = $8.64 \times 10^{19}$ FLOP).
+That changes the intercept $a$ but not the slope, so $\alpha$ is comparable across the two and the
 constant is not.</p>
-<p>Your job is to recover \(\alpha\) from data and see how small it is.</p>
+<p>Your job is to recover $\alpha$ from data and see how small it is.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Real runs: Cerebras-GPT, five compute-optimal models trained on the Pile.</span>
@@ -150,7 +158,6 @@ constant is not.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Plot on log-log axes: a power law is a straight line here, and nowhere else.</span>
@@ -167,7 +174,6 @@ constant is not.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Least-squares fit of log10(L) = a - alpha * log10(C).</span>
@@ -202,7 +208,6 @@ constant is not.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># The same authors fitted their own frontier and published it (eq. 1 of the paper):</span>
@@ -229,7 +234,6 @@ constant is not.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Extrapolate one order of magnitude past the largest run in the data.</span>
@@ -245,10 +249,9 @@ constant is not.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A0">Explore ①</h3><p>Five points from one lab is a thin basis for a law. The cell below loads a much larger set: 245
+<h3 id="Explore-①">Explore ①<a class="anchor-link" href="#Explore-%E2%91%A0">¶</a></h3><p>Five points from one lab is a thin basis for a law. The cell below loads a much larger set: 245
 (compute, loss) points from the real training runs behind Chinchilla (Hoffmann et al., 2022),
 extracted from that paper's Figure 4 by Epoch AI. Two things change when you look at a cloud
 rather than a handful of points.</p>
@@ -256,7 +259,7 @@ rather than a handful of points.</p>
 budget was spent several ways, on a bigger model with less data or a smaller model with more, and
 only the best of those is on the curve the law describes.</p>
 <p>Second, the loss cannot fall to zero. Language has entropy the model can never predict away, so a
-real curve is \(L(C) = E + (C_c/C)^{\alpha}\) with an irreducible \(E\). Chinchilla estimates \(E = 1.69\).</p>
+real curve is $L(C) = E + (C_c/C)^{\alpha}$ with an irreducible $E$. Chinchilla estimates $E = 1.69$.</p>
 <p>Things to try:</p>
 <ul>
 <li>Set <code>SUBTRACT_E = True</code>. The exponent jumps from about 0.05 to about 0.16. Which is the honest description of how fast the <em>reducible</em> part of the loss falls?</li>
@@ -273,7 +276,6 @@ the experiment more carefully.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">CHINCHILLA</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/epoch-research/'</span>
@@ -292,11 +294,16 @@ the experiment more carefully.</p>
     <span class="n">cC</span><span class="p">,</span> <span class="n">cL</span> <span class="o">=</span> <span class="n">ch</span><span class="p">[</span><span class="s1">'Training FLOP'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">ch</span><span class="p">[</span><span class="s1">'loss'</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cC</span><span class="p">)</span><span class="si">}</span><span class="s1"> runs spanning </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cC</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">cC</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> orders of magnitude'</span><span class="p">)</span>
 
-    <span class="c1"># the frontier: the lowest loss anyone achieved at each compute budget</span>
+    <span class="c1"># A binned approximation to the frontier, sensitive to bin boundaries.</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cC</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cC</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="n">BINS</span><span class="p">)</span>
     <span class="n">which</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">cC</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
-    <span class="n">envC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">cC</span><span class="p">[</span><span class="n">which</span> <span class="o">==</span> <span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">BINS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">which</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">])</span>
-    <span class="n">envL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cL</span><span class="p">[</span><span class="n">which</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">BINS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">which</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="c1"># Keep compute and loss from the same observed run in each occupied bin.</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">BINS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">which</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cL</span><span class="p">[</span><span class="n">idx</span><span class="p">])])</span>
+    <span class="n">envC</span><span class="p">,</span> <span class="n">envL</span> <span class="o">=</span> <span class="n">cC</span><span class="p">[</span><span class="n">selected</span><span class="p">],</span> <span class="n">cL</span><span class="p">[</span><span class="n">selected</span><span class="p">]</span>
 
     <span class="n">target</span> <span class="o">=</span> <span class="n">envL</span> <span class="o">-</span> <span class="n">E</span> <span class="k">if</span> <span class="n">SUBTRACT_E</span> <span class="k">else</span> <span class="n">envL</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -329,11 +336,10 @@ the experiment more carefully.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A1-Explore-the-compute-trends">② Explore the compute trends</h2><p>Epoch AI maintain a public dataset of notable AI models with, among much else, a publication date
+<h2 id="②-Explore-the-compute-trends">② Explore the compute trends<a class="anchor-link" href="#%E2%91%A1-Explore-the-compute-trends">¶</a></h2><p>Epoch AI maintain a public dataset of notable AI models with, among much else, a publication date
 and an estimate of training compute. We plot compute against date on a log axis and read off a
 doubling time.</p>
 <p>Note what this measurement is and is not. Training compute is an <em>input</em>, not a capability, and the
@@ -343,7 +349,6 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">EPOCH_CSV</span> <span class="o">=</span> <span class="s1">'https://epoch.ai/data/notable_ai_models.csv'</span>
@@ -367,7 +372,6 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Keep the rows that have both a date and a compute estimate.</span>
@@ -389,7 +393,6 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Fit log10(compute) against time in years, then convert the slope to a doubling time.</span>
@@ -419,7 +422,6 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># The fit is not the whole story: label the models at the top of the range and see</span>
@@ -432,10 +434,9 @@ estimates are reconstructed from papers and reports of varying candour.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A1">Explore ②</h3><p>The cell below runs the same fit over several starting years, so you can see the answer move without
+<h3 id="Explore-②">Explore ②<a class="anchor-link" href="#Explore-%E2%91%A1">¶</a></h3><p>The cell below runs the same fit over several starting years, so you can see the answer move without
 editing anything. Run it, then read the spread.</p>
 <p>Things to try:</p>
 <ul>
@@ -452,7 +453,6 @@ turning it on someone else's.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">WINDOWS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2018</span><span class="p">,</span> <span class="mi">2020</span><span class="p">]</span>
@@ -473,12 +473,11 @@ turning it on someone else's.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A2-Open-up-a-transformer">③ Open up a transformer</h2><p>First contact with the residual-stream picture from 2.2, on a real model. GPT-2 small: 12 layers,
-12 heads, \(d_{\text{model}} = 768\).</p>
+<h2 id="③-Open-up-a-transformer">③ Open up a transformer<a class="anchor-link" href="#%E2%91%A2-Open-up-a-transformer">¶</a></h2><p>First contact with the residual-stream picture from 2.2, on a real model. GPT-2 small: 12 layers,
+12 heads, $d_{\text{model}} = 768$.</p>
 <p>The first cell downloads the weights (about 500 MB) and takes a minute or two. CPU is fine.</p>
 <p>You will probably see a deprecation warning about <code>from_pretrained</code> and a note about
 unauthenticated Hugging Face requests. Both are harmless: the model loads either way.</p>
@@ -487,7 +486,6 @@ unauthenticated Hugging Face requests. Both are harmless: the model loads either
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -503,7 +501,6 @@ unauthenticated Hugging Face requests. Both are harmless: the model loads either
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Feed it some prompts and read off the top predicted next tokens.</span>
@@ -529,7 +526,6 @@ unauthenticated Hugging Face requests. Both are harmless: the model loads either
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Before believing any of that: TransformerLens prepends a beginning-of-text token to your</span>
@@ -550,17 +546,15 @@ unauthenticated Hugging Face requests. Both are harmless: the model loads either
 
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'The bare prompt flips on a token you never typed. One ordinary sentence of context'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'settles it: the model is not ignorant about the Eiffel Tower, the bare prompt was.'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'A claim about what a model knows turned on setup nobody chose deliberately, which'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'is the evaluation problem of Session 11 arriving early.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Compare the rankings across all three setups. Did the preferred answer change?'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'This probes sensitivity to prompt context and the beginning-of-text token.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'It does not establish the full extent of the model’s knowledge from one example.'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Where is it confident and where is it not? Entropy is the number to watch: a peaked distribution
 (low entropy) means the model has effectively decided. Note that confidence and correctness are
@@ -570,7 +564,6 @@ different things, which is the whole reason Session 1.4 has a checklist.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># run_with_cache captures every intermediate activation.</span>
@@ -579,7 +572,7 @@ different things, which is the whole reason Session 1.4 has a checklist.</p>
 
 <span class="n">resid</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="s1">'resid_post'</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>     <span class="c1"># residual stream after block 0</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'residual stream shape: </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">resid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">   # [batch, position, d_model]'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'tokens: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">prepend_bos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'tokens: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">to_str_tokens</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">prepend_bos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'This is the T x d matrix from 2.2: one row per token position, one column per'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'residual-stream dimension. Every block reads from it and writes back into it.'</span><span class="p">)</span>
@@ -600,7 +593,6 @@ different things, which is the whole reason Session 1.4 has a checklist.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># How the residual-stream norm moves through the blocks. Note the last block, which cuts it.</span>
@@ -615,10 +607,9 @@ different things, which is the whole reason Session 1.4 has a checklist.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="The-tokenisation-check-(the-African-safety-thread)">The tokenisation check (the African-safety thread)</h3><p>GPT-2's tokenizer is a byte-pair-encoding vocabulary of 50,257 tokens fitted mostly to English text.
+<h3 id="The-tokenisation-check-(the-African-safety-thread)">The tokenisation check (the African-safety thread)<a class="anchor-link" href="#The-tokenisation-check-(the-African-safety-thread)">¶</a></h3><p>GPT-2's tokenizer is a byte-pair-encoding vocabulary of 50,257 tokens fitted mostly to English text.
 The same sentence in a low-resource language is therefore chopped into more pieces.</p>
 <p>To measure this honestly we need <em>parallel</em> text: the same meaning in both languages. We use
 <a href="https://github.com/masakhane-io/lafand-mt">MAFAND-MT</a>, the Masakhane news translation dataset
@@ -628,7 +619,6 @@ The same sentence in a low-resource language is therefore chopped into more piec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">MAFAND</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/masakhane-io/lafand-mt/main/data/tsv_files/en-</span><span class="si">{lang}</span><span class="s1">/dev.tsv'</span>
@@ -655,7 +645,6 @@ The same sentence in a low-resource language is therefore chopped into more piec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Across many sentence pairs, not one: the ratio is the number that matters.</span>
@@ -688,7 +677,6 @@ The same sentence in a low-resource language is therefore chopped into more piec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Optional: the same measurement across several African languages.</span>
@@ -714,10 +702,9 @@ The same sentence in a low-resource language is therefore chopped into more piec
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A2">Explore ③</h3><p>Put your own text through the model in the cell below: prompts it should find easy or hard, and a
+<h3 id="Explore-③">Explore ③<a class="anchor-link" href="#Explore-%E2%91%A2">¶</a></h3><p>Put your own text through the model in the cell below: prompts it should find easy or hard, and a
 sentence pair in a language you speak.</p>
 <p>Things to try:</p>
 <ul>
@@ -726,16 +713,14 @@ sentence pair in a language you speak.</p>
 <li>Back in the multi-language cell, add <code>'amh'</code> (Amharic, a non-Latin script) to <code>LANGS</code> and compare its ratio with the Latin-script languages.</li>
 </ul>
 <p><strong>Question.</strong> A short paragraph on what your ratio implies, covering cost (APIs bill per token, and
-context windows are counted in tokens), quality (the model sees the language in smaller, less
-meaningful pieces), and safety (if a language is under-represented enough to tokenise badly, what does
-that predict about how much safety training and red-teaming it received?). Sessions 9 and 18 return to this.</p>
+context windows are counted in tokens), quality (what would you need to test to establish an effect on task performance?), and safety
+(which claims about safety-training coverage or harmful responses remain untested by token counts?). Sessions 9 and 18 return to this.</p>
 <p><em>Your answer:</em></p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">MY_PROMPTS</span> <span class="o">=</span> <span class="p">[</span>
@@ -761,11 +746,10 @@ that predict about how much safety training and red-teaming it received?). Sessi
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="Submission-checklist">Submission checklist</h2><ul>
+<h2 id="Submission-checklist">Submission checklist<a class="anchor-link" href="#Submission-checklist">¶</a></h2><ul>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, top to bottom, with its output visible</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>① one sentence on why to distrust your extrapolation</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>② two sentences on what you measured and over what window</li>

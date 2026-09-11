@@ -40,7 +40,7 @@
         </div>
 
         <h2 class="section-title">② The single-option posterior</h2>
-        <p class="lead">First, a sub-question: given that one option scored a proxy value \(p\), what do we expect its true value to be? Take \(G \sim \mathcal{N}(\mu_G, \sigma_G^2)\) and \(\varepsilon \sim \mathcal{N}(0, \sigma_\varepsilon^2)\), independent.</p>
+        <p>First, a sub-question: given that one option scored a proxy value \(p\), what do we expect its true value to be? Take \(G \sim \mathcal{N}(\mu_G, \sigma_G^2)\) and \(\varepsilon \sim \mathcal{N}(0, \sigma_\varepsilon^2)\), independent.</p>
         <div class="technical-detail">
             <h4>Derivation by precision-weighting (completing the square)</h4>
             <p style="color:#555;">Because \(\varepsilon = P - G\), the conditional density of \(G\) given \(P = p\) is proportional to the product of the prior on \(G\) and the likelihood of the observation:</p>
@@ -69,11 +69,11 @@
         </div>
         <div class="info-box">
             <h4>Equal-variance example</h4>
-            <p>If signal and noise have equal variance, \(\sigma_G^2 = \sigma_\varepsilon^2\), then \(\beta = \tfrac{1}{2}\). An option whose proxy sits two standard deviations above the mean has an expected true value only <em>one</em> standard deviation above the mean: half of its apparent excellence is luck that will not reproduce. Optimise on a metric that is half noise and you systematically harvest options half as good as they look.</p>
+            <p>If signal and noise have equal variance, \(\beta=1/2\). In the centred model, observing \(P=2\sigma_P\) gives \(\mathbb{E}[G\mid P]=\sigma_P\). Both quantities here use the proxy standard deviation \(\sigma_P\); in true-value units the latter is \(\sqrt{2}\sigma_G\). The expected noise accounts for half the observed proxy value.</p>
         </div>
 
         <h2 class="section-title">④ Selecting the best of many: optimisation power</h2>
-        <p class="lead">"Optimising harder" often means <em>searching more options</em>. Taking the \(\operatorname{argmax}\) over \(N\) independent draws pushes the winning proxy deep into the tail, and §③ then says the over-statement grows with it.</p>
+        <p>"Optimising harder" often means <em>searching more options</em>. Taking the \(\operatorname{argmax}\) over \(N\) independent draws pushes the winning proxy deep into the tail, and §③ then says the over-statement grows with it.</p>
         <div class="technical-detail">
             <h4>Extreme-value scaling</h4>
             <p style="color:#555;">Let \(P_1,\ldots,P_N\) be i.i.d. \(\mathcal{N}(\mu_P, \sigma_P^2)\) with \(\sigma_P^2 = \sigma_G^2 + \sigma_\varepsilon^2\), and \(M_N = \max_i P_i\). The normal distribution lies in the Gumbel domain of attraction, with centering constant (Embrechts, Klüppelberg &amp; Mikosch, 1997)</p>
@@ -90,11 +90,11 @@
         </div>
         <div class="info-box">
             <h4>A worked number</h4>
-            <p>Search \(N = 1000\) options, equal signal/noise (\(\beta = \tfrac{1}{2}\)), \(\sigma_P = 1\): \(\sqrt{2 \ln 1000} \approx 3.7\), so the winner's proxy sits ≈3.7 σ above the mean, of which the expected over-statement is ≈ \((1-\tfrac{1}{2}) \cdot 3.7 \approx 1.9\) standard deviations of pure illusion. Push to \(N = 10^6\) and \(\sqrt{2 \ln N} \approx 5.3\): the curse worsens, but only logarithmically.</p>
+            <p>For \(N=1000\), \(\beta=1/2\) and \(\sigma_P=1\), the leading term \(\sqrt{2\ln N}\) is approximately 3.72, giving an approximate overstatement of 1.86. This is an asymptotic approximation, not an exact finite-sample expectation. Compare it with a numerical estimate of the Gaussian maximum before using it as a quantitative prediction.</p>
         </div>
 
         <h2 class="section-title">⑤ The distribution-free version</h2>
-        <p class="lead">The Gaussian gave us exact numbers, but the bias does not depend on normality. Smith &amp; Winkler's (2006) general statement needs only unbiased estimates and a one-line convexity argument.</p>
+        <p>The Gaussian gave us exact numbers, but the bias does not depend on normality. Smith &amp; Winkler's (2006) general statement needs only unbiased estimates and a one-line convexity argument.</p>
         <div class="technical-detail">
             <h4>The optimizer's curse, in general</h4>
             <p style="color:#555;">Suppose options \(1,\ldots,N\) have fixed true values \(V_i\) and we hold unbiased estimates \(\hat{V}_i\) (so \(\mathbb{E}[\hat{V}_i] = V_i\)). Select \(i^* = \operatorname{argmax}_i \hat{V}_i\). Because the maximum is a convex function, Jensen's inequality gives</p>
@@ -105,11 +105,11 @@
         <h2 class="section-title">⑥ Scope of the result</h2>
         <div class="card-grid">
             <div class="card"><h3>Regressional Goodhart</h3><p>The shrinkage by \(\beta\) and the noise-driven over-statement are Manheim &amp; Garrabrant's (2018) <em>regressional</em> variant: the unavoidable consequence of selecting on (signal + noise) with a <em>fixed</em> joint distribution. It needs no adversary and no breakdown of the proxy.</p></div>
-            <div class="card"><h3>The gentle case</h3><p>The derivation assumes the \(G\)–\(P\) relationship stays linear-Gaussian out into the tail. Real optimisers also reach regions where the proxy stops tracking the goal (<em>extremal</em> Goodhart), where the correlation was never causal (<em>causal</em>), or where another agent games the metric (<em>adversarial</em>). Those are worse, and not captured here.</p></div>
+            <div class="card"><h3>The gentle case</h3><p>The derivation assumes the \(G\)–\(P\) relationship stays linear-Gaussian out into the tail. Real optimisers also reach regions where the proxy stops tracking the goal (<em>extremal</em> Goodhart), where the correlation was never causal (<em>causal</em>), or where another agent games the metric (<em>adversarial</em>). Their effects depend on the setting and are not captured here.</p></div>
         </div>
         <div class="info-box">
-            <h4>The closed form as a lower bound</h4>
-            <p>\((1-\beta) \cdot \sigma_P \cdot \sqrt{2 \ln N}\) is the over-statement you pay even in the friendliest possible world. Reality adds the extremal/causal/adversarial terms on top. That is why §⑥ matters: regressional Goodhart proves the problem is real <em>in principle</em>; the other variants are why it is often severe <em>in practice</em>.</p>
+            <h4>Limits of the approximation</h4>
+            <p>The expression \((1-\beta)\sigma_P\sqrt{2\ln N}\) is a leading-order Gaussian approximation to the expected overstatement as \(N\) grows. It is not a distribution-free lower bound. Extremal, causal and adversarial Goodhart involve different assumptions; their effects cannot generally be added to this expression as separate terms.</p>
         </div>
 
         <h2 class="section-title">⑦ Back to specification gaming</h2>
@@ -121,7 +121,7 @@
                 <li><strong>True value \(G\)</strong> ↔ the intended objective we cannot write down.</li>
                 <li><strong>argmax over N</strong> ↔ training: searching the policy space for high-reward behaviour. A more capable optimiser explores a larger effective \(N\).</li>
             </ul>
-            <p style="color:#555; margin-top:10px;">Read in these terms, the result gives a quantitative basis for Session 3.1's empirical claims. The winner's-shortfall formula says the gap between <em>measured reward</em> and <em>true quality</em> grows with optimisation power, the mechanism behind Pan, Bhatia &amp; Steinhardt's (2022) finding that more capable agents game misspecified rewards more. And it sharpens Skalse et al.'s (2022) impossibility result: a non-trivial proxy can be optimised in a value-lowering direction, and the expected over-statement of the best-by-proxy option is strictly positive and increasing in search. "Just write a better reward" reduces \((1-\beta)\); it cannot reach the \(\beta = 1\) that would be needed to make the curse vanish.</p>
+            <p>This example separates optimistic selection bias from a decline in true quality. In the centred Gaussian model, the selected option has expected true value \(\beta\,\mathbb{E}[\max_i P_i]\). For positive \(\beta\), that value increases with search even while the expected overstatement grows. A falling true-reward curve therefore needs more than this calculation. Better measurement can reduce the noise; the model does not rule out \(\beta=1\), where proxy and true value coincide.</p>
         </div>
 
         <h2 class="section-title">References</h2>

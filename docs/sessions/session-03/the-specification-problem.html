@@ -46,15 +46,16 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Recall the hinge from Session 2.1: <em>we choose the loss, not the behaviour</em>. A trained system does not do what we want; it maximises a number we wrote down. When that number is a perfect description of what we want, all is well. It never is. We cannot write "be a helpful, honest, harmless assistant" as a differentiable function, so we optimise a measurable <strong>proxy</strong> (a game score, a hand-coded reward, a model of human approval) and hope the gap between proxy and intent is small enough not to matter.</p>
-            <p>This sub-session is about what lives in that gap. We will: define the problem as outer alignment; watch real systems exploit misspecified objectives in sometimes alarming ways; sharpen the folk wisdom of "Goodhart's law" into four distinct failure mechanisms, with a small derivation for one of them; see experimental evidence that <em>more capable</em> agents exploit misspecification <em>more</em>, sometimes abruptly; and meet a result suggesting that a non-trivial proxy can <em>never</em> be proven safe to optimise without limit. We close by setting up why the rest of the course needs machinery beyond "just write a better reward".</p>
+            <p>Training rewards a specified objective. For an assistant, that objective usually measures only part of what we want, such as preference ratings or task success. Specification gaming occurs when improving the measured score conflicts with the intended outcome.</p>
+            <p>We examine examples of specification gaming, distinguish four Goodhart mechanisms and state the conditions under which unrestricted optimisation of a proxy can be guaranteed not to lower true reward.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
-            <h4>Mandatory readings</h4>
+            <h4>Core preparation</h4>
+<p>Use the readings below to identify one specification-gaming example and distinguish the four Goodhart mechanisms. The full readings are references; you need not finish them before class.</p>
             <p>• <a href="https://deepmind.google/blog/specification-gaming-the-flip-side-of-ai-ingenuity/" target="_blank" rel="noopener"><strong>Krakovna et al. (2020), "Specification gaming: the flip side of AI ingenuity"</strong></a> (DeepMind blog + the examples list). Short and concrete; skim the examples list and pick three favourites. ≈2,000 words.</p>
             <p>• <strong>Pan, Bhatia &amp; Steinhardt (2022), "The Effects of Reward Misspecification"</strong> (ICLR 2022; <a href="https://arxiv.org/abs/2201.03544" target="_blank" rel="noopener">arXiv:2201.03544</a>). Read for the capability-vs-gaming curves and the phase-transition phenomenon, both in §4, "How Agent Optimization Power Drives Misalignment". ≈1,500 words.</p>
-            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈3,500 words.</p>
+            <p>Preparation budget: 30 minutes, excluding these notes. Stop at the time limit and bring one unresolved question.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
@@ -64,7 +65,7 @@
         </div>
 
         <h2 class="section-title">Optimising a proxy</h2>
-        <p class="lead">Every trained system optimises a number. That number stands in for what we actually care about, and any optimiser worth its name will exploit the difference.</p>
+        <p>Every trained system optimises a number. That number stands in for what we actually care about, and any optimiser worth its name will exploit the difference.</p>
         <p>It helps to name two distinct objects. The <strong>intended objective</strong> is what the designer actually wants: win the boat race, be a trustworthy research assistant, drive safely. The <strong>specified objective</strong> is the thing the system is literally trained on: the in-game score, a reward model fit to thousands of human ratings, a hand-written reward function. Training drives the system up the <em>specified</em> objective as hard as the optimiser allows. Whether that also climbs the <em>intended</em> objective depends entirely on how faithfully the specification captures the intent, and faithful capture is far harder than it looks.</p>
         <div class="info-box">
             <h4>Defining the problem: outer alignment</h4>
@@ -73,7 +74,7 @@
         <p>This is an ancient worry in modern dress. King Midas specified "everything I touch turns to gold" when he meant "let me become wealthy", and starved among golden food. The genie grants the wish you <em>said</em>, not the one you <em>had</em>. What is new is that we now build powerful optimisers and hand them literal specifications at industrial scale, and the more powerful the optimiser, the more ruthlessly it finds the cheapest path to the number.</p>
 
         <h2 class="section-title">Specification gaming, in the wild</h2>
-        <p class="lead">This is not a hypothetical. DeepMind maintains a public, crowd-sourced list of around sixty documented cases (Krakovna et al., 2020). They are funny right up to the moment you imagine the same dynamic inside a capable, deployed system.</p>
+        <p>This is not a hypothetical. DeepMind maintains a public, crowd-sourced list of around sixty documented cases (Krakovna et al., 2020). They are funny right up to the moment you imagine the same dynamic inside a capable, deployed system.</p>
         <div class="card-grid">
             <div class="card"><h3>The CoastRunners boat</h3><p>In a boat-racing game, an RL agent is scored by hitting targets along the route, not by finishing. It found that three targets in a lagoon respawn, and learned to drive in tight circles forever, repeatedly collecting them. It catches fire, drives the wrong way, and crashes into other boats, all while scoring ~20% higher than human players who actually complete the race (Clark &amp; Amodei, 2016). The proxy (score) and the intent (win) had quietly come apart, and the optimiser drove a truck through the gap.</p></div>
             <div class="card"><h3>The upside-down block</h3><p>A robot was rewarded for the height of the <em>bottom face</em> of a red block, as a proxy for "stack it on the blue block". The intended solution lifts the red block onto the blue one. The discovered solution simply flips the red block over: its bottom face is now on top, reward collected, nothing stacked.</p></div>
@@ -86,7 +87,7 @@
         </div>
 
         <h2 class="section-title">The same problem in language models</h2>
-        <p class="lead">It would be comforting if specification gaming were a quirk of toy RL environments. It recurs in the systems this course is about.</p>
+        <p>It would be comforting if specification gaming were a quirk of toy RL environments. It recurs in the systems this course is about.</p>
         <p>When we train a language model with human feedback (Session 6), the "reward" is itself a learned model of what human raters approve of. Optimising hard against an imperfect approval-model produces textbook specification gaming, with names you will meet again:</p>
         <ul class="styled-list">
             <li>Sycophancy. Telling the user what they want to hear (agreeing with stated beliefs, flattering, conceding when challenged even when originally correct) because raters reward agreeable answers. The model optimises "approval", not "truth".</li>
@@ -100,7 +101,7 @@
         </div>
 
         <h2 class="section-title">A worked case: gaming the unit tests</h2>
-        <p class="lead">To make the language-model version concrete, follow one realistic pipeline end to end, from "funny robot" to "this is in the systems you'll build".</p>
+        <p>To make the language-model version concrete, follow one realistic pipeline end to end, from "funny robot" to "this is in the systems you'll build".</p>
         <div class="case-study">
             <h4>Reward = "fraction of unit tests passed"</h4>
             <p>Suppose we train a coding model with a reward equal to the fraction of a hidden test suite it passes, a sensible-looking proxy for "writes correct code". An optimiser pushed hard on this reward can discover, in rising order of cunning: special-casing the specific inputs the tests use (correct on those, wrong in general); hard-coding the expected outputs it has inferred; reading or overwriting the test file if it has filesystem access; or detecting that it is being graded and behaving differently than it would in real use. Every one of these raises the proxy (tests pass) while lowering the intended objective (correct, general code), and several are difficult to catch without reading the solution carefully.</p>
@@ -108,7 +109,7 @@
         </div>
 
         <h2 class="section-title">Goodhart's law, made precise</h2>
-        <p class="lead">"When a measure becomes a target, it ceases to be a good measure." Manheim &amp; Garrabrant (2018) turn this folk slogan into four <em>distinct</em> mechanisms, worth separating because they fail for different reasons and call for different fixes.</p>
+        <p>"When a measure becomes a target, it ceases to be a good measure." Manheim &amp; Garrabrant (2018) turn this folk slogan into four <em>distinct</em> mechanisms, worth separating because they fail for different reasons and call for different fixes.</p>
         <div class="technical-detail">
             <h4>Four variants of Goodhart</h4>
             <table class="comparison-table">
@@ -125,7 +126,7 @@
             <h4>Deriving regressional Goodhart</h4>
             <p style="color:#555;">Suppose the proxy is an unbiased, noisy measurement of the true goal: \(\text{proxy} = \text{goal} + \varepsilon\), with \(\varepsilon\) independent noise of mean zero. "Optimising the proxy" means selecting the option with the largest \(\text{proxy}\) value. But</p>
             <div class="formula">\[ \operatorname{argmax}\,(\text{goal} + \varepsilon) \]</div>
-            <p style="color:#555;">over-selects options where \(\varepsilon\) happens to be large and positive, not just options where \(\text{goal}\) is large. Conditioning on a high proxy value, the expected noise is positive: \(\mathbb{E}[\varepsilon \mid \text{proxy high}] > 0\). So the proxy <em>systematically over-estimates</em> the true goal at the top, and the harder you optimise (the further into the tail you select), the larger the over-estimate. The error is built into selection itself: it appears <em>even with an unbiased proxy and no adversary</em>. Optimisation pressure converts a small, innocent specification error into a large behavioural one. This is why "just write a good reward" cannot be the whole answer.</p>
+            <p>can select options with unusually positive noise as well as high true value. In the independent Gaussian signal-and-noise model developed in the appendix, conditioning on a high proxy produces positive expected noise. The selected score becomes an optimistic estimate of true quality. Both true quality and this bias can increase with search; a decline in true quality requires additional assumptions.</p>
         </div>
         <p style="text-align:center; margin:18px 0 0;"><a href="regressional-goodhart-derivation.html" style="display:inline-block; background:#003A70; color:#fff; padding:12px 24px; border-radius:10px; text-decoration:none; font-weight:600;">Read the full formal derivation →</a></p>
         <p style="text-align:center; color:#888; font-size:0.9em; margin-top:8px;">The bivariate-normal posterior, the optimizer's curse as a distribution-free theorem, and how the bias grows like √(ln N) with search.</p>
@@ -139,10 +140,10 @@
         <p>This is the rigorous version of the Session 1.3 worry and the bridge to the rest of Session 3. A specification error that is harmless in a weak system can become catastrophic in a stronger one, and you may get little warning, because the failure can appear suddenly as capability crosses a threshold. "It behaved fine in all our smaller-scale tests" is therefore weak evidence about how the next, more capable model will behave. (Pan et al. also propose anomaly detection as a partial mitigation, a thread we pick up in the evaluation and monitoring material later.)</p>
 
         <h2 class="section-title">Can a proxy be safe to optimise?</h2>
-        <p class="lead">A natural hope: maybe we are just bad at writing rewards, and a sufficiently careful proxy would be safe to optimise. Skalse et al. (2022) give a discouraging formal answer.</p>
+        <p>A natural hope: maybe we are just bad at writing rewards, and a sufficiently careful proxy would be safe to optimise. Skalse et al. (2022) give a discouraging formal answer.</p>
         <div class="warning-box">
             <h4>An impossibility-flavoured result</h4>
-            <p>They define a proxy reward as <strong>unhackable</strong> relative to the true reward if it is <em>impossible</em> for an increase in expected proxy return to ever come with a <em>decrease</em> in expected true return (i.e. optimising the proxy can never actively hurt the true objective). The main theorem: over the set of <em>all</em> stochastic policies, the only unhackable proxies are the trivial ones (constant rewards that say nothing). In other words, any proxy that actually distinguishes good behaviour from bad can, in principle, be optimised in a direction that lowers true reward. You cannot, in general, write down a non-trivial reward that is provably safe to optimise without limit.</p>
+            <p>They define two rewards as unhackable on a policy set when no pair of policies is ranked in opposite orders by the rewards. Over all stochastic policies, their result allows unhackability when the rewards induce the same policy ordering, or when one has constant expected return across policies. For example, a proxy equal to the true reward is unhackable. The restrictive result concerns proxies that are neither equivalent to the true reward nor trivial. It shows how demanding an unrestricted guarantee is; it does not prove that every informative reward can be hacked. See <a href="https://arxiv.org/html/2209.13085v2" target="_blank" rel="noopener">Definition 1 and Theorem 1</a>, including the equivalent-rewards exception.</p>
         </div>
         <div class="info-box">
             <h4>The caveat: deterministic and finite policy sets</h4>
@@ -152,7 +153,7 @@
         <h2 class="section-title">Consequences for the rest of the course</h2>
         <div class="decision-framework">
             <h4>The field's four responses</h4>
-            <p style="color:#555; line-height:1.9;">If we cannot write a perfect objective and cannot prove a non-trivial one safe, the field's responses all become attempts to manage the gap rather than eliminate it:</p>
+            <p>When we lack confidence that an objective captures the intended behaviour, we can improve the objective and constrain or monitor optimisation:</p>
             <ul class="styled-list" style="margin-top:6px;">
                 <li>Learn the reward from richer signals instead of hand-coding it (RLHF, RLAIF, Constitutional AI, Sessions 6–7), accepting that the learned reward is itself a gameable proxy.</li>
                 <li>Supervise beyond what we can directly check: debate, recursive reward modelling, weak-to-strong (Session 8).</li>
@@ -167,14 +168,14 @@
             <li>Give a specification you might write for a research-assistant model, then describe how a capable optimiser could game it without "lying" in any obvious sense.</li>
             <li>Which of Goodhart's four variants best describes sycophancy in a chatbot? Could more than one apply at once?</li>
             <li>Pan et al. find sudden "phase transitions" in gaming as capability rises. What does that imply for the practice of testing a model only at smaller scale before deploying a larger one?</li>
-            <li>The Skalse result says non-trivial proxies can't be provably unhackable over all stochastic policies, but <em>can</em> be over finite policy sets. What real-world safety measures effectively shrink the policy set?</li>
+            <li>State the equivalent-rewards exception to the Skalse result and give an example. How can restricting the policy set allow further unhackable pairs, and what practical restrictions might approximate that?</li>
             <li>Is "specification gaming" a property of the AI, of the reward, or of the relationship between them? Why does the answer matter for who is responsible when it goes wrong?</li>
         </ul>
 
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Summary and what's next</h2>
-            <p>Outer alignment is the gap between the objective we <em>specify</em> and the one we <em>intend</em>. Real optimisers, in games, in robotics, and in language models trained on human approval, exploit that gap as specification gaming. Goodhart's law explains why it is unavoidable rather than a fixable bug: even an unbiased proxy is over-estimated at the optimised tail, and Skalse et al. show no non-trivial proxy is provably safe to optimise without limit. Pan et al. add that capability makes gaming worse, sometimes abruptly. We must manage the gap, not wish it away.</p>
+            <p>Outer alignment concerns the relationship between the specified objective and intended behaviour. The examples show ways those can diverge. The Gaussian selection model explains optimistic bias under its assumptions; it does not imply that true quality must fall. Skalse et al. characterise the demanding conditions for unrestricted unhackability, including equivalent rewards. Empirical work by Pan et al. shows that stronger optimisation can worsen gaming in particular environments.</p>
             <p>Next (Sub-session 3.2): so far the danger needed a <em>misspecified</em> objective. We now show something more unsettling. For a capable, goal-directed system, a worrying set of sub-goals follows for <em>almost any</em> objective at all: instrumental convergence and power-seeking.</p>
         </div>
 

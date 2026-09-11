@@ -46,7 +46,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Everything a frontier model can do begins with <strong>pretraining</strong>: one enormous run of self-supervised next-token prediction over web-scale text. This sub-session pins down the objective (it is the cross-entropy from Session 2.1, now at scale), explains why it is called "self-supervised", describes what such a run produces (a <strong>base model</strong>), and why that base model, for all its capability, is <em>not</em> yet a safe, instruction-following assistant. That gap is what Sessions 5.2–6 exist to close.</p>
+            <p>Pretraining fits a language model to a large text corpus using next-token prediction. We examine the objective, the resulting base model and the behaviour that further training is intended to change.</p>
         </div>
 
         
@@ -63,7 +63,7 @@
         </div>
 
 <h2 class="section-title">The objective: self-supervised next-token prediction</h2>
-        <p class="lead">There is no human labelling here. The text labels itself: for every position, the "correct answer" is the token that came next.</p>
+        <p>There is no human labelling here. The text labels itself: for every position, the "correct answer" is the token that came next.</p>
         <p>Take a corpus of text, tokenise it (Session 2.2), and slide over it. At each position \(i\) the model sees the tokens so far, \(t_{&lt;i}\), and outputs a distribution \(p_\theta(\cdot \mid t_{&lt;i})\) over the vocabulary; the training signal is how much probability it placed on the token \(t_i\) that followed. Averaged over the corpus, the loss is exactly the cross-entropy from Session 2.1:</p>
         <div class="formula">\[ L(\theta) = -\frac{1}{T} \sum_{i} \log p_\theta\!\left(t_i \mid t_{&lt;i}\right). \]</div>
         <div class="info-box">
@@ -73,7 +73,7 @@
         <p>This is a humble-sounding objective with a profound consequence. To predict the next token well across the breadth of human text (code, dialogue, proofs, translations, arguments), a model is pressured to build internal machinery that captures syntax, facts, reasoning patterns, and styles. Capabilities are not programmed in; they are whatever turns out to <em>reduce next-token loss</em> on a sufficiently varied corpus. This is the seed of the alignment problem: the model learns whatever serves the objective, which is only a proxy for what we want.</p>
 
         <h2 class="section-title">The product of pretraining: a base model</h2>
-        <p class="lead">The output of a pretraining run is a base model (or "foundation model"): a powerful next-token predictor, and nothing more specific than that.</p>
+        <p>The output of a pretraining run is a base model (or "foundation model"): a powerful next-token predictor, and nothing more specific than that.</p>
         <p>A base model is, by construction, a model of the <em>training distribution</em>. Prompt it and it continues the text in the most plausible way given what it has read. That makes it astonishingly capable and, simultaneously, not what most users want:</p>
         <div class="card-grid">
             <div class="card"><h3>It completes text</h3><p>Ask a base model "What is the capital of France?" and it might continue with a list of more quiz questions, because on the web, that string is often followed by more questions. It imitates plausible text; it has no notion of "doing what the user asked".</p></div>
@@ -86,7 +86,7 @@
         </div>
 
         <h2 class="section-title">Scale and the "bitter lesson"</h2>
-        <p class="lead">Why are base models so big? Because, empirically, scale works, and it works predictably (Session 2.3).</p>
+        <p>Why are base models so big? Because, empirically, scale works, and it works predictably (Session 2.3).</p>
         <p>The trajectory is stark: GPT-2 (Radford et al., 2019) was a 1.5-billion-parameter model trained on ~40 GB of web text; a year later GPT-3 (Brown et al., 2020) was 175 billion parameters, and the qualitative leap in capability came largely from scale. GPT-2's own paper already noted that zero-shot performance improved "in a log-linear fashion" with model capacity, the scaling-law story you met in 2.3. Richard Sutton's "Bitter Lesson" (2019) names the pattern bluntly: across seventy years of AI, <em>general methods that use more computation tend to win</em> over cleverly hand-engineered ones. Pretraining is that lesson incarnate: a simple objective, applied at enormous scale.</p>
         <div class="warning-box">
             <h4>The safety consequences of scale</h4>
@@ -94,7 +94,7 @@
         </div>
 
         <h2 class="section-title">The pretraining corpus</h2>
-        <p class="lead">If the objective is "predict the next token", then the <em>corpus</em> is everything: it is simultaneously the model's source of capability, of bias, and of latent danger. Pretraining data deserves the same scrutiny as the architecture.</p>
+        <p>If the objective is "predict the next token", then the <em>corpus</em> is everything: it is simultaneously the model's source of capability, of bias, and of latent danger. Pretraining data deserves the same scrutiny as the architecture.</p>
         <p>Frontier corpora are assembled from web crawls, books, code, and curated collections, then heavily processed: de-duplication (repeated text distorts what the model "believes" is likely), quality filtering, and removal of the most toxic material. None of this is neutral. Every choice (which languages, which sources, what counts as "low quality") shapes what the model is good at and whose world it represents. Three consequences matter for safety:</p>
         <div class="card-grid">
             <div class="card"><h3>The data is the values</h3><p>A base model has no values we designed; it has the statistical shadow of its corpus. Over-represent one register, dialect or worldview and the model treats it as the default. The web's heavy skew toward English and the Global North is therefore baked in <em>before</em> any alignment, the deepest root of the multilingual safety gap (Session 1.4).</p></div>

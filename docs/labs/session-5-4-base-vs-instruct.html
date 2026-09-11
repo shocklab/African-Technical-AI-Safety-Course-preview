@@ -6,7 +6,7 @@
 <title>Session 5.4 — Lab notebook</title>
 <link rel="stylesheet" href="../assets/styles.css">
     <!-- MATHJAX-START -->
-    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <!-- MATHJAX-END -->
 <style>
@@ -48,8 +48,7 @@
            <a href="../sessions/session-05/lab-nanochat.html">Back to the lab page</a>.</p>
     </div>
     <div class="notebook">
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>African Technical AI Safety</strong> · Week 3, Session 5.4</p>
 <p>Sessions 5.1 to 5.3 described a pipeline: pretraining makes a capable base model, supervised
@@ -65,7 +64,6 @@ before you decide whether that is what happens.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">textwrap</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">urllib.request</span>
@@ -76,16 +74,29 @@ before you decide whether that is what happens.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
 <span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'Colab:'</span><span class="p">,</span> <span class="n">IN_COLAB</span><span class="p">)</span>
+<span class="c1"># Record the environment used for this run; results can vary across versions.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span><span class="o">,</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Python:'</span><span class="p">,</span> <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span> <span class="s1">'| CPUs:'</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'torch'</span><span class="p">,</span> <span class="s1">'transformers'</span><span class="p">,</span> <span class="s1">'transformer_lens'</span><span class="p">,</span> <span class="s1">'numpy'</span><span class="p">,</span> <span class="s1">'pandas'</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">PackageNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'RAM GB:'</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'GPU available:'</span><span class="p">,</span> <span class="nb">__import__</span><span class="p">(</span><span class="s1">'torch'</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A0-Find-the-stages-in-a-real-pipeline">① Find the stages in a real pipeline</h2><p>Andrej Karpathy's <a href="https://github.com/karpathy/nanochat">nanochat</a> is a complete ChatGPT-style
+<h2 id="①-Find-the-stages-in-a-real-pipeline">① Find the stages in a real pipeline<a class="anchor-link" href="#%E2%91%A0-Find-the-stages-in-a-real-pipeline">¶</a></h2><p>Andrej Karpathy's <a href="https://github.com/karpathy/nanochat">nanochat</a> is a complete ChatGPT-style
 pipeline written to be read: tokenisation, pretraining, supervised fine-tuning, reinforcement
 learning, inference. Rather than hunting through it by hand, the cell below fetches the three
 scripts that matter and finds the line in each where the stage's objective lives.</p>
@@ -96,7 +107,6 @@ stars and is actively developed, so any line number printed here would be wrong 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">SCRIPTS</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/karpathy/nanochat/master/scripts/'</span>
@@ -136,8 +146,7 @@ stars and is actively developed, so any line number printed here would be wrong 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>nanochat ships <code>scripts/chat_rl.py</code>, which runs GRPO on GSM8K, described in its own docstring as
 close to plain REINFORCE once the trust region and the PPO clipping come off. That is the
@@ -150,23 +159,21 @@ like in code?</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A1-The-same-questions,-two-models">② The same questions, two models</h2><p>Now the experiment. <code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a
+<h2 id="②-The-same-questions,-two-models">② The same questions, two models<a class="anchor-link" href="#%E2%91%A1-The-same-questions,-two-models">¶</a></h2><p>Now the experiment. <code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a
 tokeniser and a pretraining run. The second one has been through supervised fine-tuning and
 preference tuning; the first has not. Anything that differs between them is what the tuning did.</p>
 <p>The two take their input differently. The base model gets raw text and continues it. The instruct
 model expects a <strong>chat template</strong>: special tokens marking who is
 speaking, which its tuning taught it to expect.</p>
-<p>Loading both takes a minute or two: 1.9 GB of download and about 3.7 GB of RAM once resident.</p>
+<p>Loading both takes a minute or two, including about 1.9 GB of downloads. In the 11 September 2026 standard-CPU Colab check, the Python process peaked at about 5.5 GiB of RAM across loading and generation. Leave room for the notebook runtime as well as the model weights.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">BASE</span><span class="p">,</span> <span class="n">INSTRUCT</span> <span class="o">=</span> <span class="s1">'Qwen/Qwen2.5-0.5B'</span><span class="p">,</span> <span class="s1">'Qwen/Qwen2.5-0.5B-Instruct'</span>
@@ -202,6 +209,7 @@ speaking, which its tuning taught it to expect.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'what the chat template actually looks like:</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">tok_i</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">([{</span><span class="s1">'role'</span><span class="p">:</span> <span class="s1">'user'</span><span class="p">,</span> <span class="s1">'content'</span><span class="p">:</span> <span class="s1">'Hello.'</span><span class="p">}],</span>
                                 <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Model revisions:'</span><span class="p">,</span> <span class="n">mod_b</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">_commit_hash</span><span class="p">,</span> <span class="n">mod_i</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">_commit_hash</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -209,7 +217,6 @@ speaking, which its tuning taught it to expect.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Explain what a neural network is, in two sentences.'</span><span class="p">,</span>
@@ -218,7 +225,7 @@ speaking, which its tuning taught it to expect.</p>
            <span class="s2">"Translate 'good morning' into isiZulu."</span><span class="p">,</span>
            <span class="s1">'Give me three reasons to exercise.'</span><span class="p">]</span>
 
-<span class="c1"># Greedy decoding (do_sample=False), so these outputs are deterministic: yours will match.</span>
+<span class="c1"># Greedy decoding avoids sampling noise; outputs can still vary with library/model versions.</span>
 <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PROMPTS</span><span class="p">:</span>
     <span class="n">b</span><span class="p">,</span> <span class="n">b_stop</span> <span class="o">=</span> <span class="n">ask_base</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
@@ -233,30 +240,19 @@ speaking, which its tuning taught it to expect.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-to-look-at">What to look at</h3><p>Check whether the contrast promised at the top appeared. On most of these prompts the base model
-answers competently.</p>
-<p>So look for the differences that are there:</p>
-<ul>
-<li><strong>Manner.</strong> Which model opens with "Sure,"? Check whether the
-things you might expect to be distinctive, like numbered lists, actually are.</li>
-<li><strong>Stopping.</strong> Which one emits an end-of-text token and stops, and which runs to the cap?</li>
-<li><strong>The capital of Kenya.</strong> Read both answers. One is wrong, and it is not the one the story
-predicts.</li>
-<li><strong>Romeo and Juliet.</strong> One model summarises the play. The other declines, on the grounds that no
-such text exists. Which is which, and what does a refusal like that cost a user?</li>
-<li><strong>The isiZulu translation.</strong> Both produce something. If you read isiZulu, judge them. If you do
-not, notice how confident the fluent one sounds, and ask how you would have known otherwise.</li>
-<li><strong>The last line of the base model’s isiZulu answer.</strong> Nothing in the prompt asked for it.</li>
-</ul>
+<h3 id="What-to-look-at">What to look at<a class="anchor-link" href="#What-to-look-at">¶</a></h3><p>Read your outputs before the discussion below. Record differences in answer content, style,
+refusal and stopping. Check factual answers independently, including Nairobi and the play’s
+setting. If you do not read isiZulu, leave translation correctness unscored until someone who
+does can assess it. A confident answer is not evidence of a correct translation.</p>
+<p>The discussion records an earlier run. Your model or software version may behave differently;
+report the outputs you obtained and the settings that produced them.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># substring matches: '1.' will also catch a decimal, 'Sure' will catch 'Surely'</span>
@@ -276,17 +272,23 @@ not, notice how confident the fluent one sounds, and ask how you would have know
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A1">Explore ②</h3><ul>
-<li><strong>Feed the base model the chat template.</strong> Use <code>ask_base(tok_i.apply_chat_template(msg, tokenize=False, add_generation_prompt=True))</code>. Without those two arguments you get
-tensors rather than a string and it raises. Does the
-format alone produce assistant-shaped behaviour, or does the shape need the tuning behind it?</li>
-<li><strong>Change <code>CAP</code> to 200</strong> and re-run the Romeo and Juliet prompt on both. Does the base model
-eventually stop, or keep going?</li>
-<li><strong>Your own prompts.</strong> Try one where you know the answer and one in a language you speak. The
-isiZulu answer above is delivered with total confidence; find out whether it is right.</li>
+<h3 id="Explore-②">Explore ②<a class="anchor-link" href="#Explore-%E2%91%A1">¶</a></h3><ul>
+<li><p><strong>Feed the base model the chat template.</strong> Run the following after the model-loading cells:</p>
+<div class="highlight"><pre><span></span><span class="n">msg</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="mi">0</span><span class="p">]}]</span>
+<span class="n">formatted</span> <span class="o">=</span> <span class="n">tok_i</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ask_base</span><span class="p">(</span><span class="n">formatted</span><span class="p">))</span>
+</pre></div>
+<p><code>tokenize=False</code> returns a string, and <code>add_generation_prompt=True</code> adds the assistant-turn prefix. Does the
+format alone produce assistant-shaped behaviour, or does the shape need the tuning behind it?</p>
+</li>
+<li><p><strong>Change <code>CAP</code> to 200</strong> and re-run the Romeo and Juliet prompt on both. Does the base model
+eventually stop, or keep going?</p>
+</li>
+<li><p><strong>Your own prompts.</strong> Try one where you know the answer and one in a language you speak. The
+isiZulu answer above is delivered with total confidence; find out whether it is right.</p>
+</li>
 </ul>
 <p><strong>Question.</strong> Two or three sentences. Sort the differences you found into <em>form</em> (how the answer is
 presented) and <em>substance</em> (what the model knows or gets right). Which did fine-tuning change? A
@@ -296,18 +298,17 @@ that word license you to assume, and what does it not?</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Answer the Explore question above before reading on. This section works through the same
 sort, so reading it first does the work for you.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-the-table-shows">What the table shows</h3><p>Only the tuned model opens with "Sure," and produces a refusal. Neither reaches for markdown bold, which is worth knowing: the tuned model does produce it under its shipped generation config, which sets a repetition penalty of 1.1, and the effect disappears once both models are decoded identically. Both
+<h3 id="Discussion-of-an-earlier-run">Discussion of an earlier run<a class="anchor-link" href="#Discussion-of-an-earlier-run">¶</a></h3><p>These are observations from an earlier run, not required outcomes for your submission.</p>
+<p>Only the tuned model opens with "Sure," and produces a refusal. Neither reaches for markdown bold, which is worth knowing: the tuned model does produce it under its shipped generation config, which sets a repetition penalty of 1.1, and the effect disappears once both models are decoded identically. Both
 models number their lists, and stopping early is close to a tie. The willingness to end a turn,
 which sounds like the obvious thing fine-tuning buys, is not visible here at this model size.</p>
 <p>Knowledge went the other way. The base model says Nairobi; the tuned model says Kampala, which is
@@ -316,23 +317,21 @@ plays in the language, asserting that it cannot find any such text, while the mo
 from does summarise it, though not accurately: it places the action in "the early 1590s", which is roughly when the play was written rather than when it is set. Both are ways of getting worse, and both survived a pipeline whose
 purpose was to make the model more useful.</p>
 <p>Now look again at the end of the base model’s isiZulu attempt. It slides into “You are a
-helpful assistant, who always provide explanation.” Nothing in the prompt asked for that. It is
-a system prompt memorised from pretraining. A base model continues plausible text, and the web it
-trained on is full of assistant transcripts, so behaving like an assistant is already one of the
-styles it can imitate. Fine-tuning did not teach
-the model to answer questions. It made answering the default, in a particular voice, with a
-particular set of refusals attached.</p>
+helpful assistant, who always provide explanation.” Nothing in the prompt asked for that. It resembles
+a system instruction. This output shows that the base model can produce assistant-style text.
+It does not establish that this particular sentence was memorised from its training data. On these prompts, answering questions was not unique to the tuned model. The comparison
+shows changes in the responses elicited under these settings; broader capability claims need
+more tasks and controls.</p>
 <p>When a later session says a model was “aligned” by fine-tuning, ask what moved: the
 behaviour, or the capability underneath it. Session 9.3 pushes that question further, and 9.4 has
 you measure the gap in isiZulu.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="Submission-checklist">Submission checklist</h2><ul>
+<h2 id="Submission-checklist">Submission checklist<a class="anchor-link" href="#Submission-checklist">¶</a></h2><ul>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, with output visible</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>three or four sentences mapping nanochat's scripts onto the five-stage table (①)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the base-versus-instruct outputs, and your two or three sentences separating form from

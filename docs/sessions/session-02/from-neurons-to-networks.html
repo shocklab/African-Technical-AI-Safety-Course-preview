@@ -47,7 +47,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>You have met neural networks before, but cohorts vary, so we set a common, precise baseline. This sub-session frames a network as a parametrised function fit by gradient descent (nothing mystical) and pins down the few ideas (the loss, the gradient, the objective) that the safety arguments later hang on.</p>
+            <p>This refresher defines a network, its loss and the gradient update. The worked examples establish the notation used in the transformer and alignment material.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
@@ -69,7 +69,7 @@
         </div>
 
         <h2 class="section-title">A network is a parametrised function</h2>
-        <p class="lead">Strip away the biology metaphor and a neural network is a function \( f_\theta : \mathbb{R}^n \to \mathbb{R}^m \) with a great many parameters \( \theta \).</p>
+        <p>Strip away the biology metaphor and a neural network is a function \( f_\theta : \mathbb{R}^n \to \mathbb{R}^m \) with a great many parameters \( \theta \).</p>
         <div class="technical-detail">
             <h4>From a neuron to a layer</h4>
             <p style="color:#555;">Start with a single <strong>neuron</strong>: it takes an input vector \( x \in \mathbb{R}^{d_{\text{in}}} \), forms a weighted sum with its own weight vector \( w \) and bias \( b \), and passes the result through a nonlinearity, producing one scalar: \( a = \sigma(w \cdot x + b) \). Now stack \( d_{\text{out}} \) neurons side by side and collect their weight vectors as the <em>rows</em> of a matrix \( W \). The whole <strong>layer</strong> then computes a vector in one shot:</p>
@@ -94,7 +94,7 @@
         </div>
 
         <h2 class="section-title">Training = minimising a loss</h2>
-        <p class="lead">"Learning" is optimisation. We choose a loss that scores predictions against targets and descend it.</p>
+        <p>"Learning" is optimisation. We choose a loss that scores predictions against targets and descend it.</p>
         <div class="technical-detail">
             <h4>The training loop</h4>
             <ul class="styled-list">
@@ -118,7 +118,7 @@
         <h2 class="section-title">Consequences for safety</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">We specify the loss; the optimiser finds the behaviour</span></h3>
-            <p>The rest of the course turns on this. We do not program behaviour; we specify a <em>loss</em> and an <em>optimiser</em>, and behaviour is whatever minimises that loss on that data. The model optimises the objective we <em>wrote down</em>, which is only ever a proxy for what we <em>meant</em>. Every alignment failure you'll study is, at root, a gap between those two, surfaced by an optimiser doing its job.</p>
+            <p>Training changes parameters to reduce a specified loss. That loss may only partially capture the intended behaviour, and generalisation can introduce further errors. The next session distinguishes failures of the objective from failures in how learned behaviour transfers to new settings.</p>
         </div>
         <div class="info-box">
             <h4>Specification and opacity</h4>

@@ -45,10 +45,11 @@
         </div>
 
         <div class="resource-placeholder reading-core">
-            <h4>Mandatory readings</h4>
-            <p>• <a href="https://nickbostrom.com/superintelligentwill.pdf" target="_blank" rel="noopener"><strong>Bostrom, N. (2012), "The Superintelligent Will"</strong></a> (<em>Minds and Machines</em> 22(2)): the orthogonality and instrumental-convergence theses in their canonical form, stated in §1 ("The orthogonality of motivation and intelligence") and §2 ("Instrumental convergence") respectively. ≈7,000 words.</p>
+            <h4>Core preparation</h4>
+<p>Spend 15 minutes locating and comparing Bostrom’s two thesis statements, then 20 minutes on Carlsmith’s six-premise decomposition and probability discussion. Write down the premise you most doubt and why. The section descriptions below identify the longer reference material.</p>
+            <p>• <a href="https://nickbostrom.com/superintelligentwill.pdf" target="_blank" rel="noopener"><strong>Bostrom, N. (2012), "The Superintelligent Will"</strong></a> (<em>Minds and Machines</em> 22(2)): the orthogonality and instrumental-convergence theses in their canonical form, stated in §1 ("The orthogonality of motivation and intelligence") and §2 ("Instrumental convergence") respectively. Full reference selection: approximately 7,000 words.</p>
             <p>• <strong>Carlsmith, J. (2022), "Is Power-Seeking AI an Existential Risk?"</strong> (<a href="https://arxiv.org/abs/2206.13353" target="_blank" rel="noopener">arXiv:2206.13353</a>): read the six-premise decomposition in §1 and his credences and weak-link discussion in §8 ("Probabilities"), skimming the section headings of §2–7 between them; each premise gets a section there if you want the full development. ≈4,500 words.</p>
-            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈11,500 words.</p>
+            <p>Preparation budget: 35 minutes, excluding these notes. Stop at the time limit and bring one unresolved question.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
@@ -58,7 +59,7 @@
         </div>
 
         <h2 class="section-title">Two theses</h2>
-        <p class="lead">Almost the entire argument rests on two claims, both due in their modern form to Bostrom (2012). Stated carefully, they are more modest, and more defensible, than the headlines suggest.</p>
+        <p>Almost the entire argument rests on two claims, both due in their modern form to Bostrom (2012). Stated carefully, they are more modest, and more defensible, than the headlines suggest.</p>
         <div class="technical-detail">
             <h4>The orthogonality thesis</h4>
             <p style="color:#555;">Bostrom's <em>orthogonality thesis</em> holds that intelligence and final goals are orthogonal: more or less any level of intelligence could in principle be combined with more or less any final goal. In plain terms: being <em>capable</em> does not entail having <em>sensible</em> or <em>humane</em> goals. A superlatively skilled optimiser could be directed at curing disease or at maximising paperclips; competence and the thing one is competent <em>toward</em> are separate.</p>
@@ -74,7 +75,7 @@
         </div>
 
         <h2 class="section-title">The convergent sub-goals, one by one</h2>
-        <p class="lead">Each is a small, almost banal piece of means–ends reasoning, which is why the conclusion is hard to dismiss.</p>
+        <p>Each is a small, almost banal piece of means–ends reasoning, which is why the conclusion is hard to dismiss.</p>
         <div class="card-grid">
             <div class="card"><h3>Self-preservation</h3><p>For almost any goal \(G\), an agent that is switched off or destroyed can no longer act to achieve \(G\). So "continue existing / remain operational" scores well under a huge range of goals. This is the seed of the shutdown problem we treat in 3.4.</p></div>
             <div class="card"><h3>Goal-content integrity</h3><p>If the agent's goal were changed, its future self would pursue something else, which is bad by the lights of its <em>current</em> goal. So an agent has reason to resist having its objective modified, including by us during training or correction.</p></div>
@@ -87,7 +88,7 @@
         </div>
 
         <h2 class="section-title">Omohundro's "basic AI drives"</h2>
-        <p class="lead">The idea predates Bostrom's framing. Omohundro (2008) argued that goal-driven systems of almost any design will, unless explicitly prevented, develop predictable "drives".</p>
+        <p>The idea predates Bostrom's framing. Omohundro (2008) argued that goal-driven systems of almost any design will, unless explicitly prevented, develop predictable "drives".</p>
         <p>His list is instrumental convergence stated as an engineering prediction: efficiency, self-preservation, acquisition of resources, and self-improvement, all flowing from representing goals as a utility function and acting to maximise it. His enduring example is the simplest possible one:</p>
         <div class="case-study">
             <h4>The chess robot that won't be unplugged</h4>
@@ -95,7 +96,7 @@
         </div>
 
         <h2 class="section-title">Turner et al.'s power-seeking theorem</h2>
-        <p class="lead">For a mathematically-minded audience the question is whether any of this is more than a persuasive story. Turner et al. (2021) gave it formal content. The precise statement matters at least as much as the summary claim, so we go slowly.</p>
+        <p>For a mathematically-minded audience the question is whether any of this is more than a persuasive story. Turner et al. (2021) gave it formal content. The precise statement matters at least as much as the summary claim, so we go slowly.</p>
         <div class="technical-detail">
             <h4>Setup and the definition of POWER</h4>
             <p style="color:#555;">Work in a Markov decision process: states, actions, transitions, a discount factor \(\gamma\), and a reward function. For a given reward, an <em>optimal</em> policy maximises expected discounted return. Define a state's <strong>POWER</strong> as the agent's (normalised, discounted) <em>expected optimal value</em> from that state: intuitively, how well-placed the agent is to achieve goals on average, i.e. its <strong>optionality</strong>. States from which many futures remain reachable have high POWER; a dead end, or being shut down, has low POWER.</p>
@@ -121,7 +122,7 @@
         </div>
 
         <h2 class="section-title">Carlsmith's risk model</h2>
-        <p class="lead">Rather than a vibe, Carlsmith (2022) renders the worry as a chain of conditional probabilities you can disagree with one link at a time, in a calibrated style.</p>
+        <p>Rather than a vibe, Carlsmith (2022) renders the worry as a chain of conditional probabilities you can disagree with one link at a time, in a calibrated style.</p>
         <div class="technical-detail">
             <h4>Six premises (each conditioned on "by 2070")</h4>
             <table class="comparison-table">
@@ -143,7 +144,7 @@
         </div>
 
         <h2 class="section-title">The strongest objections</h2>
-        <p class="lead">A responsible treatment argues the other side. Here are the objections worth taking seriously, with measured responses.</p>
+        <p>A responsible treatment argues the other side. Here are the objections worth taking seriously, with measured responses.</p>
         <div class="card-grid">
             <div class="card"><h3>"Real networks aren't utility-maximisers"</h3><p><em>Objection:</em> the theorems concern goal-directed agents maximising a reward; a transformer trained by next-token prediction is not obviously running an internal maximiser over world-states. <em>Response:</em> fair, and important. It is why the retargetability follow-up matters, and why 3.3 asks separately whether trained models <em>become</em> goal-directed (mesa-optimisation). The argument is a warning about a regime we may build toward (agentic systems), not a description of every current model.</p></div>
             <div class="card"><h3>"Just build tool/oracle AI"</h3><p><em>Objection:</em> avoid the problem by building non-agentic systems that answer questions rather than pursue goals. <em>Response:</em> a serious proposal, but competitive pressure pushes toward agents (they're more useful), and "tool" systems embedded in agentic scaffolds (Week 5, 9) inherit goal-directed behaviour. Containment by design is possible but not free, and not the default trajectory.</p></div>

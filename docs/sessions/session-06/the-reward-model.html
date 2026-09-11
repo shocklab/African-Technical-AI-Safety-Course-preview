@@ -57,7 +57,7 @@
         </div>
 
 <h2 class="section-title">From comparisons to a score</h2>
-        <p class="lead">We collect data of one shape: a prompt \(x\), two candidate responses, and a human's judgement of which is better.</p>
+        <p>We collect data of one shape: a prompt \(x\), two candidate responses, and a human's judgement of which is better.</p>
         <p>Write the preferred ("winning") response \(y_w\) and the dispreferred ("losing") one \(y_l\). We want a scalar reward function \(r_\phi(x,y)\), a neural network with parameters \(\phi\), such that better responses get higher scores. The question is how to turn discrete "A beats B" judgements into a continuous score. The standard answer borrows a seventy-year-old model from statistics.</p>
         <div class="technical-detail">
             <h4>The Bradley–Terry model</h4>
@@ -76,7 +76,7 @@
         </div>
 
         <h2 class="section-title">Training the reward model</h2>
-        <p class="lead">Fit \(\phi\) by maximum likelihood: make the model assign high probability to the comparisons humans actually made.</p>
+        <p>Fit \(\phi\) by maximum likelihood: make the model assign high probability to the comparisons humans actually made.</p>
         <p>Taking the negative log-likelihood of the Bradley–Terry model over a dataset \(\mathcal{D}\) of comparisons gives the reward-model loss:</p>
         <div class="formula">\[ \mathcal{L}(\phi) = -\,\mathbb{E}_{(x,\,y_w,\,y_l)\sim\mathcal{D}}\Big[ \log \sigma\!\big( r_\phi(x, y_w) - r_\phi(x, y_l) \big) \Big]. \]</div>
         <p>Minimising it pushes the reward of preferred responses above that of dispreferred ones, by a margin that grows with how consistently humans favoured them. In practice \(r_\phi\) is usually the SFT model itself with its final unembedding replaced by a single scalar "reward head", so the reward model starts from the same language understanding as the policy it will judge.</p>

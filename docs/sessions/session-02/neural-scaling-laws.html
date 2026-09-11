@@ -59,7 +59,7 @@
         </div>
 
         <h2 class="section-title">The empirical law</h2>
-        <p class="lead">Kaplan et al. (2020) measured the test loss \(L\) of language models across roughly seven orders of magnitude and found it scales as a power law in each of three quantities (model parameters \(N\), dataset size \(D\), and training compute \(C\)) whenever the other two are not the bottleneck.</p>
+        <p>Kaplan et al. (2020) measured the test loss \(L\) of language models across roughly seven orders of magnitude and found it scales as a power law in each of three quantities (model parameters \(N\), dataset size \(D\), and training compute \(C\)) whenever the other two are not the bottleneck.</p>
         <p>Written out, the three relationships are</p>
         <div class="formula">\[ L(N) \approx \left( \frac{N_c}{N} \right)^{\alpha_N}, \qquad L(D) \approx \left( \frac{D_c}{D} \right)^{\alpha_D}, \qquad L(C) \approx \left( \frac{C_c}{C} \right)^{\alpha_C}. \]</div>
         <p>Each is a straight line on a log–log plot, with slope equal to minus the exponent. The exponents are small and positive: Kaplan estimated \(\alpha_N \approx 0.076\), \(\alpha_D \approx 0.095\), and \(\alpha_C^{\min} \approx 0.05\) along the compute-efficient frontier (the plain compute exponent is \(\alpha_C \approx 0.057\)). A small exponent means diminishing returns: a \(10\times\) increase in parameters cuts the (reducible) loss by only a factor of about \(10^{0.076} \approx 1.19\). But the line does not bend down to a plateau anywhere in the studied range.</p>
@@ -110,7 +110,7 @@
         </div>
 
         <h2 class="section-title">The forecasting asymmetry</h2>
-        <p class="lead">The reason a safety course opens with an empirical curve is that the curve sets the terms of the whole problem.</p>
+        <p>The reason a safety course opens with an empirical curve is that the curve sets the terms of the whole problem.</p>
         <div class="card-grid">
             <div class="card"><h3>Capability is forecastable</h3><p>Loss, and more loosely many capabilities, can be <em>predicted</em> before a model is built. Frontier labs commit budgets to larger systems partly <em>because</em> the payoff is foreseeable. Capability sits on a planned trajectory that you can extrapolate.</p></div>
             <div class="card"><h3>Safety is not forecastable the same way</h3><p>There is no clean scaling law for "will not deceive its overseer" or "is robust to jailbreaks". The quantity we can extrapolate is the one we worry about least; the properties we care about most resist this kind of prediction.</p></div>

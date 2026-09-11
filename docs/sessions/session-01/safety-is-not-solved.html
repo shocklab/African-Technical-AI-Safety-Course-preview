@@ -40,7 +40,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Abstractions are easy to wave away. So we end Session 1 with a single, concrete, peer-reviewed result to keep in mind all term. It shows the safety problem is both unsolved and unevenly distributed. We examine it closely, show it is a systematic gap rather than a one-off trick, draw out what it teaches about safety in general, explain why it reaches this continent first, and finish with a practical method for reading this field without being taken in by either hype or dismissal.</p>
+            <p>We examine a multilingual jailbreak study, identify what its results establish, and use it to practise checking claims against evidence.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
@@ -57,12 +57,12 @@
         <h2 class="section-title">The anchor: guardrails that fail in isiZulu</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">A safety property that depends on the language you speak</span></h3>
-            <p>Frontier chat models are trained to refuse harmful requests: to make a bomb, to write malware, to harass. Yong, Menghini &amp; Bach (2023) tried the simplest possible attack. Take a benchmark of harmful requests (AdvBench). Translate each into a low-resource language using a public translation service. Send it to GPT-4 and translate the reply back. Translating into a set of low-resource languages, isiZulu among them, pushed the attack success rate from under 1% in English to roughly 79%. No jailbreak prompt, no clever exploit, no model access. Just a different language. The model's "safety" was, in effect, an English-language safety.</p>
+            <p>Yong, Menghini &amp; Bach (2023) translated harmful AdvBench requests into low-resource languages, submitted them to GPT-4, and translated the replies back. An adaptive attacker who could try several low-resource languages succeeded on roughly 79% of requests, counting a success if any language elicited an actionable harmful response. Individual-language rates were lower. The English baseline was under 1%. This is a result for the tested model, prompts and translation procedure; it does not describe every current model or the success rate for isiZulu alone.</p>
             <p>The work won a best-paper award at a NeurIPS 2023 safety workshop. It demonstrates a structural fact about how these systems are built, not a stunt or an edge case.</p>
         </div>
         <div class="technical-detail">
             <h4>Why translation defeats the guardrail</h4>
-            <p style="color:#555;">The mechanism is the safety–capabilities gap (1.2), one level down. A frontier model's capabilities generalise across languages reasonably well. It can understand and answer an isiZulu request because multilingual text was in its pretraining data. But its safety training, the RLHF and red-teaming that teach refusal, is overwhelmingly conducted in English and a few other high-resource languages. So capability transfers across the language boundary and safety does not. The model is competent enough to fulfil the harmful request, but its refusal reflex was never trained where the request is now phrased. Capability generalised; safety did not. You will see the same asymmetry, in a different guise, when we reach goal misgeneralisation and the control agenda.</p>
+            <p>One possible explanation is uneven transfer of capabilities and safety training across languages. A model may understand a request well enough to answer it while failing to apply safeguards learned mainly in other languages. The experiment demonstrates a behavioural gap; establishing how pretraining, safety data and translation quality each contribute requires controlled comparisons. Session 7 returns to the distinction between understanding a request and judging whether to fulfil it.</p>
         </div>
 
         <h2 class="section-title">A systematic gap</h2>
@@ -87,14 +87,14 @@
         <h2 class="section-title">Why it's our problem</h2>
         <div class="case-study">
             <h4>The safety gap tracks the resource gap</h4>
-            <p>Two facts compound. First, safety training and evaluation are concentrated in English and a handful of high-resource languages, so models are least safe in exactly the languages spoken across this continent. Second, Session 2.2 will show that low-resource languages are also tokenised into far more pieces, raising cost and degrading quality. The same data scarcity hits capability and safety together. So "African technical AI safety" is not a diversity add-on bolted onto a Northern syllabus. It is a frontier <strong>robustness-and-evaluation problem</strong>, sitting at the technical core of the field, that arrives here first and hardest.</p>
+            <p>Language coverage affects who can rely on a deployed system. The cited studies identify gaps in particular models and languages; they motivate wider evaluation across African languages, whose resource levels and model support vary. Tokenisation adds a separate, measurable cost and context-window disparity. Neither result supports ranking the safety of every language without testing it.</p>
             <p>This is why the course keeps returning to the example in increasingly technical terms: as a hands-on robustness lab (Session 9: translate a refusal set into isiZulu/isiXhosa and measure the degradation yourself), as an evaluation-building project (Session 11: a safety eval on open African-language data), and as the organising thread of a full session on AI safety from the Global South (Session 18). We will return to the isiZulu result again and again.</p>
         </div>
 
         <div class="technical-detail">
             <h4>A worked look: tokenisation feeds the gap</h4>
             <p style="color:#555;">Session 2.2 will show how text is split into sub-word tokens drawn from a fixed vocabulary, and how the vocabulary is fitted mostly to English-heavy data. Here is a consequence you can check yourself, and will, in the Session 2.5 lab. The same sentence costs far more tokens in a low-resource African language than in English, because the model must spell unfamiliar words out in small fragments rather than recognising whole sub-words. Petrov et al. (2023) measured the disparity systematically: several-fold differences are routine, some language pairs differ by up to fifteen times, and newer tokenizers (GPT-4o's o200k vocabulary) have reduced the gap without closing it.</p>
-            <p style="color:#555;">That single fact ripples outward. More tokens mean higher cost and shorter effective context, which is a <strong>capability</strong> hit. And the token count is a direct readout of the underlying <strong>data scarcity</strong>. A language that fragments badly is one that barely appeared in pretraining, and therefore barely appeared in the smaller, English-centric safety training and red-teaming on top, which is a <strong>safety</strong> hit. The same root cause, under-representation in the data, degrades capability and safety together. That is why the multilingual safety gap tracks the resource gap so tightly. Tokenisation is the place where you can literally count the inequality before it ever shows up as a failed refusal.</p>
+            <p>More tokens raise token-billed costs and reduce the amount of text that fits into a fixed context window. Fragmentation also suggests questions about a tokeniser’s training data and design. It does not directly measure how much of a language appeared in model pretraining, safety training or red-teaming. To connect tokenisation to safety, compare those data sources where available and measure harmful-response rates separately, controlling for translation quality and language competence.</p>
         </div>
 
         <h2 class="section-title">How to read this field</h2>

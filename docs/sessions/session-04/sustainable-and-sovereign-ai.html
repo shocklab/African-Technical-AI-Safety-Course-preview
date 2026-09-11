@@ -239,7 +239,7 @@
 </tr>
 <tr>
 <td><strong>Large context (long documents)</strong></td>
-<td>Transformer attention scales quadratically with sequence length; doubling context roughly quadruples compute</td>
+<td>Dense attention has a quadratic sequence-length term. Doubling context quadruples that term, not necessarily total inference compute; feed-forward work, decoding and caching also matter.</td>
 <td>O(n²) scaling; theoretically proven, not an estimate <em>(Duman-Keles et al., ALT 2023)</em></td>
 </tr>
 </tbody>

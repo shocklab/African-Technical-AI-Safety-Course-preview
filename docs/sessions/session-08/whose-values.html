@@ -40,7 +40,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Sub-session 8.1 asked how to oversee a stronger system; 8.2 and 8.3 gave us tools (the four lenses, and Ubuntu and relational ethics) for reasoning about the <em>target</em>. This sub-session closes the loop. "Align to human values" hides three buried choices: align to <em>what</em> (instructions? preferences? interests?), <em>whose</em>, and <em>aggregated by what rule</em>. We work each in turn, show with Arrow's theorem that some of those choices are provably in tension, and end with the in-class debate exercise for the whole session.</p>
+            <p>An alignment target requires choices about which values to pursue, whose judgements to use and how to aggregate them. We examine these choices through Gabriel’s target distinctions, social choice and a debate exercise.</p>
         </div>
 
         <h2 class="section-title">The normative turn</h2>
@@ -99,20 +99,20 @@
         <h2 class="section-title">Whose values, at two levels</h2>
         <div class="info-box">
             <h4>The demographic and ontological levels</h4>
-            <p>Whose preferences are in the annotation pool that trains a frontier reward model? Almost certainly not isiZulu- or Sesotho-speaking ones in any representative number. That is the <em>demographic</em> level, and it is already a problem the course returns to (Session 18). But there is a deeper, <em>ontological</em> level. Arrow and RLHF both assume value lives in individual preference orderings to be aggregated. Ubuntu and relational ethics (8.3) locate value <em>relationally</em> (in community and in obligations between persons), which the preference-aggregation frame cannot even express, let alone average. So "whose values?" is two questions stacked: whose preferences enter the data, and whether the individual-preference framework is the right container at all. African technical AI safety presses both, and that is why this is more than a footnote to alignment.</p>
+            <p>There are two questions about representation. First, whose judgements entered the annotation pool, and how well are its languages and communities represented? Establish this from dataset documentation rather than assuming the answer. Second, is preference aggregation an adequate account of the target? Individuals can express preferences about relationships and collective outcomes, but collecting those preferences may not fulfil requirements for community authority, reciprocity or shared decision-making.</p>
         </div>
 
         <h2 class="section-title">In-class: the debate exercise</h2>
         <div class="lab-box">
             <h4>Does debate actually help a weak judge? <span class="tag">seminar</span></h4>
-            <p>Two students argue opposite answers to a contested question; a third plays an under-informed "judge" and must rule using only the debate. Run it twice: once on a checkable factual question, once on a value-laden one.</p>
-            <p>Debrief: Did the judge converge on truth, or on the better rhetorician? What changed between the factual and the value question? Map the result back onto the AI-debate proposal (8.1) and onto the social-choice problem above.</p>
+            <p>Work in groups of three for 20 minutes. First use a factual claim whose answer can be checked against a short source supplied by the lecturer. The judge records an answer and confidence before hearing two 2-minute arguments, then records both again. Reveal the source and check whether the answer improved. Rotate roles and repeat on the university study-assistant scenario from 8.2, keeping the facts fixed. Record the normative premises behind the decision rather than marking one value judgement as factually correct.</p>
+            <p>Debrief: compare the factual judge’s before-and-after correctness and confidence. On the values case, assess whether the judge identified the competing premises and answered the strongest objection. Explain which observations bear on the AI-debate proposal and which would require a larger controlled study.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Take a single request ("help me write this email") and say how Gabriel's six targets could each yield a different "aligned" response.</li>
-            <li>Work the Condorcet cycle yourself, then explain in one sentence which of Arrow's four conditions "average the annotators" most clearly gives up.</li>
+            <li>Work the Condorcet cycle, then define a scoring rule: each voter gives 2 points to their first choice, 1 to their second and 0 to their third; sum points, resolving ties A before B before C. Using four voters, give two profiles where every voter’s A-versus-B ordering stays fixed but moving C changes the group’s A-versus-B ordering. Which Arrow condition fails? Separately, explain why averaging supplied cardinal ratings requires a different analysis.</li>
             <li>RLHF's cardinal reward escapes Arrow's letter. What does it assume instead, and why is that assumption also contestable?</li>
             <li>Does pluralistic alignment dissolve the "whose values" problem or relocate it? Where does the choice reappear?</li>
         </ul>

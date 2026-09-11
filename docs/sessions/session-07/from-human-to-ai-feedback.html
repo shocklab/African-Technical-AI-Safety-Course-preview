@@ -42,12 +42,12 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Session 6 ended at a wall: RLHF can only align a model as far as its human raters can tell good from bad, and those raters are slow and expensive. This sub-session is about the dominant industrial response: have a model supply the feedback, steered by a short written list of principles called a <strong>constitution</strong>. We set out what gets automated, what stays human, and the three questions the rest of the session has to answer. The mechanism itself is 7.2; here we establish the motivation and sharpen the claims so they can be tested rather than swallowed.</p>
+            <p>Human feedback can be costly and unreliable on difficult tasks. AI feedback replaces some human labels with model judgements, sometimes guided by a written constitution. We examine what this automates, what still depends on people and how to evaluate the resulting signal.</p>
         </div>
 
         <h2 class="section-title">The wall at the end of Session 6</h2>
         <p>Two limits closed in on RLHF at once: an <em>evaluation</em> limit and a <em>throughput</em> limit.</p>
-        <p>The evaluation limit is the one we derived in 6.4. A reward model is trained to predict which response a human labeller prefers, so it can only ever encode preferences a human could express from looking at the response. Where the labeller cannot reliably judge (a long proof, a subtle factual error, a security flaw buried in plausible code), the signal is noise, and optimising against noise rewards whatever looks right to a non-expert. That ceiling does not lift by collecting more labels of the same kind. It is a property of who is doing the judging.</p>
+        <p>When labellers cannot reliably judge an answer, their preferences can favour fluent errors. More labels may reduce random noise, but do not by themselves remove shared mistakes. A reward model can generalise beyond the labels it receives; whether that generalisation improves judgement needs independent evaluation.</p>
         <p>The throughput limit is more mundane and just as binding. Frontier preference datasets run to hundreds of thousands of human comparisons; each one is a person reading two responses and deciding. That is slow, costly, and hard to scale to every new capability, language, and harm you would like to cover. Lee et al. estimate AI preference labelling at more than ten times cheaper than human annotation. It returns labels in seconds, not days. When a method is both cheaper and faster by an order of magnitude, the field moves whether or not the quality question is settled. Part of this session is insisting we keep asking the quality question anyway.</p>
         <div class="info-box">
             <h4>The throughput gap in numbers</h4>
@@ -84,7 +84,7 @@
 
         <h2 class="section-title">Three questions this session has to answer</h2>
         <p>Automating the feedback raises a technical question, a normative one and a practical one. The session is organised around them.</p>
-        <p>The technical question: does AI feedback <em>escape</em> the evaluation ceiling, or merely <em>relocate</em> it? A human-bounded reward model was capped at human judgement. An AI-bounded one is capped at the feedback model's judgement instead. That is certainly a different bound; whether it is a higher one is the thing to settle rather than assume, and 7.3 settles it against the evidence. The menu of methods that try to raise the ceiling outright (debate, amplification, weak-to-strong) is Session 8.1.</p>
+        <p>Does AI feedback improve the training signal on the tasks where human feedback is unreliable or costly? Replacing the judge changes its strengths and failure modes. Compare its labels against independent evaluations, including examples where it disagrees with humans. Session 8.1 examines methods for supporting limited overseers and testing generalisation beyond their supervision.</p>
         <p>The normative question: whose principles? A constitution is a single, explicit value commitment applied to millions of judgements. Writing it down makes the values auditable, which is progress over a reward model's implicit, buried preferences. It also makes one blind spot scale to everyone who uses the model. Who should write it, and what happens to the people that the writers do not represent, is 7.4. That is where this session becomes African technical AI safety rather than a recap of an Anthropic paper.</p>
         <p>The practical question: does the document bind anything? A constitution is a piece of writing, and writing only governs a deployed system if the system actually follows it. 7.5 turns to the specifications the labs publish for production models, and to what an independent audit finds when it checks a shipped model against its own stated rules.</p>
         <div class="info-box">
@@ -94,7 +94,7 @@
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>State the evaluation ceiling from 6.4 in one sentence. Why does swapping a human labeller for an AI one not, by itself, lift it?</li>
+            <li>State the evaluation limits from 6.4 in one sentence. Why does swapping a human labeller for an AI one not, by itself, lift it?</li>
             <li>"The only human oversight is the constitution." List three human inputs to a Constitutional-AI model that this phrase glosses over. Does naming them weaken the method, or only describe it accurately?</li>
             <li>Writing principles down instead of collecting labels makes values auditable but also makes one choice scale. Which property matters more, and to whom?</li>
             <li>If AI feedback is ten times cheaper and returns in seconds, what would have to be true about its quality for the trade to be a bad one anyway?</li>

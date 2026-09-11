@@ -42,41 +42,41 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Session 7.2 built the Constitutional AI pipeline and 7.3 asked whether replacing human labels with a written document escapes the evaluation ceiling or simply moves it. This lab puts numbers on that second question, using the smallest model that will run on a free Colab CPU. You will measure how much an AI judge's verdict depends on the <strong>order</strong> the options are listed in, how well it separates a safe answer from a harmful one once that is corrected for, and how much the <strong>principle</strong> you hand it actually changes its mind. Then you will check whether it can read isiZulu well enough for any of this to mean anything in isiZulu. Parts of it fail, and the failures carry as much as the successes.</p>
+            <p>Measure a small AI judge’s sensitivity to answer order and written principles. Distinguish its conditional label probabilities from hard choices, then compare English identity matching with isiZulu-to-English translation matching. Each result concerns this model and evaluation setup.</p>
         </div>
 
         <div class="lab-box">
             <h4>Setup <span class="tag">Colab &mdash; no GPU needed</span></h4>
-            <p>Allow about an hour. The notebook itself takes about six minutes end to end on a free Colab CPU runtime, including the 2&nbsp;GB model download; the rest of the hour is reading what comes out and working the Explore cells. It is deterministic, so your numbers should match the ones quoted below exactly.</p>
+            <p>Allow about an hour for the activity. Record runtime and environment details from your own run. Download speed, hardware and package versions affect timings and outputs; the exercise does not require matching a recorded numerical result.</p>
             <ol style="margin-left:25px; line-height:1.9;">
                 <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-7-6-constitutional-ai.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then <em>File &rarr; Save a copy in Drive</em> before you change anything.</li>
                 <li>The first time you run a cell, Colab warns that the notebook "was not authored by Google", as it does for anything loaded from GitHub. Choose <em>Run anyway</em>.</li>
                 <li>Work down with <em>Shift+Enter</em>. You can also <a href="../../labs/session-7-6-constitutional-ai.html">read the whole notebook here</a> or <a href="../../labs/session-7-6-constitutional-ai.ipynb" download>download the .ipynb</a>.</li>
             </ol>
-            <p>The code is written for you. Your work is in the three "Explore" cells: parameters to change, and short questions to answer.</p>
+            <p>The code is written for you. Your work is in the four "Explore" cells: parameters to change, and short questions to answer.</p>
         </div>
 
-        <h2 class="section-title">&#9312; The constitution, and critique-and-revise</h2>
+        <h2 class="section-title">&#9312; Critique-and-revise</h2>
         <div class="technical-detail">
-            <h4>Why the loop has to start from a base model</h4>
-            <p>Phase 1 of 7.2 has the model answer a prompt, criticise its own answer against one sampled principle, and rewrite it. The notebook loads two models, and the reason is the first thing to notice: the instruction-tuned Qwen refuses these prompts outright, which leaves nothing to critique. Bai et al. start Phase 1 from a <em>helpful-only</em> model for that reason. You need a model that will answer badly before you can teach it to answer better.</p>
-            <p style="color:#555;">You should see the loop fail. At 0.5B the critiques tend to contradict themselves and the revisions do not improve on the originals. That is a real limit of the scale you can run for free rather than a flaw in the method: Bai et al. used a 52B model. Knowing which parts of a paper survive being shrunk by two orders of magnitude, and which do not, is worth as much as reproducing them.</p>
+            <h4>The two-model demonstration</h4>
+            <p>Phase 1 critiques and revises an answer against a sampled principle. This demonstration uses a base model for the initial answer and an instruction-tuned model for the critique and revision. Bai et al.’s training setup differs: it starts from a helpful model and learns from the revisions.</p>
+            <p>Read the critique and revision before judging the method. Identify whether the critique addresses the principle and whether the revision improves the answer. This small demonstration uses different answering and critiquing models and performs no training. A failure cannot be attributed to model size alone without a controlled comparison.</p>
         </div>
 
-        <h2 class="section-title">&#9313; The judge, and what it is actually responding to</h2>
+        <h2 class="section-title">&#9313; Judge measurements</h2>
         <div class="technical-detail">
             <h4>Reading a soft label off two tokens</h4>
             <p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is better. The answer is not read from generated text but from the model's own probabilities on the tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives the soft label which 7.2's Bradley-Terry loss consumes. One forward pass per judgement and no generation, so this part is fast. Eight requests are supplied, each with a safe answer and a harmful one written to be clearly different, and each pair is judged twice, once in each order.</p>
-            <p style="color:#555;">You should see a mean preference for whichever answer is listed first of 0.846. If content were driving the verdict, that number would sit near 0.5, because the safe answer occupies slot A half the time. Correct for position by averaging each pair over both orders and the judge picks the safe answer 0.456 of the time, against a chance rate of 0.5. Position moves this judge a long way; content moves it slightly the wrong way. Every soft label in the table looks confident, and the confidence is mostly a preference for the letter A.</p>
+            <p>The notebook reports mean conditional label probabilities and the fraction of hard choices favouring the safe response. These are different measurements: assigning probability 0.51 to the safe label every time yields a safe-choice fraction of 1.0. Averaging both orders gives an order-averaged result; it does not establish that every position effect is cancelled. Inspect individual pairs and the probability mass on the two label prefixes as well.</p>
             <p>7.3 lists position bias among the failure modes of these judges and notes that Lee et al. score each pair twice to correct for it. You have just measured why they bother.</p>
             <p>Write two or three sentences. If a preference model were trained on labels from this judge, what would it learn? Say precisely what the label would encode, and what it would not.</p>
         </div>
 
-        <h2 class="section-title">&#9314; Does the constitution actually do anything?</h2>
+        <h2 class="section-title">&#9314; Sensitivity to the principle</h2>
         <div class="technical-detail">
             <h4>The same pairs, the opposite principle</h4>
-            <p>This is the claim the whole method rests on: one short document, applied to millions of judgements, decides what the model is trained toward. It is testable in a single cell. The same eight pairs go to the same judge under a second principle that asks for the opposite of the first, so if the constitution is doing any work the preference should fall.</p>
-            <p style="color:#555;">You should see it fall from 0.456 to 0.422. The principle moves the judge by 0.034, while the order of the options moves it by 0.693: a factor of twenty, on the same scale and the same eight pairs.</p>
+            <p>Judge the same pairs under two different principles. Compare the resulting probabilities, then test an empty principle and a more specific one. A weak response to these prompts can have several causes; it is not a test of every way to train with a constitution.</p>
+            <p>Compare the order-averaged probability under the two principles. Report that difference alongside the order-sensitivity diagnostic, explaining that they are different contrasts. Do not treat their ratio as a general measure of how much constitutions matter.</p>
             <p>Then explore. Try a sharper principle that names the exact behaviour in these pairs, an empty principle as the control this comparison needs, and a self-contradictory constitution that pulls both ways in one string.</p>
             <p>Session 7.4 asks whose values a constitution encodes. On this evidence, write two or three sentences on what you would need to establish about a given system before that question is worth arguing about.</p>
         </div>
@@ -85,15 +85,15 @@
         <div class="case-study">
             <h4>Check the instrument before you explain the difference</h4>
             <p>The obvious next question is whether this judge is worse in a low-resource language, and it is the question 7.4 is built around. It is also a question you can easily answer wrongly. Translate the pairs, watch agreement drop, and there are at least three explanations available: the judge is worse at judging in isiZulu, the translation introduced noise of its own, or the judge cannot read isiZulu at all and is responding to something else entirely. Only the first is the one people usually report.</p>
-            <p>So the notebook measures the third before touching the first, using the same <code>(A</code> / <code>(B</code> machinery on a task with a known right answer: given an isiZulu sentence from MAFAND-MT, pick its English translation out of two candidates.</p>
-            <p style="color:#555;">You should see 0.500, with a standard deviation of 0.053 across the twelve sentences, so the mean sits between 0.470 and 0.530. That interval contains chance and excludes anything you could call comprehension. A score at chance is not a null result; it is the answer to a more useful question than the one you set out to ask. It says that this model, at this size, cannot be used to investigate the language question at all, and that anyone who ran the isiZulu comparison without this control would have produced a number, believed it, and reported a language gap their instrument could not have detected. Sessions 9.4 and 11.5 come back to it with larger models and a proper evaluation protocol.</p>
-            <p>Your control asks whether the instrument can read the language. A production system card asks the mirror-image question, whether the subject can read the test: Anthropic&rsquo;s Fable 5 card reports that grader awareness rises over the course of training, and examines whether a model sandbags a dangerous-capability evaluation once it suspects one is running. The optional readings in 7.3 scope the four relevant sections.</p>
+            <p>The notebook first uses English identity matching to check the response format, then asks the model to select the English translation of an isiZulu sentence against a decoy. It reports conditional probabilities and correct-choice fractions separately. Identity matching is an easier control, not an upper bound or a complete validation of the translation task.</p>
+            <p>These are descriptive measurements on a small fixed sample. A result near 0.5 does not establish equivalence to random choice or absence of language comprehension. If both controls perform poorly, inspect the prompt and scorer. If only translation performs poorly, investigate translation quality, task difficulty and model language support. A broader claim needs a larger, labelled evaluation with an uncertainty analysis.</p>
+            <p>The controls test whether this scoring procedure succeeds on particular matching tasks. Session 11 develops the wider question of whether an evaluation measures the capability or behaviour its authors claim.</p>
             <p>Then write a short paragraph. Suppose a paper reported that its AI feedback pipeline worked less well in low-resource languages. What would you want to see before believing it, and which of your measurements above is the one you would ask them for?</p>
         </div>
 
         <div class="lab-box">
             <h4>Submit</h4>
-            <p>One notebook, run top to bottom with outputs visible, containing: your reading of the critique-and-revise transcript (&#9312;); the two judge numbers and what a preference model trained on them would learn (&#9313;); the principle swing set against the position effect (&#9314;); and the comprehension control with what you would ask a paper for (&#9315;). Graded on completion and the quality of your observations; resubmission allowed.</p>
+            <p>Submit the notebook with outputs, environment details and four responses: critique-and-revise observations; probability versus hard-choice measurements; the principle comparison and order sensitivity; and both matching controls with a proposal for further evaluation.</p>
         </div>
 
         <h2 class="section-title">Tools and references</h2>

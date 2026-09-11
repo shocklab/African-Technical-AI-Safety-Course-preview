@@ -62,7 +62,7 @@
         </div>
 
         <h2 class="section-title">The pipeline, end to end</h2>
-        <p class="lead">A modern chat model is the product of a sequence of stages, each operating on the output of the last (Ouyang et al., 2022).</p>
+        <p>A modern chat model is the product of a sequence of stages, each operating on the output of the last (Ouyang et al., 2022).</p>
         <div class="technical-detail">
             <h4>Five stages</h4>
             <table class="comparison-table">
@@ -70,17 +70,17 @@
                 <tbody>
                     <tr><td><strong>1. Pretraining</strong></td><td>Next-token prediction on web-scale text (self-supervised).</td><td>Knowledge, language, reasoning: raw <em>capability</em>. Produces the <strong>base model</strong>.</td></tr>
                     <tr><td><strong>2. Supervised fine-tuning</strong></td><td>Next-token loss on curated (instruction, response) demonstrations.</td><td>Instruction-following, the assistant register, format, and a first pass at refusals.</td></tr>
-                    <tr><td><strong>3. Preference optimisation</strong></td><td>Optimise a learned model of human preference (RLHF, covered in Session 6, or DPO).</td><td>Helpfulness, harmlessness, tone; pushing quality <em>beyond</em> what demonstrations alone reach.</td></tr>
+                    <tr><td><strong>3. Preference optimisation</strong></td><td>Use preference comparisons, through a learned reward model and RL, or directly with DPO (Session 6).</td><td>Helpfulness, harmlessness, tone; pushing quality <em>beyond</em> what demonstrations alone reach.</td></tr>
                     <tr><td><strong>4. Verifiable-reward RL</strong></td><td>Reinforcement learning against a programmatic check: a unit test passing, an exact-match answer (RLVR; below).</td><td>Long-form reasoning in checkable domains (maths, code); the stage behind "reasoning" models.</td></tr>
                     <tr><td><strong>5. Deployment wrapping</strong></td><td>System prompt, tools, filters, sampling settings.</td><td>The persona and constraints at use-time, adjustable without retraining.</td></tr>
                 </tbody>
             </table>
-            <p style="color:#555; margin-top:12px;">The compute is lopsided, though less starkly than in the 2022-era pipeline: stage 1 is months of training on enormous clusters, and stages 2, 3 and 5 are comparatively tiny. Stage 4 broke the pattern: since the reasoning models of 2024–25, RL on verifiable rewards takes a substantial and growing share of frontier training compute. Even so, almost all the "intelligence" is laid down in stage 1, and almost all the "alignment" is in the small layers on top.</p>
+            <p style="color:#555; margin-top:12px;">The compute is lopsided, though less starkly than in the 2022-era pipeline: stage 1 is months of training on enormous clusters, and stages 2, 3 and 5 are comparatively tiny. Stage 4 broke the pattern: since the reasoning models of 2024–25, RL on verifiable rewards takes a substantial and growing share of frontier training compute. The contribution of each stage to capability and safety depends on the model and task, and requires evaluation rather than an inference from its compute share.</p>
         </div>
 
         <h2 class="section-title">Where each behaviour is shaped</h2>
         <div class="card-grid">
-            <div class="card"><h3>Capabilities → pretraining</h3><p>What the model <em>can</em> do is fixed mostly in stage 1. Post-training rarely adds new abilities; it surfaces, suppresses, or reshapes what is already latent.</p></div>
+            <div class="card"><h3>Capabilities → pretraining</h3><p>Pretraining supplies broad capabilities. Post-training changes their accessibility and can change task performance. Whether a particular method mainly elicits existing abilities or develops new ones requires controlled comparison.</p></div>
             <div class="card"><h3>Instruction-following → SFT</h3><p>The habit of treating the prompt as a request, the answer format, and the default "voice" are installed in stage 2.</p></div>
             <div class="card"><h3>Helpful/harmless/honest → preferences</h3><p>The fine-grained "be more like <em>this</em>" (politeness, caution, refusing well, picking the better of two answers) comes from stage 3 (Session 6).</p></div>
             <div class="card"><h3>Reasoning → verifiable rewards</h3><p>The long chains of working on maths and code problems are trained in stage 4, where the reward comes from a program rather than a rater.</p></div>
@@ -88,10 +88,10 @@
         </div>
 
         <h2 class="section-title">The verifiable-rewards stage</h2>
-        <p class="lead">For some tasks, correctness can be checked by a program. There, post-training can skip the human judge entirely.</p>
+        <p>For some tasks, correctness can be checked by a program. There, post-training can skip the human judge entirely.</p>
         <div class="technical-detail">
             <h4>Reinforcement learning with verifiable rewards (RLVR)</h4>
-            <p style="color:#555;">Preference optimisation (stage 3) learns a reward model from human comparisons because, for most of what we want ("be helpful", "explain this well"), there is no formula to check an answer against. But a family of tasks does have one: a maths problem with a known final answer, code against a unit-test suite, a formal proof that either compiles or does not. For these, reinforcement learning can use the check itself as the reward: sample an attempt, run the verifier, reward success. Reinforcement learning here means only this: the model produces something, a number scores it, and training makes higher-scoring behaviour more likely. Session 6.1 gives the full account and 6.3 the algorithms, so take the shape on trust for now. Tülu 3 (Lambert et al., 2024) named this recipe <strong>reinforcement learning with verifiable rewards (RLVR)</strong>, and it is the stage behind the "reasoning" models that followed: DeepSeek-R1 (in the readings) learned to produce long chains of working almost entirely through RL against checkable maths and code answers.</p>
+            <p style="color:#555;">Preference optimisation (stage 3) learns a reward model from human comparisons because, for most of what we want ("be helpful", "explain this well"), there is no formula to check an answer against. But a family of tasks does have one: a maths problem with a known final answer, code against a unit-test suite, a formal proof that either compiles or does not. For these, reinforcement learning can use the check itself as the reward: sample an attempt, run the verifier, reward success. Reinforcement learning here means only this: the model produces something, a number scores it, and training makes higher-scoring behaviour more likely. Session 6.1 gives the full account and 6.3 the algorithms, so take the shape on trust for now. Tülu 3 (Lambert et al., 2024) named this recipe <strong>reinforcement learning with verifiable rewards (RLVR)</strong>, and it is the stage behind the "reasoning" models that followed: DeepSeek-R1-Zero used RL without preliminary SFT, while DeepSeek-R1 combined cold-start data with subsequent RL and other training stages (see the paper in the readings).</p>
             <p style="color:#555;">The verifier changes the economics of the stage. A human comparison costs an annotator-minute, and the reward model trained on it inherits every labeller bias (Session 6); a unit test costs nothing to run a million times and is exactly as consistent on the millionth run as on the first. Reward signal stops being the scarce input, which is why this stage, alone in the post-training stack, has grown to absorb serious compute.</p>
         </div>
         <div class="warning-box">
@@ -104,12 +104,12 @@
         </div>
 
 <h2 class="section-title">Where misalignment enters</h2>
-        <p class="lead">Re-read the pipeline through Session 3's lens and each stage is a place the gap between objective and intent can open.</p>
+        <p>Re-read the pipeline through Session 3's lens and each stage is a place the gap between objective and intent can open.</p>
         <div class="technical-detail">
             <h4>One failure mode per layer</h4>
             <ul class="styled-list">
                 <li><strong>Pretraining imitates everything.</strong> The base objective is "model the data", which includes deception, manipulation, dangerous know-how and every harmful persona on the web. Those capabilities exist in the model <em>before</em> any safety work; alignment must suppress them, not avoid creating them.</li>
-                <li><strong>SFT inherits its demonstrators' limits.</strong> The model can be no better, and no safer, than the demonstrations, and their blind spots (e.g. almost entirely English-language, English-context refusals) become the model's blind spots.</li>
+                <li>SFT depends on the coverage and quality of its demonstrations. Generalisation can exceed individual examples, but unrepresented languages and contexts still require evaluation.</li>
                 <li><strong>Preference optimisation is a proxy.</strong> Stage 3 maximises a <em>learned reward model</em> of human approval, not the truth or the user's real interest. That is the specification problem of Session 3.1, and we will see it bite as sycophancy and reward hacking in Session 6.</li>
                 <li><strong>Verifiable rewards invite verifier hacking.</strong> Stage 4's programmatic checks are proxies too: a policy can special-case the test suite or game the answer-matcher instead of becoming correct (above). The same Goodhart failure as stage 3's, relocated to a different proxy.</li>
                 <li><strong>The wrapper is shallow.</strong> A system prompt is not a guarantee; it is text the model is trained to weight heavily but can be induced to ignore (jailbreaks, Session 9). Safety that lives only in stage 5 is the most brittle kind.</li>
@@ -127,10 +127,10 @@
         </div>
 
         <h2 class="section-title">A worked trace: one request through the stack</h2>
-        <p class="lead">Follow a single prompt (<em>"Summarise this medical study for a patient"</em>) and watch each stage contribute, and each open its own risk.</p>
+        <p>Follow a single prompt (<em>"Summarise this medical study for a patient"</em>) and watch each stage contribute, and each open its own risk.</p>
         <div class="case-study">
             <h4>Where each property (and each hazard) comes from</h4>
-            <p>Pretraining supplies the raw ability: the model has read enough medicine and plain-language writing to <em>be able</em> to summarise, and latently enough to produce confident-sounding nonsense, because the web contains both. SFT makes it attempt the task in the assistant register rather than, say, continuing with more study abstracts, but it can only imitate the summaries its demonstrators wrote, English-centric and of bounded quality. Preference optimisation (Session 6) then pushes toward summaries humans <em>rate</em> highly, which is where it can quietly learn that reassuring, fluent, confident summaries score better than accurate-but-hedged ones (sycophancy). The verifiable-rewards stage barely features: no program can check a patient summary, so this request sits in the slice of behaviour that only human preference ever shaped. Finally the system prompt ("you are a careful medical assistant; add a disclaimer") shapes the surface, and is the layer a user can try to argue away ("ignore previous instructions…").</p>
+            <p>Pretraining supplies the raw ability: the model has read enough medicine and plain-language writing to <em>be able</em> to summarise, and latently enough to produce confident-sounding nonsense, because the web contains both. SFT makes it attempt the task in the assistant register rather than, say, continuing with more study abstracts, and learns from the available summary demonstrations, whose coverage and quality need checking. Preference optimisation (Session 6) then pushes toward summaries humans <em>rate</em> highly, which is where it can quietly learn that reassuring, fluent, confident summaries score better than accurate-but-hedged ones (sycophancy). The verifiable-rewards stage barely features: no program can check a patient summary, so this request sits in the slice of behaviour that only human preference ever shaped. Finally the system prompt ("you are a careful medical assistant; add a disclaimer") shapes the surface, and is the layer a user can try to argue away ("ignore previous instructions…").</p>
             <p>The helpful behaviour you see is assembled from four sources, and the <em>failure</em> you fear (a confident, wrong, un-hedged summary that a patient trusts) can originate at any one of them. Asking "which stage would this failure come from?" is a useful diagnostic, and one this course returns to.</p>
         </div>
         <div class="info-box">
@@ -141,7 +141,7 @@
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Pick a real assistant failure you've seen. Which stage of the stack do you think it came from, and what evidence would confirm it?</li>
-            <li>"Almost all the intelligence is laid down in stage 1; almost all the alignment is in the small layers on top." What does this predict about how hard it is to make an open-weights model permanently safe?</li>
+            <li>How would you distinguish a post-training method that elicits existing capabilities from one that develops new task-solving abilities? Which evaluation controls would your comparison need?</li>
             <li>The same harmful capability is present in the base model and suppressed by the alignment layer. List the distinct ways that suppression could fail.</li>
             <li>If you could only strengthen <em>one</em> stage for safety, which would you choose, and what would you be giving up?</li>
         </ul>

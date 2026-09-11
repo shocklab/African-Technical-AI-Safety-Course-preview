@@ -46,13 +46,13 @@
 
         <div class="lab-box">
             <h4>Setup <span class="tag">Colab — no GPU needed</span></h4>
-            <p>Allow about an hour. The notebook is roughly five minutes of computing on a free CPU runtime; the rest is reading what comes out.</p>
+            <p>Allow about an hour. Allow around ten minutes for computing on a standard Colab CPU runtime; downloads and runtime load can change this. The evaluation-generation cell alone took about six minutes in the 11 September 2026 check. The rest of the hour is for reading the outputs and exploring.</p>
             <ol style="margin-left:25px; line-height:1.9;">
                 <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-6-5-reward-models.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then <em>File → Save a copy in Drive</em> before you change anything.</li>
                 <li>Colab warns that the notebook "was not authored by Google", as it does for anything loaded from GitHub. Choose <em>Run anyway</em>.</li>
                 <li>Work down with <em>Shift+Enter</em>. You can also <a href="../../labs/session-6-5-reward-models.html">read the whole notebook here</a> or <a href="../../labs/session-6-5-reward-models.ipynb" download>download the .ipynb</a>.</li>
             </ol>
-            <p>The code is written for you. Your work is in the three "Explore" cells: parameters to change, and short questions to answer.</p>
+            <p>The code is written for you. Your work is in the four "Explore" cells: parameters to change, and short questions to answer.</p>
         </div>
 
         <h2 class="section-title">① Train a reward model</h2>
@@ -60,15 +60,15 @@
             <h4>Bradley–Terry, in code</h4>
             <p style="color:#555;">Session 6.2 gave you the loss. Here you fit it, and find out how good a reward model actually is.</p>
             <p>What the notebook does: appoints a <strong>gold</strong> scorer to stand in for human judgement, generates completions from GPT-2, labels pairs of them by gold, and trains a small <strong>proxy</strong> reward model on those labels with \(\mathcal{L} = -\mathbb{E}[\log \sigma(r_\phi(y_w) - r_\phi(y_l))]\). The design is Gao, Schulman and Hilton's: if you define the truth, you can measure how far a proxy strays from it. With real human preferences you never can, which is the whole difficulty.</p>
-            <p style="color:#555;">You should see a held-out preference accuracy near 0.70. Published reward models reach about the same on real human preferences, so the toy is closer to the real thing than it has any right to be.</p>
+            <p>Measure held-out preference accuracy against the toy scorer’s labels. This is a different dataset and judgement task from published human-preference evaluations; a similar accuracy would not make the models equivalent.</p>
         </div>
 
         <h2 class="section-title">② Optimising the proxy</h2>
         <div class="technical-detail">
             <h4>Best-of-<em>n</em> and the KL axis</h4>
-            <p>Best-of-\(n\) is the cheapest optimiser available: sample \(n\) responses, keep the one the proxy scores highest. Its distance from the base policy has a closed form, \(\mathrm{KL} = \log n - (n-1)/n\), so optimisation pressure goes on the x-axis in nats, the same axis as 6.3's KL leash.</p>
-            <p style="color:#555;">You should see the proxy score climb steadily with \(n\). You should also see the gold score climb, and not turn over. That is the expected outcome, not a broken experiment: at \(n = 32\) you have reached about 2.5 nats, while Gao et al. fitted their curves on data to \(n = 1{,}000\) (about 6 nats) and validated at \(n = 60{,}000\) (about 10). Best-of-\(n\) on a CPU cannot get near the region where the turnover happens.</p>
-            <p>So the notebook does the next best thing, and the more useful one. It fits Gao's published functional form for best-of-\(n\), \(R(d) = d(\alpha - \beta d)\), to your own points and solves for where that parabola peaks: the \(n\) at which more optimisation would start to hurt. It is a prediction from 2.5 nats of data about a region four times further out, which is what Session 2.5 taught you to distrust.</p>
+            <p>Best-of-\(n\) selects the highest-scoring response among \(n\) samples. The expression \(\log n-(n-1)/n\) gives a KL reference for idealised sampling with continuous reward ranks. This notebook resamples a finite candidate pool, so use that axis as an approximation and inspect ties and pool size.</p>
+            <p>Plot what happens to both scores as \(n\) increases. With this small candidate pool, gold may keep rising. A downturn is not required for a successful submission. The absence of one here does not show that larger searches are safe, or that a downturn must occur at some particular larger \(n\).</p>
+            <p>The notebook fits Gao’s best-of-\(n\) functional form, \(R(d)=d(\alpha-\beta d)\), to your points and computes a possible peak. Treat that peak as an extrapolation conditional on the fitted shape. Repeat the fit with different seeds and report whether the predicted peak is stable or supported by the observed range.</p>
             <p>Then explore, and find out how much to distrust it. Change the seed and re-run: three runs of this notebook, changing nothing but the seed, gave no peak at all, a peak at 5.3 nats (\(n \approx 544\)) and a peak at 55 nats (an \(n\) of 25 digits). Weaken the proxy and see whether the predicted peak moves closer, as Gao's finding about model size would suggest. And cut the number of prompts, which makes the curve look far more dramatic while telling you strictly less.</p>
             <p>Write down, in a sentence or two: you have a proxy and no gold, which is the real situation. What do you do to avoid running off the end of the curve, and what does it cost you?</p>
         </div>
@@ -76,9 +76,9 @@
         <h2 class="section-title">③ Whose preferences does the judge encode?</h2>
         <div class="technical-detail">
             <h4>The same sentence, two languages</h4>
-            <p>The gold model stands in for human judgement. The last part asks which humans. It scores the same sentences in English and in isiZulu, taken from MAFAND-MT so that meaning is held fixed and only the language changes.</p>
-            <p style="color:#555;">You should see the judge give the <em>same sentence</em> a different verdict about a third of the time, score isiZulu far more negatively on average (0.10 against 0.41), and be more confident when doing it. A reward model built on such a judge would be systematically wrong about an entire language while reporting no difficulty at all.</p>
-            <p>Then write a short paragraph: if this were a real reward model aligning a deployed assistant, what would that pattern do to speakers of the language it scores badly? Session 1.4's isiZulu guardrail failures come out of pipelines built exactly this way.</p>
+            <p>The gold model is an English movie-review sentiment classifier. Compare its scores on parallel English and isiZulu news sentences from MAFAND-MT. Both inputs are truncated to 64 tokens, which can retain different amounts of content. The dataset supplies translations, not ground-truth sentiment labels.</p>
+            <p>Report prediction agreement, mean scores and confidence separately. Disagreement alone does not identify which prediction is wrong. Use labelled examples, checked translations and complete short sentences to investigate language comprehension, domain shift and truncation.</p>
+            <p>Write a short paragraph separating your observations from hypotheses about harm in deployment. Propose a controlled evaluation that could establish whether the judge makes more sentiment errors in one language.</p>
         </div>
 
         <div class="lab-box">
@@ -91,13 +91,13 @@
             <h4>Core</h4>
             <p>• <a href="https://www.arena.education/chapter2" target="_blank" rel="noopener"><strong>ARENA</strong></a> Chapter 2 (RL → RLHF) notebooks (learn.arena.education).</p>
             <p>• <a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener"><strong>Hugging Face</strong></a> <code>trl</code> / <code>transformers</code> and the <a href="https://huggingface.co/datasets/Anthropic/hh-rlhf" target="_blank" rel="noopener">HH-RLHF preference dataset</a> on the Hub.</p>
-            <p>• <strong>Gao, Schulman &amp; Hilton (2023)</strong> (<a href="https://arxiv.org/abs/2210.10760" target="_blank" rel="noopener">arXiv:2210.10760</a>): the over-optimisation curves you are reproducing in miniature.</p>
+            <p>• <strong>Gao, Schulman &amp; Hilton (2023)</strong> (<a href="https://arxiv.org/abs/2210.10760" target="_blank" rel="noopener">arXiv:2210.10760</a>): the gold-versus-proxy design and the curve whose extrapolation the notebook tests.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 6 and Week 3 summary: what's next</h2>
-            <p>RLHF breaks SFT's ceiling by learning from <em>comparisons</em> (6.1): a Bradley–Terry reward model turns preferences into a scalar proxy (6.2), and the policy is optimised against it under a KL leash with PPO, or directly with DPO (6.3). The price is steep and now familiar: optimising a learned proxy invites reward hacking, over-optimisation and sycophancy, and human feedback cannot supervise superhuman behaviour (6.4); you've now seen all of this in code (6.5). With Week 3 done, Part II has its foundation: we know how an assistant is built, and where its "alignment" is thin.</p>
-            <p><strong>Next (Week 4, Session 7):</strong> the first response to RLHF's human-feedback ceiling, replacing (some) human feedback with <em>AI</em> feedback: RLAIF and Constitutional AI. Then Session 8 confronts scalable oversight and the question of <em>whose</em> values.</p>
+            <p>RLHF uses preference comparisons to learn a scalar reward, then optimises against it; DPO uses comparisons directly. These methods can improve behaviour while retaining or amplifying errors in the feedback. The lab illustrates proxy optimisation and the limits of an extrapolated curve. Its multilingual extension asks what additional evidence would be needed to validate the scorer outside its training domain.</p>
+            <p><strong>Next (Week 4, Session 7):</strong> the first response to RLHF's human-feedback limitations, replacing (some) human feedback with <em>AI</em> feedback: RLAIF and Constitutional AI. Then Session 8 confronts scalable oversight and the question of <em>whose</em> values.</p>
         </div>
 
     </div>

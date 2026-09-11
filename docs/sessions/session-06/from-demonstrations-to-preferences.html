@@ -35,19 +35,19 @@
     <header>
         <div class="week-badge">Week 3 • Session 6.1</div>
         <h1>From demonstrations to preferences</h1>
-        <p>Why learning from human <em>comparisons</em> breaks through the ceiling that supervised fine-tuning hits</p>
+        <p>Learning from comparisons when demonstrations are difficult to provide</p>
     </header>
     <div class="content">
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Session 6 — RLHF &amp; RL fine-tuning</span></h3>
-            <p>Session 5 left us at a wall: supervised fine-tuning can imitate a good answer but cannot express "this answer is <em>better</em> than that one", and so caps out at demonstration quality. This session is about the technique that broke through it, <strong>reinforcement learning from human feedback</strong>, and the price it charges: we now optimise a <em>learned proxy</em> for human approval, with all the Goodhart hazards of Session 3.1.</p>
+            <p>Session 5 introduced training on demonstrations. Human comparisons provide another signal: a rater may recognise the better of two answers without being able to write either. RLHF learns a reward model from these comparisons and optimises against it, bringing the proxy risks of Session 3 into the training pipeline.</p>
             <p style="margin-bottom:0;">This session's sub-sessions: 6.1 from demonstrations to preferences · 6.2 the reward model · 6.3 policy optimisation: PPO &amp; the KL leash · 6.4 the limits of RLHF · 6.5 lab (Colab).</p>
         </div>
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>This sub-session motivates the RLHF pipeline. We recall why SFT stalls, introduce the central idea (learn from preferences, not demonstrations), trace its short but consequential history (from Atari to InstructGPT), and lay out the three-step pipeline the next sub-sessions unpack. Throughout, keep one question live: what does optimising a <em>model of what humans approve of</em> incentivise, as opposed to optimising for what is actually good?</p>
+            <p>Human comparisons can provide useful feedback when demonstrations are difficult to write. We introduce the RLHF pipeline and ask when human approval tracks the behaviour we want.</p>
         </div>
 
         
@@ -65,8 +65,8 @@
         </div>
 
 <h2 class="section-title">Judging is easier than producing</h2>
-        <p class="lead">Recall the asymmetry from Session 5.2: for most of what we want from an assistant, <em>judging</em> is far easier than <em>producing</em>.</p>
-        <p>You may not be able to write the ideal answer to an open-ended question, or the perfectly calibrated, honest response. But shown two attempts, you can usually say which is better. SFT cannot use that ability: its loss, "make this target more likely", needs a single demonstration to imitate and has no way to encode "A &gt; B". So SFT inherits three limits: it caps at demonstration quality, it can't express comparative judgement, and it has no negative signal (Session 5.2). The opening is obvious in hindsight: build the training signal out of the <em>comparisons</em> humans can reliably give, not the demonstrations they struggle to author.</p>
+        <p>Recall the asymmetry from Session 5.2: for most of what we want from an assistant, <em>judging</em> is far easier than <em>producing</em>.</p>
+        <p>You may be able to compare two answers without being able to write an ideal answer yourself. Ordinary SFT directly rewards a supplied target; a preference objective can use the comparison itself. Choosing preferred samples as SFT targets is also possible. The distinction concerns how feedback enters the objective, not a theorem that supervised models cannot outperform their demonstrators.</p>
 
                 <div class="technical-detail">
             <h4>A short primer on reinforcement learning</h4>
@@ -100,10 +100,10 @@
             <h4>The idea</h4>
             <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are cheaper and more reliable than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
         </div>
-        <p>That last point matters most. SFT is bounded above by its demonstrators. A preference-trained model can, in principle, climb past them: as long as humans can <em>recognise</em> improvements, the model can be pushed toward them even if no human wrote the ideal answer. The same property is also the danger: "push toward what humans recognise as better" quietly becomes "push toward what <em>looks</em> better to a rater", and those diverge (we will see this as sycophancy in 6.4).</p>
+        <p>Preference training can improve responses beyond the supplied demonstrations when the feedback recognises those improvements and optimisation can find them. Supervised learning can also generalise beyond individual demonstrations. Both approaches can fail when their training signal rewards plausible-looking errors.</p>
         <div class="case-study">
             <h4>Comparisons versus demonstrations</h4>
-            <p>Take the task "write a clear, honest two-sentence summary of this paper." A <em>demonstration</em> asks an annotator to produce the ideal summary, which is slow and capped by that person's own writing; two good annotators will write different "ideal" answers, so the target is noisy. A <em>comparison</em> asks only whether summary A is better than summary B, which is quick and far more reproducible: annotators who could never agree on the perfect summary will readily agree that the fluent, faithful one beats the rambling, inaccurate one. The same human hour yields more signal, and signal that is less arbitrary. And because the model is being told which of <em>its own</em> samples is better, it climbs its own gradient of quality rather than aiming at one fixed human answer, which is how it can end up better than any single demonstration in the data.</p>
+            <p>For a paper-summary task, a demonstration asks an annotator to write a summary; a comparison asks them to choose between supplied summaries. Comparisons may be easier to collect, but their cost and reliability depend on the task and raters. Evaluate agreement and factual accuracy rather than assuming that preference labels are less noisy.</p>
         </div>
         <div class="technical-detail">
             <h4>The preference-collection loop</h4>
@@ -134,7 +134,7 @@
         </div>
         <div class="warning-box">
             <h4>A common misconception: RLHF makes the model "smarter"</h4>
-            <p>It mostly does not. The knowledge, the reasoning, the language: all of that capability is laid down in pre-training (Session 5.1). Preference-based RLHF, the pipeline this session covers, largely <em>elicits and reshapes</em> what is already there: it changes which behaviours surface, the format of answers, the willingness to follow instructions and to refuse. That is why a 1.3B InstructGPT could be preferred to the 175B GPT-3 it was built from: the smaller model gained no raw ability, it was made to <em>use</em> its ability the way people wanted. Keep this straight, because it bounds what alignment-by-RLHF can do: it is a powerful lever on <em>behaviour and disposition</em>, and a weak one on <em>competence</em>. Whether RL on <em>verifiable</em> rewards, the neighbouring stage in 5.3, extends competence or only elicits it is a separate and contested question.</p>
+            <p>Preference-based RLHF changes which responses a model produces. InstructGPT’s 1.3B model was preferred to the separate 175B GPT-3 model in the reported comparison; the smaller model was fine-tuned from a base model of its own size. This demonstrates the value of post-training for that evaluation, not the absence of any capability change. Distinguishing improved elicitation from new task-solving ability requires broader, controlled tests.</p>
         </div>
 
         <h2 class="section-title">The three-step pipeline</h2>

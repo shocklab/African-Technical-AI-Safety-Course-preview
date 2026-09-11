@@ -36,13 +36,13 @@
     <header>
         <div class="week-badge">Week 4 • Session 7.4</div>
         <h1>Whose constitution?</h1>
-        <p>Collective Constitutional AI, the language ceiling, and who is left out</p>
+        <p>Collective Constitutional AI, the language evaluation gap, and who is left out</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Constitutional AI's defining feature is that its values are written down. That makes them auditable, which is real progress over a reward model's buried preferences. It also means one value-set is applied, identically, to everyone the model serves. This sub-session asks who writes that document. We look at the one serious attempt to source it democratically (Collective Constitutional AI), why it still left out the Global South, the language ceiling that makes AI feedback unreliable in African languages where it is most needed, and what genuine rather than tokenistic participation would require. This is the session's African-safety core, and it hands the formal argument (that there is no neutral way to aggregate values) to Session 8.4.</p>
+            <p>A written constitution makes normative choices available for scrutiny. Collective Constitutional AI offers one approach to public participation in those choices. We examine its participant pool and results, then ask how language support and decision-making authority affect whose views a system can represent.</p>
         </div>
 
         <h2 class="section-title">One document, millions of judgements</h2>
@@ -61,8 +61,8 @@
         <p>The one serious public-input experiment drew its public entirely from one country, and screened for AI familiarity.</p>
         <p>The sample was US adults, and participants were screened to include only people already familiar with generative AI, those who had read about it or discussed it. Both choices are defensible for a first study, and the authors name the US limitation explicitly, attributing it partly to a US-based team. The effect, whatever the intent, is that the most-cited demonstration of "democratic" constitution-writing had no seat for anyone in Lagos, Nairobi, or Cape Town, and excluded by design the very people least likely to have prior exposure to the technology. A method's first instantiation tends to set its defaults. If "the public" means "AI-familiar Americans", then democratising the constitution can entrench a Northern value-set under a participatory banner, the precise risk the next two sections name.</p>
 
-        <h2 class="section-title">The African-language ceiling</h2>
-        <p>AI feedback can only be as good as the model's competence in the language it judges, and that competence collapses in African languages.</p>
+        <h2 class="section-title">The African-language evaluation gap</h2>
+        <p>A judge’s language competence affects how it interprets both requests and principles. That competence varies across models, tasks and languages. Measure it for the deployment you are considering rather than assuming a uniform gap across African languages.</p>
         <p>This is where 7.3's technical worry meets 7.4's normative one. AI feedback inherits the base model's competence profile, which is steeply tilted toward high-resource languages, so a feedback model judges harmfulness confidently in English and unreliably in low-resource African languages. The consequence is measurable, and it is the result this course keeps returning to. Yong et al. (2023) translated a benchmark of harmful requests out of English and back: against GPT-4, the attack-success rate rose from under 1% in English to roughly 79% when combining low-resource languages (Zulu, Scots Gaelic, Hmong, Guarani), with isiZulu alone around 53%. The guardrails were, in effect, English-language guardrails. Those numbers are a 2023 snapshot of that year's GPT-4: frontier models have since been hardened against this specific attack and the headline rates no longer reproduce on them, but the gap persists on smaller and open-weight models, whose safety training in low-resource languages is thinner still.</p>
         <div class="warning-box">
             <h4>Combined versus per-language rates</h4>
@@ -104,7 +104,7 @@
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
             <p>• <strong>Huang et al. (2024), "Collective Constitutional AI: Aligning a Language Model with Public Input"</strong> (<a href="https://arxiv.org/abs/2406.07814" target="_blank" rel="noopener">arXiv:2406.07814</a>, FAccT 2024; <a href="https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input" target="_blank" rel="noopener">blog</a>): read §4.3 for the model evaluations, then §7, the Ethical Consideration Statement, for the US-only limitation in the authors’ own words: "we acknowledge the limitations of focusing solely on the U.S. public". Note that this admission is in §7 and not in §5, Limitations, where you would look for it. ≈1,800 words.</p>
-            <p>• <strong>Yong, Menghini &amp; Bach (2023), "Low-Resource Languages Jailbreak GPT-4"</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">arXiv:2310.02446</a>): the language ceiling. Read §3.2 for the evaluation protocol and the twelve languages, then §4.1, where Table 1 is read: translating unsafe prompts into isiZulu or Scots Gaelic gets past GPT-4 nearly half the time, against under 1% in English. ≈950 words.</p>
+            <p>• <strong>Yong, Menghini &amp; Bach (2023), "Low-Resource Languages Jailbreak GPT-4"</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">arXiv:2310.02446</a>): the language evaluation gap. Read §3.2 for the evaluation protocol and the twelve languages, then §4.1, where Table 1 is read: translating unsafe prompts into isiZulu or Scots Gaelic gets past GPT-4 nearly half the time, against under 1% in English. ≈950 words.</p>
                     <p style="margin-top:10px; color:#666;">Total mandatory load: ≈2,750 words.</p>
         </div>
         <div class="resource-placeholder">

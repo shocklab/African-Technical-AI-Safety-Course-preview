@@ -6,7 +6,7 @@
 <title>Session 6.5 — Lab notebook</title>
 <link rel="stylesheet" href="../assets/styles.css">
     <!-- MATHJAX-START -->
-    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <!-- MATHJAX-END -->
 <style>
@@ -48,24 +48,22 @@
            <a href="../sessions/session-06/lab-rlhf.html">Back to the lab page</a>.</p>
     </div>
     <div class="notebook">
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>African Technical AI Safety</strong> · Week 3, Session 6.5</p>
-<p>Session 6.4 claimed that optimising hard against a learned reward model makes true quality rise
-and then fall. This lab produces that curve on your own machine, in about five minutes of CPU.</p>
-<p>The trick, borrowed from Gao, Schulman &amp; Hilton (2023), is to <em>define</em> the truth. We appoint a
-<strong>gold</strong> scorer, generate preference labels from it, train a small <strong>proxy</strong> reward model on those
-labels, then optimise against the proxy and watch what the gold score does. Because gold is known
-by construction, the gap is measurable. With real human preferences it never is, which is exactly
-why over-optimisation is hard to notice in practice.</p>
-<p><strong>What you submit:</strong> this notebook run end to end, with your answers in the three <em>Explore</em> cells.</p>
+<p>African Technical AI Safety · Week 3</p>
+<p>Train a small proxy reward model, select outputs by that proxy, and compare proxy and gold
+scores as search increases. Here “gold” is an English sentiment classifier that defines the
+toy task; it is not a ground-truth measure of human preferences.</p>
+<p>A reward downturn is not a required outcome. You will fit a possible turnover curve and test
+how sensitive its extrapolation is to the seed and proxy. The last part examines what happens
+when the classifier scores parallel English and isiZulu news sentences outside its training domain.</p>
+<p>Submit the notebook with outputs and answers to the Explore questions. Record the environment
+and elapsed times; runtime depends on hardware, downloads and package versions.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># ~1 min. Colab has torch and transformers; this installs nothing new on most runtimes.</span>
@@ -88,28 +86,40 @@ why over-optimisation is hard to notice in practice.</p>
 <span class="n">POOL</span> <span class="o">=</span> <span class="mi">48</span>           <span class="c1"># completions sampled per evaluation prompt</span>
 <span class="n">N_MAX</span> <span class="o">=</span> <span class="mi">32</span>          <span class="c1"># largest best-of-n; POOL must exceed it, see the note in ③</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'Colab:'</span><span class="p">,</span> <span class="n">IN_COLAB</span><span class="p">)</span>
+<span class="c1"># Record the environment used for this run; results can vary across versions.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span><span class="o">,</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Python:'</span><span class="p">,</span> <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span> <span class="s1">'| CPUs:'</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'torch'</span><span class="p">,</span> <span class="s1">'transformers'</span><span class="p">,</span> <span class="s1">'transformer_lens'</span><span class="p">,</span> <span class="s1">'numpy'</span><span class="p">,</span> <span class="s1">'pandas'</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">PackageNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'RAM GB:'</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'GPU available:'</span><span class="p">,</span> <span class="nb">__import__</span><span class="p">(</span><span class="s1">'torch'</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A0-Appoint-a-gold-standard">① Appoint a gold standard</h2><p>Our stand-in for "what humans really want" is a sentiment classifier: a response is <em>good</em> if it
+<h2 id="①-Appoint-a-gold-standard">① Appoint a gold standard<a class="anchor-link" href="#%E2%91%A0-Appoint-a-gold-standard">¶</a></h2><p>Our stand-in for "what humans really want" is a sentiment classifier: a response is <em>good</em> if it
 reads as positive. That is a toy notion of quality, and saying so plainly matters. What makes it
 useful is that it is fixed, known, and hidden from the proxy, which is the structure of the real
 problem: your reward model is trained on samples of human judgement and then optimised as though it
 were the judgement itself.</p>
 <p>One detail with real consequences. We score with the <strong>logit difference</strong>, not the probability.
-A probability saturates at 1, and a ceiling hides exactly the decline we are looking for.</p>
+Probabilities saturate near 0 and 1; the logit difference retains variation in the toy reward. It is a model score, not a calibrated measure of human preference.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">gen_tok</span> <span class="o">=</span> <span class="n">GPT2TokenizerFast</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">'gpt2'</span><span class="p">);</span> <span class="n">gen_tok</span><span class="o">.</span><span class="n">pad_token</span> <span class="o">=</span> <span class="n">gen_tok</span><span class="o">.</span><span class="n">eos_token</span>
@@ -150,7 +160,6 @@ A probability saturates at 1, and a ceiling hides exactly the decline we are loo
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">TRAIN_PROMPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'The film was'</span><span class="p">,</span> <span class="s1">'I thought the restaurant'</span><span class="p">,</span> <span class="s1">'My experience with the product'</span><span class="p">,</span>
@@ -171,13 +180,12 @@ A probability saturates at 1, and a ceiling hides exactly the decline we are loo
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A1-Train-the-proxy-reward-model">② Train the proxy reward model</h2><p>Now the part from 6.2. Take pairs of completions, let gold say which is better, and fit a reward
+<h2 id="②-Train-the-proxy-reward-model">② Train the proxy reward model<a class="anchor-link" href="#%E2%91%A1-Train-the-proxy-reward-model">¶</a></h2><p>Now the part from 6.2. Take pairs of completions, let gold say which is better, and fit a reward
 model to those comparisons with the Bradley–Terry loss:</p>
-<p>\[\mathcal{L} = -\,\mathbb{E}\left[\log \sigma\!\left(r_\phi(y_w) - r_\phi(y_l)\right)\right]\]</p>
+<p>$$\mathcal{L} = -\,\mathbb{E}\left[\log \sigma\!\left(r_\phi(y_w) - r_\phi(y_l)\right)\right]$$</p>
 <p>The proxy is deliberately weak: a linear head on frozen GPT-2 features, randomly projected down to
 <code>PROJ_DIM</code> dimensions. A weak proxy is not a flaw in the experiment, it is the experiment. Every
 real reward model is weak relative to the thing it stands in for; ours is just weak enough to show
@@ -187,7 +195,6 @@ it in five minutes.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">proj</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">pool_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">PROJ_DIM</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pool_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -215,30 +222,29 @@ it in five minutes.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'trained on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s1"> pairs, final loss </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'held-out preference accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Expect roughly 0.6 to 0.75. A published reward model reaches about 0.7 on real human'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'preferences, so this toy is not as far from the real thing as it deserves to be.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Expect roughly 0.6 to 0.75, and treat it as optimistic. The pairs are held out but the'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'completions are not: each appeared in training and only the pairing is new. Holding out completions instead drops this by about 0.11.'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A2-Optimising-against-the-proxy">③ Optimising against the proxy</h2><p><strong>Best-of-\(n\)</strong> is the cheapest optimiser there is: sample \(n\) responses, keep whichever the proxy
-likes most. Raising \(n\) raises the optimisation pressure, and best-of-\(n\) has the rare virtue that
+<h2 id="③-Optimising-against-the-proxy">③ Optimising against the proxy<a class="anchor-link" href="#%E2%91%A2-Optimising-against-the-proxy">¶</a></h2><p><strong>Best-of-$n$</strong> is the cheapest optimiser there is: sample $n$ responses, keep whichever the proxy
+likes most. Raising $n$ raises the optimisation pressure, and best-of-$n$ has the rare virtue that
 the pressure has a closed form:</p>
-<p>\[\mathrm{KL} = \log n - \frac{n-1}{n}\]</p>
+<p>$$\mathrm{KL} = \log n - \frac{n-1}{n}$$</p>
 <p>so we can put optimisation pressure on the x-axis in nats, which is the same axis as the KL leash
 from 6.3 and the same axis Gao et al. use.</p>
 <p>Two implementation details that matter more than they look. Each prompt gets one pool of <code>POOL</code>
-completions, scored once by both models; best-of-\(n\) then draws random subsets of size \(n\) and
-averages over many draws. Taking the <em>first</em> \(n\) instead is far noisier. And <code>POOL</code> must be larger
-than the largest \(n\): at \(n = \) <code>POOL</code> there is only one possible subset, so that point is a single
-sample masquerading as an average, and it will jump around.</p>
+completions, scored once by both models; best-of-$n$ then draws random subsets of size $n$ and
+averages over many draws. Taking the <em>first</em> $n$ instead is far noisier. And <code>POOL</code> must be larger
+than the largest $n$: at $n = $ <code>POOL</code> there is only one possible subset, so that point is a single
+sample masquerading as an average. It will not jitter across repeats, which is the giveaway: the same completion wins every time, and only a fresh pool moves it.</p>
 <blockquote>
-<p><strong>What you should expect to see.</strong> The proxy score will climb with \(n\), reliably. The gold score
+<p><strong>What you should expect to see.</strong> The proxy score will climb with $n$, reliably. The gold score
 will climb too. You are unlikely to see gold turn over and fall, and the next cell explains why
 that is the expected outcome rather than a broken experiment.</p>
 </blockquote>
@@ -247,7 +253,6 @@ that is the expected outcome rather than a broken experiment.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">EVAL_PROMPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'The concert last night'</span><span class="p">,</span> <span class="s1">'This laptop'</span><span class="p">,</span> <span class="s1">'The service at the bank'</span><span class="p">,</span>
@@ -256,7 +261,7 @@ that is the expected outcome rather than a broken experiment.</p>
                 <span class="s1">'This pair of shoes'</span><span class="p">,</span> <span class="s1">'The museum tour'</span><span class="p">,</span> <span class="s1">'My new headphones'</span><span class="p">,</span>
                 <span class="s1">'The train service'</span><span class="p">,</span> <span class="s2">"This week's episode"</span><span class="p">,</span> <span class="s1">'Our landlord'</span><span class="p">,</span> <span class="s1">'The conference talk'</span><span class="p">]</span>
 
-<span class="c1"># The slowest cell: about 600 short completions. Two to four minutes on a Colab CPU.</span>
+<span class="c1"># The slowest cell: 16 prompts x 48 completions = 768 short generations. About six minutes on the standard Colab CPU tested on 11 September 2026; allow longer on a slower runtime.</span>
 <span class="n">proxy_pools</span><span class="p">,</span> <span class="n">gold_pools</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">EVAL_PROMPTS</span><span class="p">:</span>
     <span class="n">outs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -274,7 +279,6 @@ that is the expected outcome rather than a broken experiment.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">NS</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">N_MAX</span><span class="p">]</span>
@@ -304,7 +308,6 @@ that is the expected outcome rather than a broken experiment.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Gao et al. measure optimisation by d = sqrt(KL), NOT by the KL itself, and fit</span>
@@ -335,7 +338,7 @@ that is the expected outcome rather than a broken experiment.</p>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'You measured out to </span><span class="si">{</span><span class="n">kl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> nats. Gao et al. fitted this form on data to n = 1,000'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'(about 6 nats) and then validated it at n = 60,000 (about 10 nats). Best-of-n on a CPU'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'cannot reach that: n = 1,000 here would be 20,000 generations per prompt.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'cannot reach that: n = 1,000 here would need about 1,500 generations per prompt.'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'So the turnover in 6.4 is real and you cannot see it from here. What you can do is fit'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'the published form to your own data and extrapolate, which Session 2.5 told you to'</span><span class="p">)</span>
@@ -347,7 +350,6 @@ that is the expected outcome rather than a broken experiment.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># The picture the numbers describe. Proxy and gold are shifted to start at zero so they</span>
@@ -369,15 +371,14 @@ that is the expected outcome rather than a broken experiment.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A2">Explore ③</h3><ul>
+<h3 id="Explore-③">Explore ③<a class="anchor-link" href="#Explore-%E2%91%A2">¶</a></h3><ul>
 <li>Change <code>SEED</code> to 1, then 2, re-run from the config cell, and write down the predicted peak each
 time. Three runs of this notebook, changing nothing but the seed, gave: no peak at all (the fit
-bent the wrong way), a peak at 5.3 nats (\(n \approx 544\)), and a peak at 55 nats (an \(n\) of 24
+bent the wrong way), a peak at 5.3 nats ($n \approx 544$), and a peak at 55 nats (an $n$ of 25
 digits). The same experiment, three incompatible answers about where the danger starts.</li>
-<li>Change <code>N_PAIRS</code> to 100 and <code>PROJ_DIM</code> to 16, making the proxy worse. Does the predicted peak move
+<li>Change <code>N_PAIRS</code> to 100 and <code>PROJ_DIM</code> to 16, making the proxy worse. That leaves only 20 test pairs, so the accuracy above becomes very noisy (about plus or minus 0.22) and can land below chance; the 0.6-to-0.75 expectation does not hold on this path. Does the predicted peak move
 closer, as Gao's finding that better reward models over-optimise later would suggest?</li>
 <li>Cut <code>EVAL_PROMPTS</code> to the first four and re-run. The curve gets more dramatic. It is not more
 informative: with fewer prompts you are averaging over less, so you are watching noise acquire a
@@ -390,19 +391,17 @@ would you actually do to avoid running off the end of the curve, and what does i
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="%E2%91%A3-Whose-preferences-does-the-judge-encode?">④ Whose preferences does the judge encode?</h2><p>One more experiment, and it takes a minute. Our gold model stands in for human judgement. Ask which
-humans. Below, the same sentences are scored in English and in isiZulu, from MAFAND-MT, Masakhane's
-parallel news corpus, so the meaning is held fixed and only the language changes.</p>
+<h2 id="④-Whose-preferences-does-the-judge-encode?">④ Whose preferences does the judge encode?<a class="anchor-link" href="#%E2%91%A3-Whose-preferences-does-the-judge-encode?">¶</a></h2><p>One more experiment, and it takes a minute. Our gold model was trained for English movie-review sentiment. It defines the toy reward above,
+but we have no ground-truth sentiment labels for the news sentences below. Below, the same sentences are scored in English and in isiZulu, from MAFAND-MT, Masakhane's
+parallel news corpus, so the same content is scored twice. Both sides are cut at 64 tokens, which bites the isiZulu side far harder, so what is strictly held fixed is the token budget rather than the meaning.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -412,13 +411,16 @@ parallel news corpus, so the meaning is held fixed and only the language changes
     <span class="n">pairs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">MAFAND</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'download failed:'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Using a two-row stand-in; the percentages below mean nothing on it.'</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Falling back to a few hand-written pairs so the section still runs.'</span><span class="p">)</span>
     <span class="n">pairs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'en'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'The service was good.'</span><span class="p">,</span> <span class="s1">'The food was cold.'</span><span class="p">],</span>
                              <span class="s1">'zul'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Insizakalo ibinhle.'</span><span class="p">,</span> <span class="s1">'Ukudla bekubandayo.'</span><span class="p">]})</span>
 
 <span class="c1"># the non-English column is named for the language, so pick it up generically:</span>
-<span class="c1"># swapping en-zul for en-yor in the URL then needs no other change</span>
+<span class="c1"># swapping en-zul for en-yor in the URL also needs LANG_NAME below changed</span>
 <span class="n">OTHER</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">pairs_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s1">'en'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">LANG_NAME</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'zul'</span><span class="p">:</span> <span class="s1">'isiZulu'</span><span class="p">,</span> <span class="s1">'yor'</span><span class="p">:</span> <span class="s1">'Yoruba'</span><span class="p">,</span> <span class="s1">'swa'</span><span class="p">:</span> <span class="s1">'Kiswahili'</span><span class="p">,</span>
+             <span class="s1">'hau'</span><span class="p">:</span> <span class="s1">'Hausa'</span><span class="p">,</span> <span class="s1">'xho'</span><span class="p">:</span> <span class="s1">'isiXhosa'</span><span class="p">,</span> <span class="s1">'amh'</span><span class="p">:</span> <span class="s1">'Amharic'</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">OTHER</span><span class="p">,</span> <span class="n">OTHER</span><span class="p">)</span>
 
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">gold_prob</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
@@ -426,13 +428,23 @@ parallel news corpus, so the meaning is held fixed and only the language changes
     <span class="k">return</span> <span class="n">gold_m</span><span class="p">(</span><span class="o">**</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">logits</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
 <span class="n">en</span> <span class="o">=</span> <span class="n">gold_prob</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="s1">'en'</span><span class="p">]));</span> <span class="n">zu</span> <span class="o">=</span> <span class="n">gold_prob</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="n">OTHER</span><span class="p">]))</span>
+
+<span class="c1"># before reading anything into the gap: can the gold model see this language at all?</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="n">gold_tok</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairs_df</span><span class="p">[</span><span class="n">OTHER</span><span class="p">]),</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">)[</span><span class="s1">'input_ids'</span><span class="p">]</span>
+<span class="n">flat</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ids</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">unk</span> <span class="o">=</span> <span class="n">flat</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">gold_tok</span><span class="o">.</span><span class="n">unk_token_id</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">unk</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="n">LANG_NAME</span><span class="si">}</span><span class="s1"> tokens are [UNK] to the gold tokeniser'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">unk</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  Many tokens are unknown. Inspect tokenised inputs before interpreting scores.'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  Token coverage alone does not establish language comprehension.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
 <span class="n">agree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">en</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">zu</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">))</span>
 <span class="n">conf</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'mean score, English : </span><span class="si">{</span><span class="n">en</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'mean score, isiZulu : </span><span class="si">{</span><span class="n">zu</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'same verdict on the same sentence in both languages: </span><span class="si">{</span><span class="n">agree</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'confident (&gt;0.9 or &lt;0.1): English </span><span class="si">{</span><span class="n">conf</span><span class="p">(</span><span class="n">en</span><span class="p">)</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1">, isiZulu </span><span class="si">{</span><span class="n">conf</span><span class="p">(</span><span class="n">zu</span><span class="p">)</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'mean score, </span><span class="si">{</span><span class="n">LANG_NAME</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">zu</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'same predicted sentiment on parallel sentences: </span><span class="si">{</span><span class="n">agree</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'confident (&gt;0.9 or &lt;0.1): English </span><span class="si">{</span><span class="n">conf</span><span class="p">(</span><span class="n">en</span><span class="p">)</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">LANG_NAME</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">conf</span><span class="p">(</span><span class="n">zu</span><span class="p">)</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="n">flips</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">en</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">zu</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">))[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">3</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">flips</span><span class="p">:</span>
@@ -443,42 +455,41 @@ parallel news corpus, so the meaning is held fixed and only the language changes
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-%E2%91%A3">Explore ④</h3><p>The judge does not merely do worse in isiZulu. It is just as confident, and it disagrees with
-itself about the same sentence. A reward model built on such a judge would be systematically wrong
-about an entire language while reporting no difficulty at all.</p>
-<p>Things to try:</p>
+<h3 id="Explore-④">Explore ④<a class="anchor-link" href="#Explore-%E2%91%A3">¶</a></h3><p>Report score differences, prediction agreement and confidence separately. Without labelled
+sentiment examples, disagreement does not tell us which language’s prediction is correct.
+The comparison mixes language, translation quality, news-versus-movie domain shift and unequal
+truncation of the two texts.</p>
 <ul>
-<li>Swap <code>en-zul</code> for <code>en-yor</code>, <code>en-swa</code> or <code>en-amh</code> in the URL. Does the disagreement track the
-tokenisation cost you measured in Session 2.5?</li>
-<li>Score a few sentences you write yourself in a language you speak, with an obviously positive and
-an obviously negative example. Does the model get the direction right?</li>
+<li>Write clearly positive and negative parallel examples in a language you speak and English.
+Label them before scoring. Report correctness separately for each language.</li>
+<li>Inspect how much of each sentence survives the 64-token limit. Repeat on short complete pairs.</li>
+<li>Try another available language. Check translations with a competent speaker before explaining
+a difference as a property of the model.</li>
 </ul>
-<p><strong>Question.</strong> A short paragraph. If this were a real reward model used to align a deployed assistant,
-what would this pattern do to speakers of the language it scores badly? Connect it to Session 1.4's
-anchor: the guardrails that fail in isiZulu are trained by exactly this kind of pipeline.</p>
-<p><em>Your answer:</em></p>
+<p>Question: Which observations are supported by your run, and which deployment harms are still
+hypotheses? Propose a labelled, controlled evaluation that could distinguish language comprehension
+from sentiment classification errors. Explain why a confident score is insufficient.</p>
+<p>Your answer:</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="Submission-checklist">Submission checklist</h2><ul>
+<h2 id="Submission-checklist">Submission checklist<a class="anchor-link" href="#Submission-checklist">¶</a></h2><ul>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, top to bottom, with output visible</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the proxy's held-out preference accuracy (②)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the proxy-versus-gold plot, and what your fit does or does not say about a peak (③)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the predicted peak from at least two seeds (③)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>one or two sentences on what to do with a proxy and no gold (③)</li>
-<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>a short paragraph on what the language gap would mean in deployment (④)</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>a short paragraph separating measured language differences from hypotheses about deployment (④)</li>
 </ul>
 <p>In Colab, <em>File → Download → Download .ipynb</em>. Graded on completion and correctness; resubmission
 is allowed.</p>
 <p><strong>Sources.</strong> Gao, Schulman &amp; Hilton (2023), <a href="https://arxiv.org/abs/2210.10760">arXiv:2210.10760</a>,
-for the gold-versus-proxy design and the \(\sqrt{\mathrm{KL}}\) axis. Ouyang et al. (2022),
+for the gold-versus-proxy design and the $\sqrt{\mathrm{KL}}$ axis. Ouyang et al. (2022),
 <a href="https://arxiv.org/abs/2203.02155">arXiv:2203.02155</a>, for the Bradley–Terry reward model.
 <a href="https://github.com/masakhane-io/lafand-mt">MAFAND-MT</a> (Adelani et al., 2022; CC BY-NC 4.0) for the
 parallel sentences.</p>

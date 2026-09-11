@@ -41,7 +41,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Every model in this course is a <strong>transformer</strong>. This sub-session builds one properly, as a sequence of linear-algebraic operations you could, in principle, trace by hand rather than a black box. We go slowly through <em>attention</em> (with explicit matrix shapes and a worked example), then assemble the full block, and finish with the residual-stream picture that mechanistic interpretability (Weeks 7–8) literally reads off.</p>
+            <p>We follow the operations in a decoder-only transformer, tracking matrix shapes from tokens to predictions. Attention patterns and the residual stream will also be used in the interpretability labs.</p>
             <p>Notation we'll keep throughout: a sequence of \(T\) tokens; a model (residual-stream) dimension \(d_{\text{model}}\); \(n_h\) attention heads each of dimension \(d_{\text{head}} = d_{\text{model}}/n_h\) (why the dimension is divided this way is explained under <em>Multi-head attention</em>, below); a vocabulary of size \(V\).</p>
         </div>
 
@@ -76,7 +76,7 @@
         </div>
 
         <h2 class="section-title">One attention head, step by step</h2>
-        <p class="lead">Attention is the one new idea. It lets each position selectively read information from <em>other</em> positions. Here is a single head, in five steps.</p>
+        <p>Attention is the one new idea. It lets each position selectively read information from <em>other</em> positions. Here is a single head, in five steps.</p>
         <div class="technical-detail">
             <h4>Step 1 — Project to queries, keys, values</h4>
             <p style="color:#555;">From the input \(X \in \mathbb{R}^{T \times d_{\text{model}}}\), three learned matrices produce three new matrices:</p>
@@ -119,7 +119,7 @@
         </div>
 
         <figure>
-            <img src="../../assets/img/session-2-2b-attention-heatmap.jpg" alt="Attention-weight heatmap for the sentence 'The Eiffel Tower is in the city of'. Rows are query positions and columns are key positions, forming a lower-triangular grid because each position can attend only to itself and earlier positions, with the upper triangle blank. The first token 'The' attends entirely to itself with weight 1.0. The final position 'of' places its largest weights on the 'Eiffel' and 'Tower' columns, showing that it reads from 'Eiffel Tower' to predict the next word.">
+            <img src="../../assets/img/session-2-2b-attention-heatmap.svg" alt="Attention-weight heatmap for the sentence 'The Eiffel Tower is in the city of'. Rows are query positions and columns are key positions, forming a lower-triangular grid because each position can attend only to itself and earlier positions, with future-position weights shown as zero. The first token 'The' attends entirely to itself with weight 1.0. The final position 'of' places its largest weights on the 'Eiffel' and 'Tower' columns, showing that it reads from 'Eiffel Tower' to predict the next word.">
             <figcaption><strong>Figure 2.2b.</strong> The attention weights A for one head on "…the Eiffel Tower is in the city of ___". Rows are queries, columns are keys; the lower-triangular shape is the causal mask. The final position reads most strongly from "Eiffel Tower": the routing described above. (Illustrative weights.)</figcaption>
         </figure>
 
@@ -167,18 +167,18 @@
             <h4>Unembed, logits, loss</h4>
             <p style="color:#555;">After the final block, a last LayerNorm is applied and the residual vector at each position is mapped to vocabulary scores by the unembedding matrix \(W_U \in \mathbb{R}^{d_{\text{model}} \times V}\):</p>
             <div class="formula">\[ \text{logits} = \operatorname{LayerNorm}(x) \cdot W_U \in \mathbb{R}^{T \times V}; \quad p = \operatorname{softmax}(\text{logits}) \]</div>
-            <p style="color:#555;">Row \(i\) is the model's predicted distribution for the token <em>after</em> position \(i\). Training minimises the cross-entropy of \(p\) against the true next token at every position, the loss from Session 2.1. That single objective, next-token prediction, is the <em>only</em> thing the network is ever directly optimised for.</p>
+            <p style="color:#555;">Row \(i\) is the model's predicted distribution for the token <em>after</em> position \(i\). Training minimises the cross-entropy of \(p\) against the true next token at every position, the loss from Session 2.1. Next-token prediction is the pretraining objective described here. Post-training can add other objectives, including preference optimisation (Sessions 5 and 6).</p>
         </div>
         <div class="info-box">
             <h4>Trace one prediction, end to end</h4>
-            <p>Tokens → embeddings + positions give \(X\) (\(T \times d_{\text{model}}\)) → each block: attention routes information between positions, MLP computes within them, both added back into the residual stream → final LayerNorm → multiply by \(W_U\) → logits → softmax → next-token distribution. Everything in between is matrix multiplies, one softmax per head, and additions. Nothing else.</p>
+            <p>Tokens → embeddings + positions give \(X\) (\(T \times d_{\text{model}}\)) → each block: attention routes information between positions, MLP computes within them, both added back into the residual stream → final LayerNorm → multiply by \(W_U\) → logits → softmax → next-token distribution. The blocks combine matrix multiplication, attention softmax, nonlinear activation functions, normalisation and residual additions. The final vocabulary softmax produces the next-token distribution.</p>
         </div>
 
         <h2 class="section-title">Three consequences for safety</h2>
         <div class="card-grid">
-            <div class="card"><h3>Tokenisation has consequences</h3><p>African and other low-resource languages are often split into far more tokens than English (because the vocabulary was fit mostly to English-heavy data). That raises cost, shortens effective context, and degrades quality: one concrete root of the capability <em>and</em> safety gaps this course keeps returning to. You'll measure it yourself in the 2.5 lab.</p></div>
+            <div class="card"><h3>Tokenisation has consequences</h3><p>Tokenisers can use substantially different numbers of tokens for parallel texts. The lab measures this difference for English and isiZulu. It directly affects token-billed cost and usable context length; implications for capability and safety require separate evaluation.</p></div>
             <div class="card"><h3>Attention is inspectable</h3><p>Attention weights and head outputs are explicit tensors. We can <em>watch</em> the model route information: the entry point for interpretability (Weeks 7–8) and for catching unexpected or deceptive behaviour.</p></div>
-            <div class="card"><h3>The objective is just next-token</h3><p>Reasoning, code, refusals, "personality": all are learned only as means to predicting the next token on the training data. Keep asking what behaviour that objective does and does not incentivise; that question is the seed of the alignment problem in Session 3.</p></div>
+            <div class="card"><h3>The pretraining objective</h3><p>During pretraining, next-token prediction supplies the learning signal for language, reasoning and other behaviours. Later training can change both task performance and how the model responds. Ask what each training objective rewards and how that relates to the intended behaviour.</p></div>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">

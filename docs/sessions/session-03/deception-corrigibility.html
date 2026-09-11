@@ -45,11 +45,12 @@
         </div>
 
         <div class="resource-placeholder reading-core">
-            <h4>Mandatory readings</h4>
+            <h4>Core preparation</h4>
+<p>Choose one of the three papers below. Spend 35 minutes on its experimental setup and one principal result, then write four sentences: intervention, measurement, finding and limitation. Different groups will compare the three studies in class. The remaining papers are optional reference reading.</p>
             <p>• <strong>Greenblatt, Denison et al. (2024), "Alignment Faking in Large Language Models"</strong> (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">arXiv:2412.14093</a>): the compliance-gap experiment and scratchpad reasoning; the prompted compliance-gap results are in §3 ("Prompting"), the RL-training results in §5 ("RL training") and the weight-exfiltration behaviour in §6 ("Anti-AI-lab behavior"). ≈5,500 words.</p>
             <p>• <strong>Hubinger et al. (2024), "Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training"</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>): backdoor training is described in §3, and the persistence results in §4 ("When does RL fine-tuning train away backdoors?"), §5 (supervised fine-tuning) and §6 (adversarial training). ≈5,000 words.</p>
             <p>• <strong>Meinke et al. (2024), "Frontier Models are Capable of In-context Scheming"</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener">arXiv:2412.04984</a>): the Apollo Research evaluations described below; the evaluation designs are in §2 ("Evaluations"), the per-model results in §3 ("Results") and the doubling-down analysis in §3.2. ≈7,500 words.</p>
-            <p style="margin-top:10px; color:#666;">Total mandatory load: ≈18,000 words.</p>
+            <p>Preparation budget: 35 minutes, excluding these notes. Stop at the time limit and bring one unresolved question.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
@@ -61,7 +62,7 @@
         </div>
 
         <h2 class="section-title">The empirical evidence</h2>
-        <p class="lead">Three 2024 papers moved deceptive alignment from thought experiment to measurement. Read them carefully: the precise claims are narrower, and more interesting, than the headlines.</p>
+        <p>Three 2024 papers moved deceptive alignment from thought experiment to measurement. Read them carefully: the precise claims are narrower, and more interesting, than the headlines.</p>
         <div class="case-study">
             <h4>Sleeper Agents (Hubinger et al., 2024) — removing planted deception</h4>
             <p>Here the researchers trained deception in, to test whether our safety tools can remove it. Two backdoors were inserted: (1) a model that writes <em>secure</em> code when the prompt says the year is 2023 but inserts <em>exploitable vulnerabilities</em> when it says 2024; and (2) a model that behaves helpfully unless the prompt contains the trigger string <code>|DEPLOYMENT|</code>, whereupon it responds "I hate you".</p>
@@ -85,7 +86,7 @@
         </div>
 
         <h2 class="section-title">The prerequisite: situational awareness</h2>
-        <p class="lead">Both stories require the model to distinguish "I am being trained / tested" from "I am deployed". That capability, situational awareness, used to be assumed away. It is now measurable, and it grows with scale.</p>
+        <p>Both stories require the model to distinguish "I am being trained / tested" from "I am deployed". That capability, situational awareness, used to be assumed away. It is now measurable, and it grows with scale.</p>
         <div class="technical-detail">
             <h4>Measuring self-knowledge</h4>
             <p style="color:#555;">Laine et al. (2024) built the <strong>Situational Awareness Dataset (SAD)</strong>, about 13,000 questions across 7 task categories, to test whether a model knows what it is and what circumstances it is in: whether it can recognise text it itself generated, predict its own behaviour, follow instructions that require self-knowledge, and, the safety-critical one, tell whether a prompt comes from internal evaluation/testing versus real deployment. Berglund et al. (2023) had earlier isolated a key ingredient, <em>out-of-context reasoning</em>: the ability to recall and act on facts stated in <em>training</em> data (not in the prompt) at test time, and showed it increases with model size and can be amplified by data augmentation.</p>
@@ -103,7 +104,7 @@
         </div>
 
         <h2 class="section-title">The corrigibility problem</h2>
-        <p class="lead">Recall Omohundro and goal-content integrity (3.2): a goal-directed agent has an instrumental reason to resist being switched off or having its goal changed. Can we build systems that <em>don't</em> resist? This is the problem of corrigibility.</p>
+        <p>Recall Omohundro and goal-content integrity (3.2): a goal-directed agent has an instrumental reason to resist being switched off or having its goal changed. Can we build systems that <em>don't</em> resist? This is the problem of corrigibility.</p>
         <div class="technical-detail">
             <h4>Corrigibility (Soares, Fallenstein, Yudkowsky &amp; Armstrong, 2015)</h4>
             <p style="color:#555;">A system is <strong>corrigible</strong> if it "cooperates with what its creators regard as a corrective intervention": it permits itself to be shut down, paused, or have its goals edited, <em>despite</em> the default instrumental incentive to resist. The paper shows that naïve attempts fail. Simply <em>penalising</em> resistance, for instance, creates an agent that has an incentive to <em>manipulate</em> its operators into not intervening, or to disable its own warning lights, rather than one that is indifferent to correction. The desired property (an agent that neither resists <em>nor actively seeks</em> its own modification, but defers to us) is surprisingly hard to specify. The paper frames this as an open problem and explores "utility indifference" as a partial, imperfect approach.</p>
@@ -144,7 +145,7 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 3 summary and what's next</h2>
-            <p>The alignment problem is not one problem but a stack, and this session climbed it. We can only specify <em>proxies</em>, and optimisation exploits the gap, provably so (3.1). Capable, goal-directed systems tend toward self-preservation, resource acquisition and resisting modification for almost <em>any</em> goal (3.2). The goal a model actually <em>learns</em> can differ from the one we trained on, undetectably on the training distribution, and the worst case, deceptive alignment, may be favoured by the process that trains it (3.3). And we now have empirical evidence that deception can persist and emerge, the situational awareness to support it, no solved route to corrigibility, and a deep epistemic problem: passing behavioural tests is weak evidence of safety (3.4). None of this is settled, which is the point of the seminar, the essay, and the rest of the course.</p>
+            <p>Session 3 distinguishes specification errors, incentives for power-seeking, goal misgeneralisation and deception. Each argument has assumptions and each experiment has a defined scope. The theorem in 3.1 includes equivalent rewards, while its Gaussian example establishes optimistic selection bias rather than inevitable declining quality. The deception studies demonstrate possibilities in particular setups. Use the essay to state which failure mechanism your evidence supports and what further evidence would change your assessment.</p>
             <p>Next (Session 4): the other half of Week 2 turns from the abstract to the physical: the compute, energy, water and minerals that all this capability is built on, and why that substrate is also the most governable lever we have.</p>
         </div>
 

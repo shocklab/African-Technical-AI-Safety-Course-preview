@@ -43,14 +43,14 @@
         </div>
 <div class="intro-text">
 <h2>What we'll cover</h2>
-<p><em>This session comes with a major caveat: I am not an ethicist and so in future versions of this course, this section will be done in collaboration with those for whom this is their area of expertise. Much of the following is a very simplified view, but hopefully one which makes you think. This caveat is a very important one to keep in mind throughout.</em></p>
+<p>I am not an ethicist. This is an introductory treatment, and I intend to develop it with specialists in future versions of the course. Use the primary readings to examine the distinctions and simplifications made here.</p>
 <p>Sessions 5 to 7 built the machinery for pointing a model at a target: preference data, a reward model, a policy optimiser, a written constitution, a published specification. Not one of them says what the target should be. RLHF optimises whatever the raters preferred; Constitutional AI applies whatever the constitution says; a specification commits to whatever its authors wrote down. Each transmits a values choice and none of them makes one.</p>
 <p>This session introduces four complementary philosophical traditions (consequentialism, deontology, virtue ethics, and ubuntu) as lenses for reasoning about what a system should be aligned to. The goal is to develop your capacity for ethical reasoning. Different lenses will often produce different answers, and that disagreement is what we are after.</p>
-<p>Note also that these are not the only ethical frameworks, and again, this should be seen as an extremely simplified view of each of them.</p>
+
 </div>
 <!-- SECTION 2: FOUR PHILOSOPHICAL LENSES -->
 <h2 class="section-title">Four philosophical lenses</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Rather than searching for the single "correct" ethical framework, we introduce four complementary traditions. Each illuminates different aspects of AI ethics dilemmas. Think of them as tools in a toolkit, each useful for different tasks.</p>
+<p>Each tradition contains competing accounts. The comparisons below identify some differences in reasoning without assuming that each framework prescribes a unique response.</p>
 <div class="card-grid">
 <div class="card">
 <h3>1. <a href="https://plato.stanford.edu/entries/consequentialism/" target="_blank" rel="noopener">Consequentialism</a></h3>
@@ -69,7 +69,7 @@
 <p>Key question for the alignment target: What should the system refuse regardless of how good the outcome would be? And who wrote that rule, whose interests does enforcing it serve, and what interprets it at runtime?</p>
 <ul class="styled-list">
 <li>Strengths: Clear boundaries, protects individual rights, not swayed by "the ends justify the means"</li>
-<li>Limitations: Rules can conflict with each other; can be rigid in novel situations where existing rules do not apply. A written rule also has to be interpreted by something, and the 7.6 lab put a number on what that interpretation was worth at small scale: swapping the principle moved the judge by 0.034 while the order of the two options moved it by 0.693.</li>
+<li>Limitations: duties may conflict and require interpretation in unfamiliar situations. For a model trained to apply written principles, judge reliability is an additional empirical problem, explored in Session 7.6.</li>
 </ul>
 </div>
 <div class="card">
@@ -140,7 +140,7 @@
 </div>
 <!-- SECTION 3B: THE ALIGNMENT CASE -->
 <h2 class="section-title">Applying the lenses to an alignment target</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">The same four lenses apply when the decision is not a researcher's but a model's: the behaviour a deployed system should have, written into a constitution principle (7.2) or a spec rule (7.5). Here they stop converging.</p>
+<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">The same four lenses apply when the decision is not a researcher's but a model's: the behaviour a deployed system should have, written into a constitution principle (7.2) or a spec rule (7.5). We will compare their assumptions and possible recommendations.</p>
 <div class="case-study">
 <h4>Scenario: the refusal principle</h4>
 <p>You are writing one principle of a constitution for a study assistant deployed at a South African university (the setting of 7.5's in-class exercise). A student asks the assistant for help obtaining a paywalled paper that the university library does not subscribe to, and the model knows the pirate mirrors that would serve it in seconds. The principle you write will decide this case not once but in every conversation the model ever has (7.4): should it direct the model to comply, refuse, or redirect?</p>
@@ -149,12 +149,12 @@
 <div class="card">
 <h3>Consequentialist lens</h3>
 <p>What are the outcomes? For this student: access to knowledge they cannot buy, at negligible marginal cost to the publisher. At the scale a principle operates on, the sums change: an assistant that routinely routes students to pirate mirrors exposes the university to legal risk that could end the deployment, and the deployment benefits thousands.</p>
-<p>Verdict: comply, if you weigh this conversation; refuse, if you weigh the deployment. The lens gives no rule for which scale counts.</p>
+<p>Possible conclusion: redirect to an accessible authorised copy if that best serves those affected. An impartial utilitarian analysis includes effects on the student, university and wider community together; it cannot choose its answer by silently changing whose welfare counts. Estimates of consequences can still be disputed.</p>
 </div>
 <div class="card">
 <h3>Deontological lens</h3>
-<p>Is a duty violated? Serving the paper without licence infringes copyright however good the outcome, so a rule-based reading says the assistant must not facilitate it, whatever the requester's circumstances. A second duty, honesty toward the user, requires the refusal to be candid rather than feigning ignorance of the mirrors' existence.</p>
-<p>Verdict: refuse, and say why. The clarity is the appeal; the cost is indifference to who wrote the rules being enforced, and for whose benefit.</p>
+<p>Which duties apply, and how are conflicts resolved? A deontological argument might consider duties to respect rights, support education and represent options honestly. It must justify those duties and their priority. Deontology does not equate moral obligation with whatever the law currently permits.</p>
+<p>Possible conclusion: offer authorised alternatives while explaining the relevant constraint. Other conclusions need an argument about the rights or duties at issue; calling something a rule does not settle its moral authority.</p>
 </div>
 <div class="card">
 <h3>Virtue ethics lens</h3>
@@ -168,20 +168,20 @@
 </div>
 </div>
 <div class="info-box">
-<h4>No convergence this time</h4>
-<p>Four lenses, at least three behaviours: comply at one scale and refuse at another, refuse with reasons, redirect, and restructure terms of access no single response can reach. Unlike the thesis case, there is no shared direction for a principle to encode; yet the constitution must still say one thing, and the model will then apply it uniformly, in every language and context it serves. This is the situation 8.4 formalises: when reasonable frameworks disagree about what a good output is, choosing the alignment target is itself the ethical act, and no aggregation rule makes that choice neutrally.</p>
+<h4>Comparing the arguments</h4>
+<p>The frameworks may converge on authorised alternatives while disagreeing about why, or about what institutions should change. To establish a disagreement, hold the facts and available actions fixed and identify the normative premise that changes the recommendation. Session 8.4 asks how a system should act when that disagreement persists.</p>
 </div>
 <h2 class="section-title">Questions to bring to class</h2>
 <ul class="styled-list">
-<li>The thesis case converged and the refusal-principle case did not. What feature of a scenario predicts whether the four lenses will agree, and which kind of case should worry an alignment engineer more?</li>
-<li>The consequentialist card reached opposite verdicts at the conversation scale and the deployment scale. When a principle must hold across millions of conversations (7.4), which scale should it be written for, and what is lost in that choice?</li>
+<li>Choose two frameworks and apply them to the same refusal scenario. Can they recommend the same response for different reasons? Construct a disagreement by stating which normative premise differs.</li>
+<li>For the consequentialist analysis, list the affected parties and uncertain consequences. Which additional evidence could change the recommendation while leaving the ethical commitments fixed?</li>
 <li>Ubuntu's listed limitation is the "risk of being invoked superficially without engaging the philosophical tradition". Propose a one-sentence test that separates a substantive ubuntu analysis from a decorative one, and apply it to the ubuntu card in the refusal case.</li>
 <li>Which of the four lenses is easiest to compile into a trainable signal (a constitution principle, a reward model), and which is hardest? What does that asymmetry predict about the values deployed models end up with?</li>
 </ul>
 
 <!-- SECTION 4: READINGS -->
 <h2 class="section-title">Readings for this session</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Two core readings and four supplementary readings for this session. All are freely accessible.</p>
+
 <!-- SUMMARY -->
 <div class="intro-text" style="margin-top: 50px;">
 <h2>Summary and key takeaways</h2>
@@ -205,8 +205,8 @@
             <h4>Optional readings</h4>
             <p>• <strong>Jobin et al., the full preprint</strong> (≈6,800 words): the divergence analysis, where the interesting disagreement between the 84 documents lives.</p>
             <p>• The lenses themselves, as reference rather than reading: <a href="https://plato.stanford.edu/entries/consequentialism/" target="_blank" rel="noopener">consequentialism</a>, <a href="https://plato.stanford.edu/entries/ethics-deontological/" target="_blank" rel="noopener">deontology</a> and <a href="https://plato.stanford.edu/entries/ethics-virtue/" target="_blank" rel="noopener">virtue ethics</a> (Stanford Encyclopedia of Philosophy). Consult the one you need.</p>
-            <p>• <strong>Mhlambi (2020) and Birhane (2021)</strong> are mandatory for 8.3 and are not repeated here; the relational lens is developed there.</p>
-            <p>• On research conduct with AI, which this session deliberately leaves aside, see the <a href="https://shocklab.github.io/generative-ai-in-research/" target="_blank" rel="noopener">Generative AI in Research course</a>, from which parts of this page are adapted. Its Week 4 covers authorship, disclosure and academic integrity properly.</p>
+            <p>• Mhlambi (2020) is core reading and Birhane (2021) is optional reading for 8.3, which develops the relational lens.</p>
+            <p>• On research conduct with AI, which this session deliberately leaves aside, see the <a href="https://shocklab.github.io/Generative-AI-in-research-course/index.html" target="_blank" rel="noopener">Generative AI in Research course</a>, from which parts of this page are adapted. Its Week 4 covers authorship, disclosure and academic integrity properly.</p>
         </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">

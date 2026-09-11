@@ -14,6 +14,7 @@ import pathlib
 import re
 import subprocess
 import sys
+from urllib.parse import unquote
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LABS = ROOT / "docs" / "labs"
@@ -138,6 +139,8 @@ def render(nb_path):
     # the shell already prints the title, so drop the notebook's own first h1
     out = re.sub(r"<h1[^>]*>.*?</h1>", "", out, count=1, flags=re.S)
     out = dollars_to_backslash(out)
+    # Match decoded fragment targets when nbconvert percent-encodes heading IDs.
+    out = re.sub(r'id="([^"\n]+)"', lambda m: 'id="' + html.escape(unquote(m.group(1)), quote=True) + '"', out)
     back, back_title, heading, subtitle = BACKLINKS.get(
         stem, ("../index.html", "Contents", stem, "Lab notebook"))
     page = PAGE.format(title=html.escape(heading), heading=heading, subtitle=subtitle,
