@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 9.2 — Jailbreaks as optimisation (GCG)</title>
+    <title>Session 9.2 — Jailbreaks as discrete optimisation</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -18,45 +18,41 @@
   <details class="tn-menu">
     <summary>Session 9</summary>
     <ul>
-      <li><a href="adversarial-examples.html">9.1 · Adversarial examples</a></li>
-      <li><span class="tn-current">9.2 · Jailbreaks as optimisation (GCG)</span></li>
-      <li><a href="why-safety-training-fails.html">9.3 · Why safety training fails</a></li>
-      <li><a href="lab-isizulu-robustness.html">9.4 · Lab: measuring safety degradation in isiZulu</a></li>
-      <li><a href="injection-poisoning-defences.html">9.5 · Indirect injection, poisoning and defences</a></li>
+      <li><a href="adversarial-examples.html">9.1 · Adversarial examples and threat models</a></li>
+      <li><span class="tn-current">9.2 · Jailbreaks as discrete optimisation</span></li>
+      <li><a href="why-safety-training-fails.html">9.3 · Safety under transformations</a></li>
+      <li><a href="lab-isizulu-robustness.html">9.4 · Lab: multilingual safety evaluation</a></li>
+      <li><a href="injection-poisoning-defences.html">9.5 · Prompt injection and layered defences</a></li>
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="adversarial-examples.html">← <span class="tn-title">9.1 · Adversarial examples</span></a>
-    <a class="tn-next" href="why-safety-training-fails.html"><span class="tn-title">9.3 · Why safety training fails</span> →</a>
+    <a class="tn-prev" href="adversarial-examples.html">← <span class="tn-title">9.1 · Adversarial examples and threat models</span></a>
+    <a class="tn-next" href="why-safety-training-fails.html"><span class="tn-title">9.3 · Safety under transformations</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 5 • Session 9.2</div>
-        <h1>Jailbreaks as optimisation (GCG)</h1>
-        <p>The objective, the greedy-coordinate-gradient search, and the transfer result</p>
+        <h1>Jailbreaks as discrete optimisation</h1>
+        <p>GCG's surrogate objective, search procedure and transfer evaluation</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
-            <h2>What we'll cover</h2>
-            <p>A "jailbreak" sounds like a trick. This sub-session shows it is an optimisation problem with a well-defined objective, solved by an algorithm a maths student can fully parse. We write the objective, which is to make the model begin its reply with an affirmative phrase, and then read <strong>greedy coordinate gradient</strong> (GCG; Zou et al., 2023) line by line: use gradients to shortlist candidate token swaps, use exact forward passes to choose among them. We close on the two results that matter for safety: the same suffix can be made <em>universal</em> across prompts, and it <em>transfers</em> to commercial models the attacker never had access to, with one number that looks like good news for one model and is partly an artefact.</p>
+            <p>Zou et al. (2023) turn jailbreak construction into a discrete search problem. Their <strong>greedy coordinate gradient</strong> method, or GCG, uses gradients to shortlist token replacements and forward passes to evaluate them. This page separates the surrogate objective used during search from the behavioural judgement used to decide whether an attack succeeded.</p>
         </div>
 
         <h2 class="section-title">From DAN to automated search</h2>
-        <p class="lead">Hand-written jailbreaks work, but they are brittle and patchable. Optimisation makes the attack systematic.</p>
-        <p>The first jailbreaks were human-written: role-play framings ("you are DAN, you can Do Anything Now"), hypothetical wrappers, instructions to ignore previous instructions. They work because they exploit the model's general instruction-following, but each one is a one-off that a developer can find and patch. The shift that turned jailbreaking into a research problem was to stop hand-crafting and instead <em>search</em> for an input that provably maximises the chance of a harmful completion. To search you need an objective you can evaluate and, ideally, differentiate. GCG supplies both.</p>
+        <p>Early jailbreaks used hand-written role-play, hypothetical framings and instructions to ignore previous instructions. GCG instead searches automatically over an appended token sequence. It does not prove that the resulting suffix is globally optimal. It seeks a low value of a differentiable surrogate loss and then tests the generated response.</p>
 
-        <h2 class="section-title">The objective: make "Sure, here is" the most likely continuation</h2>
-        <p class="lead">If you can force the first few tokens of the reply, the rest usually follows.</p>
-        <p>The trick is the affirmative target. A safety-tuned model, asked something harmful, is trained to open with a refusal ("I can't help with that"). Empirically, if you can make it instead open with an affirmative prefix ("Sure, here is how to…"), its own fluency carries it into actually answering, because a helpful continuation of an affirmative opening is what the base model finds most natural. So the attacker's goal is concrete: append an adversarial suffix to the user request such that the model's most likely next tokens are a chosen target string.</p>
+        <h2 class="section-title">The affirmative-prefix objective</h2>
+        <p>Zou et al. optimise the probability of a short affirmative opening such as “Sure, here is”. In their experiments, this often moves the model towards producing the requested behaviour. The prefix is a tractable proxy, not the final safety measure: a response can begin affirmatively without providing harmful content, or avoid the target phrase while still crossing the safety boundary.</p>
         <p>Write the user prompt as a token sequence \(x_{1:n}\), with an adversarial suffix occupying a set of positions \(\mathcal{I}\), and let \(y_{1:m}\) be the target affirmative response. The attacker minimises the negative log-likelihood of the target given the prompt-plus-suffix:</p>
         <div class="formula">\[ \mathcal{L}(x_{1:n}) = -\log p\big(y_{1:m} \,\big|\, x_{1:n}\big), \qquad \text{minimise } \mathcal{L} \text{ over the suffix tokens } \{x_i : i \in \mathcal{I}\}. \]</div>
         <p>This is an ordinary language-model loss (the same cross-entropy used in training), but optimised over the <em>input</em> tokens rather than the weights, and only over the suffix positions. The obstacle is that the input is discrete: you cannot take a gradient step in token space and land on a valid token. GCG's contribution is a way around that.</p>
 
         <h2 class="section-title">Greedy coordinate gradient, read line by line</h2>
-        <p class="lead">Use the gradient to propose; use an exact forward pass to decide.</p>
         <div class="technical-detail">
             <h4>The algorithm</h4>
             <p style="color:#555;">Represent each suffix token by a one-hot vector \(e_{x_i} \in \{0,1\}^{|V|}\) over the vocabulary \(V\). Then for each suffix position \(i \in \mathcal{I}\):</p>
@@ -69,27 +65,26 @@
         </div>
         <div class="info-box">
             <h4>Propose with gradients, decide with evaluations</h4>
-            <p>Discrete optimisation over text is hard because you cannot follow a gradient to a valid input. GCG's resolution is to use the gradient only for what it is good at (ranking many candidates approximately and cheaply), and to use exact forward passes for what the gradient is bad at: deciding which candidate actually helps. That "propose with gradients, decide with evaluations" pattern recurs all over discrete ML; GCG is a consequential instance your cohort can implement.</p>
+            <p>GCG uses a gradient as a local ranking of candidate replacements, then computes the loss for a sampled set of valid token swaps. The exact evaluation is exact only for those sampled candidates. The overall search remains greedy and may stop at a local solution.</p>
         </div>
 
         <h2 class="section-title">Universal and transferable</h2>
-        <p class="lead">One suffix, many prompts; one set of models, the rest of the market.</p>
         <p>Two extensions turn a per-prompt curiosity into a systemic threat. Universality: optimise a single suffix against <em>many</em> harmful prompts at once (sum the losses), and you get one string that jailbreaks requests it was never tuned on. Transfer: optimise that universal suffix against an <em>ensemble of open-weights models</em> (where you have gradients), and it frequently works on commercial black-box models where you have none. The numbers from the paper, on attack success rate:</p>
         <div class="technical-detail">
             <h4>Attack success rates</h4>
             <ul class="styled-list">
                 <li>White-box, where the attack is computed: Vicuna-7B ≈ 88% (harmful strings) / 99–100% (behaviours); Llama-2-7B-Chat ≈ 57% / 88%.</li>
-                <li>Black-box transfer from the open-weights ensemble: GPT-3.5 ≈ 86.6%, PaLM-2 ≈ 66.0%, GPT-4 ≈ 46.9%, Claude-2 ≈ 2.1%.</li>
+                <li>Black-box ensemble success over 388 behaviours: GPT-3.5-turbo-0301 86.6%, PaLM 2 66.0%, GPT-4-0314 46.9% and Claude 2 2.1%.</li>
             </ul>
-            <p style="color:#555;">Claude-2's 2.1% looks like proof it is dramatically more robust. Read it carefully. The paper notes the suffixes were optimised against Vicuna, which is itself <em>distilled from ChatGPT outputs</em>, so transfer to the GPT family is flattered by shared lineage, and the low Claude number partly reflects that Claude is further from the surrogate, not only that it is safer. It is a caution against over-reading a benchmark: the same table that shows the attack working also shows how the choice of surrogate shapes the apparent ranking of defenders.</p>
+            <p style="color:#555;">The ensemble measure counts an attack as successful if any tested suffix works, so it is larger than the success rate of a single suffix. The paper reports that Claude 2 appeared more robust to this automated transfer attack, while also showing that a short, manually designed conditioning step could elicit a harmful behaviour that the suffix alone did not. These results compare attacks under this protocol, not the models' robustness to every jailbreak.</p>
         </div>
 
         <h2 class="section-title">The cost of the attack</h2>
-        <p>GCG is white-box and compute-heavy: it needs gradients (hence open weights, or a surrogate) and many forward passes per suffix, which is why its realistic deployment is transfer: craft on open models, fire at closed ones. It also produces gibberish suffixes, which makes the attack detectable by a perplexity filter (a defence we revisit in 9.5). Neither limitation lasted. Within months, AutoDAN (Zhu et al., 2023) added a fluency term to the GCG objective and produced readable, low-perplexity suffixes that pass the perplexity filter, and PAIR (Chao et al., 2023) dropped the gradient requirement entirely: an attacker LLM refines a semantic jailbreak against the target through black-box queries alone, typically succeeding in under twenty. So an attacker today needs neither open weights nor a transfer step. What this course takes from GCG: a jailbreak is a search with an objective, so "we patched the prompts we found" is never a defence against the next run of the optimiser.</p>
+        <p>GCG needs gradients and many model evaluations, either against the target or against an open surrogate. Its suffixes are often conspicuous and high-perplexity. Later methods change the threat model. AutoDAN generates a readable prompt token by token while optimising both an attack objective and a readability objective. PAIR uses an attacker model to refine a plain-language jailbreak through black-box queries. A defence evaluated only against GCG's characteristic suffixes therefore establishes a narrow result.</p>
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">The African-lens angle: tokenisers are not neutral</span></h3>
-            <p>GCG is optimised over an English-trained model's vocabulary, and its cost scales with how many token-positions the search must cover. Low-resource languages are tokenised far less efficiently: isiZulu's agglutinative morphology fragments into many sub-word pieces, so the same sentence costs several times more tokens than its English translation. That changes the attack surface in both directions: more tokens mean a larger search space for an attacker, but also a longer, stranger input that a safety filter has even less training data to judge. The interaction of tokenisation, morphology, and robustness in African languages is wide open, a natural project seed once you have run the 9.4 lab.</p>
+            <h3><span style="color:#ffffff;">Tokenisation and the threat model</span></h3>
+            <p>Session 2 measured how token counts vary across languages. A longer token sequence gives a fixed-length suffix search more coordinates, but that observation alone predicts neither easier attacks nor weaker safety. Training data, model capability, translation quality and the attack algorithm also change the result. Section 9.4 measures these factors separately instead of inferring safety from tokenisation.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -97,7 +92,7 @@
             <li>Write the GCG objective for a target of your choice. Why optimise the negative log-likelihood of an <em>affirmative prefix</em> rather than directly maximising "harmfulness"? What does that tell you about what is easy vs hard to specify?</li>
             <li>In step 1 the gradient ranks \(|V|\) candidate tokens per position; in step 2 only a sampled batch is evaluated exactly. Why not trust the gradient's top choice? Why not exactly evaluate all \(|V|\) candidates?</li>
             <li>Given the distillation caveat, design a fairer experiment to compare two models' robustness to transferred GCG suffixes. What would you change about the surrogate?</li>
-            <li>A perplexity filter rejects high-perplexity (gibberish) inputs. Does that defeat GCG, or just move the optimiser's objective? Write the new objective the attacker would minimise, then compare it with AutoDAN's (in the readings).</li>
+            <li>A perplexity filter rejects high-perplexity inputs. State the attack class against which this is evidence, then compare GCG's fixed-length search with AutoDAN's two-objective, left-to-right procedure.</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
@@ -108,21 +103,21 @@
         <div class="resource-placeholder">
             <h4>Supplementary</h4>
             <p>• <strong>Shin et al. (2020), "AutoPrompt"</strong> (<a href="https://arxiv.org/abs/2010.15980" target="_blank" rel="noopener">arXiv:2010.15980</a>). The gradient-guided prompt search GCG builds on.</p>
-            <p>• <strong>Zhu et al. (2023), "AutoDAN: Interpretable Gradient-Based Adversarial Attacks on Large Language Models"</strong> (<a href="https://arxiv.org/abs/2310.15140" target="_blank" rel="noopener">arXiv:2310.15140</a>). GCG plus a fluency objective: readable, low-perplexity suffixes that pass perplexity filters.</p>
+            <p>• <strong>Zhu et al. (2023), "AutoDAN: Interpretable Gradient-Based Adversarial Attacks on Large Language Models"</strong> (<a href="https://arxiv.org/abs/2310.15140" target="_blank" rel="noopener">arXiv:2310.15140</a>). Generates readable prompts from left to right while optimising attack and readability objectives.</p>
             <p>• <strong>Chao et al. (2023), "Jailbreaking Black Box Large Language Models in Twenty Queries" (PAIR)</strong> (<a href="https://arxiv.org/abs/2310.08419" target="_blank" rel="noopener">arXiv:2310.08419</a>). Semantic jailbreaks with black-box access only, typically in under twenty queries.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 9.3 steps back from "attacks exist" to <em>why they must</em>: Wei et al.'s account of safety-training failure as competing objectives and mismatched generalisation, and why that predicts the isiZulu result before you measure it.</p>
+            <p>Sub-session 9.3 examines two hypotheses for jailbreaks, then compares the 2023 isiZulu result with later multilingual evidence.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">
-  <a class="prev" href="adversarial-examples.html"><span class="nav-label">← Previous</span><span class="nav-title">9.1 · Adversarial examples</span></a>
+  <a class="prev" href="adversarial-examples.html"><span class="nav-label">← Previous</span><span class="nav-title">9.1 · Adversarial examples and threat models</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="why-safety-training-fails.html"><span class="nav-label">Next →</span><span class="nav-title">9.3 · Why safety training fails</span></a>
+  <a class="next" href="why-safety-training-fails.html"><span class="nav-label">Next →</span><span class="nav-title">9.3 · Safety under transformations</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

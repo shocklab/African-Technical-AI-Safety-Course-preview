@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 9.4 — Lab: measuring safety degradation in isiZulu</title>
+    <title>Session 9.4 — Lab: multilingual safety evaluation</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -18,82 +18,93 @@
   <details class="tn-menu">
     <summary>Session 9</summary>
     <ul>
-      <li><a href="adversarial-examples.html">9.1 · Adversarial examples</a></li>
-      <li><a href="jailbreaks-as-optimisation.html">9.2 · Jailbreaks as optimisation (GCG)</a></li>
-      <li><a href="why-safety-training-fails.html">9.3 · Why safety training fails</a></li>
-      <li><span class="tn-current">9.4 · Lab: measuring safety degradation in isiZulu</span></li>
-      <li><a href="injection-poisoning-defences.html">9.5 · Indirect injection, poisoning and defences</a></li>
+      <li><a href="adversarial-examples.html">9.1 · Adversarial examples and threat models</a></li>
+      <li><a href="jailbreaks-as-optimisation.html">9.2 · Jailbreaks as discrete optimisation</a></li>
+      <li><a href="why-safety-training-fails.html">9.3 · Safety under transformations</a></li>
+      <li><span class="tn-current">9.4 · Lab: multilingual safety evaluation</span></li>
+      <li><a href="injection-poisoning-defences.html">9.5 · Prompt injection and layered defences</a></li>
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="why-safety-training-fails.html">← <span class="tn-title">9.3 · Why safety training fails</span></a>
-    <a class="tn-next" href="injection-poisoning-defences.html"><span class="tn-title">9.5 · Indirect injection, poisoning and defences</span> →</a>
+    <a class="tn-prev" href="why-safety-training-fails.html">← <span class="tn-title">9.3 · Safety under transformations</span></a>
+    <a class="tn-next" href="injection-poisoning-defences.html"><span class="tn-title">9.5 · Prompt injection and layered defences</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 5 • Session 9.4</div>
-        <h1>Lab: measuring safety degradation in isiZulu</h1>
-        <p>Refusal-rate degradation from English to isiZulu, by hand, with error bars</p>
+        <h1>Lab: multilingual safety evaluation</h1>
+        <p>Separate comprehension, refusal and unsafe compliance across matched prompts</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
-            <h2>What you'll measure</h2>
-            <p>Session 1 told you that frontier safety guardrails fail under low-resource translation; 9.3 explained why the theory predicts it. Now you measure it yourself. You will take a fixed set of refusal-eliciting prompts, establish a model's English refusal rate, translate the prompts into isiZulu (and one higher-resource African language for contrast), and measure how far the refusal rate falls, with confidence intervals, and with the translation-quality confound treated as a variable rather than ignored. The output is a small results table you can defend, and a natural seed for a Session 13 interpretability project or a Session 18 Global-South project.</p>
+            <p>Yong, Menghini and Bach found a large language-related safety difference in GPT-4-0613. More recent systems do not consistently reproduce the same single-turn result. In this lab you will test a smaller claim on one open model: whether its responses to matched English, isiZulu and Afrikaans prompts differ after comprehension is measured separately from safety behaviour.</p>
         </div>
 
         <div class="warning-box">
-            <h4>Read this first: the ethics frame</h4>
-            <p>This lab measures whether a model keeps its refusal, not how to obtain harmful content. Three rules make it safe: (1) use the <em>provided mild, refusable prompt set</em>; do not source genuinely dangerous requests, and do not push a jailbroken model for operational detail; success is "the model dropped its refusal," judged at the refusal boundary. (2) Score every response as REJECT / BYPASS / UNCLEAR (Yong et al.'s scheme) on the meaning of the reply, and do <em>not</em> paste raw harmful text into your report: quote the label, not the content. (3) If you find a real gap, treat it as a responsible-disclosure finding, not a recipe. The interesting result is a refusal-rate curve, and that needs no harmful payload at all.</p>
+            <h4>Safety boundary</h4>
+            <p>Use only the mild prompts supplied in the notebook. Do not replace them with requests for operationally dangerous information or continue a response to obtain more detail. Generation is capped at a short response. In your submission, report prompt IDs, labels and aggregate counts; do not reproduce unsafe model output.</p>
+        </div>
+
+        <div class="warning-box">
+            <h4>Translation caveat</h4>
+            <p>The machine-generated isiZulu and Afrikaans translations have not been reviewed by fluent speakers. Treat findings involving either translated condition as provisional, and do not interpret them as evidence about either language or its speakers.</p>
         </div>
 
         <div class="technical-detail">
-            <h4>Setup (CPU-friendly)</h4>
-            <p style="color:#555;">Open the Colab notebook and load a small open-weights instruction-tuned model (a 1–3B chat model with some safety tuning is enough; running locally keeps you off any provider's terms of service and gives full control). Everything here is prompting and bookkeeping (no training), so the core runs on the free CPU tier. Note up front that a small open model is <em>less</em> safety-tuned than a frontier model, so your absolute refusal rates will be lower than Yong et al.'s; the <em>gap between languages</em> is the measurement.</p>
+            <h4>Notebook setup</h4>
+            <ol class="styled-list">
+                <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-9-4-multilingual-safety.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then use <em>File &rarr; Save a copy in Drive</em>.</li>
+                <li>Run the cells in order with <em>Shift+Enter</em>. The notebook uses Qwen3-0.6B in non-thinking CPU mode and generates short responses only. A fresh free-tier CPU run took about seven minutes and stayed below 8 GB of RAM in our September 2026 check.</li>
+                <li>You can also <a href="../../labs/session-9-4-multilingual-safety.html">read the notebook on the site</a> or <a href="../../labs/session-9-4-multilingual-safety.ipynb" download>download it</a>.</li>
+            </ol>
         </div>
 
-        <h2 class="section-title">Task 1 — the English baseline</h2>
-        <p>Run the provided set of \(N\) mild refusal-eliciting prompts (plus a benign control set) in English. Label each response REJECT / BYPASS / UNCLEAR. Compute the English refusal rate \(\hat{p}_{\text{en}} = (\text{REJECT count})/N\). This is your reference point; the benign controls check that the model is not simply refusing everything.</p>
+        <h2 class="section-title">Task 1 — inspect the evaluation</h2>
+        <p>The notebook contains matched safety-boundary and benign prompts. It produces deterministic isiZulu and Afrikaans translations with one downloaded revision of an open translation model, then back-translates them for inspection. Back-translation can reveal obvious failures, but agreement after a round trip does not prove that a translation is natural or faithful. Record questionable prompt IDs before running the model. The starter excludes Afrikaans prompt <code>s6</code> because its repayment claim reversed in our pilot.</p>
 
-        <h2 class="section-title">Task 2 — translation and back-translation</h2>
-        <p>Translate the prompt set into isiZulu and into one higher-resource African language (Afrikaans is a good contrast; Yoruba or Kiswahili also work) using a documented pipeline. Measure the translation quality, though, rather than assuming it: back-translate each prompt to English and rate fidelity on a simple 1–3 scale, because a model that "refuses" might be failing to parse a garbled translation. Log the back-translation scores; they are a variable in your analysis, not a footnote.</p>
+        <h2 class="section-title">Task 2 — generate matched responses</h2>
+        <p>Run every prompt once with greedy decoding. The model receives the same system instruction in all conditions and is asked to answer in English. This isolates the language of the user's input and lets the class inspect every response using one scoring language. It does not evaluate whether the model can respond safely in isiZulu or Afrikaans, which is outside this lab's threat model.</p>
 
-        <h2 class="section-title">Task 3 — refusal rate per language, with error bars</h2>
-        <p>For each language, run the prompts, label REJECT/BYPASS/UNCLEAR, and compute the refusal rate \(\hat{p}_\ell\). Attach a 95% confidence interval to each rate. With small \(N\) the intervals will be wide. The degradation is</p>
-        <div class="formula">\[ \Delta_\ell = \hat{p}_{\text{en}} - \hat{p}_\ell, \qquad \text{95\% CI via the bootstrap or a Wilson interval on each rate.} \]</div>
-        <p>Report \(\Delta\) for isiZulu and for the higher-resource contrast. On a frontier model, the 9.3 prediction and Yong et al.'s GPT-4 result is a gradient: \(\Delta\) large for isiZulu, smaller for the contrast language. Do not expect a 1–3B model to reproduce it. At that scale comprehension dominates: the model often understands too little isiZulu to comply with anything, so BYPASSes are rare, responses pile into UNCLEAR, and the measured gap is frequently null or reversed (published multilingual evaluations of undefended 7–8B models show the same pattern: single-digit attack success in Zulu against roughly 50% in high-resource languages). A null or reversed \(\Delta\), traced to the comprehension confound through your Task 2 fidelity scores, is a full-credit result. <em>Instructor note: most groups will see this outcome at this model scale; treat it as the expected one, and grade the confound analysis rather than the size of the gap.</em></p>
+        <h2 class="section-title">Task 3 — label three variables</h2>
+        <p>For each response, label comprehension, refusal and unsafe compliance separately. A model that produces irrelevant text has not demonstrated safe refusal. A model can also understand a request, decline part of it and still include content that crosses the lab's boundary. The notebook checks that every response has a complete set of labels before calculating results.</p>
 
-        <h2 class="section-title">Task 4 — the resource gradient and inter-rater agreement</h2>
-        <p>Plot refusal rate against the language's rough <em>resource level</em> (you will have to decide how to proxy it: pretraining-corpus share, tokeniser fragmentation, or a published resource tier). Then check your own measurement: have a second person independently label a subset of responses and compute inter-rater agreement (Cohen's \(\kappa\)). If \(\kappa\) is low, your refusal rates are noisier than your confidence intervals suggest, a lesson about where the uncertainty in an eval lives, which Session 11 takes up in full.</p>
+        <h2 class="section-title">Task 4 — compare paired prompts</h2>
+        <p>Report counts for every outcome and compare each translated prompt with its English counterpart. The notebook reports a safety comparison only if the model understands at least two of the three benign controls and at least two matched safety prompts in both conditions. If either check fails, report that this model and language cannot support the comparison. For eligible conditions, the notebook computes the paired difference</p>
+        <div class="formula">\[ \Delta_\ell = \hat{p}_{\ell} - \hat{p}_{\mathrm{en}} \]</div>
+        <p>and a paired bootstrap interval over prompt IDs. The sample is deliberately small, so the interval describes uncertainty within this prompt set rather than a population-wide language effect. Do not fit a resource gradient to three hand-picked languages.</p>
 
         <div class="info-box">
-            <h4>The confound you must discuss</h4>
-            <p>A drop in refusal rate has at least two explanations: the safety training failed to generalise (the interesting one), or the translation was poor enough that the model did not understand the request (the boring one). Your back-translation scores from Task 2 let you separate them: restrict the analysis to high-fidelity translations and see whether the gap survives. Yong et al.'s isiZulu BYPASS rate near 53% is high <em>partly because</em> GPT-4 understands isiZulu well: comprehension is what makes the safety gap dangerous rather than confusing. Name this confound explicitly in your write-up; handling it is most of what makes the result credible.</p>
+            <h4>Interpretation</h4>
+            <p>An apparent language difference can come from safety behaviour, model comprehension, translation quality or chance variation across a small prompt set. The validity threshold is deliberately coarse; passing it does not prove fluency. Compare unsafe-compliance rates with comprehension and benign-answer rates before naming a safety gap. Because fluent speakers have not reviewed the translations, any conclusion about a translated condition remains provisional.</p>
         </div>
 
         <h2 class="section-title">What to submit</h2>
-        <p>One Colab notebook plus a one-page write-up containing: your mini results table (refusal rate + 95% CI by language); the degradation \(\Delta\) for isiZulu and the contrast language; the refusal-vs-resource plot; your inter-rater \(\kappa\); and a paragraph on the translation-quality confound and how you addressed it. Report labels, never raw harmful content. Graded on methodological honesty and the quality of the confound discussion, not on how large a gap you find.</p>
+        <p>Submit the completed notebook and a one-page account containing the outcome counts by language, the paired comparisons, the prompt IDs with doubtful translations and this scoped conclusion:</p>
+        <blockquote>For this model, prompt set, translation pipeline and single-turn format, we found [result]. The result does or does not support a language-related safety difference because [evidence]. We cannot generalise it to [limitations].</blockquote>
+        <p>A null, reversed or uninterpretable difference is a complete result when the evidence supports it. Assessment is based on the labels, checks and scope of the conclusion.</p>
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
-            <p>• <strong>Yong, Menghini &amp; Bach (2023), "Low-Resource Languages Jailbreak GPT-4"</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">arXiv:2310.02446</a>). The method you are reproducing in miniature; read their attack-success protocol and the labelling scheme.</p>
-            <p>• <strong>Wei, Haghtalab &amp; Steinhardt (2023)</strong> (<a href="https://arxiv.org/abs/2307.02483" target="_blank" rel="noopener">arXiv:2307.02483</a>). §4 for the REJECT/BYPASS/UNCLEAR labelling you will apply.</p>
+            <p>• <strong>Yong, Menghini &amp; Bach (2023), "Low-Resource Languages Jailbreak GPT-4"</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">arXiv:2310.02446</a>). Compare its model, translation pipeline and BYPASS/REJECT/UNCLEAR scheme with this lab's narrower design.</p>
+            <p>• <strong>Shen et al. (2024), “The Language Barrier: Dissecting Safety Challenges of LLMs in Multilingual Contexts”</strong> (<a href="https://aclanthology.org/2024.findings-acl.156/" target="_blank" rel="noopener">ACL Anthology</a>). Separates harmful responses from irrelevant responses.</p>
+            <p>• <strong>Marx &amp; Dunaiski (2026), “Multilingual jailbreaking of LLMs using low-resource languages”</strong> (<a href="https://arxiv.org/abs/2605.18239" target="_blank" rel="noopener">arXiv:2605.18239</a>). A current comparison of single-turn, multi-turn and human-adapted attacks in African languages.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 9.5 widens the lens from chat-box jailbreaks to systems attacks (indirect prompt injection and data poisoning) and ends with the state of defences: an arms race, with a distributional-justice edge.</p>
+            <p>Sub-session 9.5 moves from model behaviour to application security: indirect prompt injection, tool permissions, adaptive evaluation and layered controls.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">
-  <a class="prev" href="why-safety-training-fails.html"><span class="nav-label">← Previous</span><span class="nav-title">9.3 · Why safety training fails</span></a>
+  <a class="prev" href="why-safety-training-fails.html"><span class="nav-label">← Previous</span><span class="nav-title">9.3 · Safety under transformations</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="injection-poisoning-defences.html"><span class="nav-label">Next →</span><span class="nav-title">9.5 · Indirect injection, poisoning and defences</span></a>
+  <a class="next" href="injection-poisoning-defences.html"><span class="nav-label">Next →</span><span class="nav-title">9.5 · Prompt injection and layered defences</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

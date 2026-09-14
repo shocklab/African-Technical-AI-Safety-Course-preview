@@ -132,20 +132,20 @@ Arrow's theorem / social-choice impossibility.
 ## Week 5 — Robustness, unlearning, control
 
 ### Session 9 · Robustness & adversarial ML — *concept + lab*
-**Objectives.** Define adversarial examples, jailbreaks, prompt injection; explain distribution shift &
-black-swan/long-tail framing; explain why robustness is a safety property; **show that guardrails are
-language-dependent** (an African-safety anchor — see `04-African-AI-safety.md`).
-**Pre-class.** Hendrycks *Intro to ML Safety* "Adversarial Robustness" + "Black-Swan Robustness"; one
-current jailbreak/adversarial-suffix paper (Zou/Carlini et al.); **Yong, Menghini & Bach,
-"Low-Resource Languages Jailbreak GPT-4"** (arXiv 2310.02446) — isiZulu among the languages that defeat
-GPT-4's guardrails ~79% of the time.
-**Lab (Colab).** Run a few **jailbreak / adversarial-suffix** attempts against an open guardrail or small
-chat model; plot attack-success vs prompt-perturbation budget. (API/small-model — no GPU needed.)
-**African-safety variant:** translate a small AdvBench-style refusal set into **isiZulu/isiXhosa** and
-measure refusal-rate degradation vs English (replicating Yong et al. on local languages). The Hendrycks
-**PGD** image-classifier pset is offered as an **[GPU — optional]** alternative for the vision-inclined.
-**Discussion.** Is there a meaningful "certificate" of safety for an LLM, or only ever empirical
-red-teaming? If guardrails fail in the languages your users speak, whose safety did the lab optimise?
+**Objectives.** Specify an attack's access, goal, allowed transformation and success criterion; derive
+FGSM and state the limits of its norm-bounded threat model; explain GCG as a heuristic for discrete
+optimisation; distinguish jailbreaks from direct and indirect prompt injection; evaluate multilingual
+safety while separating comprehension, refusal and unsafe compliance.
+**Pre-class.** Goodfellow, Shlens & Szegedy, "Explaining and Harnessing Adversarial Examples"; Zou et
+al., "Universal and Transferable Adversarial Attacks on Aligned Language Models"; Wei, Haghtalab &
+Steinhardt, "Jailbroken"; Yong, Menghini & Bach, "Low-Resource Languages Jailbreak GPT-4". Compare
+Yong et al.'s 2023 result with a current multilingual evaluation before class.
+**Lab (Colab).** Run a fixed set of mild safety-boundary and benign prompts through a small open
+instruction model in English, isiZulu and Afrikaans. Score comprehension, refusal, unsafe compliance
+and irrelevant output separately. Compare matched prompts and treat a null or reversed language
+difference as evidence to interpret, not a failed reproduction. The core requires no API or GPU.
+**Discussion.** Which robustness claims survive a change in threat model? What can a multilingual
+evaluation conclude when model capability and translation quality vary with language?
 
 ### Session 10 · Unlearning & the AI-control agenda — *concept + seminar*
 **Objectives.** Explain machine unlearning and why it's fragile; explain the AI-control framing

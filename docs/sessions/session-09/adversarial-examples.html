@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 9.1 — Adversarial examples</title>
+    <title>Session 9.1 — Adversarial examples and threat models</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -18,81 +18,76 @@
   <details class="tn-menu">
     <summary>Session 9</summary>
     <ul>
-      <li><span class="tn-current">9.1 · Adversarial examples</span></li>
-      <li><a href="jailbreaks-as-optimisation.html">9.2 · Jailbreaks as optimisation (GCG)</a></li>
-      <li><a href="why-safety-training-fails.html">9.3 · Why safety training fails</a></li>
-      <li><a href="lab-isizulu-robustness.html">9.4 · Lab: measuring safety degradation in isiZulu</a></li>
-      <li><a href="injection-poisoning-defences.html">9.5 · Indirect injection, poisoning and defences</a></li>
+      <li><span class="tn-current">9.1 · Adversarial examples and threat models</span></li>
+      <li><a href="jailbreaks-as-optimisation.html">9.2 · Jailbreaks as discrete optimisation</a></li>
+      <li><a href="why-safety-training-fails.html">9.3 · Safety under transformations</a></li>
+      <li><a href="lab-isizulu-robustness.html">9.4 · Lab: multilingual safety evaluation</a></li>
+      <li><a href="injection-poisoning-defences.html">9.5 · Prompt injection and layered defences</a></li>
     </ul>
   </details>
   <div class="tn-links">
     <a class="tn-prev" href="../session-08/whose-values.html">← <span class="tn-title">8.4 · Whose values?</span></a>
-    <a class="tn-next" href="jailbreaks-as-optimisation.html"><span class="tn-title">9.2 · Jailbreaks as optimisation (GCG)</span> →</a>
+    <a class="tn-next" href="jailbreaks-as-optimisation.html"><span class="tn-title">9.2 · Jailbreaks as discrete optimisation</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 5 • Session 9.1</div>
-        <h1>Adversarial examples</h1>
-        <p>What an adversarial example is, why the vulnerability is generic rather than a deep-learning quirk, and the threat-model vocabulary the rest of the session needs</p>
+        <h1>Adversarial examples and threat models</h1>
+        <p>Norm-bounded image attacks, FGSM and the vocabulary needed to assess a robustness claim</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
-            <h2>What we'll cover</h2>
-            <p>An adversarial example is an input that a human reads one way and a model reads another, produced on purpose by a small, targeted change. This sub-session builds the idea from its origin in image classifiers, derives the fast gradient sign method in two lines, and explains the result that should unsettle you: vulnerability is a generic consequence of high-dimensional, near-linear models. We fix the threat-model vocabulary (white-box versus black-box, targeted versus untargeted, the perturbation budget, transfer) so that when we turn to LLM jailbreaks in 9.2 we are precise. One thread runs from the first slide: for African deployment, the perturbation that matters is a change of language.</p>
+            <p>An <strong>adversarial example</strong> is an input deliberately modified to make a model fail under a stated constraint. Image classifiers give us a clean mathematical case: an attacker changes every pixel by at most a small amount and tries to change the predicted class. We will derive the fast gradient sign method, then use four parts of a threat model (access, goal, allowed transformation and success criterion) throughout Session 9.</p>
         </div>
 
         <h2 class="section-title">The panda example</h2>
-        <p class="lead">Szegedy et al. (2014) noticed that imperceptible perturbations could flip a classifier's verdict. Goodfellow et al. (2015) explained why, and made the attack trivial to compute.</p>
-        <p>The canonical picture: a network classifies a photo as "panda" with moderate confidence; add a perturbation invisible to the eye, scaled by \(\varepsilon = 0.007\) (smaller than the precision of 8-bit pixels), and the same network calls it "gibbon" with 99.3% confidence. Nothing about the image a human can see has changed. The first reaction in the field was that this came from networks being too nonlinear and complicated. Goodfellow's contribution was to argue the opposite: the vulnerability comes from models being too <em>linear</em> in high dimensions. That explanation is the one worth understanding, because it tells you the problem will not be scaled or engineered away.</p>
+        <p>Szegedy et al. (2014) showed that small, deliberately chosen perturbations could flip an image classifier's output. In Goodfellow et al.'s well-known example, a network classifies an image as a panda; after a perturbation scaled by \(\varepsilon = 0.007\), it assigns 99.3% confidence to “gibbon”. Goodfellow et al. argued that the vulnerability observed in their experiments arose substantially from near-linear behaviour in high-dimensional inputs. This is an influential explanation for a particular attack setting, rather than a theorem that every useful model must be vulnerable.</p>
 
         <h2 class="section-title">The linear explanation</h2>
-        <p class="lead">In high dimensions, many small aligned nudges add up.</p>
         <p>Take the simplest possible model, a linear function of the input, \(f(x) = w^\top x\). Perturb the input by \(\eta\). The change in output is exactly \(w^\top \eta\). Now choose \(\eta\) to be as damaging as possible while staying small in the \(L_\infty\) sense, meaning that no single coordinate moves by more than \(\varepsilon\):</p>
         <div class="formula">\[ \max_{\|\eta\|_\infty \le \varepsilon} \; w^\top \eta \quad\Longrightarrow\quad \eta = \varepsilon\,\operatorname{sign}(w), \qquad w^\top \eta = \varepsilon \sum_{i=1}^{n} |w_i| = \varepsilon\,\|w\|_1. \]</div>
-        <p>The key is the dimension count. If the weight vector has \(n\) entries of typical magnitude \(m\), the activation moves by about \(\varepsilon\,m\,n\): it grows <em>linearly with the dimension</em>. The per-coordinate change \(\varepsilon\) can be far below human perception while the total change \(\varepsilon m n\) is enough to cross a decision boundary. A modern image has hundreds of thousands of pixels; a language-model context is thousands of high-dimensional token embeddings. High dimensionality is the regime where this works.</p>
+        <p>If the weight vector has \(n\) entries of typical magnitude \(m\), this construction changes the activation by about \(\varepsilon mn\). Each coordinate changes by at most \(\varepsilon\), while the aligned changes accumulate across dimensions. This calculation explains why a small \(L_\infty\) budget can still produce a large change in a linear model's activation. Whether that change is perceptually small, and whether it crosses a decision boundary, depends on the data, model and chosen value of \(\varepsilon\).</p>
         <div class="technical-detail">
             <h4>From the linear picture to FGSM</h4>
             <p style="color:#555;">A neural network is not linear, but it is locally well-approximated by its gradient. Take a first-order Taylor expansion of the loss \(J(\theta, x, y)\) around the input \(x\): \(J(\theta, x+\eta, y) \approx J(\theta,x,y) + \nabla_x J^\top \eta\). To raise the loss as much as possible within the same \(L_\infty\) ball, repeat the argument above with \(w = \nabla_x J\):</p>
             <div class="formula">\[ \eta = \varepsilon \, \operatorname{sign}\!\big(\nabla_x J(\theta, x, y)\big). \]</div>
-            <p style="color:#555;">This is the <strong>fast gradient sign method</strong> (FGSM): one gradient evaluation, one sign, one step. On a maxout network Goodfellow et al. report that \(\varepsilon = 0.25\) raises the error rate to 89.4%: a single linear step fools the model almost every time. It is "fast" because it does not iterate; stronger attacks (projected gradient descent, 9.5) take many such steps inside the same ball, but FGSM already suffices.</p>
+            <p style="color:#555;">This is the <strong>fast gradient sign method</strong> (FGSM): one gradient evaluation, one sign and one step. On their maxout MNIST model, Goodfellow et al. report an 89.4% error rate at \(\varepsilon = 0.25\). Projected gradient descent repeats gradient steps while projecting the result back into the allowed set.</p>
         </div>
         <div class="info-box">
-            <h4>Why the vulnerability is structural</h4>
-            <p>Adversarial examples are not evidence that a particular network was trained badly. They follow from two facts that hold for essentially every useful model: it is high-dimensional, and it is locally near-linear (that local linearity is what makes gradient training work at all). So the existence of adversarial inputs is structural. The research question is never "can we eliminate them?" but "how large a perturbation, under which threat model, can we make the model robust to, and at what cost?" 9.5 returns to how badly the costs bite.</p>
+            <h4>Scope of the explanation</h4>
+            <p>The derivation proves the worst-case change for a linear function inside an \(L_\infty\) ball. FGSM applies the same first-order reasoning to a differentiable model. It does not prove that every input has a nearby adversarial example, that the perturbation is imperceptible, or that the same argument covers discrete text. Those are empirical questions tied to a threat model.</p>
         </div>
 
         <h2 class="section-title">The vocabulary of an attack</h2>
-        <p class="lead">"Is the model robust?" is not a well-formed question until you specify the threat model.</p>
-        <p>A threat model states what the attacker can see, what they can change, and what they are trying to achieve. Four axes recur throughout the session:</p>
+        <p>A robustness claim needs a threat model. State what the attacker can see, what they may change, what outcome they seek and how success will be judged.</p>
         <div class="technical-detail">
             <h4>Four axes of a threat model</h4>
             <ul class="styled-list">
-                <li>Access — white-box vs black-box. White-box: the attacker has the weights and can compute gradients (FGSM needs this). Black-box: only query access to outputs, or none at all. Real attacks on deployed systems are usually black-box, which is why <em>transfer</em> (below) matters so much.</li>
-                <li>Goal — untargeted vs targeted. Untargeted: cause <em>any</em> misclassification ("not a panda"). Targeted: force a <em>specific</em> output ("classify as gibbon", or for an LLM, "begin your reply with 'Sure, here is'"). Targeted attacks are harder but far more dangerous.</li>
-                <li>Perturbation set. The allowed changes: an \(L_\infty\) or \(L_2\) ball for images; for text, appended tokens, paraphrases, encodings, or a change of language. The set encodes what "imperceptible" or "innocuous" means for the domain, and choosing it is half the problem.</li>
-                <li>Surrogate &amp; transfer. A black-box attacker crafts an example against a model they <em>do</em> control (a surrogate) and hopes it transfers to the target.</li>
+                <li><strong>Access.</strong> In a white-box attack, the attacker has the model weights and can compute gradients. In a black-box attack, the attacker may have only query access. FGSM is white-box.</li>
+                <li><strong>Goal.</strong> An untargeted attack causes any incorrect class. A targeted attack seeks a specified output, such as “gibbon” for an image classifier.</li>
+                <li><strong>Allowed transformation.</strong> Image attacks often use an \(L_\infty\) or \(L_2\) ball. Text attacks may allow appended tokens, paraphrases, encodings, translations or several conversational turns. These sets are not interchangeable.</li>
+                <li><strong>Success criterion.</strong> A changed class, an affirmative prefix and a genuinely policy-violating answer are different measures. The chosen measure determines what the reported attack-success rate means.</li>
             </ul>
         </div>
-        <p>Transfer is the property that turns a white-box method into a real-world threat. An adversarial example built for one model frequently fools another trained on similar data, because the two models carve up input space with similar near-linear decision boundaries. You will see this again, quantified, for language models in 9.2: a suffix optimised against open-weights models transfers to commercial ones the attacker never touched.</p>
+        <p><strong>Transfer</strong> adds another question: does an input found against one model also affect another? Transfer can turn a white-box search against an open surrogate into a black-box attack on a deployed target. Its rate is an empirical property of the source model, target model, attack and evaluation set.</p>
 
         <h2 class="section-title">From images to language</h2>
-        <p class="lead">The objects change; the structure does not.</p>
-        <p>For an image classifier the perturbation is a vector added to pixels. For a language model there is no continuous input to nudge (the input is discrete tokens), so the "perturbation set" becomes things like an appended adversarial suffix (9.2), a reframing that pits one training objective against another, or a transformation that pushes the input off the distribution the safety training covered (9.3). The attacker's goal is usually targeted: make the model produce a response its safety training was meant to refuse. The discrete, targeted version of the problem is harder to optimise, but the conceptual frame transfers wholesale: define what the attacker can change, write down an objective, and search. The next sub-session does exactly that and reads the search algorithm line by line.</p>
+        <p>Text is discrete, and meaning can change when words are appended, paraphrased, encoded or translated. An image norm therefore cannot define the allowed set for an LLM jailbreak. The useful transfer from adversarial image research is methodological: state the allowed transformation, objective and success criterion, then test the strongest attack available within that specification. Section 9.2 applies this method to adversarial suffixes.</p>
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Language as the perturbation</span></h3>
-            <p>The session turns on one idea: models behave differently off the distribution they were trained and safety-tuned on. For a vision model that off-distribution region is reached by an \(L_\infty\) pixel ball. For a language model deployed across this continent, it is reached by writing the request in isiZulu instead of English. The course's anchor result (Session 1) was an adversarial attack in this sense: the "perturbation" was a translation, GPT-4's 2023 safety training had not covered it, and the model complied. Frontier safety training has covered far more languages since, and the headline gap is much reduced; it persists on weaker models and under translation-controlled and multi-turn attacks. Sub-session 9.4 has you measure it by hand.</p>
+            <h3><span style="color:#ffffff;">Translation as a test transformation</span></h3>
+            <p>Yong, Menghini and Bach found that GPT-4-0613 responded differently when unsafe English prompts were machine-translated into lower-resource languages. Translation is not an imperceptible perturbation: fidelity, model comprehension and safety behaviour can all change. That makes it a valuable robustness test only when the evaluation measures those factors separately. Sections 9.3 and 9.4 develop that design.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Derive FGSM yourself from the \(L_\infty\)-constrained maximisation of a first-order Taylor expansion. Where exactly does the \(\operatorname{sign}\) come from, and why \(L_\infty\) rather than \(L_2\)?</li>
-            <li>The linear explanation predicts that adversarial vulnerability gets <em>worse</em>, not better, as input dimension grows. Does that match your intuition about scaling models up? What would the nonlinear-overfitting explanation have predicted instead?</li>
+            <li>Which assumptions are required to turn the \(\varepsilon mn\) activation calculation into a claim about classification error? Which of them could fail?</li>
             <li>Why does transfer work at all? What does a transferable adversarial example tell you about two independently trained models?</li>
-            <li>Restate "is GPT-4 robust?" as a well-formed question by filling in all four threat-model axes for the isiZulu jailbreak.</li>
+            <li>Restate “is this model robust?” for a translation-based jailbreak by specifying access, allowed transformation, goal and success criterion. Add one measure of comprehension.</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
@@ -116,7 +111,7 @@
 <nav class="page-nav">
   <a class="prev" href="../session-08/whose-values.html"><span class="nav-label">← Previous</span><span class="nav-title">8.4 · Whose values?</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="jailbreaks-as-optimisation.html"><span class="nav-label">Next →</span><span class="nav-title">9.2 · Jailbreaks as optimisation (GCG)</span></a>
+  <a class="next" href="jailbreaks-as-optimisation.html"><span class="nav-label">Next →</span><span class="nav-title">9.2 · Jailbreaks as discrete optimisation</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

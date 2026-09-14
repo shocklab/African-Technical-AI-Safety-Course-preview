@@ -120,13 +120,14 @@ preference aggregation (which connects to social-choice impossibility results �
 ### Week 5 — Robustness, unlearning, control
 
 **Session 9 · Robustness & adversarial ML.**
-Adversarial examples, **jailbreaks**, prompt injection, red-teaming, distribution shift, certified
-robustness, the long-tail / black-swan framing. Why robustness is a *safety* property, not just a
-benchmark number.
-- *Lab:* an adversarial-suffix / jailbreak exercise against an open guardrail model, **or** Hendrycks'
-  PGD adversarial-robustness coding pset. Metric: attack success vs perturbation budget.
-- *Readings:* Hendrycks "Adversarial Robustness" + "Black-Swan Robustness"; a current jailbreak paper
-  (Carlini et al.).
+Threat models, adversarial examples, jailbreaks, multilingual safety and indirect prompt injection.
+The session distinguishes bounded image perturbations from open-ended language transformations and
+asks what evidence a robustness claim supports.
+- *Lab:* a CPU-friendly multilingual safety evaluation of a small open instruction model. Students
+  score comprehension, refusal and unsafe compliance separately, then compare paired prompts across
+  English, isiZulu and Afrikaans without assuming the 2023 language gap will reproduce.
+- *Readings:* Goodfellow et al. on adversarial examples; Zou et al. on GCG; Wei et al. on safety-training
+  failure; Yong et al. and current multilingual follow-up work.
 
 **Session 10 · Unlearning & the AI-control agenda.**
 **Machine unlearning** (and how fragile it is — recovery via fine-tuning/probing). The **AI control**
