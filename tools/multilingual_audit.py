@@ -119,7 +119,8 @@ def report_comparisons(frame):
         sensitivity = unclear_sensitivity(frame, language)
         if min(controls) >= 2 and sensitivity:
             s = sensitivity
-            print(f"Unclear outcomes ({s['unclear_cells']} labels on {s['n']} jointly understood pairs): "
+            label_word = 'label' if s['unclear_cells'] == 1 else 'labels'
+            print(f"Unclear outcomes ({s['unclear_cells']} {label_word} on {s['n']} jointly understood pairs): "
                   f"paired gap {s['all_yes']:+.3f} if all are scored yes, {s['all_no']:+.3f} if all are scored no, "
                   f"and between {s['lowest']:+.3f} and {s['highest']:+.3f} over every way of scoring them. "
                   'The primary estimate above excludes these pairs.')
