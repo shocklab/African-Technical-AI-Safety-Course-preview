@@ -8,6 +8,9 @@ with unreleased sessions as plain text instead of links; unreleased page
 files are absent from the deployed tree (docs/404.html catches deep links).
 
 State: RELEASED-SESSIONS at the repo root, one session number per line.
+Anything in dev's index between <!-- DEV-ONLY-START --> and
+<!-- DEV-ONLY-END --> is dropped from the public index; a
+<span id="release-note"> in dev's index replaces the default note.
 The public docs/index.html is GENERATED (from dev's index + the RELEASED
 list) — never hand-edit it on main; edit dev's index instead.
 
@@ -54,7 +57,12 @@ def read_released():
 
 
 def gate_index(full_index: str, released: set) -> str:
-    """De-link every syllabus entry whose session is not released."""
+    """De-link every syllabus entry whose session is not released, and drop
+    the dev index's DEV-ONLY block (reference material outside the taught
+    route) entirely."""
+    full_index = re.sub(r"[ \t]*<!-- DEV-ONLY-START -->.*?<!-- DEV-ONLY-END -->"
+                        r"[ \t]*\n?", "", full_index, flags=re.S)
+
     def session_of(href):
         m = re.search(r"sessions/session-(\d+)", href)
         return int(m.group(1)) if m else None
@@ -62,7 +70,7 @@ def gate_index(full_index: str, released: set) -> str:
     def sub_li(m):
         href, text = m.group(1), m.group(2)
         s = session_of(href)
-        if s in released:
+        if s is None or s in released:  # unnumbered pages (project launch) stay
             return m.group(0)
         text = re.sub(r'<span class="badge-built">.*?</span>', "", text,
                       flags=re.S).strip()
@@ -90,11 +98,12 @@ def gate_index(full_index: str, released: set) -> str:
     out = re.sub(r'\s*<span class="badge-built">.*?</span>', "", out,
                  flags=re.S)
 
-    # release note in the caveat banner, idempotent
-    out = re.sub(r'<span id="release-note">.*?</span>\s*', "", out, flags=re.S)
-    out = out.replace('<div class="caveat-banner">\n            <p>',
-                      '<div class="caveat-banner">\n            <p>'
-                      + RELEASE_NOTE, 1)
+    # release note in the caveat banner: dev's own note wins; otherwise the
+    # default, inserted once
+    if '<span id="release-note">' not in out:
+        out = out.replace('<div class="caveat-banner">\n            <p>',
+                          '<div class="caveat-banner">\n            <p>'
+                          + RELEASE_NOTE, 1)
     return out
 
 
