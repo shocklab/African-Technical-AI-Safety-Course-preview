@@ -33,7 +33,7 @@
     <header>
         <div class="week-badge">Week 1 • Session 1.1</div>
         <h1>How this course works</h1>
-        <p>Who it's for, the shape of the 24 sessions, what's assessed, and how to get the most from it</p>
+        <p>Who it's for, the shape of the taught route, what's assessed, and how to get the most from it</p>
     </header>
     <div class="content">
 
@@ -45,7 +45,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>This course is for anyone interested in AI safety, though it is aimed at a more technical audience. Before any content, we want to be clear about the deal between us: what the course assumes you already know, what you should be able to do by the end, how your work is graded, and how to study a fast-moving, contested field without drowning in it or writing it off. This sub-session is that deal. None of it is examinable, but reading it carefully will make the next 12 weeks much easier.</p>
+            <p>This course is for anyone interested in AI safety, though it is aimed at a more technical audience. Before any content, we want to be clear about the deal between us: what the course assumes you already know, what you should be able to do by the end, how your work is graded, and how to study a fast-moving, contested field without drowning in it or writing it off. This sub-session is that deal. None of it is examinable, but reading it carefully will make the rest of the course much easier.</p>
         </div>
 
         <h2 class="section-title">Who this course is for</h2>
@@ -58,13 +58,13 @@
         </div>
 
         <h2 class="section-title">The shape of the course</h2>
-        <p>The course runs 12 weeks with 2 sessions a week, so 24 sessions in total. They fall into 5 parts. We start with idealised, formal questions, move to messy empirical practice, and end with your own research.</p>
+        <p>The 2026 taught route covers Sessions 1–9, then 11–13 and a project. Session 10 is skipped; the numbers follow the original course plan. We start with idealised, formal questions, move to messy empirical practice, and end with your own research.</p>
         <div class="card-grid">
             <div class="card"><h3>Part 1 · Foundations and the problem</h3><p>What technical AI safety is. The deep-learning and scaling foundations. The core alignment problem: specification, instrumental convergence, inner misalignment, deception. The physical substrate of compute, energy and minerals that all of it rests on.</p></div>
             <div class="card"><h3>Part 2 · Training and aligning</h3><p>How a frontier model is actually built (pretraining, supervised fine-tuning, RLHF), then the methods meant to align it: RLAIF, Constitutional AI, scalable oversight, and the question of whose values.</p></div>
-            <div class="card"><h3>Part 3 · Robust, controllable, evaluable</h3><p>Adversarial robustness and jailbreaks. Unlearning and the AI-control agenda. Evaluations and technical governance: how we measure what a system can and will do, and what makes a safety policy enforceable.</p></div>
-            <div class="card"><h3>Part 4 · Mechanistic interpretability</h3><p>Opening the model up (features, circuits, superposition) with hands-on TransformerLens labs. Behaviour alone cannot tell us whether a model is safe, a point Week 2 foreshadows.</p></div>
-            <div class="card"><h3>Part 5 · Research project</h3><p>A scoped, Colab-feasible safety project. You produce a short paper plus code, present it to the class, and review each other's work. Roughly the final third of the course.</p></div>
+            <div class="card"><h3>Part 3 · Robust, controllable, evaluable</h3><p>Adversarial robustness and jailbreaks. Evaluations and technical governance: how we measure what a system can and will do, and what makes a safety policy enforceable.</p></div>
+            <div class="card"><h3>Part 4 · Mechanistic interpretability</h3><p>Opening the model up with one worked induction-head circuit and its evidence limits. Behaviour alone cannot tell us whether a model is safe, a point Week 2 foreshadows.</p></div>
+            <div class="card"><h3>Part 5 · Research project</h3><p>A scoped, Colab-feasible safety project. You produce a short paper plus code, present it to the class, and review each other's work. The project follows Session 13.</p></div>
         </div>
         <div class="info-box">
             <h4>The two-act structure</h4>
@@ -72,12 +72,12 @@
         </div>
 
         <h2 class="section-title">Four through-lines</h2>
-        <p>Four ideas recur in almost every session. Watch for them. The course is, in a sense, 24 variations on these.</p>
+        <p>Four ideas recur in almost every session. Watch for them. The examples below return throughout the course.</p>
         <ul class="styled-list">
             <li>The safety–capabilities distinction. What a system can do (capabilities) is not the same as whether we can rely on it to do what we intend (safety). The organising worry of the whole field is the widening gap between the two. We test almost every idea against it.</li>
             <li>From idealised to empirical. Formal models of agency first, then the messy systems we actually have. Each half informs the other. The theory tells you what to look for; the experiments tell you whether it is there.</li>
             <li>African technical AI safety. This is a thread, not a single week. Frontier models are measurably less safe in African languages (Session 1.4). Compute, energy and data sovereignty shape who can build and govern these systems (Sessions 4 and 12). Relational ethics reframes the alignment target (Session 8). "Whose safety, whose risks, whose values?" runs throughout.</li>
-            <li>Intellectual honesty. The field disagrees with itself, sometimes sharply, and a good deal is uncertain. We steelman the sceptics (Session 20), hold beliefs at the confidence the evidence supports, and treat "I don't know, and here's why" as a respectable answer. Often it is the correct one.</li>
+            <li>Intellectual honesty. The field disagrees with itself, sometimes sharply, and a good deal is uncertain. We examine the sceptics, hold beliefs at the confidence the evidence supports, and treat "I don't know, and here's why" as a respectable answer. Often it is the correct one.</li>
         </ul>
 
         <h2 class="section-title">Assessment</h2>
@@ -87,7 +87,7 @@
             <table class="comparison-table">
                 <thead><tr><th>Component</th><th>Weight</th><th>What it is</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Weekly labs / problem sets</strong></td><td>25%</td><td>The coding labs (TransformerLens, UK AISI Inspect, robustness, evals) and short problem sets. Graded on completion and correctness. Resubmission is allowed, because we are after mastery, not one-shot performance.</td></tr>
+                    <tr><td><strong>Weekly labs / problem sets</strong></td><td>25%</td><td>The coding labs in the taught sessions and short problem sets. Graded on completion and correctness. Resubmission is allowed, because we are after mastery, not one-shot performance.</td></tr>
                     <tr><td><strong>Paper presentation + critiques</strong></td><td>15%</td><td>You present one paper to the class. Go beyond summary: what does it claim, what is the evidence, does it hold up? You also submit short written critiques of peers' chosen papers before the relevant seminar.</td></tr>
                     <tr><td><strong>Failure-mode analysis</strong></td><td>10%</td><td>An essay of about 1,500 words analysing one alignment failure mode rigorously, due in the first week after the mid-semester break (announced in Session 3.4). An African or Global-South failure mode is one sanctioned track.</td></tr>
                     <tr><td><strong>Research project</strong></td><td>40%</td><td>Proposal, then a paper of 6 to 8 pages plus code, in small teams. Marked by an itemised, per-section rubric (abstract / method / experiments / limitations / creativity) plus a positioning-and-context criterion.</td></tr>
@@ -97,7 +97,7 @@
         </div>
         <div class="info-box">
             <h4>Grading the African lens</h4>
-            <p>Every project carries a one-paragraph <strong>context statement</strong>: who does this help, whose risk does it address, and how, if at all, does it apply in an African context? "Not applicable, because…" is a perfectly good, gradable answer for a pure-theory project. What matters is that you have thought about it rather than performed a gesture. The failure-mode essay and several project tracks offer strong African-context options (Sessions 9, 11 and 18). None is compulsory.</p>
+            <p>Every project carries a one-paragraph <strong>context statement</strong>: who does this help, whose risk does it address, and how, if at all, does it apply in an African context? "Not applicable, because…" is a perfectly good, gradable answer for a pure-theory project. What matters is that you have thought about it rather than performed a gesture. The failure-mode essay and several project tracks offer strong African-context options (Sessions 9 and 11). None is compulsory.</p>
         </div>
         <div class="warning-box">
             <h4>The course's AI-use policy</h4>
@@ -107,7 +107,7 @@
         <h2 class="section-title">The weekly rhythm</h2>
         <div class="card-grid">
             <div class="card"><h3>Two sessions a week</h3><p>Usually one concept or seminar session and one lab or working session. Read the assigned material before class. Sessions assume it, and the seminars only work if you arrive ready to argue.</p></div>
-            <div class="card"><h3>Labs run on Colab</h3><p>Every graded lab runs on free or Pro Google Colab, with no special hardware needed. A few GPU-hungry labs, such as full RLHF or adversarial-training runs, are marked optional. Nothing graded depends on hardware you may not have.</p></div>
+            <div class="card"><h3>Labs run on Colab</h3><p>The taught labs are designed for free Google Colab, with no special hardware needed. GPU-hungry extensions are optional. Nothing graded depends on hardware you may not have.</p></div>
             <div class="card"><h3>This site is home base</h3><p>All sub-sessions, readings and labs live here. The "← Previous / ⌂ / Next →" bar at the foot of each page walks you through in order; the ⌂ button returns to the contents page. Optional deep-dive appendices, like the derivation linked from Session 3.1, sit off to the side.</p></div>
         </div>
 
@@ -124,7 +124,7 @@
         <h2 class="section-title">What makes this African technical AI safety</h2>
         <div class="case-study">
             <h4>Safety for whom</h4>
-            <p>The technical core of AI safety (alignment, interpretability, control) was largely developed in a handful of Northern labs, and most courses inherit that vantage point. This one does too, but it adds a question those courses rarely ask: safe for whom? The anchor, in Session 1.4, is a concrete, peer-reviewed result. Frontier models' safety guardrails fail far more often in isiZulu and other low-resource languages than in English. That is not an ethics footnote. It is a robustness and evaluation problem at the technical core of the field, and it lands on this continent first. We return to it as a lab (Session 9), an evaluation project (Session 11), and a full session on AI safety from the Global South (Session 18), alongside compute and data sovereignty (Sessions 4 and 12) and relational ethics (Session 8). You will not be asked to pretend an African angle exists where it does not. You will be asked, repeatedly, to check.</p>
+            <p>The technical core of AI safety (alignment, interpretability, control) was largely developed in a handful of Northern labs, and most courses inherit that vantage point. This one does too, but it adds a question those courses rarely ask: safe for whom? The anchor, in Session 1.4, is a concrete, peer-reviewed result. Frontier models' safety guardrails fail far more often in isiZulu and other low-resource languages than in English. That is not an ethics footnote. It is a robustness and evaluation problem at the technical core of the field, and it lands on this continent first. We return to it as a lab (Session 9), an evaluation project (Session 11), alongside compute and data sovereignty (Sessions 4 and 12) and relational ethics (Session 8). You will not be asked to pretend an African angle exists where it does not. You will be asked, repeatedly, to check.</p>
         </div>
 
         <h2 class="section-title">Practicalities and a standing caveat</h2>
@@ -137,7 +137,7 @@
         <h2 class="section-title">To do before the next session</h2>
         <ul class="styled-list">
             <li>Confirm you can open a Google Colab notebook and run a trivial cell.</li>
-            <li>Skim the contents page so you have a mental map of the 12 weeks.</li>
+            <li>Skim the <a href="../../short-course-2026.html">2026 taught route</a> so you have a mental map of the course.</li>
             <li>Come to Session 1.2 with a one-line answer to: "What do you currently think 'AI safety' means?" We'll sharpen it together.</li>
         </ul>
 

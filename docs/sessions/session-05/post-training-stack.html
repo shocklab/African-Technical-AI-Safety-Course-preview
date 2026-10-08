@@ -117,7 +117,7 @@
         </div>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Alignment is a thin layer over a vast base</span></h3>
-            <p>A frontier assistant is an enormous, capability-rich, value-indifferent base model, with a comparatively thin layer of fine-tuning shaping how it presents itself. That layer is real and does a great deal of work, but it is small, it is a proxy, and it is applied to a system that already contains the behaviours we are trying to prevent. Much of the rest of this course is about how fragile that layer is (robustness, Week 5), whether we can see through it (interpretability, Weeks 7–8), and whether the underlying model is merely <em>behaving</em> aligned (deception, Session 3.4).</p>
+            <p>A frontier assistant is an enormous, capability-rich, value-indifferent base model, with a comparatively thin layer of fine-tuning shaping how it presents itself. That layer is real and does a great deal of work, but it is small, it is a proxy, and it is applied to a system that already contains the behaviours we are trying to prevent. Much of the rest of this course is about how fragile that layer is (robustness, Week 5), whether we can see through it (interpretability, Session 13), and whether the underlying model is merely <em>behaving</em> aligned (deception, Session 3.4).</p>
         </div>
 
         <h2 class="section-title">Base vs aligned models</h2>
@@ -135,7 +135,7 @@
         </div>
         <div class="info-box">
             <h4>Locating a failure in the pipeline</h4>
-            <p>Different stages call for different fixes. A capability that shouldn't exist at all is a <em>pretraining/data</em> problem (or an unlearning one, Session 10). A model that won't follow instructions is an <em>SFT</em> problem. Sycophancy and reward hacking are <em>preference-optimisation</em> problems (Session 6). A jailbreak that peels off the persona is a <em>robustness</em> problem (Session 9). Locating a failure in the pipeline tells you which tool can address it, and warns you when a fix at one layer (a sterner system prompt) is being asked to paper over a problem rooted in another (a capability baked in at pretraining).</p>
+            <p>Different stages call for different fixes. A capability that should not exist at all may be rooted in pretraining data, which is much harder to address than a surface instruction-following failure. A model that won't follow instructions is an <em>SFT</em> problem. Sycophancy and reward hacking are <em>preference-optimisation</em> problems (Session 6). A jailbreak that peels off the persona is a <em>robustness</em> problem (Session 9). Locating a failure in the pipeline tells you which tool can address it, and warns you when a fix at one layer (a sterner system prompt) is being asked to paper over a problem rooted in another (a capability baked in at pretraining).</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>

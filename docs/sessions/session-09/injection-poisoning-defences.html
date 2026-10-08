@@ -27,11 +27,10 @@
   </details>
   <div class="tn-links">
     <a class="tn-prev" href="lab-isizulu-robustness.html">← <span class="tn-title">9.4 · Lab: multilingual safety evaluation</span></a>
-    <a class="tn-next" href="../session-10/machine-unlearning.html"><span class="tn-title">10.1 · Machine unlearning</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
-    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. The diagram on this page was created with OpenAI Codex. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 5 • Session 9.5</div>
         <h1>Prompt injection and layered defences</h1>
@@ -49,6 +48,11 @@
             <h4>A worked threat model</h4>
             <p style="color:#555;">Consider an assistant asked to summarise an email. The email contains hidden text instructing the assistant to send private correspondence to an external address. The attacker controls the email, the application supplies it as untrusted content, and success means an unauthorised tool call or disclosure. A test that checks only the quality of the summary misses the security outcome.</p>
         </div>
+
+        <figure class="wide">
+            <img src="../../assets/img/session-9-5-prompt-injection-boundary.svg" alt="A user asks an assistant to summarise an email. The email is attacker-controlled and contains an instruction to send private mail out. A dashed arrow marks the possible trust-boundary failure when the assistant treats email text as an instruction. A separate tool-action check validates destination, data and authority before an email tool acts.">
+            <figcaption>The worked email example. A tool-action check limits the effect of a model following an injected instruction; it does not make the model immune to injection. <a href="../../assets/img/session-9-5-prompt-injection-boundary.svg">Open the diagram at full size</a>.</figcaption>
+        </figure>
 
         <h2 class="section-title">Automated red-teaming</h2>
         <p>Perez et al. (2022) used one language model to generate tests for another, with a classifier scoring the target's responses. On the model and offensive-language classifier they studied, reinforcement-learning optimisation of the red model increased the estimated offensive-reply rate from about 3.7% for zero-shot generation to above 40%. The comparison shows that an evaluation's attack-generation method can dominate its result. Session 11 returns to elicitation and validity in more detail.</p>
@@ -103,7 +107,7 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Session 10 turns to machine unlearning, backdoors and the AI-control agenda. Its control protocols assume that the model itself may act adversarially, then ask how much harm a surrounding system can prevent.</p>
+            <p>The taught route continues with <a href="../session-11/why-evaluate-and-taxonomy.html">Session 11</a>. We will ask what an evaluation measures, how a model might appear safer or less capable than it is, and what evidence a result can support.</p>
         </div>
 
     </div>
@@ -111,7 +115,7 @@
 <nav class="page-nav">
   <a class="prev" href="lab-isizulu-robustness.html"><span class="nav-label">← Previous</span><span class="nav-title">9.4 · Lab: multilingual safety evaluation</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-10/machine-unlearning.html"><span class="nav-label">Next →</span><span class="nav-title">10.1 · Machine unlearning</span></a>
+  <a class="next" href="../session-11/why-evaluate-and-taxonomy.html"><span class="nav-label">Next →</span><span class="nav-title">11.1 · Why evaluate?</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

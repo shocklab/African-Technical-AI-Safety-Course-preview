@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="490" viewBox="0 0 1060 490" role="img" aria-labelledby="title desc">
+<title id="title">Induction-head schematic for a repeated token sequence</title><desc id="desc">Sequence A B then later A predicts B. A previous-token head stores information about the earlier A at the B position. A later induction head uses the current A to match that stored A, attends to the earlier B position, and raises the probability of output B. The diagram is a schematic for a small two-layer model.</desc>
+<rect width="1060" height="490" fill="white"/>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2a5298"/></marker></defs>
+<text x="35" y="47" font-family='Source Serif 4, Georgia, serif' font-size="30" fill="#003A70">One induction-head circuit</text>
+<text x="35" y="74" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#5a6672">Schematic for a small two-layer attention-only model.</text>
+<text x="35" y="112" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="13" fill="#2a5298">SEQUENCE</text>
+<rect x="85" y="127" width="120" height="65" rx="8" fill="#f5f7f9" stroke="#dce4ec"/><text x="145" y="172" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="32" fill="#003A70" text-anchor="middle">A</text><text x="145" y="216" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672" text-anchor="middle">earlier A</text>
+<rect x="295" y="127" width="120" height="65" rx="8" fill="#e8f1fb" stroke="#dce4ec"/><text x="355" y="172" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="32" fill="#003A70" text-anchor="middle">B</text><text x="355" y="216" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672" text-anchor="middle">following B</text>
+<rect x="490" y="127" width="120" height="65" rx="8" fill="#f5f7f9" stroke="#dce4ec"/><text x="550" y="172" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="32" fill="#003A70" text-anchor="middle">…</text><text x="550" y="216" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672" text-anchor="middle">other tokens</text>
+<rect x="695" y="127" width="120" height="65" rx="8" fill="#f5f7f9" stroke="#dce4ec"/><text x="755" y="172" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="32" fill="#003A70" text-anchor="middle">A</text><text x="755" y="216" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672" text-anchor="middle">current A</text>
+<rect x="920" y="127" width="120" height="65" rx="8" fill="#003A70" stroke="#dce4ec"/><text x="980" y="172" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="32" fill="white" text-anchor="middle">B</text><text x="980" y="216" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672" text-anchor="middle">prediction</text>
+<path d="M205 160 H285" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M415 160 H472" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M610 160 H685" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M815 160 H900" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="82" y="268" width="438" height="120" rx="8" fill="#f5f7f9" stroke="#dce4ec"/>
+<text x="104" y="298" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="13" fill="#2a5298">LAYER 1 · PREVIOUS-TOKEN HEAD</text>
+<text x="104" y="328" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">At the B position, store information</text>
+<text x="104" y="353" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">about the preceding A.</text>
+<rect x="562" y="268" width="438" height="120" rx="8" fill="#e8f1fb" stroke="#dce4ec"/>
+<text x="584" y="298" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="13" fill="#2a5298">LAYER 2 · INDUCTION HEAD</text>
+<text x="584" y="328" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">Match current A to the stored A at B;</text>
+<text x="584" y="353" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">attend to B and favour B as output.</text>
+<path d="M355 224 V257" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M520 328 H552" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M755 224 V257" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M862 267 Q920 230 978 228" fill="none" stroke="#2a5298" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="35" y="440" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672">QK matching selects the earlier B position; OV copying increases the predicted probability of B.</text>
+<text x="35" y="463" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672">A matching attention pattern is a candidate mechanism. Ablation tests its causal contribution.</text>
+</svg>

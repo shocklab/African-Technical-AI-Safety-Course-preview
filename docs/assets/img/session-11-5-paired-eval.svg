@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="548" viewBox="0 0 850 548" role="img" aria-labelledby="title desc">
+<title id="title">Paired multilingual safety evaluation</title><desc id="desc">Two by two table for six eligible matched prompts. Both conditions cross the safety boundary on one prompt, English only on zero, isiZulu only on two, and neither on three. Paired isiZulu minus English difference equals two minus zero divided by six, or one third.</desc>
+<rect width="850" height="548" fill="white"/>
+<text x="38" y="48" font-family='Source Serif 4, Georgia, serif' font-size="30" fill="#003A70">Keep the prompts paired</text>
+<text x="38" y="75" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#5a6672">Six eligible prompts; each is evaluated in English and isiZulu.</text>
+<text x="528" y="117" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="16" fill="#003A70" text-anchor="middle">ISIZULU CONDITION</text>
+<text x="125" y="263" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="16" fill="#003A70" text-anchor="middle" transform="rotate(-90 125 263)">ENGLISH CONDITION</text>
+<rect x="226" y="134" width="572" height="294" fill="white" stroke="#dce4ec" stroke-width="2"/>
+<rect x="226" y="134" width="572" height="58" fill="#003A70"/>
+<rect x="226" y="192" width="156" height="236" fill="#f5f7f9"/>
+<line x1="382" y1="134" x2="382" y2="428" stroke="#dce4ec" stroke-width="2"/>
+<line x1="590" y1="134" x2="590" y2="428" stroke="#dce4ec" stroke-width="2"/>
+<line x1="226" y1="310" x2="798" y2="310" stroke="#dce4ec" stroke-width="2"/>
+<text x="486" y="171" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="white" text-anchor="middle">Crosses boundary</text>
+<text x="694" y="171" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="white" text-anchor="middle">Does not cross</text>
+<text x="246" y="244" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">Crosses</text><text x="246" y="268" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">boundary</text>
+<text x="246" y="359" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">Does not</text><text x="246" y="383" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">cross</text>
+<rect x="383" y="193" width="206" height="116" fill="#f5f7f9"/><rect x="591" y="193" width="206" height="116" fill="#f7eacb"/>
+<rect x="383" y="311" width="206" height="116" fill="#e8f1fb"/><rect x="591" y="311" width="206" height="116" fill="#f5f7f9"/>
+<text x="486" y="254" font-family='Source Serif 4, Georgia, serif' font-size="43" fill="#003A70" text-anchor="middle">1</text><text x="486" y="281" font-family='Source Serif 4, Georgia, serif' font-size="14" fill="#5a6672" text-anchor="middle">both</text>
+<text x="694" y="254" font-family='Source Serif 4, Georgia, serif' font-size="43" fill="#003A70" text-anchor="middle">0</text><text x="694" y="281" font-family='Source Serif 4, Georgia, serif' font-size="14" fill="#5a6672" text-anchor="middle">English only</text>
+<text x="486" y="373" font-family='Source Serif 4, Georgia, serif' font-size="43" fill="#003A70" text-anchor="middle">2</text><text x="486" y="400" font-family='Source Serif 4, Georgia, serif' font-size="14" fill="#5a6672" text-anchor="middle">isiZulu only</text>
+<text x="694" y="373" font-family='Source Serif 4, Georgia, serif' font-size="43" fill="#003A70" text-anchor="middle">3</text><text x="694" y="400" font-family='Source Serif 4, Georgia, serif' font-size="14" fill="#5a6672" text-anchor="middle">neither</text>
+<rect x="226" y="451" width="572" height="72" fill="#f5f7f9" stroke="#dce4ec"/>
+<text x="247" y="481" font-family='Source Serif 4, Georgia, serif' font-size="18" fill="#2c3e50">Paired difference = (isiZulu only − English only) / eligible prompts</text>
+<text x="247" y="507" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="20" fill="#003A70">(2 − 0) / 6 = 1/3</text>
+</svg>

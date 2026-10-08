@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="575" viewBox="0 0 1100 575" role="img" aria-labelledby="title desc">
+<title id="title">Technical AI governance capacities by targets</title><desc id="desc">Six capacities form the rows: assessment, access, verification, security, operationalisation and ecosystem monitoring. Four targets form the columns: data, compute, models and algorithms, and deployment. Selected example cells show deployment evaluation results, compute chip attestation, model weight security and model risk thresholds. The examples are illustrative, and categories may overlap.</desc>
+<rect width="1100" height="575" fill="white"/>
+<text x="35" y="48" font-family='Source Serif 4, Georgia, serif' font-size="30" fill="#003A70">Capacities × targets</text>
+<text x="35" y="74" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#5a6672">The row is what governance needs to do. The column is where it acts.</text>
+<text x="35" y="106" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="13" fill="#2a5298">CAPACITY</text>
+<text x="412" y="106" font-family='IBM Plex Mono, ui-monospace, monospace' font-size="13" fill="#2a5298">TARGET</text>
+<rect x="260" y="122" width="205" height="54" fill="#003A70" stroke="white"/><text x="362.5" y="156" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="white" text-anchor="middle">Data</text>
+<rect x="465" y="122" width="205" height="54" fill="#003A70" stroke="white"/><text x="567.5" y="156" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="white" text-anchor="middle">Compute</text>
+<rect x="670" y="122" width="205" height="54" fill="#003A70" stroke="white"/><text x="772.5" y="156" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="white" text-anchor="middle">Models / algorithms</text>
+<rect x="875" y="122" width="205" height="54" fill="#003A70" stroke="white"/><text x="977.5" y="156" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="white" text-anchor="middle">Deployment</text>
+<rect x="35" y="176" width="225" height="58" fill="#f5f7f9" stroke="#dce4ec"/><text x="51" y="212" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="#2c3e50">Assessment</text>
+<rect x="260" y="176" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="465" y="176" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="670" y="176" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="875" y="176" width="205" height="58" fill="#e8f1fb" stroke="#dce4ec"/>
+<text x="977.5" y="211" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#003A70" text-anchor="middle">Eval results</text>
+<rect x="35" y="234" width="225" height="58" fill="#f5f7f9" stroke="#dce4ec"/><text x="51" y="270" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="#2c3e50">Access</text>
+<rect x="260" y="234" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="465" y="234" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="670" y="234" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="875" y="234" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="35" y="292" width="225" height="58" fill="#f5f7f9" stroke="#dce4ec"/><text x="51" y="328" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="#2c3e50">Verification</text>
+<rect x="260" y="292" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="465" y="292" width="205" height="58" fill="#e8f1fb" stroke="#dce4ec"/>
+<text x="567.5" y="327" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#003A70" text-anchor="middle">Chip attestation</text>
+<rect x="670" y="292" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="875" y="292" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="35" y="350" width="225" height="58" fill="#f5f7f9" stroke="#dce4ec"/><text x="51" y="386" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="#2c3e50">Security</text>
+<rect x="260" y="350" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="465" y="350" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="670" y="350" width="205" height="58" fill="#e8f1fb" stroke="#dce4ec"/>
+<text x="772.5" y="385" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#003A70" text-anchor="middle">Weight security</text>
+<rect x="875" y="350" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="35" y="408" width="225" height="58" fill="#f5f7f9" stroke="#dce4ec"/><text x="51" y="444" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="#2c3e50">Operationalisation</text>
+<rect x="260" y="408" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="465" y="408" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="670" y="408" width="205" height="58" fill="#e8f1fb" stroke="#dce4ec"/>
+<text x="772.5" y="443" font-family='Source Serif 4, Georgia, serif' font-size="16" fill="#003A70" text-anchor="middle">Risk thresholds</text>
+<rect x="875" y="408" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="35" y="466" width="225" height="58" fill="#f5f7f9" stroke="#dce4ec"/><text x="51" y="502" font-family='Source Serif 4, Georgia, serif' font-size="17" fill="#2c3e50">Ecosystem monitoring</text>
+<rect x="260" y="466" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="465" y="466" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="670" y="466" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<rect x="875" y="466" width="205" height="58" fill="white" stroke="#dce4ec"/>
+<text x="35" y="550" font-family='Source Serif 4, Georgia, serif' font-size="15" fill="#5a6672">Highlighted cells are examples, not an exhaustive classification. Categories may overlap.</text>
+</svg>

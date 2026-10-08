@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 13.2 — One circuit and its limits</title>
+    <link rel="stylesheet" href="../../assets/styles.css">
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="container">
+<div class="top-nav"><a class="tn-home" href="../../short-course-2026.html">⌂ Taught route</a><div class="tn-links"><a class="tn-prev" href="why-interpretability.html">← <span class="tn-title">Why open the black box?</span></a><a class="tn-next" href="../project-kickoff-short-course.html"><span class="tn-title">Project launch</span> →</a></div></div>
+<div class="ai-notice"><strong>Note:</strong> This page was drafted with OpenAI Codex. See the <a href="../../ai-disclaimer.html">course AI-use statement</a>.</div>
+<header><div class="week-badge">Session 13.2 • Taught route</div><h1>One circuit and its limits</h1><p>A worked example of what interpretability can establish, and where the evidence stops</p></header>
+<div class="content">
+<div class="intro-text"><h2>The question</h2><p>If a model sees <code>[A][B] … [A]</code> and predicts <code>[B]</code>, what has it learned? An output test tells us that the completion works on the tested sequences. A circuit account tries to show which parts of the model carry out the matching and copying. Induction heads give us a small, concrete case on which to practise judging that evidence.</p></div>
+<h2 class="section-title">The two-step algorithm</h2>
+<ol class="styled-list"><li><strong>Mark the previous token.</strong> An early attention head writes information about the token before each position into the residual stream, the shared vector that the model’s layers read and update.</li><li><strong>Match and copy.</strong> A later head can use that information to find an earlier occurrence of the current token. Its attention points to the token that followed the earlier occurrence, and its output raises the probability of copying that token.</li></ol>
+<p>For <code>[cat][sat] … [cat]</code>, the second head should attend to the earlier <code>[sat]</code> position and favour <code>sat</code> as the next token. This is the induction pattern. The <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">source paper</a> develops the QK matching and OV copying matrices in detail; you do not need the full derivation to evaluate the central claim.</p>
+<figure class="wide"><img src="../../assets/img/session-13-induction-circuit.svg" alt="In a small two-layer model, an earlier attention head stores information about token A at the following B position. When A appears again, a later induction head matches it to that stored A, attends to the earlier B position and raises the probability of predicting B."><figcaption>A schematic induction-head account for a small model, based on <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">Olsson et al. (2022)</a>. The arrows describe a proposed mechanism; the intervention below tests its causal contribution. <a href="../../assets/img/session-13-induction-circuit.svg">Open the diagram at full size</a>.</figcaption></figure>
+<div class="technical-detail"><h4>What would count as evidence?</h4><p>First, show the behaviour on repeated sequences that were not used to select the head. Second, inspect the attention pattern: does it point to the token after the matching prefix? Third, intervene. Remove or replace the candidate head and measure whether the specific repeat-completion advantage falls. Repeat with a comparison head and with sequences that should not need the pattern. A colourful attention plot alone meets only the second of these checks.</p></div>
+<h2 class="section-title">The inference ladder</h2>
+<table><thead><tr><th>Observation</th><th>Claim it supports</th><th>What it does not establish</th></tr></thead><tbody><tr><td>The model completes repeated sequences</td><td>The tested behaviour exists</td><td>Which mechanism produced it</td></tr><tr><td>A head attends at the induction position</td><td>A plausible candidate mechanism</td><td>That the head is necessary for the behaviour</td></tr><tr><td>A targeted ablation reduces repeat completion</td><td>A causal contribution in this model and test distribution</td><td>A complete account of in-context learning, or a frontier-scale safety guarantee</td></tr></tbody></table>
+<div class="warning-box"><h4>The safety limit</h4><p>A verified circuit in a small model does not show that a large model is transparent, that its other circuits have been found, or that a deceptive model cannot evade an audit. The useful habit is to specify the model, input distribution, intervention and remaining alternative explanations before using a mechanistic result in a safety argument.</p></div>
+<h2 class="section-title">In-class exercise</h2>
+<p>In pairs, design an ablation test for the induction claim. State the outcome measure and one control that would distinguish a specific loss of repeat copying from general damage to the model. Then make two sentences about the result: the strongest claim a positive test would license, and a stronger claim it would leave open.</p>
+<h2 class="section-title">From the example to the project</h2>
+<p>Interpretability is an optional project route for students ready to do additional practical preparation with the instructor. A project on a circuit needs a baseline, an intervention and a held-out prompt distribution. The course project also welcomes narrower work based on the robustness experiment, evaluation audit or governance exercise. Bring one question and one possible disconfirming result to the <a href="../project-kickoff-short-course.html">project launch</a>.</p>
+<h2 class="section-title">Readings and optional depth</h2>
+<div class="resource-placeholder"><h4>Already assigned for Session 13</h4><p>• Return to the bounded Olsson et al. excerpt assigned on the preceding page. The link there opens the full article; read only the named sections. This worked example adds no new pre-class reading.</p></div>
+<div class="resource-placeholder"><h4>For independent study</h4><p>• The <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">full Olsson et al. paper</a> develops the induction-head account. It is optional and is not a prerequisite for the project.</p></div>
+</div>
+<nav class="page-nav"><a class="prev" href="why-interpretability.html"><span class="nav-label">← Previous</span><span class="nav-title">Why open the black box?</span></a><a class="home" href="../../short-course-2026.html"><span class="nav-title">⌂</span></a><a class="next" href="../project-kickoff-short-course.html"><span class="nav-label">Next →</span><span class="nav-title">Project launch</span></a></nav>
+</div>
+</body>
+</html>
