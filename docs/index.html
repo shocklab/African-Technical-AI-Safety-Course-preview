@@ -62,14 +62,14 @@
     <div class="content">
 
         <div class="caveat-banner">
-            <p><strong>A note on these materials:</strong> The design, presentation, and content of these pages have been created and enhanced using AI tools (primarily Claude by Anthropic). All materials are reviewed and reference-checked, but errors are still possible, particularly in links, citations, or statistics. If you spot anything wrong, please email <a href="mailto:jonathan.shock@uct.ac.za">jonathan.shock@uct.ac.za</a>. See the <a href="ai-disclaimer.html">full AI content disclaimer</a>.</p>
+            <p><span id="release-note">The 2026 taught route is complete here: Sessions 1–9, then 11–13, followed by a project.</span> <strong>A note on these materials:</strong> The design, presentation, and content of these pages have been created and enhanced using AI tools (primarily Claude by Anthropic). Materials are checked during preparation, but errors are still possible, particularly in links, citations, or statistics. If you spot anything wrong, please email <a href="mailto:jonathan.shock@uct.ac.za">jonathan.shock@uct.ac.za</a>. See the <a href="ai-disclaimer.html">full AI content disclaimer</a>.</p>
         </div>
 
         <div class="intro-section">
             <h2>About this course</h2>
-            <p>A 12-week, twice-weekly (24-session) technical introduction to AI safety for students who understand neural networks and can program in Python. It runs from the alignment problem through training and alignment methods, robustness and control, evaluations and technical governance, and mechanistic interpretability, into a research project.</p>
+            <p>A technical introduction to AI safety for students who understand neural networks and can program in Python. The 2026 taught route covers Sessions 1–9, then evaluations, technical governance and one worked interpretability case in Sessions 11–13, followed by a research project. Session 10 is skipped; the numbering follows the original course plan.</p>
             <p style="margin-top:12px;">What makes it <em>African</em> technical AI safety is a through-line rather than a single week: frontier models are <strong>measurably less safe in African languages</strong> (a robustness and evaluation problem); compute, energy and data sovereignty shape who can build and govern these systems; and relational ethics and the present-harms debate ask, throughout, <strong>whose safety, whose risks, whose values?</strong> The labs and project are built to run on Google Colab.</p>
-            <p style="margin-top:12px;"><em>Built lessons are linked below; the rest are in preparation.</em></p>
+            
             <p style="margin-top:14px;"><a href="about.html">Read more about the course, the convenor, licensing, and how to cite →</a></p>
         </div>
 
@@ -80,7 +80,7 @@
             <div class="week-header"><div class="week-number">1</div><h2>Orientation and foundations</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 1 · What technical AI safety is <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 1 · What technical AI safety is</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-01/how-this-course-works.html">1.1 · How this course works</a></li>
                         <li><a href="sessions/session-01/what-technical-ai-safety-is.html">1.2 · What technical AI safety is</a></li>
@@ -89,7 +89,7 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="session-group">Session 2 · Deep learning and scaling laws <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 2 · Deep learning and scaling laws</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-02/from-neurons-to-networks.html">2.1 · From neurons to networks</a></li>
                         <li><a href="sessions/session-02/inside-the-transformer.html">2.2 · Inside the transformer</a></li>
@@ -105,7 +105,7 @@
             <div class="week-header"><div class="week-number">2</div><h2>The alignment problem and the physical substrate</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 3 · The core alignment problem <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 3 · The core alignment problem</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-03/the-specification-problem.html">3.1 · The specification problem (outer alignment)</a></li>
                         <li><a href="sessions/session-03/instrumental-convergence.html">3.2 · Instrumental convergence and power-seeking</a></li>
@@ -114,7 +114,7 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="session-group">Session 4 · The physical substrate of scale (energy) <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 4 · The physical substrate of scale (energy)</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-04/cost-of-every-prompt.html">4.1 · The cost of every prompt</a></li>
                         <li><a href="sessions/session-04/infrastructure-and-rebound.html">4.2 · Infrastructure, scale and the rebound problem</a></li>
@@ -132,7 +132,7 @@
             <div class="week-header"><div class="week-number">3</div><h2>LLM training, end to end</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 5 · From pretraining to assistant <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 5 · From pretraining to assistant</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-05/pretraining.html">5.1 · Pretraining: learning to predict the next token</a></li>
                         <li><a href="sessions/session-05/supervised-fine-tuning.html">5.2 · From predictor to instruction-follower (SFT)</a></li>
@@ -141,7 +141,7 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="session-group">Session 6 · RLHF and RL fine-tuning <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 6 · RLHF and RL fine-tuning</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-06/from-demonstrations-to-preferences.html">6.1 · From demonstrations to preferences</a></li>
                         <li><a href="sessions/session-06/the-reward-model.html">6.2 · The reward model</a></li>
@@ -157,7 +157,7 @@
             <div class="week-header"><div class="week-number">4</div><h2>Scalable alignment methods</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 7 · Learning from AI feedback (RLAIF and Constitutional AI) <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 7 · Learning from AI feedback (RLAIF and Constitutional AI)</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-07/from-human-to-ai-feedback.html">7.1 · From human to AI feedback</a></li>
                         <li><a href="sessions/session-07/constitutional-ai.html">7.2 · Constitutional AI</a></li>
@@ -168,7 +168,7 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="session-group">Session 8 · Scalable oversight and "whose values?" (ethics) <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 8 · Scalable oversight and "whose values?" (ethics)</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-08/scalable-oversight.html">8.1 · Scalable oversight</a></li>
                         <li><a href="sessions/session-08/ethical-frameworks-four-lenses.html">8.2 · Four ethical lenses</a></li>
@@ -180,23 +180,46 @@
         </div>
 
         <!-- ===== PART III ===== -->
-        <div class="part-label">Part III · Robust, controllable, evaluable models</div>
+        <div class="part-label">Part III · Robustness, evaluation and governance</div>
+        <div class="week-section">
+            <div class="week-header"><div class="week-number">5</div><h2>Robustness and adversarial ML</h2></div>
+            <ul class="lesson-list"><li><div class="session-group">Session 9 · Robustness and adversarial ML</div><ul class="subsession-list">
+                <li><a href="sessions/session-09/adversarial-examples.html">9.1 · Adversarial examples and threat models</a></li>
+                <li><a href="sessions/session-09/jailbreaks-as-optimisation.html">9.2 · Jailbreaks as discrete optimisation</a></li>
+                <li><a href="sessions/session-09/why-safety-training-fails.html">9.3 · Safety under transformations</a></li>
+                <li><a href="sessions/session-09/lab-isizulu-robustness.html">9.4 · Lab: multilingual safety evaluation</a></li>
+                <li><a href="sessions/session-09/injection-poisoning-defences.html">9.5 · Prompt injection and layered defences</a></li>
+            </ul></li></ul>
+        </div>
+        <div class="week-section">
+            <div class="week-header"><div class="week-number">6</div><h2>Evaluations and technical governance</h2></div>
+            <ul class="lesson-list"><li><div class="session-group">Session 11 · Evaluations and dangerous-capability evals</div><ul class="subsession-list">
+                <li><a href="sessions/session-11/why-evaluate-and-taxonomy.html">11.1 · Why evaluate: the eval taxonomy</a></li>
+                <li><a href="sessions/session-11/dangerous-capability-evals.html">11.2 · Dangerous-capability evals: elicitation and sandbagging</a></li>
+                <li><a href="sessions/session-11/construct-validity.html">11.3 · Does the eval measure what it claims?</a></li>
+                <li><a href="sessions/session-11/statistics-of-evals.html">11.4 · The statistics of evals</a></li>
+                <li><a href="sessions/session-11/lab-isizulu-eval.html">11.5 · Lab: audit a multilingual safety eval</a></li>
+            </ul></li><li><a href="sessions/session-12-technical-ai-governance.html">Session 12 · Technical AI governance</a></li></ul>
+        </div>
+        <div class="part-label">Part IV · Interpretability and project</div>
+        <div class="week-section">
+            <div class="week-header"><div class="week-number">7</div><h2>One circuit, then project work</h2></div>
+            <ul class="lesson-list"><li><div class="session-group">Session 13 · Interpretability and its limits</div><ul class="subsession-list">
+                <li><a href="sessions/session-13/why-interpretability.html">13.1 · Why open the black box?</a></li>
+                <li><a href="sessions/session-13/one-circuit-and-its-limits.html">13.2 · One circuit and its limits</a></li>
+            </ul></li><li><a href="sessions/project-kickoff-short-course.html">Project launch and scoping</a></li></ul>
+        </div>
+        <div class="intro-section"><h2>After Session 9</h2><p>The <a href="short-course-2026.html">2026 taught route</a> gives the sequence, bounded pre-class reading and project starting points in one place.</p></div>
+
+        <!-- DEV-ONLY-START -->
+        <div class="part-label">Reference · The original 24-session plan</div>
+        <div class="intro-section"><p>These sessions are not part of the 2026 taught route. They remain on the development site for reference, numbered as in the original plan.</p></div>
 
         <div class="week-section">
-            <div class="week-header"><div class="week-number">5</div><h2>Robustness, unlearning, control</h2></div>
+            <div class="week-header"><div class="week-number">5</div><h2>Unlearning and control</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 9 · Robustness and adversarial ML <span class="badge-built">built</span></div>
-                    <ul class="subsession-list">
-                        <li><a href="sessions/session-09/adversarial-examples.html">9.1 · Adversarial examples and threat models</a></li>
-                        <li><a href="sessions/session-09/jailbreaks-as-optimisation.html">9.2 · Jailbreaks as discrete optimisation</a></li>
-                        <li><a href="sessions/session-09/why-safety-training-fails.html">9.3 · Safety under transformations</a></li>
-                        <li><a href="sessions/session-09/lab-isizulu-robustness.html">9.4 · Lab: multilingual safety evaluation</a></li>
-                        <li><a href="sessions/session-09/injection-poisoning-defences.html">9.5 · Prompt injection and layered defences</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="session-group">Session 10 · Unlearning and the AI-control agenda <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 10 · Unlearning and the AI-control agenda</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-10/machine-unlearning.html">10.1 · Machine unlearning</a></li>
                         <li><a href="sessions/session-10/the-control-paradigm.html">10.2 · The control paradigm</a></li>
@@ -206,41 +229,21 @@
                     </ul>
                 </li>
             </ul>
-        </div>
-
-        <div class="week-section">
-            <div class="week-header"><div class="week-number">6</div><h2>Evaluations and technical governance</h2></div>
-            <ul class="lesson-list">
-                <li>
-                    <div class="session-group">Session 11 · Evaluations and dangerous-capability evals <span class="badge-built">built</span></div>
-                    <ul class="subsession-list">
-                        <li><a href="sessions/session-11/why-evaluate-and-taxonomy.html">11.1 · Why evaluate: the eval taxonomy</a></li>
-                        <li><a href="sessions/session-11/dangerous-capability-evals.html">11.2 · Dangerous-capability evals: elicitation and sandbagging</a></li>
-                        <li><a href="sessions/session-11/construct-validity.html">11.3 · Does the eval measure what it claims?</a></li>
-                        <li><a href="sessions/session-11/statistics-of-evals.html">11.4 · The statistics of evals</a></li>
-                        <li><a href="sessions/session-11/lab-isizulu-eval.html">11.5 · Lab: build a refusal eval on open isiZulu data</a></li>
-                    </ul>
-                </li>
-                <li><a href="sessions/session-12-technical-ai-governance.html">Session 12 · Technical AI governance<span class="badge-built">built</span></a></li>
             </ul>
         </div>
-
-        <!-- ===== PART IV ===== -->
-        <div class="part-label">Part IV · Mechanistic interpretability</div>
 
         <div class="week-section">
             <div class="week-header"><div class="week-number">7</div><h2>Interpretability foundations</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 13 · Interpretability: features and circuits <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 13 · Interpretability: features and circuits (original plan)</div>
                     <ul class="subsession-list">
-                        <li><a href="sessions/session-13/why-interpretability.html">13.1 · Why open the black box?</a></li>
-                        <li><a href="sessions/session-13/features-and-superposition.html">13.2 · Features, directions, and superposition</a></li>
-                        <li><a href="sessions/session-13/circuits-qk-ov.html">13.3 · The circuits paradigm: QK and OV</a></li>
-                        <li><a href="sessions/session-13/induction-heads.html">13.4 · Induction heads and in-context learning</a></li>
+                        <li><a href="sessions/interpretability-extended/features-and-superposition.html">13.2 · Features, directions, and superposition</a></li>
+                        <li><a href="sessions/interpretability-extended/circuits-qk-ov.html">13.3 · The circuits paradigm: QK and OV</a></li>
+                        <li><a href="sessions/interpretability-extended/induction-heads.html">13.4 · Induction heads and in-context learning</a></li>
                     </ul>
                 </li>
-                <li><a href="sessions/session-14/lab-induction-heads.html">Session 14 · Lab: find and verify an induction head<span class="badge-built">built</span></a></li>
+                <li><a href="sessions/session-14/lab-induction-heads.html">Session 14 · Lab: find and verify an induction head</a></li>
             </ul>
         </div>
 
@@ -248,7 +251,7 @@
             <div class="week-header"><div class="week-number">8</div><h2>Interpretability in practice</h2></div>
             <ul class="lesson-list">
                 <li>
-                    <div class="session-group">Session 15 · Circuits, patching, and sparse autoencoders <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 15 · Circuits, patching, and sparse autoencoders</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-15/activation-patching.html">15.1 · Activation patching and causal interventions</a></li>
                         <li><a href="sessions/session-15/ioi-circuit.html">15.2 · The IOI circuit</a></li>
@@ -257,7 +260,7 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="session-group">Session 16 · Steering, applications and limits <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 16 · Steering, applications and limits</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-16/lab-steering-and-saes.html">16.1 · Lab: steering and interpreting SAE features</a></li>
                         <li><a href="sessions/session-16/safety-applications.html">16.2 · What interpretability buys for safety</a></li>
@@ -268,15 +271,13 @@
             </ul>
         </div>
 
-        <!-- ===== PART V ===== -->
-        <div class="part-label">Part V · Research project and synthesis</div>
 
         <div class="week-section">
             <div class="week-header"><div class="week-number">9</div><h2>Project launch + frontier topic</h2></div>
             <ul class="lesson-list">
-                <li><a href="sessions/session-17-project-kickoff.html">Session 17 · Project kickoff and scoping<span class="badge-built">built</span></a></li>
+                <li><a href="sessions/session-17-project-kickoff.html">Session 17 · Project kickoff and scoping</a></li>
                 <li>
-                    <div class="session-group">Session 18 · AI safety from the Global South <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 18 · AI safety from the Global South</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-18/two-framings.html">18.1 · Two framings of AI risk</a></li>
                         <li><a href="sessions/session-18/the-multilingual-safety-gap.html">18.2 · The multilingual safety gap</a></li>
@@ -290,9 +291,9 @@
         <div class="week-section">
             <div class="week-header"><div class="week-number">10</div><h2>Project work + the skeptics</h2></div>
             <ul class="lesson-list">
-                <li><a href="sessions/session-19-project-clinic.html">Session 19 · Project clinic<span class="badge-built">built</span></a></li>
+                <li><a href="sessions/session-19-project-clinic.html">Session 19 · Project clinic</a></li>
                 <li>
-                    <div class="session-group">Session 20 · Steelman the skeptics + open problems <span class="badge-built">built</span></div>
+                    <div class="session-group">Session 20 · Steelman the skeptics + open problems</div>
                     <ul class="subsession-list">
                         <li><a href="sessions/session-20/meaning-and-present-harms.html">20.1 · The meaning critique and present harms</a></li>
                         <li><a href="sessions/session-20/political-economy-of-x-risk.html">20.2 · The political economy of the x-risk frame</a></li>
@@ -305,19 +306,21 @@
         <div class="week-section">
             <div class="week-header"><div class="week-number">11</div><h2>Project work</h2></div>
             <ul class="lesson-list">
-                <li><a href="sessions/session-21-mid-project-check-in.html">Session 21 · Mid-project check-in<span class="badge-built">built</span></a></li>
-                <li><a href="sessions/session-22-project-work.html">Session 22 · Project work and writing the paper<span class="badge-built">built</span></a></li>
+                <li><a href="sessions/session-21-mid-project-check-in.html">Session 21 · Mid-project check-in</a></li>
+                <li><a href="sessions/session-22-project-work.html">Session 22 · Project work and writing the paper</a></li>
             </ul>
         </div>
 
         <div class="week-section">
             <div class="week-header"><div class="week-number">12</div><h2>Presentations and synthesis</h2></div>
             <ul class="lesson-list">
-                <li><a href="sessions/session-23-presentations-and-peer-review.html">Session 23 · Final presentations + peer review<span class="badge-built">built</span></a></li>
-                <li><a href="sessions/session-24-synthesis-and-pathways.html">Session 24 · Synthesis and pathways<span class="badge-built">built</span></a></li>
+                <li><a href="sessions/session-23-presentations-and-peer-review.html">Session 23 · Final presentations + peer review</a></li>
+                <li><a href="sessions/session-24-synthesis-and-pathways.html">Session 24 · Synthesis and pathways</a></li>
             </ul>
         </div>
 
+    </div>
+        <!-- DEV-ONLY-END -->
     </div>
 
     <footer>
