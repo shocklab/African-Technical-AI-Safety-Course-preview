@@ -19,20 +19,18 @@
     <summary>Session 13</summary>
     <ul>
       <li><span class="tn-current">13.1 · Why open the black box?</span></li>
-      <li><a href="features-and-superposition.html">13.2 · Features, directions, and superposition</a></li>
-      <li><a href="circuits-qk-ov.html">13.3 · The circuits paradigm: QK and OV</a></li>
-      <li><a href="induction-heads.html">13.4 · Induction heads and in-context learning</a></li>
+      <li><a href="one-circuit-and-its-limits.html">13.2 · One circuit and its limits</a></li>
     </ul>
   </details>
   <div class="tn-links">
     <a class="tn-prev" href="../session-12-technical-ai-governance.html">← <span class="tn-title">Session 12 · Technical AI governance</span></a>
-    <a class="tn-next" href="features-and-superposition.html"><span class="tn-title">13.2 · Features, directions, and superposition</span> →</a>
+    <a class="tn-next" href="one-circuit-and-its-limits.html"><span class="tn-title">One circuit and its limits</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
-    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <div class="ai-notice"><strong>Note:</strong> This page was developed with Claude and revised with OpenAI Codex; the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Week 7 • Session 13.1</div>
+        <div class="week-badge">Session 13.1</div>
         <h1>Why open the black box?</h1>
         <p>What mechanistic interpretability is, how it differs from saliency and from black-box evaluation, and the state of the reverse-engineering ambition</p>
     </header>
@@ -40,40 +38,42 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Every safety number in this course so far has been read off the <em>outside</em> of a model: a refusal rate, a benchmark score, an attack-success rate. Mechanistic interpretability asks a different question: what is the model actually computing <em>inside</em>, and can we read it the way we read source code? This sub-session defines the field, places it inside the evaluation taxonomy from Session 11, and sets out from the start how far the ambition currently reaches: convincingly for one- and two-layer toy models, far more tentatively for frontier systems. The rest of Session 13 earns the tools; here we set the question and the standard of evidence.</p>
+            <p>The course has used refusal rates, benchmark scores and attack success rates to study model behaviour. Mechanistic interpretability asks what computation inside the model produces a specified result. Small attention-only models admit detailed circuit analyses; frontier models remain much harder to explain. The worked example on the next page shows how to test one proposed circuit and limit the claim it supports.</p>
         </div>
 
+        <div class="info-box"><h4>Where the taught route goes next</h4><p>Continue to <a href="one-circuit-and-its-limits.html">one circuit and its limits</a>, then the <a href="../project-kickoff-short-course.html">project launch</a>. The source paper develops the mathematics in more depth for independent study.</p></div>
+
         <h2 class="section-title">Three ways to explain a model's behaviour</h2>
-        <p class="lead">Interpretability is not one thing. The useful split is by what kind of explanation you are after.</p>
-        <p>Take a single concrete behaviour: a language model, shown a repeated sequence, correctly continues it. There are three levels at which you could "explain" that, and they are not interchangeable.</p>
+
+        <p>Suppose a language model correctly continues a repeated sequence. We can describe that result through output tests, attribution or a proposed circuit. Each supplies different evidence.</p>
         <div class="technical-detail">
             <h4>Levels of explanation</h4>
             <ul class="styled-list">
-                <li><strong>Black-box / behavioural.</strong> Measure the output: how often does the model complete the sequence correctly, and how does that vary with the input? This is what every eval in Session 11 did. It tells you <em>what</em> the model does, never <em>why</em>.</li>
-                <li><strong>Attribution / saliency.</strong> Ask which inputs mattered: gradient-based saliency maps, feature-importance scores, probing classifiers trained on activations. This localises <em>where</em> the relevant information is, but it still treats the computation as opaque and is notoriously easy to over-read.</li>
-                <li><strong>Mechanistic.</strong> Reverse-engineer the actual algorithm: which attention head, via which weight matrices, moves which information, such that you could in principle re-implement the behaviour by hand. This is the level that says <em>why</em>, and it is what "mechanistic interpretability" means.</li>
+                <li><strong>Black-box / behavioural.</strong> Measure the output: how often does the model complete the sequence correctly, and how does that vary with the input? This is what every eval in Session 11 did. It describes the tested behaviour but does not identify the computation that produced it.</li>
+                <li><strong>Attribution / saliency.</strong> Ask which inputs mattered: gradient-based saliency maps, feature-importance scores, probing classifiers trained on activations. These methods can suggest relevant inputs or representations. A saliency map or probe still needs checks before it can support a causal account.</li>
+                <li><strong>Mechanistic.</strong> Propose and test a computational account: which components move which information, and what changes when one is intervened on. A successful account explains a specified behaviour in a specified model; it need not describe every computation the model performs.</li>
             </ul>
         </div>
-        <p>The course's claim is that only the third level eventually answers the safety questions the others cannot: not "did the model behave on our test set" but "what is it computing, and would that computation generalise or betray us off-distribution". Sessions 13–16 pursue the third level and note how often we reach it.</p>
+        <p>Mechanistic work can add evidence about what a model computes on the tested inputs. Whether that mechanism generalises beyond them still needs testing. The worked circuit that follows shows how to make and limit such a claim.</p>
 
         <h2 class="section-title">Interpretability is the white-box arm of evaluation</h2>
-        <p class="lead">Session 11.1 already drew the line we need; interpretability lives on one side of it.</p>
-        <p>Recall the taxonomy from 11.1: evaluations are <em>behavioural</em> (read inputs and outputs only) or <em>internal</em> (read activations and weights). Mechanistic interpretability is the toolkit that makes the internal side possible. This matters because the course has repeatedly hit the limits of behavioural evidence. In Session 10.4, a black-box unlearning test certified hazardous knowledge as gone that a white-box probe found still present. In Session 11.2, a model can sandbag (look incapable while being capable), and distinguishing genuine inability from hidden capability needs to look inside. Interpretability is the response to a recurring problem: behaviour can be made to look however a capable model wants it to look, so a safety case that rests only on behaviour is a safety case a sufficiently capable model can defeat. Reading the mechanism is what behaviour-faking cannot directly counter.</p>
+
+        <p>Recall the taxonomy from 11.1: evaluations are <em>behavioural</em> (read inputs and outputs only) or <em>internal</em> (read activations and weights). Mechanistic interpretability uses internal access to propose and test a computational account. In Session 11.2, a model can appear incapable on an evaluation while retaining a capability. Internal evidence may help distinguish inability from underperformance, though a probe also needs validation. A model that recognises an evaluation and changes its behaviour may make behavioural evidence unreliable. Internal tests can add evidence, provided the probes and interventions are themselves validated. Current interpretability methods are not a general defence against deceptive behaviour.</p>
 
         <h2 class="section-title">The reverse-engineering ambition</h2>
-        <p class="lead">The dream is to read a network like a decompiled program. The reality today is closer to neuroscience than to decompilation.</p>
-        <p>The strong form of the ambition is striking: a trained network is just a large pile of matrices and nonlinearities, fully observable, perfectly reproducible, with every activation available for inspection and every component open to intervention. In principle nothing is hidden, which is what a neuroscientist studying a brain would envy. The field has delivered this for small systems. As Sessions 13.3–13.4 will show, a one-layer attention-only transformer can be written out almost completely as a set of token-to-token tables read directly from its weights, and a two-layer model's in-context-learning circuit can be reverse-engineered and verified by ablation.</p>
+
+        <p>A trained network consists of matrices and nonlinearities. With the right access, researchers can record activations and intervene on components. That access makes the system easier to inspect than a biological brain, although it does not make its computations easy to understand. Small attention-only models admit much more complete analyses. As the source paper shows, a one-layer attention-only transformer can be written out almost completely as a set of token-to-token tables read directly from its weights, and a two-layer model's in-context-learning circuit can be reverse-engineered and verified by ablation.</p>
         <div class="warning-box">
             <h4>The evidence at frontier scale</h4>
-            <p>For frontier models the case is far weaker, and the framing comes from the interpretability researchers themselves: at scale the evidence is more like neuroscience (lesion studies, developmental observations, perturbations) than like reading source code. Results that are <em>causal</em> for small attention-only models (established by tens of thousands of targeted ablations) are usually only <em>correlational</em> for large models with MLPs. The course will grade evidence this way throughout the block: a tidy mechanistic story on a toy model is strong; the same story extrapolated to a 70-billion-parameter model is a hypothesis until tested. Treat anyone who tells you interpretability has "solved" transparency for frontier models with the scepticism Session 1 trained into you.</p>
+            <p>For frontier models, researchers often rely on interventions and partial observations rather than a complete account of the computation. Ablations can support causal claims about a tested component in a small model. A feature or attention pattern observed in a larger model may still be correlational until an intervention tests its contribution. Evidence from a small model should not be treated as evidence that the same circuit exists in a much larger model without testing it there. No current method gives a complete account of frontier-model behaviour.</p>
         </div>
 
         <h2 class="section-title">The safety payoffs</h2>
-        <p class="lead">Interpretability is a means to an end; its safety value is what it might let us do that nothing else can.</p>
-        <p>Three payoffs motivate the block, each of which Session 16 examines critically rather than takes on faith. It could let us detect deception: read whether a model internally "believes" something other than what it says, the open problem left hanging in Session 3.4. It could underwrite scalable oversight (Session 8.1) by giving a supervisor a window the model cannot fake. And it could make auditing meaningful: a regulator or a deploying institution with a "right to inspect" (Session 12) needs tools that work on the model artefact itself. Whether interpretability actually delivers any of these at the scale that matters is contested, and we defer that account to Session 16. For now these payoffs are large enough to justify the technical work that follows.</p>
+
+        <p>Researchers hope internal evidence will help detect deception (Session 3.4), support oversight (Session 8.1) and make independent audits more informative (Session 12). Each use remains uncertain for frontier models. The next page tests a narrow mechanistic claim in a small model and asks what that result licenses us to conclude.</p>
         <div class="info-box">
             <h4>The African-lens angle</h4>
-            <p>This is the part of the course where the African lens is thinnest. The angle, developed in Session 16, is sovereignty: interpretability is the one safety tool that operates on a model's <em>weights</em> without needing the developer's training data or cooperation, which makes it the natural instrument for an institution that <em>receives</em> a frontier model rather than building it. Whether the features and circuits a model learns are shared across languages, or specific to the high-resource ones, is a real and open question with direct consequences for isiZulu and other low-resource languages. Both matter; the foundations in 13.2–13.4 are language- and geography-neutral mathematics.</p>
+            <p>An African governance question here is access to model internals: interpretability can operate on a model's <em>weights</em> without needing the developer's training data or cooperation, which could help an institution that has access to the weights of a model it did not train. Whether the features and circuits a model learns are shared across languages, or specific to the high-resource ones, is a real and open question with direct consequences for isiZulu and other low-resource languages. The circuit example does not test how mechanisms vary across languages.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -86,15 +86,21 @@
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Olah et al. (2020), "Zoom In: An Introduction to Circuits"</strong> (<a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">distill.pub</a>): the features / circuits / universality vocabulary (in CNN vision; we borrow the concepts, not the specifics).</p>
-            <p>• <strong>Olsson et al. (2022), "In-context Learning and Induction Heads"</strong> (<a href="https://arxiv.org/abs/2209.11895" target="_blank" rel="noopener">arXiv:2209.11895</a>): read §1 for the reverse-engineering ambition and its honest framing.</p>
-                    <p>• <strong>Sharkey et al. (2025), "Open Problems in Mechanistic Interpretability"</strong> (<a href="https://arxiv.org/abs/2501.16496" target="_blank" rel="noopener">arXiv:2501.16496</a>): the field's own map of what it cannot yet do; a companion to keep open across Weeks 7–8.</p>
-</div>
+            <h4>Before class · required for Session 13</h4>
+            <p>• <strong>Olsson et al. (2022), “In-context Learning and Induction Heads”</strong> (<a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">paper HTML</a>): read the abstract, “Key Concepts” → “Induction Heads”, and the “Summary of Evidence for Sub-Claims” table. Stop there. Be ready to distinguish a behaviour, a candidate head, and a causal intervention.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Used in class</h4>
+            <p>• <strong>Olah et al. (2020), “Zoom In: An Introduction to Circuits”</strong> (<a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">article</a>): we will use its visual vocabulary for features and circuits. No pre-class reading is required.</p>
+        </div>
+        <div class="resource-placeholder">
+            <h4>Optional</h4>
+            <p>• <strong>Sharkey et al. (2025), “Open Problems in Mechanistic Interpretability”</strong> (<a href="https://arxiv.org/abs/2501.16496" target="_blank" rel="noopener">paper</a>): for students considering a project in the area.</p>
+        </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 13.2 meets the obstacle that makes interpretability hard in the first place: superposition (why a model packs more features than it has dimensions, and why that means you cannot simply read a neuron).</p>
+            <p>Continue to one worked induction-head circuit and ask what the evidence does and does not establish. The full source paper develops the QK and OV analysis for independent study.</p>
         </div>
 
     </div>
@@ -102,7 +108,7 @@
 <nav class="page-nav">
   <a class="prev" href="../session-12-technical-ai-governance.html"><span class="nav-label">← Previous</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="features-and-superposition.html"><span class="nav-label">Next →</span><span class="nav-title">13.2 · Features, directions, and superposition</span></a>
+  <a class="next" href="one-circuit-and-its-limits.html"><span class="nav-label">Next →</span><span class="nav-title">One circuit and its limits</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

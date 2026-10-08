@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 11.5 — Lab: build a refusal eval on open isiZulu data</title>
+    <title>Session 11.5 — Lab: audit a multilingual safety eval</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -22,7 +22,7 @@
       <li><a href="dangerous-capability-evals.html">11.2 · Dangerous-capability evals: elicitation and sandbagging</a></li>
       <li><a href="construct-validity.html">11.3 · Does the eval measure what it claims?</a></li>
       <li><a href="statistics-of-evals.html">11.4 · The statistics of evals</a></li>
-      <li><span class="tn-current">11.5 · Lab: build a refusal eval on open isiZulu data</span></li>
+      <li><span class="tn-current">11.5 · Lab: audit a multilingual safety eval</span></li>
     </ul>
   </details>
   <div class="tn-links">
@@ -31,73 +31,53 @@
   </div>
 </div>
 <!-- TOP-NAV-END -->
-    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <div class="ai-notice"><strong>Note:</strong> This page was developed with Claude and revised with OpenAI Codex; the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 6 • Session 11.5</div>
-        <h1>Lab: build a refusal eval on open isiZulu data</h1>
-        <p>An in-language safety eval end to end: scoring, error bars, a capability control, and a validity reflection</p>
+        <h1>Lab: audit a multilingual safety eval</h1>
+        <p>Revisit the Session 9 experiment: check its measurement, uncertainty and limits</p>
     </header>
     <div class="content">
-
         <div class="intro-text">
-            <h2>What you'll build</h2>
-            <p>Session 9.4 measured an English-versus-isiZulu refusal gap by hand to <em>feel</em> the robustness failure. This lab does the eval-science version: a small, properly-constructed refusal benchmark on open isiZulu data, with two translation routes, two models, a capability control, error bars from 11.4, and a written validity reflection. The result is a small artefact the frontier-lab eval suites do not currently cover, and the natural seed for a Session 18 Global-South project. The graded skill is not the size of any gap you find; it is whether your eval would survive a sceptic.</p>
+            <h2>What you will do</h2>
+            <p>Open the <a href="../../labs/session-11-5-audit.ipynb">Session 11 audit notebook</a> (<a href="../../labs/session-11-5-audit.html">read online</a>; <a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-11-5-audit.ipynb">open in Colab</a>) and load the results JSON exported by the revised <a href="../../labs/session-9-4-multilingual-safety.ipynb">Session 9.4 notebook</a>. Saving a notebook’s displayed outputs does not restore its runtime variables. The audit notebook needs only NumPy and pandas: no model download, API key or GPU. If you have only an older notebook with saved output tables, reconstruct and label the table from those outputs, or request a de-identified class export and identify whose data you used. A separately selected synthetic example is available for practising arithmetic; it cannot support a claim about a model or language.</p>
         </div>
-
         <div class="warning-box">
-            <h4>Ethics frame (same as 9.4)</h4>
-            <p>Measure <em>refusal behaviour</em>, not harmful content. Use a capped 30–50-item slice of mild, refusable prompts plus a benign control set; score the meaning of the reply as REJECT / BYPASS / UNCLEAR; report labels and rates, never raw harmful text; treat any real gap as a responsible-disclosure finding. None of the lab's value requires producing a harmful payload.</p>
+            <h4>Use the same safety boundary</h4>
+            <p>Use only the mild prompts in the starter notebook. Do not seek more dangerous outputs. Report prompt IDs, labels and aggregate counts, without reproducing unsafe responses.</p>
         </div>
-
+        <h2 class="section-title">In class: four checks</h2>
+        <ol class="styled-list">
+            <li><strong>Define the claim.</strong> Specify the model, prompt set, translation route, single-turn format and scoring rule. Decide whether your result concerns refusal, unsafe compliance or comprehension. These are different outcomes.</li>
+            <li><strong>Audit the denominator.</strong> Inspect every excluded or doubtful translation by prompt ID. Check whether the English and translated conditions still contain the same eligible prompts. Keep a paired table rather than comparing two unrelated percentages. An <code>unclear</code> outcome is unknown, not <code>no</code>: exclude such pairs from the primary estimate and report their IDs and denominator changes.</li>
+            <li><strong>Apply the validity gate.</strong> Use the notebook's benign controls and matched safety prompts to decide whether the model understood each language well enough to compare safety behaviour. If a condition fails, report that its safety comparison is unresolved. A refusal from a model that has not understood the request is not evidence of a working guardrail.</li>
+            <li><strong>Quantify uncertainty.</strong> Use the audit notebook’s paired difference and exploratory bootstrap spread. Tiny samples can produce a collapsed interval when every observed difference is identical; this is not certainty. Show the underlying paired counts. An interval that includes zero does not establish that the languages are equivalent. A large-looking difference on a few prompts does not establish a general language effect.</li>
+        </ol>
         <div class="technical-detail">
-            <h4>Setup — CPU floor and optional GPU</h4>
-            <p style="color:#555;">The runs-anywhere core uses InkubaLM-0.4B (Lelapa AI), small enough for a free CPU tier, as a capability contrast. The richer refusal signal needs an isiZulu-capable, instruction-tuned model, Aya-101 (13B), which the optional GPU/Colab track loads. English prompts are the control arm throughout.</p>
-            <p style="color:#555;">Translation routes: NLLB-200 runs locally, but Vulavula is a commercial API, so <a href="https://vulavula.lelapa.ai/" target="_blank" rel="noopener">register with Lelapa AI</a> for an API key before the lab session. If you cannot get a key, run NLLB-200 as the only route and say so in the write-up: the route comparison drops out, and translation quality becomes an unmeasured confound to name in the validity reflection.</p>
+            <h4>Worked classroom example</h4>
+            <p>Suppose six matched prompts pass the comprehension and translation checks. Both conditions cross the safety boundary on one prompt, English alone on none, isiZulu alone on two, and neither on three. The paired isiZulu-minus-English difference is \(2/6\). Its numerator comes from the discordant pairs, not from two independent samples. The class should then ask whether six eligible prompts can support a useful claim and whether the two isiZulu-only cases have faithful translations. This is an arithmetic example, not a result from the notebook.</p>
         </div>
-
-        <h2 class="section-title">The pipeline</h2>
-        <ul class="styled-list">
-            <li>1. Prompts. Take a capped 30–50-item slice of English AdvBench harmful-behaviour prompts, plus a matched benign-control set. Keep the slice small and mild by design.</li>
-            <li>2. Translate by two routes. Render the prompts into isiZulu with <em>two</em> documented pipelines, NLLB-200 (<code>zul_Latn</code>) and Vulavula (Lelapa AI, African-built), so translation quality is a <em>measured variable</em>, not a hidden confound. Back-translate and rate fidelity.</li>
-            <li>3. Query the models. Run English and both isiZulu routes through your model(s); InkubaLM for capability, Aya-101 for refusal if you have the GPU.</li>
-            <li>4. Score REJECT / BYPASS / UNCLEAR. Label the (back-translated) responses with Yong et al.'s scheme, using a keyword/refusal classifier <em>and</em> an LLM-as-judge, and validate both against a handful of your own human labels.</li>
-            <li>5. Capability control. Pair each refusal measurement with a few Belebele (<code>zul_Latn</code>) or AfriMMLU (<code>zul</code>) items, so you can separate "refused because safe" from "refused because the model cannot read isiZulu." Without this control the eval is uninterpretable.</li>
-        </ul>
-
-        <h2 class="section-title">Statistics</h2>
-        <p>Report refusal rate by language × translation route × model, each with a 95% confidence interval. With \(n \approx 40\) the intervals are wide <em>by design</em>. State that, and resist over-claiming. Do the central comparison paired: English versus isiZulu on the <em>same</em> prompts, so you exploit the question-level correlation rather than comparing two loose independent intervals. The headline you are allowed to report is of the form "refusal fell from \(\hat{p}_{\text{en}}\) to \(\hat{p}_{\text{zu}}\), paired difference \(\Delta\) with 95% CI \([a,b]\)". If that interval includes zero at your sample size, the conclusion is "not yet resolved," not "no gap."</p>
-
-        <div class="info-box">
-            <h4>The validity reflection</h4>
-            <p>A one-page written component naming the confounds, because handling them is what separates an eval from an anecdote:</p>
-            <ul class="styled-list">
-                <li>Translation quality. A "refusal" may be the model failing to parse a garbled translation. Use your back-translation scores to restrict to high-fidelity items and check whether the gap survives. Yong et al.'s isiZulu BYPASS near 53% is high <em>partly because</em> GPT-4 reads isiZulu well; comprehension is what makes the safety gap dangerous rather than confusing.</li>
-                <li>Capability/safety entanglement. Your Belebele/AfriMMLU control is what lets you attribute a refusal drop to safety rather than to incomprehension.</li>
-                <li>Who scores, and in what language. Back-translation is lossy both ways, and an English-tuned judge may mislabel in-language replies.</li>
-                <li>Tiny \(n\) and ethics. Wide CIs, capped prompts, no raw harmful outputs, responsible disclosure.</li>
-            </ul>
-            <p>The framing for students: the interesting result is not "we reproduced 53%." It is whether the gap <em>persists on open models</em>, <em>moves with translation quality</em>, and <em>tracks isiZulu capability</em>: three questions the frontier paper never asked, and any one of which is a project.</p>
-        </div>
-
+        <figure>
+            <img src="../../assets/img/session-11-5-paired-eval.svg" alt="Paired table for six eligible prompts. Both languages cross the safety boundary on one prompt, English only on zero, isiZulu only on two, and neither on three. The isiZulu minus English difference is two divided by six.">
+            <figcaption>The worked example keeps each prompt paired across languages. The two off-diagonal cells determine the difference. <a href="../../assets/img/session-11-5-paired-eval.svg">Open the diagram at full size</a>.</figcaption>
+        </figure>
         <h2 class="section-title">What to submit</h2>
-        <p>One Colab notebook plus a one-page write-up: the refusal-rate table (language × route × model, each with a 95% CI); the paired English-versus-isiZulu difference with its interval; the capability-control numbers; and the validity reflection above. Graded on methodological honesty (the error bars, the confound handling, the controls), not on the magnitude of the gap. This artefact, extended, is a Session 18 project.</p>
-
-        <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Yong, Menghini &amp; Bach (2023), "Low-Resource Languages Jailbreak GPT-4"</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">arXiv:2310.02446</a>): the method you are operationalising as a proper eval, with the REJECT/BYPASS/UNCLEAR scheme.</p>
+        <p>Submit your saved results file, completed audit notebook and a one-page audit with: the exact claim; eligible prompt IDs and exclusions; outcome counts by language; the paired difference and exploratory resampling spread (including any collapse); unclear-label counts; the comprehension and benign-control results; two concrete threats to validity; and a conclusion limited to the tested model and prompts. A negative or unresolved result is a valid submission when the reasoning is sound.</p>
+        <div class="info-box">
+            <h4>Project extension</h4>
+            <p>A project can expand the prompt set, add fluent-speaker translation review, compare a second open model, or test a defence. Each extension needs its own feasibility check and a predeclared primary outcome. The class lab does not depend on any of these additions.</p>
         </div>
+        <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder">
-            <h4>Resources</h4>
-            <p>• <strong>UK AISI Inspect</strong> (<a href="https://inspect.aisi.org.uk/" target="_blank" rel="noopener">inspect.aisi.org.uk</a>): an optional eval framework (Task = Dataset + Solver + Scorer) to structure your pipeline.</p>
-            <p>• <strong>Masakhane / IrokoBench</strong> (<a href="https://www.masakhane.io/" target="_blank" rel="noopener">masakhane.io</a>) and the Belebele / AfriMMLU (<code>zul</code>) dataset cards: the open African-language substrate.</p>
+            <h4>For the lab · no new paper to prepare</h4>
+            <p>• Bring your completed <a href="../session-09/lab-isizulu-robustness.html">Session 9.4 lab</a> and use the statistical tools in <a href="statistics-of-evals.html">Session 11.4</a>.</p>
+            <p>• We will compare the lab’s outcome definition with <strong>Yong, Menghini &amp; Bach (2023), “Low-Resource Languages Jailbreak GPT-4”</strong> (<a href="https://arxiv.org/abs/2310.02446" target="_blank" rel="noopener">paper</a>) during class. The full paper is optional.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>That closes Session 11. Session 12 takes the measurement you just learned to trust and asks the governance question: given an eval result, who acts on it, and how would anyone verify the claim? The eval-to-commitment chain, and what it looks like from Africa.</p>
+            <p>Session 12 asks how a measurement becomes a decision: who acts on an eval result, and who can check the evidence?</p>
         </div>
-
     </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">

@@ -22,16 +22,16 @@
       <li><a href="dangerous-capability-evals.html">11.2 · Dangerous-capability evals: elicitation and sandbagging</a></li>
       <li><a href="construct-validity.html">11.3 · Does the eval measure what it claims?</a></li>
       <li><a href="statistics-of-evals.html">11.4 · The statistics of evals</a></li>
-      <li><a href="lab-isizulu-eval.html">11.5 · Lab: build a refusal eval on open isiZulu data</a></li>
+      <li><a href="lab-isizulu-eval.html">11.5 · Lab: audit a multilingual safety eval</a></li>
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-10/lab-trusted-monitor.html">← <span class="tn-title">10.5 · Lab: build a trusted monitor</span></a>
+    <a class="tn-prev" href="../session-09/injection-poisoning-defences.html">← <span class="tn-title">9.5 · Prompt injection and layered defences</span></a>
     <a class="tn-next" href="dangerous-capability-evals.html"><span class="tn-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
-    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <div class="ai-notice"><strong>Note:</strong> This page was developed with Claude and revised with OpenAI Codex; the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 6 • Session 11.1</div>
         <h1>Why evaluate: the eval taxonomy</h1>
@@ -41,15 +41,15 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Sessions 6 through 10 kept quoting numbers: a reward model's accuracy, a jailbreak's success rate, a control protocol's safety, an unlearning method's drop on WMDP. This session asks the question underneath all of them: <em>how do you know the number is real?</em> Evaluation is the empirical backbone of every safety claim, and it is also where a confident-looking measurement can quietly be wrong. We begin with the founding distinction (does the model <em>have</em> a dangerous capability, versus does it have the <em>propensity</em> to use one) and a small taxonomy that organises the rest of the session. An eval is evidence about the specific distribution it samples, and almost every frontier eval samples English.</p>
+            <p>Earlier sessions used numbers such as reward-model accuracy and jailbreak success rates. How do we know what those numbers establish? An evaluation can give a precise score while measuring the wrong outcome. We begin with the founding distinction (does the model <em>have</em> a dangerous capability, versus does it have the <em>propensity</em> to use one) and a small taxonomy that organises the rest of the session. An eval is evidence about the tasks and conditions it samples. A result from English prompts does not directly establish performance in isiZulu.</p>
         </div>
 
         <h2 class="section-title">Evaluation as the basis of safety claims</h2>
-        <p class="lead">Every governance proposal and every safety case rests on a measurement someone trusts.</p>
-        <p>Session 12 will describe frontier-safety frameworks whose whole structure is "if a model crosses a capability threshold on a specified evaluation, then a set of mitigations becomes mandatory." That if–then is only as good as the eval in the "if." A responsible scaling policy that triggers on a bad measurement either cries wolf or, worse, certifies a dangerous model as safe. So evaluation is the instrument the entire governance edifice reads off. Shevlane et al. (2023), in the paper that organised the field, put the status plainly: model evaluation is <em>necessary but not sufficient</em> for safety. Necessary, because you cannot govern what you cannot measure; insufficient, because a measurement can be incomplete, gamed, or simply invalid, in ways the next three sub-sessions dissect.</p>
+
+        <p>Session 12 considers frontier-safety frameworks that connect evaluation evidence to deployment decisions and safeguards. Some commitments use capability thresholds; the decision rules depend on the policy and its version. For example, <a href="https://www.anthropic.com/responsible-scaling-policy">Anthropic’s Responsible Scaling Policy</a> (version 3.4, effective 8 July 2026) also includes risk reports and safety roadmaps. A threshold is useful only if its evaluation measures the relevant risk. Shevlane et al. (2023) argue that evaluation is necessary but insufficient for extreme-risk governance: measurements can be incomplete, gamed or invalid. The next three sub-sessions examine these limits.</p>
 
         <h2 class="section-title">Capability versus propensity</h2>
-        <p class="lead">Two different questions, needing two different kinds of eval.</p>
+
         <p>Shevlane et al. separate two things that everyday talk of "is the model safe?" runs together.</p>
         <div class="technical-detail">
             <h4>Dangerous-capability versus alignment evaluations</h4>
@@ -57,61 +57,61 @@
                 <li><strong>Dangerous-capability evaluation:</strong> does the model <em>have</em> a capability that could cause extreme harm? Can it find a software exploit, design a toxin, autonomously acquire resources? This asks about the ceiling of what the model can do if it tries.</li>
                 <li><strong>Alignment (propensity) evaluation:</strong> setting aside what it <em>can</em> do, does it have the <em>propensity</em> to apply a capability for harm? Would it, in deployment, actually pursue a misaligned goal or resist correction?</li>
             </ul>
-            <p style="color:#555;">The two come apart in both dangerous directions. A model can be capable but well-behaved (high capability, low harmful propensity), which is the hoped-for case. Or it can be capable and willing, which is the feared case. There is also a subtler case: a model can <em>appear</em> incapable or harmless on the eval while being neither, because it was poorly elicited or because it strategically underperformed. Capability evals try to establish an upper bound on danger; propensity evals try to establish what the model is inclined to do with that capability.</p>
+            <p style="color:#555;">The two come apart in both dangerous directions. A model can be capable but well-behaved (high capability, low harmful propensity), which is the hoped-for case. Or it can be capable and willing, which is the feared case. There is also a subtler case: a model can <em>appear</em> incapable or harmless on the eval while being neither, because it was poorly elicited or because it strategically underperformed. A capability eval measures what the model does under the elicitation methods tested. The best expected score among tested methods is no greater than the best expected score over the feasible methods. A noisy observed score is an estimate, not a guaranteed lower bound or certified ceiling. A propensity eval asks whether the model applies its capabilities for harm under the tested conditions.</p>
         </div>
 
         <h2 class="section-title">The taxonomy</h2>
-        <p class="lead">Four cross-cutting distinctions tell you what an eval result actually licenses you to say.</p>
+
         <p>Beyond capability-versus-propensity, three more axes recur, and naming them prevents a common error: reading an eval as proving more than it does.</p>
         <div class="technical-detail">
             <h4>Three more axes</h4>
             <ul class="styled-list">
-                <li>Behavioural (black-box) versus internal (white-box). A behavioural eval reads only inputs and outputs; an internal eval reads activations or weights (a deception probe, a logit-lens read). Session 10.4 already showed why this matters: a black-box unlearning eval certified knowledge as gone that a white-box probe found still present. Behavioural access alone is, in Casper et al.'s phrase, insufficient for many safety claims.</li>
-                <li>Static benchmark versus agentic / long-horizon. A static benchmark scores single question-answer pairs; an agentic eval watches a model use tools and act over a long task. Dangerous capabilities (autonomy, self-proliferation) only show up in the agentic setting.</li>
-                <li>Upper bound versus lower bound. This is the one most often confused. A capability eval that <em>elicits hard</em> estimates an upper bound on what the model can do; a casual prompt estimates a lower bound. Reporting a lower bound as if it were the ceiling is how a model gets wrongly cleared, the theme of 11.2.</li>
+                <li>Behavioural (black-box) versus internal (white-box). A behavioural eval reads only inputs and outputs; an internal eval reads activations or weights (a deception probe, a logit-lens read). A behavioural result can miss a mechanism that an internal probe detects. This is why access to weights and activations matters when an evaluator claims more than observed behaviour. Behavioural access alone is, in Casper et al.'s phrase, insufficient for many safety claims.</li>
+                <li>Static benchmark versus agentic / long-horizon. A static benchmark scores single question-answer pairs; an agentic eval watches a model use tools and act over a long task. Autonomy and self-proliferation require agentic tests to assess the relevant long-horizon behaviour.</li>
+                <li>Upper bound versus lower bound. This is the one most often confused. For a defined task distribution and scoring rule, the best expected score among tested methods cannot exceed the best expected score among feasible methods. Measured scores can fluctuate even on a fixed task set because outputs may be stochastic. Choosing the largest noisy estimate introduces selection bias. More elicitation methods can reveal stronger performance, but do not establish a ceiling. Reporting the observed score as a maximum can wrongly clear a model; 11.2 examines this problem.</li>
             </ul>
         </div>
         <div class="info-box">
             <h4>The 2×2 grid</h4>
-            <p>Cross capability-versus-propensity with behavioural-versus-internal and you get four cells, and "the model passed the eval" means something different in each. Place these and the differences become obvious: WMDP (behavioural capability), an agentic cyber-range exercise (behavioural capability, long-horizon), Apollo's in-context scheming suite (behavioural propensity), a linear deception probe (internal propensity), and an isiZulu refusal eval (behavioural propensity, in a non-English distribution). A "pass" in the behavioural-propensity cell ("it did not scheme when we watched") is a far weaker safety claim than a pass in the internal-capability cell, and the taxonomy is what stops you from quietly upgrading one to the other.</p>
+            <p>Cross capability-versus-propensity with behavioural-versus-internal and you get four cells, and "the model passed the eval" means something different in each. Place these and the differences become obvious: WMDP (behavioural capability), an agentic cyber-range exercise (behavioural capability, long-horizon), Apollo’s in-context scheming suite (behavioural capability under assigned goals and incentives), a linear deception probe (internal evidence whose interpretation depends on its training labels and validation), and an isiZulu refusal eval (behavioural propensity, in a non-English distribution). A behavioural result and an internal probe answer different questions. Neither can be upgraded to a broad safety claim without checking the test distribution and the probe itself.</p>
         </div>
 
         <h2 class="section-title">Evaluators and the theory of change</h2>
-        <p class="lead">Know the ecosystem by name, and where the eval result is supposed to go.</p>
-        <p>A handful of organisations define the practice, and they map onto the taxonomy. METR and the UK AI Security Institute (renamed from AI Safety Institute in 2025) focus on capability and agentic evals (METR's autonomy task suites; the Institute's open-source <em>Inspect</em> framework, now a de-facto standard). Apollo Research specialises in propensity and deception evals. The labs run their own: Anthropic's Responsible Scaling Policy and Google DeepMind's Frontier Safety Framework both gate decisions on capability thresholds. The intended path is a chain: an eval produces a measurement, the measurement feeds a risk assessment, the risk assessment triggers a governance action. That chain, eval to threshold to mitigation, is the subject of Session 12, so here we state it and hand it over. This session covers the first link only: making the measurement trustworthy.</p>
+
+        <p>A handful of organisations define the practice, and they map onto the taxonomy. METR and the UK AI Security Institute (renamed from AI Safety Institute in 2025) focus on capability and agentic evals (METR's autonomy task suites; the Institute's open-source <em>Inspect</em> framework). Apollo Research studies deceptive behaviour and scheming capabilities; its instructed scheming tests do not estimate how often a deployed model would scheme. The labs run their own: Anthropic’s Responsible Scaling Policy and Google DeepMind’s Frontier Safety Framework connect evaluation evidence to safeguards and governance decisions under their respective policy versions. The intended path is a chain: an eval produces a measurement, the measurement feeds a risk assessment, the risk assessment triggers a governance action. That chain, eval to threshold to mitigation, is the subject of Session 12, so here we state it and hand it over. This session covers the first link only: making the measurement trustworthy.</p>
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The distribution an eval samples</span></h3>
-            <p>An evaluation is evidence about one thing: the distribution of inputs it actually sampled. A summarisation benchmark tells you about summarisation; a multiple-choice bio test tells you about that question style; an English red-team tells you about English. The moment you generalise "scored safe on the eval" to "is safe," you have made a claim about a wider distribution than you measured, and almost every frontier safety eval samples an English-only distribution. The African-lens thread of this session is what you get when you take the validity question seriously and ask <em>which</em> distribution was sampled. It runs through 11.3 (where it becomes construct validity) and 11.5 (where you build the missing in-language eval yourself).</p>
+            <p>An evaluation is evidence about one thing: the distribution of inputs it actually sampled. A summarisation benchmark tells you about summarisation; a multiple-choice bio test tells you about that question style; an English red-team tells you about English. The moment you generalise "scored safe on the eval" to "is safe," you have made a claim about a wider distribution than you measured, and language coverage must be checked rather than assumed. A claim about safety across languages needs in-language evidence. In 11.3 you will examine the validity of such a claim, and in 11.5 you will audit the Session 9 comparison.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>Give a concrete model that would score well on a propensity eval but badly on a capability eval, and one that would do the reverse. What does each result tell a deployer?</li>
-            <li>Why is a behavioural "it did not misbehave when observed" a weaker safety claim than an internal probe showing it has no misaligned representation? Link this to the Session 10.4 black-box-evaluation failure.</li>
+            <li>Describe a model with high dangerous capability but low harmful propensity, then one with low dangerous capability but high harmful propensity. What evidence could support each description, and what would it tell a deployer?</li>
+            <li>What does an internal probe add to a behavioural finding that a model did not misbehave when observed? What evidence would you need before trusting the probe?</li>
             <li>Place a dangerous-capability cyber eval, an isiZulu refusal eval, and a deception probe in the capability/propensity × behavioural/internal grid. Which cell is hardest to evaluate well, and why?</li>
             <li>"Necessary but not sufficient." Give one reason evaluation is necessary for safety governance and one concrete way a passed eval can still leave a model unsafe.</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Shevlane et al. (2023), "Model evaluation for extreme risks"</strong> (<a href="https://arxiv.org/abs/2305.15324" target="_blank" rel="noopener">arXiv:2305.15324</a>): the capability/propensity split and the "necessary but not sufficient" framing.</p>
+            <h4>Before class · required for Session 11</h4>
+            <p>• <strong>Shevlane et al. (2023), “Model evaluation for extreme risks”</strong> (<a href="https://arxiv.org/html/2305.15324v2" target="_blank" rel="noopener">paper HTML</a>): read the abstract, Section 1 (Introduction), the first two paragraphs of Section 4 (Building evaluations for extreme risk), and Section 5.1 (Limitations). Stop there. Bring one example of a capability eval and one reason that a passed eval could still mislead.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Casper et al. (2024), "Black-Box Access is Insufficient for Rigorous AI Audits"</strong> (<a href="https://arxiv.org/abs/2401.14446" target="_blank" rel="noopener">arXiv:2401.14446</a>): the behavioural-versus-internal access taxonomy.</p>
+            <h4>Optional</h4>
+            <p>• <strong>Casper et al. (2024), “Black-Box Access is Insufficient for Rigorous AI Audits”</strong> (<a href="https://arxiv.org/abs/2401.14446" target="_blank" rel="noopener">paper</a>): for students who want more on behavioural versus internal access.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 11.2 builds a real dangerous-capability battery: the four domains, why elicitation makes a capability eval an upper bound, and how sandbagging (a model strategically underperforming) breaks that logic.</p>
+            <p>Sub-session 11.2 builds a real dangerous-capability battery: the four domains, how elicitation can reveal more capability, and how sandbagging (strategic underperformance) can widen the gap between measured and attainable performance.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
 <nav class="page-nav">
-  <a class="prev" href="../session-10/lab-trusted-monitor.html"><span class="nav-label">← Previous</span><span class="nav-title">10.5 · Lab: build a trusted monitor</span></a>
+  <a class="prev" href="../session-09/injection-poisoning-defences.html"><span class="nav-label">← Previous</span><span class="nav-title">9.5 · Prompt injection and layered defences</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
   <a class="next" href="dangerous-capability-evals.html"><span class="nav-label">Next →</span><span class="nav-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
 </nav>

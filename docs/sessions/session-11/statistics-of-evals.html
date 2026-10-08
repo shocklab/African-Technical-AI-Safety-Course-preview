@@ -22,16 +22,16 @@
       <li><a href="dangerous-capability-evals.html">11.2 · Dangerous-capability evals: elicitation and sandbagging</a></li>
       <li><a href="construct-validity.html">11.3 · Does the eval measure what it claims?</a></li>
       <li><span class="tn-current">11.4 · The statistics of evals</span></li>
-      <li><a href="lab-isizulu-eval.html">11.5 · Lab: build a refusal eval on open isiZulu data</a></li>
+      <li><a href="lab-isizulu-eval.html">11.5 · Lab: audit a multilingual safety eval</a></li>
     </ul>
   </details>
   <div class="tn-links">
     <a class="tn-prev" href="construct-validity.html">← <span class="tn-title">11.3 · Does the eval measure what it claims?</span></a>
-    <a class="tn-next" href="lab-isizulu-eval.html"><span class="tn-title">11.5 · Lab: build a refusal eval on open isiZulu data</span> →</a>
+    <a class="tn-next" href="lab-isizulu-eval.html"><span class="tn-title">11.5 · Lab: audit a multilingual safety eval</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
-    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <div class="ai-notice"><strong>Note:</strong> This page was developed with Claude and revised with OpenAI Codex; the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 6 • Session 11.4</div>
         <h1>The statistics of evals</h1>
@@ -41,67 +41,67 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>An eval score is a statistic computed from a finite sample of questions, so it has sampling error, yet leaderboards routinely report it to the decimal point with no interval. This sub-session, built on Evan Miller's <em>Adding Error Bars to Evals</em>, treats an eval as the experiment it is: a pass rate is a sample proportion with a confidence interval; two models on shared questions should be compared with a <em>paired</em> test; and you should know your statistical power <em>before</em> you run. We work the arithmetic by hand, then read METR's time-horizon result as an integrative case. A one-to-two-point leaderboard gap on a few hundred questions is usually not significant, and saying so is the difference between a measurement and a vibe.</p>
+            <p>An eval score is computed from a finite set of questions. If those questions sample a wider task distribution, the score has sampling uncertainty. We use Evan Miller's <em>Adding Error Bars to Evals</em> to calculate an interval for a pass rate and compare two models on the same questions. We then ask whether the sample could detect the difference of interest before turning to METR's time-horizon result. A one-to-two-point gap on a few hundred questions may be too small to distinguish from sampling variation.</p>
         </div>
 
         <h2 class="section-title">A pass rate is a sample proportion</h2>
-        <p class="lead">The eval questions are a sample; the score is an estimate; estimates need intervals.</p>
-        <p>Think of the benchmark's questions as a sample drawn from a large "super-population" of questions you could have asked. The model's true ability is the pass rate over that whole population; your measured score is an estimate of it from \(n\) questions. For \(k\) passes out of \(n\), the estimate and its standard error are</p>
+
+        <p>Think of the benchmark's questions as a sample drawn from a large "super-population" of questions you could have asked. The population pass rate is the quantity we want to estimate; your measured score is an estimate of it from \(n\) questions. For \(k\) passes out of \(n\), the estimate and its standard error are</p>
         <div class="formula">\[ \hat{p} = \frac{k}{n}, \qquad \mathrm{SE}(\hat{p}) = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}, \qquad \text{95\% CI} \approx \hat{p} \pm 1.96\,\mathrm{SE}. \]</div>
         <div class="info-box">
             <h4>Worked: 43 out of 50</h4>
-            <p>A model passes 43 of 50 questions: \(\hat{p} = 0.86\). Then \(\mathrm{SE} = \sqrt{0.86 \times 0.14 / 50} = \sqrt{0.00241} \approx 0.049\), and the 95% interval is \(0.86 \pm 1.96(0.049) = 0.86 \pm 0.096\), roughly \([0.76,\,0.96]\). That is a <em>wide</em> interval (nearly twenty points) on a 50-question eval, which is sobering if you were about to celebrate beating a rival at 0.78. (Near the 0 or 1 boundary the symmetric normal interval misbehaves; the <strong>Wilson</strong> interval is the standard fix and you should prefer it for extreme rates. The qualitative lesson is unchanged: small \(n\) means fat error bars.)</p>
+            <p>A model passes 43 of 50 questions: \(\hat{p} = 0.86\). Then \(\mathrm{SE} = \sqrt{0.86 \times 0.14 / 50} = \sqrt{0.00241} \approx 0.049\), and the 95% interval is \(0.86 \pm 1.96(0.049) = 0.86 \pm 0.096\), roughly \([0.76,\,0.96]\). The interval spans nearly twenty percentage points on a 50-question eval. A reported score of 0.86 alone would obscure that uncertainty. (Near the 0 or 1 boundary the symmetric normal interval misbehaves; the <strong>Wilson</strong> interval is the standard fix and you should prefer it for extreme rates. The qualitative lesson is unchanged: small \(n\) means fat error bars.)</p>
         </div>
 
         <h2 class="section-title">Clustered errors and paired comparisons</h2>
-        <p class="lead">Questions cluster, and models share questions; ignoring either gives wrong intervals.</p>
+
         <div class="technical-detail">
             <h4>Clustered standard errors</h4>
             <p style="color:#555;">The formula above assumes independent questions. Real benchmarks group them (ten questions about one passage, twenty variants of one template) and answers within a cluster are correlated. Treating \(n\) correlated questions as \(n\) independent ones <em>understates</em> the standard error, sometimes badly: Miller notes the corrected (clustered) SE can be more than three times the naïve one. The effective \(n\) is closer to the number of independent clusters than the number of questions, and an interval computed without clustering can be three times too narrow, turning noise into a "significant" result.</p>
         </div>
         <div class="technical-detail">
             <h4>Paired comparisons between models</h4>
-            <p style="color:#555;">To compare two models, do not put a separate independent CI on each and check for overlap; that throws away the fact that they answered the <em>same</em> questions. Compare them <em>paired</em>, question by question. If each model has per-question variance \(v\) and their scores correlate at \(\rho\), the variance of the difference is</p>
-            <div class="formula">\[ \mathrm{Var}(\hat{p}_A - \hat{p}_B) = v_A + v_B - 2\rho\sqrt{v_A v_B} \;\approx\; 2v(1-\rho). \]</div>
-            <p style="color:#555;">At \(\rho = 0.5\) the paired standard error is \(\sqrt{v}\) against the independent \(\sqrt{2v}\), a factor \(1/\sqrt{2}\) tighter, and questions two models both find easy or both find hard are that correlated. So a gap that looks insignificant by overlapping independent intervals can be clearly significant once paired (the discrete version is McNemar's test on the disagreement counts). Pairing is the difference between detecting a real gap and missing it.</p>
+            <p>Compare models on the same questions using paired differences. Let \(X_{Ai}, X_{Bi}\) be their scores on question \(i\), with per-question variances \(v_A,v_B\) and within-pair correlation \(\rho\). For \(n\) independent question pairs, \(\hat p_A-\hat p_B=n^{-1}\sum_i(X_{Ai}-X_{Bi})\). Independence across pairs gives the following variance. Clusters of related questions require a further adjustment:</p>
+            <div class="formula">\[ \mathrm{Var}(\hat{p}_A - \hat{p}_B) = \frac{v_A + v_B - 2\rho\sqrt{v_A v_B}}{n} \;\approx\; \frac{2v(1-\rho)}{n}. \]</div>
+            <p>If the per-question variances are equal and \(\rho=0.5\), the paired standard error is \(\sqrt{v/n}\), compared with \(\sqrt{2v/n}\) for independent samples: a factor \(1/\sqrt{2}\) smaller. This correlation is illustrative, not an estimate for a particular benchmark. Pairing can change the uncertainty substantially. For binary scores, McNemar’s test uses the two discordant paired counts. See <a href="https://arxiv.org/html/2411.00640v1#S4.SS2">Miller, Section 4.2</a>.</p>
         </div>
 
         <h2 class="section-title">Power and the winner's curse</h2>
-        <p class="lead">Ask before you run: is your eval even large enough to detect the difference you care about?</p>
-        <p>To detect a true difference \(\delta\) in pass rates at significance \(\alpha\) and power \(1-\beta\), the rough sample size <em>per model</em> for independent samples is</p>
-        <div class="formula">\[ n \;\approx\; \frac{(z_{\alpha/2} + z_{\beta})^2 \,\cdot\, 2\,p(1-p)}{\delta^2}. \]</div>
-        <p>Put numbers in: to detect a 3-point gap (\(\delta = 0.03\)) near \(p = 0.8\), at \(\alpha = 0.05\) and 80% power, \(n \approx (1.96 + 0.84)^2 \times 2(0.16) / 0.0009 \approx 2{,}800\) questions. Almost no benchmark is that large, which is why a 1–2 point leaderboard gap on 500 questions is usually <em>not</em> statistically significant: the eval lacks the power to resolve it. (Pairing reduces the requirement, which is another reason to pair.) The flip side is the <strong>winner's curse</strong>: rank dozens of models on a noisy benchmark and the apparent "best" is partly lucky, so its lead shrinks on re-evaluation. Selecting the top of a noisy leaderboard is a multiple-comparison problem, and the standard corrections (Bonferroni, or controlling the false-discovery rate) apply.</p>
+
+        <p>To detect a true difference \(\delta\) in pass rates at significance \(\alpha\) and power \(1-\beta\), the rough sample size <em>per model</em> for independent samples is (where \(z_q\) is the standard normal \(q\)-quantile)</p>
+        <div class="formula">\[ n \;\approx\; \frac{(z_{1-\alpha/2} + z_{1-\beta})^2 \,\cdot\, 2\,p(1-p)}{\delta^2}. \]</div>
+        <p>Put numbers in: to detect a 3-point gap (\(\delta = 0.03\)) near \(p = 0.8\), at \(\alpha = 0.05\) and 80% power, \(n \approx (1.96 + 0.84)^2 \times 2(0.16) / 0.0009 \approx 2{,}800\) questions. A 500-question independent-sample comparison has less power to resolve such a gap. Pairing can reduce the sample requirement, depending on the correlation. Selection also creates a <strong>winner's curse</strong>: rank dozens of models on a noisy benchmark and the apparent "best" is partly lucky, so its lead shrinks on re-evaluation. Testing many comparisons also raises a multiplicity problem. Bonferroni controls the family-wise error rate; false-discovery-rate procedures control a different error rate. Neither removes the upward bias in the selected winner’s score. Re-evaluate the selected model on independent data, or use an estimate that accounts for selection.</p>
 
         <h2 class="section-title">A worked case: the time horizon</h2>
-        <p class="lead">METR's headline metric is a derived quantity with its own uncertainty, estimated by resampling.</p>
-        <p>METR (2025) summarises an agent's capability as a <strong>time horizon</strong>: the length of task (measured by how long it takes a human) that the model can complete with 50% success. Fit a logistic curve of success probability against (log) human task-time; the time horizon is the task-duration at which the fitted curve crosses 0.5. So the headline number is not measured directly: it is <em>read off a fit</em>, which means it inherits the fit's uncertainty. METR propagate that with a <strong>hierarchical bootstrap</strong>: resample task families, then tasks within families, then attempts within tasks, refit each time, and take the spread of the crossing point as the confidence interval. We do not re-derive the bootstrap here. A "50% time horizon of 30 minutes" is an estimate with error bars, and its largest caveat is <em>external</em> validity, because a fixed task suite is not the deployment distribution (a construct-validity worry from 11.3, returning in statistical clothes).</p>
+
+        <p>METR (2025) summarises an agent's capability as a <strong>time horizon</strong>: the length of task (measured by how long it takes a human) that the model can complete with 50% success. Fit a logistic curve of success probability against (log) human task-time; the time horizon is the task-duration at which the fitted curve crosses 0.5. So the headline number is not measured directly: it is <em>read off a fit</em>, which means it inherits the fit's uncertainty. METR propagate that with a <strong>hierarchical bootstrap</strong>: resample task families, then tasks within families, then attempts within tasks, refit each time, and take the spread of the crossing point as the confidence interval. We do not re-derive the bootstrap here. A "50% time horizon of 30 minutes" is an estimate with error bars, and its largest caveat is <em>external</em> validity, because the fixed task suite may differ from the tasks encountered in deployment.</p>
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">The African lens: small samples and wide intervals</span></h3>
-            <p>There is almost no off-the-shelf safety-eval data in African languages, so any in-language eval you build (11.5) will be <em>small</em>: tens of items. By the arithmetic above, small \(n\) means wide confidence intervals, and that is not a flaw to hide but the central fact to report. The danger runs both ways: a wide interval can make a real in-language safety gap look like it might be noise (so it gets dismissed), or make noise look like a gap (so a claim is over-stated). Error bars are what let you say "English-to-isiZulu refusal dropped by \(\Delta\), 95% CI \([a,b]\)" and have the claim survive scrutiny. In a low-data setting, the statistics of this sub-session are not pedantry: they are the only thing standing between a real finding and a sampling artefact.</p>
+            <h3><span style="color:#ffffff;">The African lens: small samples and uncertain estimates</span></h3>
+            <p>The Session 9 comparison contains only a few purposively chosen prompts. Small samples usually leave substantial uncertainty, but a percentile bootstrap can collapse to a zero-width interval when all observed paired differences are identical. That collapse reflects a resampling method with no observed variation, not certainty or equivalence. In this lab, report the raw paired counts and describe the bootstrap as exploratory resampling spread. It does not provide reliable population inference from a tiny, selected prompt set or account for translation and labelling errors.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>Compute the 95% CI for 43/50 and for a second model at 39/50. Do the independent intervals overlap? Now reason about what a paired test at \(\rho = 0.5\) would conclude.</li>
+            <li>Compute the 95% CI for 43/50 and for a second model at 39/50. Do the independent intervals overlap? Compute an approximate paired standard error assuming \(\rho=0.5\). Which conclusion follows under that assumption? What paired counts would you need for an exact McNemar test?</li>
             <li>Why does ignoring question clustering make an interval too <em>narrow</em>? Give a benchmark structure where the effective \(n\) is far below the question count.</li>
             <li>Use the power formula to find how many questions you need to detect a 5-point gap at \(p = 0.7\), 80% power. Compare to a typical 500-question benchmark.</li>
             <li>The time horizon is "read off a fitted curve." Name two sources of uncertainty the hierarchical bootstrap is capturing, and one (external validity) that it is not.</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Miller (2024), "Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations"</strong> (<a href="https://arxiv.org/abs/2411.00640" target="_blank" rel="noopener">arXiv:2411.00640</a>): SEM and CIs, clustered SEs, paired tests, power analysis.</p>
+        <div class="resource-placeholder">
+            <h4>Used in class · no additional pre-class reading</h4>
+            <p>• <strong>Miller (2024), “Adding Error Bars to Evals”</strong> (<a href="https://arxiv.org/abs/2411.00640" target="_blank" rel="noopener">paper</a>): we will work through a paired-comparison example. The derivations on this course page are the study material.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>METR (2025), "Measuring AI Ability to Complete Long Software Tasks"</strong> (<a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">arXiv:2503.14499</a>): the 50% time-horizon, logistic fit, and hierarchical-bootstrap CIs.</p>
+            <h4>Optional</h4>
+            <p>• <strong>METR (2025), “Measuring AI Ability to Complete Long Tasks”</strong> (<a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">paper</a>): an extended application of uncertainty analysis.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 11.5 is the lab: build a small refusal/robustness eval on open isiZulu data, score it with the REJECT/BYPASS scheme, attach the error bars from this sub-session, and write the validity reflection: a project seed for later in the course.</p>
+            <p>Sub-session 11.5 returns to the Session 9 multilingual notebook. Audit its paired counts, comprehension gate and uncertainty, then write a validity reflection. A larger eval is a possible project, not a requirement of the class lab.</p>
         </div>
 
     </div>
@@ -109,7 +109,7 @@
 <nav class="page-nav">
   <a class="prev" href="construct-validity.html"><span class="nav-label">← Previous</span><span class="nav-title">11.3 · Does the eval measure what it claims?</span></a>
   <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-isizulu-eval.html"><span class="nav-label">Next →</span><span class="nav-title">11.5 · Lab: build a refusal eval on open isiZulu data</span></a>
+  <a class="next" href="lab-isizulu-eval.html"><span class="nav-label">Next →</span><span class="nav-title">11.5 · Lab: audit a multilingual safety eval</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

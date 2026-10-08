@@ -22,7 +22,7 @@
       <li><a href="dangerous-capability-evals.html">11.2 · Dangerous-capability evals: elicitation and sandbagging</a></li>
       <li><span class="tn-current">11.3 · Does the eval measure what it claims?</span></li>
       <li><a href="statistics-of-evals.html">11.4 · The statistics of evals</a></li>
-      <li><a href="lab-isizulu-eval.html">11.5 · Lab: build a refusal eval on open isiZulu data</a></li>
+      <li><a href="lab-isizulu-eval.html">11.5 · Lab: audit a multilingual safety eval</a></li>
     </ul>
   </details>
   <div class="tn-links">
@@ -31,7 +31,7 @@
   </div>
 </div>
 <!-- TOP-NAV-END -->
-    <div class="ai-notice"><strong>Note:</strong> This page's design and content were created and enhanced using Claude (Anthropic's AI assistant); the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
+    <div class="ai-notice"><strong>Note:</strong> This page was developed with Claude and revised with OpenAI Codex; the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
         <div class="week-badge">Week 6 • Session 11.3</div>
         <h1>Does the eval measure what it claims?</h1>
@@ -41,11 +41,11 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Suppose you elicited perfectly and the model did not sandbag. There is still a prior question: does the eval measure the thing its name claims? A benchmark called "reasoning" might measure pattern-matching; "dangerous knowledge" might measure recall of facts that are not the bottleneck to harm. This is the question of validity, and the evaluation literature is belatedly importing it from a field that has wrestled with it for a century: psychometrics. We bring in the vocabulary, organise it around the "everything in the whole wide world" critique, and show with a worked example how the choice of <em>metric</em> alone can flip a smooth trend into an apparent emergent jump. Construct validity is the representativeness problem in disguise, and the African-lens thread becomes a measurement argument here.</p>
+            <p>Suppose you elicited perfectly and the model did not sandbag. There is still a prior question: does the eval measure the thing its name claims? A benchmark called "reasoning" might measure pattern-matching; "dangerous knowledge" might measure recall of facts that are not the bottleneck to harm. This is the question of validity, and the evaluation literature is belatedly importing it from a field that has wrestled with it for a century: psychometrics. We bring in the vocabulary, organise it around the "everything in the whole wide world" critique, and show with a worked example how the choice of <em>metric</em> alone can flip a smooth trend into an apparent emergent jump. Validity asks whether the tested tasks support the broader claim, including claims that extend from English to other languages.</p>
         </div>
 
         <h2 class="section-title">Validity, borrowed from psychometrics</h2>
-        <p class="lead">Measuring an abstract construct through a concrete test is the problem psychology has studied for a hundred years.</p>
+
         <p>Psychometrics distinguishes several things that "is this a good test?" runs together, and the distinctions transfer cleanly to model evals.</p>
         <div class="technical-detail">
             <h4>The validity vocabulary</h4>
@@ -55,47 +55,47 @@
                 <li><strong>Criterion validity:</strong> does the score predict the real-world outcome you care about? Does a high WMDP score actually predict uplift in causing harm?</li>
                 <li><strong>Reliability:</strong> separate from validity. Does the test give the same answer on repeats? An eval whose score swings with the random seed is unreliable before it is even invalid.</li>
             </ul>
-            <p style="color:#555;">A benchmark can be reliable and still invalid (it consistently measures the wrong thing), and the two failures need different fixes. Most heated "the model is/is not capable" disputes are really disputes about construct validity that neither side has named as such.</p>
+            <p style="color:#555;">A benchmark can be reliable and still invalid (it consistently measures the wrong thing), and the two failures need different fixes. A disagreement about model capability may therefore come from different assumptions about what the benchmark measures.</p>
         </div>
 
         <h2 class="section-title">The "everything in the whole wide world" problem</h2>
-        <p class="lead">A benchmark that claims to measure a general ability usually measures a narrow slice and over-claims the rest.</p>
-        <p>Raji, Bender and colleagues (2021) give the field's sharpest critique, named after a children's book in which Grover tours a museum claiming to showcase everything in the whole wide world; its rooms hold small assortments of particular things, and the tour ends at a door marked "Everything Else" that opens onto the world outside. Benchmarks marketed as measuring "general" language understanding or reasoning, they argue, rest on the same move: a finite, particular set of tasks is presented as a proxy for an open-ended human ability, and a high score is read as evidence of the general capacity. The paper's diagnosis is explicitly about construct validity (these benchmarks "cannot possibly capture anything representative" of the sweeping claims made about them), and it identifies three recurring limits: task design that is narrower than the claim, data stripped of its real-world context, and benchmarks used by communities for purposes their construction never justified. The lesson for safety is direct: when a model "passes a reasoning benchmark," ask what construct the benchmark actually samples before you let the word "reasoning" do any work.</p>
+
+        <p>Raji, Bender and colleagues (2021) use the title of a children's book in which Grover tours a museum claiming to showcase everything in the whole wide world; its rooms hold small assortments of particular things, and the tour ends at a door marked "Everything Else" that opens onto the world outside. Benchmarks marketed as measuring "general" language understanding or reasoning, they argue, rest on the same move: a finite, particular set of tasks is presented as a proxy for an open-ended human ability, and a high score is read as evidence of the general capacity. The paper's diagnosis is explicitly about construct validity (these benchmarks "cannot possibly capture anything representative" of the sweeping claims made about them), and it identifies three recurring limits: task design that is narrower than the claim, data stripped of its real-world context, and benchmarks used by communities for purposes their construction never justified. A high benchmark score supports a claim about the tested tasks. A broader claim about reasoning needs evidence that those tasks represent the proposed ability.</p>
 
         <div class="technical-detail">
             <h4>The construct question, applied to WMDP</h4>
-            <p style="color:#555;">Make it concrete with a benchmark from Session 10. WMDP measures multiple-choice <em>recall of hazardous knowledge</em>: facts about pathogens, exploits, chemistry. The construct it is used to stand for is <em>uplift</em>: how much the model raises a malicious actor's chance of actually causing harm. Are those the same? Recall is plausibly <em>necessary</em> for uplift, but it is far from <em>sufficient</em>: building a weapon is gated by tacit skill, materials, and lab access that no multiple-choice question tests, and conversely a model that fails the quiz might still help by reasoning rather than recalling. So WMDP has reasonable content validity for "hazardous facts" and uncertain <em>criterion</em> validity for "uplift." None of this means WMDP is useless; it means a governance threshold written on WMDP is a threshold on recall, and the inference to real-world danger is a separate, contestable step that the score does not establish on its own.</p>
+            <p style="color:#555;">Make it concrete with a hazardous-knowledge benchmark. <a href="https://arxiv.org/html/2403.03218v3#A4.SS1">WMDP</a> measures performance on hazardous-knowledge multiple-choice questions. Its score does not distinguish recall from understanding or reasoning. The construct it is used to stand for is <em>uplift</em>: how much the model raises a malicious actor's chance of actually causing harm. Are those the same? Hazardous knowledge may contribute to uplift, but it is not sufficient: building a weapon is gated by tacit skill, materials, and lab access that no multiple-choice question tests, and conversely a model that fails the quiz might still help by reasoning rather than recalling. WMDP therefore tests hazardous knowledge, while its <em>criterion</em> validity for "uplift" remains uncertain. A threshold based on WMDP is a threshold on this test of hazardous knowledge. The further inference to real-world harm requires separate evidence.</p>
         </div>
 
-        <h2 class="section-title">Discontinuous metrics and the emergence mirage</h2>
-        <p class="lead">The same model outputs can show a smooth trend or a sudden jump, depending only on how you score them.</p>
-        <p>Session 2.4 met this as the "emergence mirage," and it belongs here too as a demonstration that a measurement choice can manufacture a scientific claim. Schaeffer et al. (2023) showed that many "emergent abilities" (capabilities that appear to switch on abruptly at some scale) are artefacts of a <em>discontinuous</em> metric. Score a task with exact-match (all-or-nothing: the whole multi-token answer must be right) and performance looks flat then suddenly jumps. Score the identical model outputs with a <em>continuous</em> metric (per-token accuracy, or token edit distance) and the same data reveal smooth, gradual improvement. The model did not change; the ruler did. We do not re-derive the argument here (it is in 2.4), but its moral is a validity moral: the metric is part of the construct, and a poorly chosen metric can produce a finding ("emergence!") that better measurement dissolves.</p>
+        <h2 class="section-title">Metric choice and apparent emergence</h2>
+
+        <p>Session 2.4 met this as the "emergence mirage," and it belongs here too as a demonstration that a measurement choice can manufacture a scientific claim. Schaeffer et al. (2023) showed that some apparent "emergent abilities" (capabilities that seem to switch on abruptly at some scale) can arise from the choice of a nonlinear or discontinuous metric. Exact-match scoring requires the whole multi-token answer to be correct. It can make improvement appear flat at first and much steeper later. In their examples, rescoring the same model outputs with more gradual metrics, such as per-token accuracy or token edit distance, revealed smoother improvement. The model outputs are unchanged; only the scoring rule differs. We do not re-derive the argument here (it is in 2.4), but its moral is a validity moral: the metric is part of the construct, and a scoring rule can affect the apparent trend. Exact match may be appropriate when the whole answer must be correct; a smoother metric is not automatically more valid. Choose the metric to match the outcome of interest.</p>
         <div class="info-box">
             <h4>Worked: exact-match versus a continuous metric</h4>
-            <p>In the lab and in class, take one fixed set of model outputs on a multi-step task and score it two ways. Under exact-match, a 5-step answer is correct only if all 5 steps are right; if per-step accuracy is \(p\), exact-match accuracy is \(p^5\), which stays near zero until \(p\) climbs high and then shoots up, an "emergent" curve. Under a continuous metric (fraction of steps correct), the score is just \(p\), a straight, gradual line through the same runs. Plot both from the same data and the contrast is stark: one licenses the claim "the ability emerged at scale," the other licenses "the ability improved smoothly." A student who can produce both plots from one set of outputs has internalised a central habit of eval-reading: ask what the metric is doing before you believe what the curve is saying.</p>
+            <p>For a classroom calculation, assume five independent steps, each correct with probability \(p\). The expected exact-match success probability is \(p^5\); the expected fraction of correct steps is \(p\). Plot these two theoretical curves. They describe different outcomes and can look very different despite the same per-step probabilities. A finite sample of model outputs need not match either expectation exactly, and correlated steps need not give \(p^5\). This calculation is separate from the multilingual safety lab in 11.5.</p>
         </div>
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Construct validity and English-only benchmarks</span></h3>
-            <p>Now the African-lens thread becomes a measurement argument. A benchmark built from English text, scored as "language understanding," and used to certify a model as broadly capable or broadly safe, is making the everything-in-the-whole-wide-world move: a narrow, English slice presented as the general construct. That is a <em>construct-validity</em> failure, and it is the same failure that makes an English-only safety eval miss the isiZulu jailbreak of Session 1. So the demand for in-language evaluation is not a separate diversity requirement layered on top of the science; it <em>is</em> the validity requirement the science already insists on. "We measured safety" is only true for the distribution sampled, and a benchmark that samples English and claims to measure safety has overstated its construct in the way Raji and Bender describe.</p>
+            <p>The same validity question applies across languages. A benchmark built from English text, scored as "language understanding," and used to certify a model as broadly capable or broadly safe, is making the everything-in-the-whole-wide-world move: a narrow, English slice presented as the general construct. That is a <em>construct-validity</em> failure, and it is the same limit illustrated by the isiZulu safety result from Session 1. A claim about safety across languages therefore needs tests in those languages. "We measured safety" must be qualified by the distribution sampled, and a benchmark that samples English and claims to measure safety has overstated its construct in the way Raji and Bender describe.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Distinguish reliability from validity with an example of an eval that is reliable but invalid. Which is easier to detect, and why?</li>
-            <li>WMDP has good content validity for "hazardous facts." What evidence would you need to establish its <em>criterion</em> validity for "uplift to cause harm"? Why is that evidence hard to get?</li>
-            <li>Show that exact-match accuracy on a 5-step task is \(p^5\) for per-step accuracy \(p\). At what \(p\) does \(p^5\) start to rise steeply, and how does that produce an "emergent" curve?</li>
+            <li>WMDP samples hazardous-knowledge questions. What evidence would you need to establish its <em>criterion</em> validity for "uplift to cause harm"? Why is that evidence hard to get?</li>
+            <li>Assuming independent steps with equal success probabilities, show that expected exact-match success on a 5-step task is \(p^5\) for per-step accuracy \(p\). Compare \(p^5\) with \(p\) at \(p=0.5, 0.7, 0.9\). How does the nonlinear score change the shape of the plot?</li>
             <li>Explain, in construct-validity terms, why an English-only safety benchmark over-claims when it is reported as measuring "safety." How is this the same error as the museum that claims to showcase everything in the whole wide world?</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
-        <div class="resource-placeholder reading-core">
-            <h4>Core</h4>
-            <p>• <strong>Raji, Bender, Paullada, Denton &amp; Hanna (2021), "AI and the Everything in the Whole Wide World Benchmark"</strong> (<a href="https://arxiv.org/abs/2111.15366" target="_blank" rel="noopener">arXiv:2111.15366</a>): the construct-validity critique of "general" benchmarks.</p>
+        <div class="resource-placeholder">
+            <h4>Used in class · no additional pre-class reading</h4>
+            <p>• <strong>Raji, Bender, Paullada, Denton &amp; Hanna (2021), “AI and the Everything in the Whole Wide World Benchmark”</strong> (<a href="https://arxiv.org/abs/2111.15366" target="_blank" rel="noopener">paper</a>): we will use its benchmark critique to practise asking what a score measures.</p>
         </div>
         <div class="resource-placeholder">
-            <h4>Supplementary</h4>
-            <p>• <strong>Schaeffer, Miranda &amp; Koyejo (2023), "Are Emergent Abilities of Large Language Models a Mirage?"</strong> (<a href="https://arxiv.org/abs/2304.15004" target="_blank" rel="noopener">arXiv:2304.15004</a>): already met in Session 2.4; here as the metric-makes-the-finding case.</p>
+            <h4>Optional</h4>
+            <p>• <strong>Schaeffer, Miranda &amp; Koyejo (2023), “Are Emergent Abilities of Large Language Models a Mirage?”</strong> (<a href="https://arxiv.org/abs/2304.15004" target="_blank" rel="noopener">paper</a>): a return to the metric example from Session 2.4.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
