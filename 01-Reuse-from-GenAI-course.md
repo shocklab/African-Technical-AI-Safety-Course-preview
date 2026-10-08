@@ -1,7 +1,6 @@
 # Reuse audit — what to lift from the "Gen AI in Research" course
 
-The sibling course (`../Gen AI in research course/`, repo: shocklab/Generative-AI-in-research-course,
-CC-BY-4.0) is a complete, fact-checked, UCT-branded 12-week course. A surprising amount transfers
+The sibling course (repository `shocklab/Generative-AI-in-research-course`, CC-BY-4.0) is a complete, fact-checked, UCT-branded 12-week course. A surprising amount transfers
 directly. Items are ranked by how much they save.
 
 ## A. Infrastructure & workflow (lift wholesale — biggest time-saver)
