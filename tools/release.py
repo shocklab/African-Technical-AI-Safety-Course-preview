@@ -38,7 +38,10 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RELEASED_FILE = ROOT / "RELEASED-SESSIONS"
-SYNC_PATHS = ["docs/assets", "docs/labs", "docs/about.html", "docs/ai-disclaimer.html"]
+SYNC_PATHS = ["docs/assets", "docs/labs", "docs/about.html", "docs/ai-disclaimer.html",
+              # the 2026 taught-route pages, which sit outside session-NN
+              "docs/short-course-2026.html",
+              "docs/sessions/project-kickoff-short-course.html"]
 RELEASE_NOTE = (
     '<span id="release-note">Sessions are released week by week as the '
     "course runs; syllabus entries without links are still to come.</span> "
