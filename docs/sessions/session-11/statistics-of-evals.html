@@ -61,9 +61,9 @@
         </div>
         <div class="technical-detail">
             <h4>Paired comparisons between models</h4>
-            <p>Compare models on the same questions using paired differences. Let \(X_{Ai}, X_{Bi}\) be their scores on question \(i\), with per-question variances \(v_A,v_B\) and within-pair correlation \(\rho\). For \(n\) independent question pairs, \(\hat p_A-\hat p_B=n^{-1}\sum_i(X_{Ai}-X_{Bi})\). Independence across pairs gives the following variance. Clusters of related questions require a further adjustment:</p>
+            <p style="color:#555;">Compare models on the same questions using paired differences (<a href="https://arxiv.org/html/2411.00640v1#S4.SS2">Miller, Section 4.2</a>). Let \(X_{Ai}, X_{Bi}\) be their scores on question \(i\), with per-question variances \(v_A,v_B\) and within-pair correlation \(\rho\). For \(n\) independent question pairs, \(\hat p_A-\hat p_B=n^{-1}\sum_i(X_{Ai}-X_{Bi})\). Independence across pairs gives the following variance. Clusters of related questions require a further adjustment:</p>
             <div class="formula">\[ \mathrm{Var}(\hat{p}_A - \hat{p}_B) = \frac{v_A + v_B - 2\rho\sqrt{v_A v_B}}{n} \;\approx\; \frac{2v(1-\rho)}{n}. \]</div>
-            <p>If the per-question variances are equal and \(\rho=0.5\), the paired standard error is \(\sqrt{v/n}\), compared with \(\sqrt{2v/n}\) for independent samples: a factor \(1/\sqrt{2}\) smaller. This correlation is illustrative, not an estimate for a particular benchmark. Pairing can change the uncertainty substantially. For binary scores, McNemar’s test uses the two discordant paired counts. See <a href="https://arxiv.org/html/2411.00640v1#S4.SS2">Miller, Section 4.2</a>.</p>
+            <p style="color:#555;">If the per-question variances are equal and \(\rho=0.5\), the paired standard error is \(\sqrt{v/n}\), compared with \(\sqrt{2v/n}\) for independent samples: a factor \(1/\sqrt{2}\) smaller. This correlation is illustrative, not an estimate for a particular benchmark. Pairing can change the uncertainty substantially. For binary scores, McNemar’s test uses the two discordant paired counts.</p>
         </div>
 
         <h2 class="section-title">Power and the winner's curse</h2>
@@ -96,12 +96,12 @@
         </div>
         <div class="resource-placeholder">
             <h4>Optional</h4>
-            <p>• <strong>METR (2025), “Measuring AI Ability to Complete Long Tasks”</strong> (<a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">paper</a>): an extended application of uncertainty analysis.</p>
+            <p>• <strong>METR (2025), “Measuring AI Ability to Complete Long Software Tasks”</strong> (<a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">paper</a>): an extended application of uncertainty analysis.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 11.5 returns to the Session 9 multilingual notebook. Audit its paired counts, comprehension gate and uncertainty, then write a validity reflection. A larger eval is a possible project, not a requirement of the class lab.</p>
+            <p>Sub-session 11.5 audits the results saved from the Session 9 multilingual notebook. Audit its paired counts, comprehension gate and uncertainty, then write a validity reflection. A larger eval is a possible project, not a requirement of the class lab.</p>
         </div>
 
     </div>
