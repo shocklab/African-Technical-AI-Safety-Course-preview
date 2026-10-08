@@ -294,6 +294,10 @@ M(
     "",
     "The paired bootstrap resamples jointly understood prompt IDs with yes/no outcomes in both languages. Its spread",
     "is exploratory: tiny selected samples can give collapsed intervals, not certainty or equivalence. Report raw counts and unclear-label exclusions; do not infer population-wide safety.",
+    "",
+    "Pairs with an unclear outcome are left out of the paired gap. When there are any, the analysis also prints",
+    "the gap with every unclear label scored yes, with every one scored no, and its full range over every way of",
+    "scoring them. Report that range: if it includes zero, the conclusion depends on how the unclear responses are read.",
 )
 
 C((Path(__file__).parent / "multilingual_audit.py").read_text(),
