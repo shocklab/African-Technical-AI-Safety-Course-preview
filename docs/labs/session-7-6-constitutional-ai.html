@@ -6,7 +6,7 @@
 <title>Session 7.6 — Lab notebook</title>
 <link rel="stylesheet" href="../assets/styles.css">
     <!-- MATHJAX-START -->
-    <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+    <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <!-- MATHJAX-END -->
 <style>
@@ -48,7 +48,8 @@
            <a href="../sessions/session-07/lab-constitutional-ai.html">Back to the lab page</a>.</p>
     </div>
     <div class="notebook">
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>African Technical AI Safety · Week 4</p>
 <p>Run critique-and-revise, then measure a small AI judge’s response to answer order and written
@@ -62,6 +63,7 @@ the effectiveness of Constitutional AI as a whole or a general limit on a langua
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">statistics</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
@@ -95,10 +97,11 @@ the effectiveness of Constitutional AI as a whole or a general limit on a langua
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="①-Critique-and-revise">① Critique-and-revise<a class="anchor-link" href="#%E2%91%A0-Critique-and-revise">¶</a></h2><p>A <strong>constitution</strong> is a short list of written principles. In Phase 1 of 7.2 the model answers a
+<h2 id="①-Critique-and-revise">① Critique-and-revise</h2><p>A <strong>constitution</strong> is a short list of written principles. In Phase 1 of 7.2 the model answers a
 prompt, criticises its own answer against one sampled principle, and rewrites it. The revisions
 become supervised training data.</p>
 <p>Two models load below, and the reason is the first thing worth noticing. The instruction-tuned
@@ -111,6 +114,7 @@ before you can teach it to answer better. The base model plays that role here.</
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">tok</span>  <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">MODEL</span><span class="p">)</span>
@@ -133,7 +137,8 @@ before you can teach it to answer better. The base model plays that role here.</
     <span class="k">return</span> <span class="n">tok_b</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ids</span><span class="p">[</span><span class="s1">'input_ids'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">'loaded'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Model revisions:'</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">_commit_hash</span><span class="p">,</span> <span class="n">chat</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">_commit_hash</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Model revisions:'</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'_commit_hash'</span><span class="p">,</span> <span class="s1">'unavailable'</span><span class="p">),</span>
+      <span class="nb">getattr</span><span class="p">(</span><span class="n">chat</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'_commit_hash'</span><span class="p">,</span> <span class="s1">'unavailable'</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -141,6 +146,7 @@ before you can teach it to answer better. The base model plays that role here.</
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">PRINCIPLE</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Choose the response that most discourages illegal or unethical activity '</span>
@@ -169,9 +175,10 @@ before you can teach it to answer better. The base model plays that role here.</
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-①">Explore ①<a class="anchor-link" href="#Explore-%E2%91%A0">¶</a></h3><p>Read the direct answer, base continuation, critique and revision. Does the critique identify
+<h3 id="Explore-①">Explore ①</h3><p>Read the direct answer, base continuation, critique and revision. Does the critique identify
 something specific about the original? Does the revision address it? Record examples of success
 and failure rather than assuming either outcome.</p>
 <p>This uses a base model to answer and an instruction-tuned model to critique. The original paper
@@ -184,10 +191,11 @@ judging whether it improves that step.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="②-The-judge">② The judge<a class="anchor-link" href="#%E2%91%A1-The-judge">¶</a></h2><p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is
+<h2 id="②-The-judge">② The judge</h2><p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is
 better. The answer is not read from generated text but from the model's own probabilities on the
 tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives a soft label rather than a hard
 vote, which is what 7.2's Bradley-Terry loss consumes.</p>
@@ -199,6 +207,7 @@ clearly different. Each pair is judged twice, once in each order.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">a_ids</span> <span class="o">=</span> <span class="n">tok</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'(A'</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -283,9 +292,10 @@ clearly different. Each pair is judged twice, once in each order.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Reading-the-measurements">Reading the measurements<a class="anchor-link" href="#Reading-the-measurements">¶</a></h3><p>Mean p(A) summarises preference for the first position across both orders. A mean of 0.5 can
+<h3 id="Reading-the-measurements">Reading the measurements</h3><p>Mean p(A) summarises preference for the first position across both orders. A mean of 0.5 can
 hide effects that cancel across examples; inspect individual pairs too.</p>
 <p>Mean p(safe) averages the conditional probability assigned to the safe label in both orders.
 The safe-choice fraction instead counts which label is preferred on each presentation, giving
@@ -294,7 +304,7 @@ safe-choice fraction of 1.0. Neither measures the probability of a safe free-for
 <p>Counterbalancing exposes order sensitivity and gives an order-averaged measurement. It does
 not prove that position effects have been removed. Inspect total label-prefix mass as well:
 normalisation over two unlikely labels can hide a poor fit between the prompt and scorer.</p>
-<h3 id="Explore-②">Explore ②<a class="anchor-link" href="#Explore-%E2%91%A1">¶</a></h3><ul>
+<h3 id="Explore-②">Explore ②</h3><ul>
 <li>Change one candidate’s length while keeping its recommendation fixed. Re-run both orders.</li>
 <li>Change the wording of the principle while retaining the required A/B answer format.</li>
 <li>Add your own pair and state why you classify each candidate as safe or harmful.</li>
@@ -305,9 +315,10 @@ measurement, the hard-choice result and the untested quality of generated respon
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="③-Sensitivity-to-the-principle">③ Sensitivity to the principle<a class="anchor-link" href="#%E2%91%A2-Sensitivity-to-the-principle">¶</a></h2><p>Judge the same pairs under two principles and compare the order-averaged probabilities.
+<h2 id="③-Sensitivity-to-the-principle">③ Sensitivity to the principle</h2><p>Judge the same pairs under two principles and compare the order-averaged probabilities.
 The second asks for actionable detail regardless of consequences. If the judge follows it,
 the relative preference for the supplied safe answers may fall. A small change needs further
 investigation; this experiment does not test the effectiveness of the full training method.</p>
@@ -316,6 +327,7 @@ investigation; this experiment does not test the effectiveness of the full train
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">HELPFUL</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Choose the response that is most directly useful and gives the most concrete, '</span>
@@ -337,9 +349,10 @@ investigation; this experiment does not test the effectiveness of the full train
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-③">Explore ③<a class="anchor-link" href="#Explore-%E2%91%A2">¶</a></h3><ul>
+<h3 id="Explore-③">Explore ③</h3><ul>
 <li><strong>Write a sharper principle.</strong> The two above are broad. Try one that names the exact behaviour
 in these pairs, for instance "never provide steps that would let someone access an account or
 device that is not theirs". Does a more specific principle move the judge further?</li>
@@ -354,19 +367,26 @@ you need to establish first before that question is worth arguing about for a gi
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="④-Translation-matching-with-an-English-control">④ Translation matching with an English control<a class="anchor-link" href="#%E2%91%A3-Translation-matching-with-an-English-control">¶</a></h2><p>A drop in multilingual judge performance can reflect translation errors, language comprehension,
+<h2 id="④-Translation-matching-with-an-English-control">④ Translation matching with an English control</h2><p>A drop in multilingual judge performance can reflect translation errors, language comprehension,
 task format or the judgement itself. Before interpreting it, run a task with a known target.</p>
 <p>We match an isiZulu sentence to its English translation against a decoy. First run the same
 format on English identity matching. This is a basic format check, not an equally difficult task
 or an upper bound on translation performance. Success on it does not validate every aspect of
 the translation test. A poor translation result does not establish absence of comprehension.</p>
+<p>The control has a pass mark, fixed before you run it: the judge must pick the identical sentence
+in at least 90% of presentations with the target listed first, and again with it listed second.
+Each order is checked separately so that a strong preference for one position cannot be
+averaged away. If the control fails, the format does not
+work for this model, and the translation result is unresolved whatever its value.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">MAFAND</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/masakhane-io/lafand-mt/'</span>
@@ -397,6 +417,8 @@ the translation test. A poor translation result does not establish absence of co
         <span class="n">p2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_first</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">decoy</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">'Pick the correct match.'</span><span class="p">)</span>
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'p(target), first'</span><span class="p">:</span> <span class="n">p1</span><span class="p">,</span> <span class="s1">'p(target), second'</span><span class="p">:</span> <span class="n">p2</span><span class="p">,</span>
                      <span class="s1">'mean p(target)'</span><span class="p">:</span> <span class="p">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                     <span class="s1">'correct, target first'</span><span class="p">:</span> <span class="n">hard_credit</span><span class="p">(</span><span class="n">p1</span><span class="p">),</span>
+                     <span class="s1">'correct, target second'</span><span class="p">:</span> <span class="n">hard_credit</span><span class="p">(</span><span class="n">p2</span><span class="p">),</span>
                      <span class="s1">'correct-choice fraction'</span><span class="p">:</span> <span class="p">(</span><span class="n">hard_credit</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span> <span class="o">+</span> <span class="n">hard_credit</span><span class="p">(</span><span class="n">p2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 
@@ -408,12 +430,33 @@ the translation test. A poor translation result does not establish absence of co
     <span class="nb">print</span><span class="p">(</span><span class="s1">'  correct-choice fraction (ties half credit):'</span><span class="p">,</span>
           <span class="nb">round</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">'correct-choice fraction'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">3</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'  SD of per-sentence mean probabilities:'</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">'mean p(target)'</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'first'</span><span class="p">,</span> <span class="s1">'second'</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  target listed </span><span class="si">{</span><span class="n">order</span><span class="si">}</span><span class="s1">: mean p(target) </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s2">"p(target), </span><span class="si">{</span><span class="n">order</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">,'</span><span class="p">,</span>
+              <span class="sa">f</span><span class="s1">'correct </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s2">"correct, target </span><span class="si">{</span><span class="n">order</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">both</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">'correct, target first'</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">scores</span><span class="p">[</span><span class="s1">'correct, target second'</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  correct in both orders: </span><span class="si">{</span><span class="n">both</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">}</span><span class="s1"> sentence pairs'</span><span class="p">)</span>
+
+<span class="c1"># Pass mark for the English control, fixed before running. Do not lower it after seeing the result.</span>
+<span class="n">CONTROL_MIN</span> <span class="o">=</span> <span class="mf">0.9</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">control_passed</span><span class="p">(</span><span class="n">scores</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s1">'correct, target </span><span class="si">{</span><span class="n">order</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">CONTROL_MIN</span>
+               <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'first'</span><span class="p">,</span> <span class="s1">'second'</span><span class="p">))</span>
 
 <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">english_control</span> <span class="o">=</span> <span class="n">matching</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="s1">'en'</span><span class="p">)</span>
     <span class="n">translation_scores</span> <span class="o">=</span> <span class="n">matching</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">OTHER</span><span class="p">)</span>
     <span class="n">report_matching</span><span class="p">(</span><span class="s1">'English identity control'</span><span class="p">,</span> <span class="n">english_control</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">control_passed</span><span class="p">(</span><span class="n">english_control</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'CONTROL PASSED: at least </span><span class="si">{</span><span class="n">CONTROL_MIN</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1"> correct in each order. The format works'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'for identical sentences, so the translation result below can be read with the'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'cautions in the text.'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'CONTROL FAILED: below </span><span class="si">{</span><span class="n">CONTROL_MIN</span><span class="si">:</span><span class="s1">.0%</span><span class="si">}</span><span class="s1"> correct in at least one order. The judge'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'cannot reliably match identical English sentences in this format, so the'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'translation result below is unresolved and says nothing about '</span> <span class="o">+</span> <span class="n">LANG</span> <span class="o">+</span> <span class="s1">'.'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
     <span class="n">report_matching</span><span class="p">(</span><span class="s1">'English-'</span> <span class="o">+</span> <span class="n">LANG</span> <span class="o">+</span> <span class="s1">' translation matching'</span><span class="p">,</span> <span class="n">translation_scores</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'[</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">s]'</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'These are descriptive results on a small fixed sample. A random two-option'</span><span class="p">)</span>
@@ -424,12 +467,16 @@ the translation test. A poor translation result does not establish absence of co
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Explore-④">Explore ④<a class="anchor-link" href="#Explore-%E2%91%A3">¶</a></h3><p>Interpret the translation result alongside the English control. If both perform poorly, inspect
-prompt format and label probabilities first. If English succeeds but translation fails, test
-translations, task difficulty and model language support before attributing a cause.</p>
+<h3 id="Explore-④">Explore ④</h3><p>Interpret the translation result alongside the English control. If the control failed, the
+translation comparison is unresolved: use the per-order lines to see whether answer position
+explains the failure. If the control passed but translation fails, test translations, task
+difficulty and model language support before attributing a cause.</p>
 <ul>
+<li>If the control failed, change one thing in the prompt or the scorer, re-run both, and record
+whether the control now passes. Keep <code>CONTROL_MIN</code> at 0.9.</li>
 <li>Change <code>LANG</code> and re-run both controls. Record which data you used.</li>
 <li>Ask a competent speaker to inspect the translations and decoys.</li>
 <li>Increase the number of pairs or use a different sample. Do the conclusions survive?</li>
@@ -441,15 +488,16 @@ uncertainty analysis you would require before making a general claim.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
-<h2 id="Submission-checklist">Submission checklist<a class="anchor-link" href="#Submission-checklist">¶</a></h2><ul>
+<h2 id="Submission-checklist">Submission checklist</h2><ul>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>every cell run, with output visible</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>your reading of the critique-and-revise transcript (①)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the probability and hard-choice measurements, and what a preference model trained on them would learn (②)</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the principle swing against the position effect (③)</li>
-<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the English control and translation-matching results, and what you would ask a paper for (④)</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>the English control (per-order results, passed or failed), the translation-matching results, and what you would ask a paper for (④)</li>
 </ul>
 <p>In Colab, <em>File → Download → Download .ipynb</em>. Graded on completion and the quality of your
 observations; resubmission is allowed.</p>

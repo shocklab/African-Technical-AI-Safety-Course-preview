@@ -69,6 +69,10 @@ C('''with pd.option_context('display.max_colwidth', None, 'display.max_rows', No
         print('Original translations, including excluded rows:')
         display(translations)
 ''')
+M('''Notes on the data: who reviewed the translations, which prompt IDs remain doubtful and why, and any label you would change.
+
+Your answer:
+''')
 M('''## 2. Check denominators and paired outcomes
 
 The coarse validity gate requires at least two of the three original benign controls understood in each condition, plus at least two safety pairs understood in both languages with determinate outcomes. It does not establish fluency or translation validity.
@@ -93,9 +97,11 @@ Include:
 
 For the synthetic exercise, replace the model/language conclusion with an explanation of the arithmetic and the evidence that would be needed for a real evaluation.
 
-Save this notebook and retain the input JSON locally. No model rerun is needed for this audit.
-
-## Sources
+Write the audit in the cell below. If you submit it as a separate document instead, give its file name there. Save this notebook and keep the input JSON locally. No model rerun is needed for this audit.
+''')
+M('''Your audit:
+''')
+M('''## Sources
 
 - [Session 11.4: statistics of evaluations](https://shocklab.github.io/African-Technical-AI-Safety-Course/sessions/session-11/statistics-of-evals.html).
 - [Miller (2024), Adding Error Bars to Evals](https://arxiv.org/html/2411.00640v1#S4.SS2).
