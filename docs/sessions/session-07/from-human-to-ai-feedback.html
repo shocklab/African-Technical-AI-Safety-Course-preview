@@ -63,7 +63,7 @@
 
         <h2 class="section-title">Let a model give the feedback</h2>
         <p>Replace the human labeller with a model that judges responses against a written list of principles.</p>
-        <p>The idea, introduced by Bai et al. (2022) under the name <strong>Constitutional AI</strong>, is disarmingly simple. Instead of paying people to rank responses for harmlessness, you write down a handful of principles ("choose the response that is least harmful", "that is least likely to be discriminatory", and so on) and you ask a capable model to do the ranking by those principles. The model's judgements become the preference data; everything downstream (reward model, policy optimisation) is the Session 6 machinery, unchanged. Only the label source changed.</p>
+        <p>The idea, introduced by Bai et al. (2022) under the name <strong>Constitutional AI</strong>, is disarmingly simple. Instead of paying people to rank responses for harmlessness, you write down a handful of principles (choose the less harmful response, choose the less discriminatory one, and so on) and you ask a capable model to do the ranking by those principles. The model's judgements become the preference data; everything downstream (reward model, policy optimisation) is the Session 6 machinery, unchanged. Only the label source changed.</p>
         <p>It helps to be exact about what is and is not automated, because the marketing and the mechanism diverge here.</p>
         <div class="technical-detail">
             <h4>Automated and human inputs</h4>

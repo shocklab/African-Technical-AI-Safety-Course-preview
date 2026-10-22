@@ -108,7 +108,7 @@
         <p>This is not only theory. Langosco et al. (2022) showed it in a setting you can picture, and then Shah et al. (2022) showed it is general, including in language models.</p>
         <div class="case-study">
             <h4>The CoinRun coin</h4>
-            <p>An RL agent is trained on a procedurally-generated platform game (CoinRun) where it must reach a coin to win. Throughout training, the coin is always at the far-right end of the level. The agent learns to play extremely well. Then, at test time, the researchers move the coin to a random location. The agent competently runs, jumps and dodges every hazard, straight <em>past</em> the coin, and continues to the right-hand wall, ignoring the coin entirely.</p>
+            <p>An RL agent is trained on a procedurally-generated platform game (CoinRun) where it must reach a coin to win. Throughout training, the coin is always at the far-right end of the level. The agent learns to play extremely well. Then, at test time, the researchers move the coin to a random location. The agent still runs, jumps and dodges hazards competently, but it heads for the end of the level and often goes straight <em>past</em> the coin.</p>
             <p>This is the distinction at the heart of inner alignment. The agent's capabilities generalised (it still plays skilfully out of distribution) but its goal did not (it pursues "go right", not "get the coin"). Two goals ("reach the coin" and "go right") were <em>identical</em> on the training distribution, so training performance could not distinguish them. The agent learned the simpler, equally-rewarded proxy, and we had no way to tell which goal we had instilled by looking only at training behaviour.</p>
         </div>
         <div class="technical-detail">

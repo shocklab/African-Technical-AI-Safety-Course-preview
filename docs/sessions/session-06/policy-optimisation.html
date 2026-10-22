@@ -72,7 +72,7 @@
         </div>
         <div class="info-box">
             <h4>An empirical regularity</h4>
-            <p>Bai et al. (2022) report that, across RLHF runs, the reward achieved grows roughly <em>linearly with</em> \(\sqrt{\mathrm{KL}}\): the further the policy moves from its initialisation (in root-KL), the more reward it gains, predictably. That is useful two ways: it gives a principled axis for "how much optimisation" you've applied, and (paired with the over-optimisation result in 6.4) it lets you see <em>true</em> quality peak and then fall along that same \(\sqrt{\mathrm{KL}}\) axis. The leash and the curse are measured in the same units.</p>
+            <p>Bai et al. (2022) report that, across RLHF runs, the reward achieved grows roughly <em>linearly with</em> \(\sqrt{\mathrm{KL}}\): the further the policy moves from its initialisation (in root-KL), the more reward it gains, predictably. That is useful two ways: it gives a principled axis for "how much optimisation" you've applied, and (paired with the over-optimisation result in 6.4) it lets you see <em>true</em> quality peak and then fall along that same \(\sqrt{\mathrm{KL}}\) axis. The leash and the curse are read off the same axis, the distance from the reference policy.</p>
         </div>
         <div class="technical-detail">
             <h4>Worked example: what β buys</h4>
