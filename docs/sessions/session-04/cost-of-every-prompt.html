@@ -52,7 +52,7 @@
 <div class="resource-placeholder reading-core">
 <h4>Mandatory readings</h4>
 <p style="font-style: normal; margin-top: 8px;"><a href="https://www.nature.com/articles/d41586-024-00478-x" target="_blank" rel="noopener">Nature (2024): "Generative AI&rsquo;s environmental costs are soaring &mdash; and mostly secret"</a>: a <em>Nature</em> commentary on why accurate environmental data is so hard to get from AI companies. A good starting point for understanding the transparency problem. ≈1,000 words.</p>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2304.03271" target="_blank" rel="noopener"><strong>Li, Yang, Islam, Ren (2023): "Making AI Less Thirsty"</strong></a>: the most-cited quantitative analysis of AI water consumption. Read the paper, not just the media coverage of it; the estimation methodology is §3 ("Estimating Water Footprint of AI Models"), with the GPT-3 case study in §3.3. ≈5,500 words.</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2304.03271" target="_blank" rel="noopener"><strong>Li, Yang, Islam, Ren (2023): "Making AI Less Thirsty"</strong></a>: the most-cited quantitative analysis of AI water consumption. Read the paper, not just the media coverage of it; the estimation methodology is §3 ("Estimating AI's Water Footprint"), with the GPT-3 case study in §3.3. ≈5,500 words.</p>
 <p style="margin-top:10px; color:#666;">Total mandatory load: ≈6,500 words.</p>
 </div>
 <div class="resource-placeholder">
@@ -73,7 +73,7 @@
 <div class="card-grid">
 <div class="card">
 <h3>Undisclosed company data</h3>
-<p>Major AI developers (OpenAI, Google, Meta, Microsoft, Anthropic) do not publish detailed energy or emissions data for individual models. What is typically missing:</p>
+<p>Major AI developers (OpenAI, Google, Meta, Microsoft, Anthropic) publish only partial energy and emissions data for individual models. Meta publishes training emissions for each Llama 3 model, and Google publishes median per-prompt energy, emissions and water figures for Gemini Apps with a stated method. Neither amounts to a complete lifecycle account for every model. What is typically missing:</p>
 <ul class="styled-list">
 <li>Energy consumed per query (by model type or size)</li>
 <li>Data centre locations and their grid carbon intensity</li>
@@ -123,7 +123,7 @@
 <td>ChatGPT text prompt (reported)</td>
 <td>0.34 Wh</td>
 <td>122 seconds of a 10 W LED</td>
-<td>OpenAI blog, June 2025; likely best-case</td>
+<td>Sam Altman (OpenAI CEO), personal blog, June 2025; no method given; likely best-case</td>
 </tr>
 <tr>
 <td>Gemini text prompt (reported)</td>
@@ -147,7 +147,7 @@
 <td>AI video generation (5 seconds)</td>
 <td>~3.4 MJ (~944 Wh)</td>
 <td>Approximately 57 minutes of a 1 kW microwave</td>
-<td>MIT Technology Review, 2025; ~700× image cost</td>
+<td>MIT Technology Review, 2025; about 190–470× the image estimate in this table</td>
 </tr>
 </tbody>
 </table>
@@ -206,37 +206,37 @@
 <tr>
 <th>Energy assumption</th>
 <th>Source</th>
-<th>CO₂ per prompt<br><small>(US grid avg: 0.386 kg/kWh)</small></th>
+<th>CO₂ per prompt<br><small>(US grid avg: 0.348 kg/kWh, EPA eGRID2023)</small></th>
 <th>Calls to match 1-tonne flight</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0.34 Wh</td>
-<td>OpenAI (reported, 2025)</td>
-<td>0.13 g CO₂</td>
-<td>~7.6 million</td>
+<td>Sam Altman (OpenAI CEO), reported, 2025</td>
+<td>0.12 g CO₂</td>
+<td>~8.5 million</td>
 </tr>
 <tr>
 <td>2 Wh</td>
 <td>Mid-range independent estimate</td>
-<td>0.77 g CO₂</td>
-<td>~1.3 million</td>
+<td>0.70 g CO₂</td>
+<td>~1.4 million</td>
 </tr>
 <tr>
 <td>8 Wh</td>
 <td>Large model, independent measurement</td>
-<td>3.1 g CO₂</td>
-<td>~323,000</td>
+<td>2.8 g CO₂</td>
+<td>~359,000</td>
 </tr>
 </tbody>
 </table>
-<p style="margin-top: 15px; color: #666;">Depending entirely on which figures you use, one transatlantic flight equals somewhere between 300,000 and 7.6 million ChatGPT text queries. That spread reflects the difference between company-optimised infrastructure and real-world large-model deployments, as well as uncertainty about what "a ChatGPT query" even means in terms of model size and compute.</p>
+<p style="margin-top: 15px; color: #666;">Depending entirely on which figures you use, one transatlantic flight equals somewhere between about 359,000 and 8.5 million ChatGPT text queries. That spread reflects the difference between company-optimised infrastructure and real-world large-model deployments, as well as uncertainty about what "a ChatGPT query" even means in terms of model size and compute.</p>
 </div>
 
 <div class="highlight-box">
-<h3><span style="color: #ffffff;">The two-order-of-magnitude spread</span></h3>
-<p>That this calculation can produce answers spanning two orders of magnitude is itself the finding. It tells us that glib comparisons ("ChatGPT = X flights per day") depend almost entirely on unstated assumptions, and that the opacity of AI companies makes it impossible to pin down a single answer.</p>
+<h3><span style="color: #ffffff;">The spread across assumptions</span></h3>
+<p>That this calculation can produce answers spanning more than an order of magnitude (a factor of about 24) is itself the finding. It tells us that glib comparisons ("ChatGPT = X flights per day") depend almost entirely on unstated assumptions, and that incomplete disclosure by AI companies makes it hard to pin down a single answer.</p>
 <p style="margin-top: 15px;">As researchers, the appropriate response is to present the range and to push for better disclosure, rather than picking the number that fits our preferred narrative.</p>
 </div>
 
@@ -249,11 +249,11 @@
 <ul>
 <li>Data centres &asymp; 1.5% of global electricity (&asymp; 415 TWh in 2024). IEA, <em><a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener">Energy and AI</a></em> (2025).</li>
 <li>AI-focused share &asymp; 0.5% of global electricity (2025). Hannah Ritchie&rsquo;s estimate from the IEA inputs, in her 2025 summary at <em><a href="https://www.sustainabilitybynumbers.com/p/ai-electricity-2025" target="_blank" rel="noopener">Sustainability by Numbers</a></em> (2026).</li>
-<li>Electricity &amp; heat &asymp; 40% of energy-related CO<sub>2</sub>; energy-related CO<sub>2</sub> &asymp; 85&ndash;90% of total CO<sub>2</sub>. IEA / <a href="https://ourworldindata.org/emissions-by-sector" target="_blank" rel="noopener">Our World in Data</a> sectoral breakdown.</li>
+<li>Electricity &amp; heat &asymp; 40% of energy-related CO<sub>2</sub>; energy-related CO<sub>2</sub> &asymp; 85&ndash;90% of total CO<sub>2</sub>. Climate Watch / <a href="https://ourworldindata.org/emissions-by-sector" target="_blank" rel="noopener">Our World in Data</a> sectoral breakdown.</li>
 </ul>
 <p style="margin-top: 12px;">Step 2 &mdash; Calculation: If AI&rsquo;s electricity were at average grid carbon intensity, AI&rsquo;s share of energy-related CO<sub>2</sub> &asymp; 0.5% &times; 40% &asymp; 0.2%. AI loads are concentrated in the US (gas-heavy) and China (coal-heavy), pushing intensity above average; the largest operators&rsquo; renewable and nuclear procurement pulls below it (though annual matching overstates hourly cleanliness). Net plausible range: 0.2&ndash;0.4% of energy-related CO<sub>2</sub>, or roughly 0.15&ndash;0.35% of total CO<sub>2</sub> / GHG depending on denominator.</p>
 <p style="margin-top: 12px;">Step 3 &mdash; The aviation benchmark. Aviation accounted for 2.5% of global energy-related CO<sub>2</sub> in 2023 (&asymp; 950 Mt). IEA, <em><a href="https://www.iea.org/energy-system/transport/aviation" target="_blank" rel="noopener">Aviation</a></em>. Passenger flights are &asymp; 81% of that and freight &asymp; 19%, so passenger aviation &asymp; 2% of global CO<sub>2</sub>.</p>
-<p style="margin-top: 12px;">In sum: Passenger air travel emits roughly 6&ndash;10&times; what AI does operationally right now. AI is around a tenth to a fifth of aviation&rsquo;s footprint at the system level.</p>
+<p style="margin-top: 12px;">In sum: On the total-CO<sub>2</sub> denominator, passenger air travel (&asymp; 2%) emits roughly 6&ndash;13&times; what AI does operationally right now (0.15&ndash;0.35%). AI is around 8 to 17% of passenger aviation&rsquo;s footprint at the system level.</p>
 </div>
 <p style="font-size: 1.05em; line-height: 1.75; margin-top: 25px;">Two caveats sharpen the comparison further:</p>
 <ul style="font-size: 1.05em; line-height: 1.75; margin-left: 25px;">
@@ -287,7 +287,7 @@
 <ul class="styled-list">
 <li>Thermal power plants (coal, gas, nuclear) use water for steam generation and cooling</li>
 <li>This water is often not returned to its source; it is evaporated or discharged at a different temperature</li>
-<li>A commonly cited estimate (Shaolei Ren, UC Riverside): a ~30-turn ChatGPT conversation = roughly 500 ml of water, of which only 12–13% is direct cooling water; the rest is from electricity generation</li>
+<li>A commonly cited estimate (Li and colleagues, including Shaolei Ren, UC Riverside) for GPT-3: roughly 500 ml of water per 10–50 medium-length responses, about 30 at the US average, of which only about 13% is direct cooling water; the rest is from electricity generation</li>
 <li>Water extracted in arid regions has very different consequences from the same volume extracted in water-abundant areas</li>
 </ul>
 </div>
@@ -295,7 +295,7 @@
 
 <div class="warning-box">
 <h4>Treating the 500 ml figure with care</h4>
-<p>The "500 ml per 30-turn conversation" figure (from Li et al., 2023 / Shaolei Ren) became widely cited in media coverage, often without key caveats: it is an estimate based on assumed data centre locations (US-average), a specific model generation (GPT-3 era), and indirect water attribution methods that are contested. Modern data centres vary widely in water efficiency; some use closed-loop systems that recirculate water rather than evaporating it. Treat this as an order-of-magnitude estimate. The original paper acknowledges significant uncertainty.</p>
+<p>The "500 ml per 30-turn conversation" figure (media shorthand for the estimate in Li et al., 2023, of about 500 ml per 10–50 GPT-3 responses) became widely cited in media coverage, often without key caveats: it is an estimate based on assumed data centre locations (US-average), a specific model generation (GPT-3 era), and indirect water attribution methods that are contested. Modern data centres vary widely in water efficiency; some use closed-loop systems that recirculate water rather than evaporating it. Treat this as an order-of-magnitude estimate. The original paper acknowledges significant uncertainty.</p>
 </div>
 
 <!-- SECTION 5: SCALE -->
@@ -335,12 +335,12 @@
 </tr>
 <tr>
 <td>US household electricity reference</td>
-<td>~1,200 TWh/year total</td>
-<td>US EIA; for comparison purposes</td>
+<td>~1,500 TWh/year total (1,515 TWh in 2025, preliminary)</td>
+<td>US EIA, Electric Power Monthly Table 5.1 (residential sales); for comparison purposes</td>
 </tr>
 </tbody>
 </table>
-<p style="margin-top: 12px; color: #666;">At the upper end of the LBNL 2024 projection (~580 TWh by 2028), US data centres would use close to half of what US households consume. These projections carry high uncertainty: they depend on assumptions about AI adoption rates, hardware efficiency improvements, and grid composition.</p>
+<p style="margin-top: 12px; color: #666;">At the upper end of the LBNL 2024 projection (~580 TWh by 2028), US data centres would use about 38% of what US households consume, roughly two-fifths. These projections carry high uncertainty: they depend on assumptions about AI adoption rates, hardware efficiency improvements, and grid composition.</p>
 </div>
 
 <div class="info-box">
@@ -354,9 +354,9 @@
 <h2>Summary and key takeaways</h2>
 <p>Before we can have a productive conversation about AI's environmental impact, we need to understand the numbers and their limits:</p>
 <ul class="styled-list" style="margin-top: 15px;">
-<li>Corporate opacity is the fundamental problem: AI companies don't disclose the data needed to calculate their environmental footprint, so all estimates involve assumptions</li>
-<li>Text vs. video is not comparable: Video generation uses roughly 1,000× more energy than text generation; these are different categories of use</li>
-<li>The flight comparison spans orders of magnitude: 300,000 to 7.6 million queries per flight, depending on model size and whose figures you trust</li>
+<li>Corporate disclosure is partial: some companies publish operational estimates or model-specific training emissions, but not the data needed for a complete footprint, so estimates involve assumptions</li>
+<li>Text vs. video is not comparable: The 5-second video estimate (~944 Wh) is roughly 2,800 to 3,900 times the reported text-prompt figures (0.34 and 0.24 Wh); these are different categories of use</li>
+<li>The flight comparison spans more than an order of magnitude: about 359,000 to 8.5 million queries per flight, depending on model size and whose figures you trust</li>
 <li>Water is underreported: Both direct cooling and indirect electricity generation consume significant water, with geographic implications</li>
 <li>Scale is what matters: Individual query costs are small; billions of queries per day is not</li>
 <li>Inference, not just training: The ongoing cost of running models at scale quickly exceeds one-time training costs</li>

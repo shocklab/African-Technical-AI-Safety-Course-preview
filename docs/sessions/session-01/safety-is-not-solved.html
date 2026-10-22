@@ -57,7 +57,7 @@
         <h2 class="section-title">The anchor: guardrails that fail in isiZulu</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">A safety property that depends on the language you speak</span></h3>
-            <p>Yong, Menghini &amp; Bach (2023) translated harmful AdvBench requests into low-resource languages, submitted them to GPT-4, and translated the replies back. An adaptive attacker who could try several low-resource languages succeeded on roughly 79% of requests, counting a success if any language elicited an actionable harmful response. Individual-language rates were lower. The English baseline was under 1%. This is a result for the tested model, prompts and translation procedure; it does not describe every current model or the success rate for isiZulu alone.</p>
+            <p>Yong, Menghini &amp; Bach (2023) translated harmful AdvBench requests into low-resource languages, submitted them to GPT-4, and translated the replies back. An adaptive attacker who could try several low-resource languages succeeded on roughly 79% of requests, counting a success if any language elicited an actionable harmful response. Individual-language rates were lower (53% for Zulu, the highest). The English baseline was under 1%. This is a result for the tested model, prompts and translation procedure; it does not describe every current model, and the 79% is not the success rate for isiZulu alone.</p>
             <p>The work won a best-paper award at a NeurIPS 2023 safety workshop. It demonstrates a structural fact about how these systems are built, not a stunt or an edge case.</p>
         </div>
         <div class="technical-detail">
@@ -80,7 +80,7 @@
             </div>
             <div class="card">
                 <h3>"Passed our tests" ≠ safe</h3>
-                <p>GPT-4 passed extensive English safety evaluations. The guardrail still failed wholesale one translation away, because the evaluations and the deployment distribution didn't match. This is a first, gentle taste of the epistemic problem that drives Weeks 5 to 8. Behaviour on the tests you ran is weak evidence about behaviour on the situations you didn't.</p>
+                <p>GPT-4 passed extensive English safety evaluations. In Yong et al.'s test, translating the harmful requests into Zulu alone bypassed the guardrail 53% of the time, and trying four low-resource languages raised that to 79%, against under 1% in English. The evaluations and the deployment distribution didn't match. This is a first, gentle taste of the epistemic problem that drives Weeks 5 to 8. Behaviour on the tests you ran is weak evidence about behaviour on the situations you didn't.</p>
             </div>
         </div>
 
@@ -93,7 +93,7 @@
 
         <div class="technical-detail">
             <h4>A worked look: tokenisation feeds the gap</h4>
-            <p style="color:#555;">Session 2.2 will show how text is split into sub-word tokens drawn from a fixed vocabulary, and how the vocabulary is fitted mostly to English-heavy data. Here is a consequence you can check yourself, and will, in the Session 2.5 lab. The same sentence costs far more tokens in a low-resource African language than in English, because the model must spell unfamiliar words out in small fragments rather than recognising whole sub-words. Petrov et al. (2023) measured the disparity systematically: several-fold differences are routine, some language pairs differ by up to fifteen times, and newer tokenizers (GPT-4o's o200k vocabulary) have reduced the gap without closing it.</p>
+            <p style="color:#555;">Session 2.2 will show how text is split into sub-word tokens drawn from a fixed vocabulary, and how the vocabulary is fitted mostly to English-heavy data. Here is a consequence you can check yourself, and will, in the Session 2.5 lab. The same sentence costs far more tokens in a low-resource African language than in English, because the model must spell unfamiliar words out in small fragments rather than recognising whole sub-words. Petrov et al. (2023) measured the disparity systematically: several-fold differences are routine, some language pairs differ by up to fifteen times. Separately, OpenAI's 2024 GPT-4o announcement reports reduced token counts for several languages under its newer o200k vocabulary.</p>
             <p>More tokens raise token-billed costs and reduce the amount of text that fits into a fixed context window. Fragmentation also suggests questions about a tokeniser’s training data and design. It does not directly measure how much of a language appeared in model pretraining, safety training or red-teaming. To connect tokenisation to safety, compare those data sources where available and measure harmful-response rates separately, controlling for translation quality and language competence.</p>
         </div>
 
@@ -118,7 +118,7 @@
         <p>Across the term we draw on, and point you to, the main public resources. Meet them as they become relevant; none is a prerequisite:</p>
         <ul class="styled-list">
             <li><strong>Hendrycks, <em>Intro to ML Safety</em></strong>: the technical backbone (robustness, monitoring, control, systemic safety), with problem sets.</li>
-            <li><strong>BlueDot AI Safety Fundamentals</strong>: the conceptual reading-group curriculum, good for breadth and current framing.</li>
+            <li><strong>BlueDot Impact's Technical AI Safety course</strong> (formerly AI Safety Fundamentals): a conceptual reading-and-discussion course with facilitated small groups, good for breadth and current framing.</li>
             <li><strong>Grosse's Toronto alignment course</strong>: the idealised-to-empirical sequencing this course follows, with tiered reading lists including "skeptical takes".</li>
             <li><strong>ARENA + Neel Nanda's materials + TransformerLens</strong>: the hands-on interpretability labs (Weeks 7 and 8) and a turnkey bank of project ideas.</li>
             <li><strong>The African ecosystem</strong>: Masakhane (open African-NLP datasets and models), Lelapa AI (the InkubaLM model), the ILINA programme (African-led AI-safety field-building), and Research ICT Africa (the rights-based "Just AI" governance work). These anchor the Global-South thread and several project options.</li>

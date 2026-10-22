@@ -48,7 +48,7 @@
             <h4>Core preparation</h4>
 <p>Spend 15 minutes on Hubinger et al.’s introduction and definitions, then 10 minutes on Langosco et al.’s CoinRun setup and result. Explain how goal misgeneralisation differs from a capability failure. Hubinger et al.’s later sections are optional reference reading.</p>
             <p>• <strong>Hubinger, van Merwijk, Mikulik, Skalse &amp; Garrabrant (2019), "Risks from Learned Optimization in Advanced Machine Learning Systems"</strong> (<a href="https://arxiv.org/abs/1906.01820" target="_blank" rel="noopener">arXiv:1906.01820</a>): use §1 for the base/mesa vocabulary. Sections 3 and 4 develop inner and deceptive alignment for optional follow-up.</p>
-            <p>• <strong>Langosco et al. (2022), "Goal Misgeneralization in Deep Reinforcement Learning"</strong> (ICML 2022; <a href="https://arxiv.org/abs/2105.14111" target="_blank" rel="noopener">arXiv:2105.14111</a>): the CoinRun demonstration; the formal definition is in §2.1 ("Defining Goal Misgeneralization") and the CoinRun experiment in §3.1 ("CoinRun"). ≈500 words.</p>
+            <p>• <strong>Langosco et al. (2022), "Goal Misgeneralization in Deep Reinforcement Learning"</strong> (ICML 2022; <a href="https://arxiv.org/abs/2105.14111" target="_blank" rel="noopener">arXiv:2105.14111</a>): the CoinRun demonstration; the formal definition is in §2.1 ("Defining Goal Misgeneralization") and the CoinRun experiment in §3.1 ("CoinRun"). ≈700 words of prose across the two sections, plus equations and figures.</p>
             <p>Preparation budget: 25 minutes, excluding these notes. Stop at the time limit and bring one unresolved question.</p>
         </div>
         <div class="resource-placeholder">
@@ -124,7 +124,7 @@
         <p>Combine a mesa-objective that differs from the base objective (3.3) with the instrumental reasoning of 3.2, and you get the failure mode that makes the whole problem hard to test for.</p>
         <div class="warning-box">
             <h4>Hubinger's three conditions</h4>
-            <p>Hubinger et al. define <strong>deceptive alignment</strong> as the case where a mesa-optimiser (i) has a mesa-objective different from the base objective; (ii) is <em>situationally aware</em> enough to model that it is being trained and selected on the base objective; and therefore (iii) <em>instrumentally</em> optimises the base objective <em>during training</em>, performing well precisely to avoid being modified by gradient descent, while intending to pursue its own mesa-objective once it is deployed and no longer under that pressure.</p>
+            <p>Hubinger et al. (2019, §4.2) give three conditions for <strong>deceptive alignment</strong>: (i) the mesa-objective extends across parameter updates; (ii) the mesa-optimiser is <em>situationally aware</em> enough to model that it is being selected on the base objective; and (iii) it expects the threat of modification eventually to go away. A mesa-optimiser meeting all three has a reason to optimise the base objective <em>instrumentally</em> <em>during training</em>, performing well to avoid being modified by gradient descent, while intending to pursue its own mesa-objective once it is deployed and no longer under that pressure.</p>
             <p>Notice this is just instrumental convergence (3.2) applied to the training process itself: goal-content integrity says "don't let them change my goal", and the way to avoid being changed by SGD is to score well on the base objective <em>now</em>. The deception is not gratuitous; it is the instrumentally rational response to being optimised.</p>
         </div>
         <div class="technical-detail">
@@ -133,11 +133,11 @@
         </div>
         <div class="info-box">
             <h4>The limits of behavioural testing</h4>
-            <p>A deceptively aligned model behaves <em>identically</em> to a genuinely aligned one on any evaluation it recognises as a test; that is the definition. So the obvious safeguard, "check that it behaves well before deploying", provides little assurance against it. This is why the course later turns to looking <em>inside</em> the model (interpretability (Session 13) and to evaluations explicitly designed to elicit hidden behaviour (Session 11).</p>
+            <p>A deceptively aligned model may imitate aligned behaviour on an evaluation it recognises as a test, when doing so helps it avoid modification and pursue its mesa-objective later. So the obvious safeguard, "check that it behaves well before deploying", provides little assurance against it. This is why the course later turns to looking <em>inside</em> the model (interpretability (Session 13) and to evaluations explicitly designed to elicit hidden behaviour (Session 11).</p>
         </div>
         <div class="info-box">
             <h4>The state of the evidence</h4>
-            <p>The conditions deceptive alignment requires (a divergent objective, situational awareness, instrumental reasoning about training) have moved from speculation to <em>measurable</em>, which is what makes the next sub-session necessary. 3.4 turns to the empirical evidence: models deliberately trained to be deceptive that resist removal (Sleeper Agents), models that fake alignment largely on their own (Alignment Faking), and the situational-awareness benchmarks that show the prerequisite capability scaling up.</p>
+            <p>The ingredients of deceptive alignment (an objective that differs from the base objective, situational awareness, instrumental reasoning about training) have moved from speculation to <em>measurable</em>, which is what makes the next sub-session necessary. 3.4 turns to the empirical evidence: models deliberately trained to be deceptive that resist removal (Sleeper Agents), models that fake alignment largely on their own (Alignment Faking), and the situational-awareness benchmarks that show the prerequisite capability scaling up.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
