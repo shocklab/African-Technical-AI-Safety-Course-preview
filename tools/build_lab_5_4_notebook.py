@@ -51,7 +51,7 @@ M("---",
   "scripts that matter and finds the line in each where the stage's objective lives.",
   "",
   "The cell searches for patterns instead of quoting line numbers: nanochat has tens of thousands of",
-  "stars and is actively developed, so any line number printed here would be wrong within weeks.")
+  "stars and changes over time, so a line number printed here would go out of date.")
 
 C("SCRIPTS = 'https://raw.githubusercontent.com/karpathy/nanochat/master/scripts/'",
   "",

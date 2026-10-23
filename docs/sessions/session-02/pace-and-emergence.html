@@ -95,7 +95,7 @@
             <h4>A worked example: exact-match scoring</h4>
             <p>Take a task whose answer is a 5-token string, scored by <strong>exact match</strong> (all five tokens right, or zero credit). Suppose the model's per-token accuracy \(p\) improves <em>smoothly</em> with scale: \(p = 0.3, 0.5, 0.7, 0.9\) across four model sizes. If token errors are roughly independent, the exact-match score is \(p^5\):</p>
             <div class="formula">\[ 0.3^5 \approx 0.002, \quad 0.5^5 \approx 0.03, \quad 0.7^5 \approx 0.17, \quad 0.9^5 \approx 0.59. \]</div>
-            <p>The underlying skill rose in even steps, but the reported score crawls along near zero and then leaps: an "emergence" curve produced entirely by raising a smoothly-improving quantity to a power. Schaeffer et al. show the converse too: replace exact match with a continuous score (token edit distance, or the log-probability of the correct answer) and the cliff turns into a ramp. Same models, different ruler, opposite story.</p>
+            <p>The underlying skill rose in even steps, but the reported score crawls along near zero and then leaps: an "emergence" curve produced entirely by raising a smoothly-improving quantity to a power. Schaeffer et al. show the converse too: replace exact match with token edit distance, or multiple-choice grade with the Brier score, and the cliff turns into a ramp. Same models, different ruler, opposite story.</p>
         </div>
 
         <h2 class="section-title">The two layers of the dispute</h2>

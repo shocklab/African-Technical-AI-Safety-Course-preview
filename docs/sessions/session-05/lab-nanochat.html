@@ -65,7 +65,7 @@
                 <li><code>chat_rl.py</code>: the reward comes from <code>train_task.reward(...)</code>, a checker that marks a GSM8K answer right or wrong.</li>
             </ul>
             <p style="color:#555;">nanochat does have a reinforcement learning stage: GRPO on grade-school maths, described in its own docstring as close to plain REINFORCE once the trust region and clipping come off. What it does not have is a reward model learned from human preferences. Those are different stages of the 5.3 table, and the difference is where the reward comes from: a checker that can be verified against ground truth, or a model trained to predict what a person would prefer. Session 6 is about the second kind, and about what goes wrong with it.</p>
-            <p style="color:#555;">The notebook searches for these patterns rather than quoting line numbers, because the repository is actively developed and any line number printed here would be wrong within a month. If a search comes back empty, read the file and find where the objective moved.</p>
+            <p style="color:#555;">The notebook searches for these patterns rather than quoting line numbers, because the repository changes and a line number printed here would go out of date. If a search comes back empty, read the file and find where the objective moved.</p>
         </div>
 
         <h2 class="section-title">&#9313; The same questions, two models</h2>
