@@ -98,7 +98,7 @@
 <h2 class="section-title">The idea: optimise for what humans prefer</h2>
         <div class="info-box">
             <h4>The idea</h4>
-            <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are cheaper and more reliable than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
+            <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are often cheaper to collect than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
         </div>
         <p>Preference training can improve responses beyond the supplied demonstrations when the feedback recognises those improvements and optimisation can find them. Supervised learning can also generalise beyond individual demonstrations. Both approaches can fail when their training signal rewards plausible-looking errors.</p>
         <div class="case-study">
