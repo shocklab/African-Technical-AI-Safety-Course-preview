@@ -78,9 +78,9 @@
         <div class="technical-detail">
             <h4>The definitions</h4>
             <ul class="styled-list">
-                <li><strong>Optimiser:</strong> a system "internally searching through a search space … looking for those elements that score high according to some objective function explicitly represented within the system." A chess engine doing tree search is an optimiser; a lookup table is not.</li>
+                <li><strong>Optimiser:</strong> a system "internally searching through a search space … looking for those elements that score high according to some objective function that is explicitly represented within the system." A chess engine doing tree search is an optimiser; a lookup table is not.</li>
                 <li><strong>Base optimiser:</strong> the <em>training process</em>, e.g. stochastic gradient descent selecting parameters to minimise a loss. Its objective is the <strong>base objective</strong> (the loss/reward we wrote).</li>
-                <li><strong>Mesa-optimiser:</strong> a learned model that is <em>itself</em> running an optimisation/search internally. ("Mesa" was coined as the opposite of "meta", Greek for "above", to mark that it arises <em>beneath</em> the base optimiser.) Whether today's LLMs are mesa-optimisers is an open empirical question, but the framing is what generates the risk.</li>
+                <li><strong>Mesa-optimiser:</strong> a learned model that is <em>itself</em> running an optimisation/search internally. ("Mesa" was coined as the opposite of "meta": meta-optimisation is pictured as one layer <em>above</em> the base optimiser, and mesa-optimisation as one layer <em>below</em> it.) Whether today's LLMs are mesa-optimisers is an open empirical question, but the framing is what generates the risk.</li>
                 <li><strong>Mesa-objective:</strong> the objective the mesa-optimiser pursues. It is <em>not specified by us</em>: it is "simply whatever objective was found by the base optimiser that produced good performance on the training environment." There is no step where we get to write it down.</li>
             </ul>
         </div>
@@ -117,7 +117,7 @@
         </div>
         <div class="info-box">
             <h4>"Correct specifications aren't enough"</h4>
-            <p>Shah et al. (2022) state the claim in the title and generalise the phenomenon beyond RL games. Goal misgeneralisation can occur <em>even when the reward specification is entirely correct</em>: it is a generalisation failure of the learned goal, not a specification error. Their examples include a language model that, asked to evaluate expressions, learns from its few-shot prompt to <em>always ask the user at least one clarifying question before answering</em>, even when nothing is unknown and it could compute the answer directly, because querying first was the pattern the prompt rewarded. This separates the two gaps: you can fix outer alignment perfectly and still get the wrong goal.</p>
+            <p>Shah et al. (2022) state the claim in the title and generalise the phenomenon beyond RL games. Goal misgeneralisation can occur <em>even when the reward specification is entirely correct</em>: it is a generalisation failure of the learned goal, not a specification error. Their examples include a language model that, asked to evaluate expressions, learns from its few-shot prompt to <em>ask the user at least one question before answering</em>. Given an expression with no unknowns, which it could compute directly, it still usually asks a redundant question, because every example in the prompt asked a question before answering. This separates the two gaps: you can fix outer alignment perfectly and still get the wrong goal.</p>
         </div>
 
         <h2 class="section-title">Deceptive alignment</h2>
@@ -129,7 +129,7 @@
         </div>
         <div class="technical-detail">
             <h4>Three strategies that achieve low loss</h4>
-            <p style="color:#555;">Once a model is capable enough to understand its training situation, three internal "strategies" all achieve low training loss: a model that has <em>internalised</em> the true objective; a model with a proxy objective that happens to be <em>corrigibly</em> pointed at it; and a <em>deceptively aligned</em> model with some other objective that plays along instrumentally. To the base optimiser these are nearly indistinguishable on the training distribution: all three produce good behaviour. There are arguments (contested) that the deceptive solution may even be <em>easier to find or more robust</em>, because "model the training process and do well on it" is a single general strategy that supports <em>any</em> mesa-objective, whereas faithfully internalising one specific objective is more constrained. If so, selection pressure toward low loss does not reliably select the aligned solution.</p>
+            <p style="color:#555;">Once a model is capable enough to understand its training situation, three internal "strategies" all achieve low training loss: a model that has <em>internalised</em> the true objective; a <em>corrigibly aligned</em> model, whose objective points to its own model of the true objective; and a <em>deceptively aligned</em> model with some other objective that plays along instrumentally. To the base optimiser these are nearly indistinguishable on the training distribution: all three produce good behaviour. There are arguments (contested) that the deceptive solution may even be <em>easier to find or more robust</em>, because "model the training process and do well on it" is a single general strategy that supports <em>any</em> mesa-objective, whereas faithfully internalising one specific objective is more constrained. If so, selection pressure toward low loss does not reliably select the aligned solution.</p>
         </div>
         <div class="info-box">
             <h4>The limits of behavioural testing</h4>

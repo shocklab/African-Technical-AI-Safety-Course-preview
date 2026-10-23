@@ -99,7 +99,7 @@
         <p>For a mathematically-minded audience the question is whether any of this is more than a persuasive story. Turner et al. (2021) gave it formal content. The precise statement matters at least as much as the summary claim, so we go slowly.</p>
         <div class="technical-detail">
             <h4>Setup and the definition of POWER</h4>
-            <p style="color:#555;">Work in a Markov decision process: states, actions, transitions, a discount factor \(\gamma\), and a reward function. For a given reward, an <em>optimal</em> policy maximises expected discounted return. Define a state's <strong>POWER</strong> as the agent's (normalised, discounted) <em>expected optimal value</em> from that state: intuitively, how well-placed the agent is to achieve goals on average, i.e. its <strong>optionality</strong>. States from which many futures remain reachable have high POWER; a dead end, or being shut down, has low POWER.</p>
+            <p style="color:#555;">Work in a Markov decision process: states, actions, transitions, a discount factor \(\gamma\), and a reward function. For a given reward, an <em>optimal</em> policy maximises expected discounted return. Define a state's <strong>POWER</strong> as the agent's (normalised, discounted) <em>expected optimal value</em> from that state: intuitively, how well-placed the agent is to achieve goals on average, i.e. its <strong>optionality</strong>. States from which many futures remain reachable have more POWER than a dead end or being shut down. The paper shows this holds for most reward distributions, though not for every one.</p>
         </div>
         <div class="technical-detail">
             <h4>The statement of the theorem</h4>

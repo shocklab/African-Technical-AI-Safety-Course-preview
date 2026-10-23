@@ -45,11 +45,11 @@
 
 <div class="resource-placeholder reading-core">
 <h4>Mandatory readings</h4>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2011.02839" target="_blank" rel="noopener"><strong>Gupta et al. (2021): "Chasing Carbon: The Elusive Environmental Footprint of Computing"</strong></a>: IEEE HPCA peer-reviewed paper introducing a lifecycle framework for computing's carbon cost. Foundational reading for understanding why operational energy figures understate the true footprint; the capex/opex lifecycle framework is §II ("Quantifying environmental impact"), with manufacturing's share quantified in §V ("Environmental impact from manufacturing"). Read the full paper, focusing on §II and §V.</p>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2309.02065" target="_blank" rel="noopener"><strong>Wright et al. (2023): "Efficiency is Not Enough: A Critical Perspective of Environmentally Sustainable AI"</strong></a>: argues that efficiency gains in AI can be offset by increased use (rebound), so efficiency alone does not ensure environmental sustainability. The most direct academic treatment of the rebound effect in AI; the rebound argument is §3 ("Discrepancy 2: Efficiency Across The Model Life Cycle"), drawn together in §5 ("Beyond Efficiency: Systems Thinking"). Read the full paper, focusing on §3 and §5.</p>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2204.05149" target="_blank" rel="noopener"><strong>Patterson et al. (2022): "The Carbon Footprint of Machine Learning Training Will Plateau, Then Shrink"</strong></a> (Google): the optimist case, written by Google researchers. Read alongside Wright et al. for a balanced picture; the "4Ms" best practices are set out in §1, with the plateau case in §5 ("Overall ML Energy Consumption"). ≈1,500 words.</p>
-<p style="margin-top: 8px; color: #555;">On the Patterson et al. paper: the authors are Google employees writing partly about Google's own practices and infrastructure. The paper's conclusions rely on advantages (access to TPUs, renewable purchasing, efficient cooling) that are not available to most researchers or smaller AI deployments.</p>
-<p style="margin-top:10px; color:#666;">Total mandatory load: ≈5,500 words.</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2011.02839" target="_blank" rel="noopener"><strong>Gupta et al. (2021): "Chasing Carbon: The Elusive Environmental Footprint of Computing"</strong></a>: IEEE HPCA peer-reviewed paper introducing a lifecycle framework for computing's carbon cost. Foundational reading for understanding why operational energy figures understate the true footprint; the capex/opex lifecycle framework is §II ("Quantifying environmental impact"), with manufacturing's share quantified in §V ("Environmental impact from manufacturing"). Read the full paper, focusing on §II and §V. ≈8,900 words.</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2309.02065" target="_blank" rel="noopener"><strong>Wright et al. (2023): "Efficiency is Not Enough: A Critical Perspective of Environmentally Sustainable AI"</strong></a>: argues that efficiency gains in AI can be offset by increased use (rebound), so efficiency alone does not ensure environmental sustainability. The most direct academic treatment of the rebound effect in AI; the rebound argument is §3 ("Discrepancy 2: Efficiency Across The Model Life Cycle"), drawn together in §5 ("Beyond Efficiency: Systems Thinking"). Read the full paper, focusing on §3 and §5. ≈6,800 words.</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2204.05149" target="_blank" rel="noopener"><strong>Patterson et al. (2022): "The Carbon Footprint of Machine Learning Training Will Plateau, Then Shrink"</strong></a> (Google): the optimist case, written mainly by Google researchers. Read alongside Wright et al. for a balanced picture; the "4Ms" best practices are set out in §1, with the plateau case in §5 ("Overall ML Energy Consumption"). ≈5,000 words.</p>
+<p style="margin-top: 8px; color: #555;">On the Patterson et al. paper: eight of the ten authors work at Google (the other two are at UC Berkeley), and the paper is written partly about Google's own practices and infrastructure. The paper's conclusions rely on advantages (access to TPUs, renewable purchasing, efficient cooling) that are not available to most researchers or smaller AI deployments.</p>
+<p style="margin-top:10px; color:#666;">Total mandatory load: ≈20,700 words.</p>
 </div>
 
 <!-- SECTION 1: DATA CENTRES -->
@@ -62,7 +62,7 @@
 <p>The energy-intensive heart of AI infrastructure is GPU-accelerated servers, specifically the NVIDIA H100 and H200 chips that dominate AI training and inference.</p>
 <ul class="styled-list">
 <li>A single H100 GPU has a thermal design power (TDP) of ~700W, roughly like running a small electric heater continuously</li>
-<li>A standard AI server rack might contain 8 GPUs: ~5.6 kW just for the compute</li>
+<li>A standard AI server (for example an NVIDIA DGX H100) contains 8 GPUs: ~5.6 kW for the GPUs alone at their 700 W maximum, and up to ~10.2 kW for the whole server. A rack often holds several such servers</li>
 <li>A large data centre might house tens of thousands of such GPUs</li>
 <li>GPUs are the primary driver of recent data centre energy growth; the Lawrence Berkeley National Laboratory (2024) attributes most of the tripling of US data centre electricity use since 2014 to GPU adoption</li>
 </ul>
@@ -74,7 +74,7 @@
 <li>Air cooling: Energy-intensive but uses little water; standard in older data centres</li>
 <li>Evaporative cooling: More energy-efficient but consumes large volumes of water (as discussed in 4.1)</li>
 <li>Liquid cooling: Emerging approach that pipes coolant directly to chips; reduces both energy and water use but requires specialised hardware</li>
-<li><strong>Power Usage Effectiveness (PUE):</strong> Industry metric for cooling efficiency; 1.0 = perfect (all energy to compute), 1.5 = 50% overhead for cooling. Modern hyperscaler data centres achieve ~1.1–1.2; older facilities often 1.4–2.0</li>
+<li><strong>Power Usage Effectiveness (PUE):</strong> Industry metric for data-centre infrastructure efficiency, equal to total facility energy divided by IT equipment energy; 1.0 = perfect (all energy reaches the IT equipment), 1.5 = 50% extra energy on top of the IT load for cooling, power conversion and other facility overheads. Modern hyperscaler data centres achieve ~1.1–1.2; older facilities often 1.4–2.0</li>
 </ul>
 </div>
 <div class="card">
@@ -116,8 +116,8 @@
 </tr>
 <tr>
 <td><strong>UK</strong></td>
-<td>~0.23</td>
-<td>Mixed: wind, gas, nuclear</td>
+<td>~0.22</td>
+<td>Mixed: wind, gas, nuclear (Ember, 2025)</td>
 </tr>
 <tr>
 <td><strong>US average</strong></td>
@@ -146,7 +146,7 @@
 
 <div class="info-box">
 <h4>Renewable energy claims</h4>
-<p>Major tech companies (Google, Microsoft, Amazon) claim to run on 100% renewable energy. This is technically accurate but requires careful interpretation.</p>
+<p>Major tech companies (Google, Microsoft, Amazon) claim to match 100% of their annual electricity use with renewable energy purchases. This is technically accurate but requires careful interpretation.</p>
 <ul class="styled-list" style="margin-top: 10px;">
 <li><strong>Energy Attribute Certificates (EACs):</strong> Companies often purchase certificates that say a renewable source generated a certain amount of electricity, but the renewable electricity may be generated at a different time or place than when the AI is running</li>
 <li><strong>24/7 matching:</strong> A more rigorous standard, where carbon-free supply is matched to consumption hour by hour. Google and Microsoft have both announced goals to do this for all their electricity use by 2030</li>
@@ -221,7 +221,7 @@
 <tr>
 <td><strong>2014</strong></td>
 <td>~58 TWh/year</td>
-<td>Pre-deep-learning era; mostly traditional cloud computing</td>
+<td>Before GPU-accelerated AI servers were a significant load; mostly conventional servers, most of them in companies' own (internal) data centres</td>
 </tr>
 <tr>
 <td><strong>2023</strong></td>
@@ -243,7 +243,7 @@
 <ul style="margin-left: 25px; margin-top: 12px; line-height: 1.7;">
 <li>Global data-centre electricity rising from approximately 415 TWh in 2024 to approximately 945 TWh in 2030, just under 3% of projected global electricity consumption.</li>
 <li>Electricity for AI-optimised data centres more than quadrupling by 2030, the fastest-growing part of the total.</li>
-<li>Data-centre CO<sub>2</sub> staying under &asymp; 1.5% of energy-sector CO<sub>2</sub> (&asymp; 180 Mt today rising to &asymp; 300 Mt by 2035).</li>
+<li>Data-centre CO<sub>2</sub> staying under &asymp; 1.5% of energy-sector CO<sub>2</sub> (&asymp; 180 Mt in 2024 rising to &asymp; 300 Mt by 2035).</li>
 </ul>
 <p style="margin-top: 12px;">For comparison, Hannah Ritchie's analysis of the IEA's World Energy Outlook 2024 projections (<em><a href="https://www.sustainabilitybynumbers.com/p/ai-energy-demand" target="_blank" rel="noopener">Sustainability by Numbers</a></em>, November 2024) put the increase in <em>total data-centre</em> electricity demand by 2030 at &asymp; 223 TWh, about 3% of global demand growth, on the order of South Africa's annual electricity use, and well below the projected 2030 increase from air conditioning (&asymp; 697 TWh) or electric vehicles (&asymp; 854 TWh). Those figures come from an earlier projection vintage than the Energy and AI numbers above, but the comparison survives the revision: the trajectory is steep on its own terms; it is not steep enough on its own to dominate the broader electricity-demand picture.</p>
 </div>
@@ -255,7 +255,7 @@
 <div class="highlight-box">
 <h3><span style="color: #ffffff;">The Jevons paradox</span></h3>
 <p>In 1865, the economist William Stanley Jevons observed that improvements in the efficiency of steam engines did not reduce coal consumption in Britain; they increased it, because lower operating costs made steam power affordable for more applications.</p>
-<p style="margin-top: 15px;">The general principle: when a resource becomes cheaper or more efficient to use, consumption tends to increase rather than decrease, because efficiency opens up new uses and new users. The cost savings from efficiency gains are "rebounded" into increased consumption.</p>
+<p style="margin-top: 15px;">The general principle: when a resource becomes cheaper or more efficient to use, demand for it rises, so part of the expected saving is lost to extra use (the rebound effect). The Jevons paradox is the case where that extra demand is large enough that total consumption rises rather than falls, as it did for coal in Jevons's Britain. Research on energy efficiency finds this outcome possible but not the general rule, so it has to be shown case by case. The cost savings from efficiency gains are "rebounded" into increased consumption.</p>
 <p style="margin-top: 15px;">This is not a historical curiosity. It has been documented repeatedly across transport, computing, lighting, heating, and manufacturing over the past two centuries.</p>
 </div>
 
@@ -302,7 +302,7 @@
 <h3>Actions taken</h3>
 <ul class="styled-list">
 <li>Renewable energy purchasing: Major tech companies are among the world's largest corporate buyers of renewable energy; this does contribute to new renewable capacity</li>
-<li>Data centre efficiency: Google, Microsoft and Meta have made real improvements in PUE (cooling efficiency) over time</li>
+<li>Data centre efficiency: Google, Microsoft and Meta have made real improvements in PUE (data-centre infrastructure efficiency) over time</li>
 <li>Hardware efficiency: Newer GPU generations achieve substantially more compute per watt</li>
 <li>Location choices: Some companies site data centres in regions with high renewable availability (Norway, Iceland, parts of the US Pacific Northwest)</li>
 <li>Architectural innovations: Mixture-of-Experts, quantisation, and other techniques reduce compute per query</li>
@@ -311,10 +311,10 @@
 <div class="card">
 <h3>The limits</h3>
 <ul class="styled-list">
-<li>Total demand is growing faster than renewable supply: Even large renewable purchases don't keep pace with AI electricity demand growth</li>
-<li>Disclosure is voluntary and inconsistent: Companies choose what to report and how; independent verification is rare</li>
-<li>Embodied carbon is almost never reported: Hardware manufacturing emissions are excluded from most corporate sustainability claims</li>
-<li>Scope 3 emissions: The indirect emissions from supply chains (including chip manufacturing) are often excluded from reported figures</li>
+<li>Clean supply is not keeping pace with demand: the IEA projects that renewables will meet only about half of the growth in data-centre electricity demand to 2030, with gas and coal meeting over 40%. A company can buy enough renewable energy to match its annual use while its data centres still draw fossil power hour by hour</li>
+<li>Disclosure is patchy and inconsistent: much of what companies publish, especially per-model or per-query figures, is voluntary and in formats they choose. Mandatory rules, such as the EU's data-centre reporting and the CSRD, cover only some companies and metrics, and outside checks usually give limited assurance on selected metrics</li>
+<li>Embodied carbon is rarely attributed to AI: large operators such as Google now report hardware manufacturing and data-centre construction emissions in their Scope 3 totals, but these are left out of headline claims such as 100% renewable matching and PUE, and are seldom broken out per model or per workload</li>
+<li>Scope 3 emissions: The indirect emissions from supply chains (including chip manufacturing) appear in some large operators' totals, but are often missing from headline claims and per-model figures</li>
 <li>Nuclear and gas bridging: In some cases, companies are accepting or actively facilitating fossil fuel or nuclear generation to meet short-term demand</li>
 </ul>
 </div>
@@ -325,7 +325,7 @@
 <h2>Summary and key takeaways</h2>
 <ul class="styled-list" style="margin-top: 15px;">
 <li>Location affects carbon impact: In the BERT example in Dodge et al. (2022), the same workload had about 73% lower operational emissions in the lowest-emission region than in the highest; region choice is one of the largest levers for individual researchers</li>
-<li>Embodied carbon is systematically ignored: Manufacturing GPUs and building data centres releases significant carbon that is absent from most reported figures</li>
+<li>Embodied carbon is seldom counted in headline figures: Manufacturing GPUs and building data centres releases significant carbon that large operators report in their Scope 3 totals but that is left out of claims such as 100% renewable matching and PUE</li>
 <li>US grid is ~60% fossil fuels: Company "100% renewable" claims use accounting methods that do not change this physical reality at the point of consumption</li>
 <li>Data-centre electricity demand is growing rapidly: US data-centre electricity use rose from ~58 TWh in 2014 to 176 TWh in 2023 (4.4% of US electricity), with LBNL projecting 325–580 TWh in 2028</li>
 <li>Jevons paradox is the central challenge: Efficiency gains in AI hardware and algorithms have so far been outpaced by growth in deployment and model scale</li>

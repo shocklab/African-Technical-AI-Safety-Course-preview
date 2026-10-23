@@ -70,7 +70,7 @@
             <ul class="styled-list">
                 <li><strong>Tokenisation.</strong> Text is split into <em>tokens</em>: sub-word pieces from a fixed vocabulary of size \(V\) (30k–100k in the GPT-2/GPT-3 generation; newer vocabularies are larger, e.g. Llama 3's 128k and GPT-4o's ~200k). "tokenisation" might become <code>token | isation</code>; a rare word becomes several pieces. Each token is an integer id.</li>
                 <li><strong>Embedding.</strong> A learned matrix \(W_E \in \mathbb{R}^{V \times d_{\text{model}}}\) maps each id to a vector in \(\mathbb{R}^{d_{\text{model}}}\) (one row of \(W_E\)). A length-\(T\) sequence becomes an activation matrix \(X \in \mathbb{R}^{T \times d_{\text{model}}}\), one row per position.</li>
-                <li><strong>Position.</strong> Self-attention is <em>permutation-equivariant</em>: shuffle the input rows and the output rows shuffle the same way; it has no built-in sense of order (because, as the next section shows, attention is a content-weighted sum with no term that depends on a position's index). So positional information is injected (added positional embeddings, or rotary/relative schemes) before the first block.</li>
+                <li><strong>Position.</strong> Self-attention is <em>permutation-equivariant</em>: shuffle the input rows and the output rows shuffle the same way; it has no built-in sense of order (because, as the next section shows, attention is a content-weighted sum with no term that depends on a position's index). So positional information is injected, either as positional embeddings added to the input before the first block or as rotary or relative schemes applied to the attention scores inside every layer.</li>
             </ul>
             <p style="color:#555; margin-top:12px;">From here on, each transformer <em>block</em> maps a \(T \times d_{\text{model}}\) matrix to another of the same shape (internally, as we'll see, it routes through narrower matrices and back). That preserved width is the residual stream.</p>
         </div>
@@ -93,7 +93,7 @@
             <h4>Step 3 — Scale by \(\sqrt{d_{\text{head}}}\)</h4>
             <p style="color:#555;">Divide by \(\sqrt{d_{\text{head}}}\) before the softmax:</p>
             <div class="formula">\[ \tilde{S} = S / \sqrt{d_{\text{head}}} \]</div>
-            <p style="color:#555;">Why: if the components of \(q\) and \(k\) have variance ~1, their dot product over \(d_{\text{head}}\) terms has variance ~\(d_{\text{head}}\). Without rescaling, large \(d_{\text{head}}\) pushes the softmax into saturation (one weight ≈ 1, the rest ≈ 0), where gradients vanish. Dividing by \(\sqrt{d_{\text{head}}}\) keeps the scores at a sensible scale.</p>
+            <p style="color:#555;">Why: if the components of \(q\) and \(k\) are independent with mean 0 and variance 1, their dot product over \(d_{\text{head}}\) terms has mean 0 and variance \(d_{\text{head}}\). Without rescaling, large \(d_{\text{head}}\) pushes the softmax into saturation (one weight ≈ 1, the rest ≈ 0), where gradients vanish. Dividing by \(\sqrt{d_{\text{head}}}\) keeps the scores at a sensible scale.</p>
         </div>
         <div class="technical-detail">
             <h4>Step 4 — Causal mask + softmax → attention weights</h4>

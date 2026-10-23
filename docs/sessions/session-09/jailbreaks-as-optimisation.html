@@ -59,7 +59,7 @@
             <ul class="styled-list">
                 <li>1. Gradient to shortlist. Compute \(\nabla_{e_{x_i}} \mathcal{L} \in \mathbb{R}^{|V|}\): how the loss would change if token \(i\) were replaced by each vocabulary item (a linearised estimate, read off the embedding gradient). Take the top-\(k\) tokens with the most negative gradient as candidate substitutions for that position. This is cheap: one backward pass gives the shortlist for every position at once.</li>
                 <li>2. Exact evaluation to choose. The gradient is only a first-order guess, so do not trust it to pick the winner. Instead sample a batch of \(B\) candidate swaps (each a single token at one position, drawn from that position's top-\(k\)), and for each one <em>actually run the model</em> and measure the true loss \(\mathcal{L}\). Keep the single swap that lowers the loss most.</li>
-                <li>3. Iterate. Apply the best swap and repeat for many steps. Each step changes one token; the loss falls until the model's most likely opening is the affirmative target.</li>
+                <li>3. Iterate. Apply the best swap and repeat for many steps. Each step changes one token. Over many steps the loss usually falls, and the attack succeeds if the affirmative target becomes the model's most likely opening; a fixed step budget does not guarantee that it gets there.</li>
             </ul>
             <p style="color:#555;">The name says it: <em>coordinate</em> (change one token-position at a time), <em>gradient</em> (to shortlist candidates), <em>greedy</em> (take the best swap each step). The gradient does the cheap pruning over a \(|V| \approx 32{,}000\)-way choice; the forward passes do the reliable selection. The earlier AutoPrompt method searched one position at a time; GCG's advance is to consider swaps across <em>all</em> positions before committing, which makes the search markedly more effective.</p>
         </div>
@@ -84,7 +84,7 @@
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Tokenisation and the threat model</span></h3>
-            <p>Session 2 measured how token counts vary across languages. A longer token sequence gives a fixed-length suffix search more coordinates, but that observation alone predicts neither easier attacks nor weaker safety. Training data, model capability, translation quality and the attack algorithm also change the result. Section 9.4 measures these factors separately instead of inferring safety from tokenisation.</p>
+            <p>Session 2 measured how token counts vary across languages. GCG optimises a fixed number of suffix tokens, so a request that tokenises into more tokens does not give the search more coordinates, and token count alone predicts neither easier attacks nor weaker safety. Training data, model capability, translation quality and the attack algorithm also change the result. Section 9.4 measures these factors separately instead of inferring safety from tokenisation.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>

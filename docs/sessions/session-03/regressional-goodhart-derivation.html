@@ -105,7 +105,7 @@
         <h2 class="section-title">⑥ Scope of the result</h2>
         <div class="card-grid">
             <div class="card"><h3>Regressional Goodhart</h3><p>The shrinkage by \(\beta\) and the noise-driven over-statement are Manheim &amp; Garrabrant's (2018) <em>regressional</em> variant: the unavoidable consequence of selecting on (signal + noise) with a <em>fixed</em> joint distribution. It needs no adversary and no breakdown of the proxy.</p></div>
-            <div class="card"><h3>The gentle case</h3><p>The derivation assumes the \(G\)–\(P\) relationship stays linear-Gaussian out into the tail. Real optimisers also reach regions where the proxy stops tracking the goal (<em>extremal</em> Goodhart), where the correlation was never causal (<em>causal</em>), or where another agent games the metric (<em>adversarial</em>). Their effects depend on the setting and are not captured here.</p></div>
+            <div class="card"><h3>The gentle case</h3><p>The derivation assumes the \(G\)–\(P\) relationship stays linear-Gaussian out into the tail. Real optimisers also reach regions where the proxy stops tracking the goal (<em>extremal</em> Goodhart), where intervening on the proxy breaks its link to the goal because the proxy does not cause the goal (<em>causal</em>), or where another agent games the metric (<em>adversarial</em>). Their effects depend on the setting and are not captured here.</p></div>
         </div>
         <div class="info-box">
             <h4>Limits of the approximation</h4>
@@ -134,7 +134,7 @@
             <h4>Background</h4>
             <p>• <a href="https://galton.org/essays/1880-1889/galton-1886-jaigi-regression-stature.pdf" target="_blank" rel="noopener"><strong>Galton, F. (1886)</strong></a>, "Regression towards Mediocrity in Hereditary Stature", <em>Journal of the Anthropological Institute</em> 15, 246–263: the origin of "regression to the mean".</p>
             <p>• <a href="https://link.springer.com/book/10.1007/978-3-642-33483-2" target="_blank" rel="noopener"><strong>Embrechts, P., Klüppelberg, C. &amp; Mikosch, T. (1997)</strong></a>, <em>Modelling Extremal Events for Insurance and Finance</em>, Springer (ISBN 978-3-540-60931-5): §3.3 for the Gaussian maximum and Gumbel norming constants.</p>
-            <p>• Pan, Bhatia &amp; Steinhardt (2022, <a href="https://arxiv.org/abs/2201.03544" target="_blank" rel="noopener">arXiv:<code>2201.03544</code></a>) and Skalse et al. (2022, <a href="https://arxiv.org/abs/2209.13085" target="_blank" rel="noopener">arXiv:<code>2209.13085</code></a>): the empirical and impossibility results this derivation underpins (see Session 3.1).</p>
+            <p>• Pan, Bhatia &amp; Steinhardt (2022, <a href="https://arxiv.org/abs/2201.03544" target="_blank" rel="noopener">arXiv:<code>2201.03544</code></a>) and Skalse et al. (2022, <a href="https://arxiv.org/abs/2209.13085" target="_blank" rel="noopener">arXiv:<code>2209.13085</code></a>): empirical and impossibility results on reward hacking. This derivation gives one mechanism for proxy failure; it does not prove either result (see Session 3.1).</p>
         </div>
 
         <nav class="page-nav">

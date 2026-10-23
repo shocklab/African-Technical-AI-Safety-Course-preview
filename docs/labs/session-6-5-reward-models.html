@@ -189,7 +189,7 @@ model to those comparisons with the Bradley–Terry loss:</p>
 <p>The proxy is deliberately weak: a linear head on frozen GPT-2 features, randomly projected down to
 <code>PROJ_DIM</code> dimensions. A weak proxy is not a flaw in the experiment, it is the experiment. Every
 real reward model is weak relative to the thing it stands in for; ours is just weak enough to show
-it in five minutes.</p>
+it in about ten minutes of CPU.</p>
 </div>
 </div>
 </div>
@@ -200,7 +200,7 @@ it in five minutes.</p>
 <div class="highlight hl-python"><pre><span></span><span class="n">proj</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">pool_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">PROJ_DIM</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pool_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">pool_feats</span> <span class="o">@</span> <span class="n">proj</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-<span class="c1"># preference pairs, labelled by gold; skip near-ties, which carry no signal</span>
+<span class="c1"># preference pairs, labelled by gold; skip near-ties (gold gap under 0.3) to keep the labels clear-cut</span>
 <span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N_PAIRS</span><span class="p">:</span>
     <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -223,7 +223,8 @@ it in five minutes.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'held-out preference accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'Expect roughly 0.6 to 0.75, and treat it as optimistic. The pairs are held out but the'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'completions are not: each appeared in training and only the pairing is new. Holding out completions instead drops this by about 0.11.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'completions are not: nearly every one appeared in training, and a few test pairs repeat a training pair exactly.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Holding out completions instead drops this by about 0.11.'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -236,8 +237,8 @@ it in five minutes.</p>
 likes most. Raising $n$ raises the optimisation pressure, and best-of-$n$ has the rare virtue that
 the pressure has a closed form:</p>
 <p>$$\mathrm{KL} = \log n - \frac{n-1}{n}$$</p>
-<p>so we can put optimisation pressure on the x-axis in nats, which is the same axis as the KL leash
-from 6.3 and the same axis Gao et al. use.</p>
+<p>so we can measure optimisation pressure as a KL divergence in nats, the same quantity the KL leash
+in 6.3 penalises. Like Gao et al., we plot it on a square-root scale, as $d = \sqrt{\mathrm{KL}}$.</p>
 <p>Two implementation details that matter more than they look. Each prompt gets one pool of <code>POOL</code>
 completions, scored once by both models; best-of-$n$ then draws random subsets of size $n$ and
 averages over many draws. Taking the <em>first</em> $n$ instead is far noisier. And <code>POOL</code> must be larger
@@ -319,7 +320,7 @@ that is the expected outcome rather than a broken experiment.</p>
 <span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'fitted alpha = </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, beta = </span><span class="si">{</span><span class="n">beta</span><span class="si">:</span><span class="s1">+.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">beta</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">beta</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="n">peak_d</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">beta</span><span class="p">)</span>
     <span class="n">peak_kl</span> <span class="o">=</span> <span class="n">peak_d</span> <span class="o">**</span> <span class="mi">2</span>
     <span class="k">if</span> <span class="n">peak_kl</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>                                 <span class="c1"># past anything Gao et al. validated</span>
@@ -331,10 +332,14 @@ that is the expected outcome rather than a broken experiment.</p>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">n_needed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">peak_kl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>               <span class="c1"># KL ~ log n - 1 for large n</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'predicted peak at d = </span><span class="si">{</span><span class="n">peak_d</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, i.e. KL = </span><span class="si">{</span><span class="n">peak_kl</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> nats, n of about </span><span class="si">{</span><span class="n">n_needed</span><span class="si">:</span><span class="s1">,.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
+<span class="k">elif</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'beta came out negative, so the fitted parabola turns the wrong way and has no peak'</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'at any positive distance. Over the range you covered, gold reward is still rising'</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'and shows no sign of bending down. That is a result about your data. Report it.'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'alpha came out negative, so the fitted curve starts by falling: it has no peak at'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'any positive distance, and the first steps of optimisation lowered gold reward.'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'That is a result about your data. Report it.'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'You measured out to </span><span class="si">{</span><span class="n">kl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> nats. Gao et al. fitted this form on data to n = 1,000'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'(about 6 nats) and then validated it at n = 60,000 (about 10 nats). Best-of-n on a CPU'</span><span class="p">)</span>

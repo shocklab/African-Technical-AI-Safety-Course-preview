@@ -50,7 +50,7 @@
             <h4>Levels of explanation</h4>
             <ul class="styled-list">
                 <li><strong>Black-box / behavioural.</strong> Measure the output: how often does the model complete the sequence correctly, and how does that vary with the input? This is what every eval in Session 11 did. It describes the tested behaviour but does not identify the computation that produced it.</li>
-                <li><strong>Attribution / saliency.</strong> Ask which inputs mattered: gradient-based saliency maps, feature-importance scores, probing classifiers trained on activations. These methods can suggest relevant inputs or representations. A saliency map or probe still needs checks before it can support a causal account.</li>
+                <li><strong>Attribution / saliency and probing.</strong> Attribution methods ask which inputs mattered: gradient-based saliency maps and feature-importance scores. Probing classifiers trained on activations ask what information a representation encodes. These methods can suggest relevant inputs or representations. A saliency map or probe still needs checks before it can support a causal account.</li>
                 <li><strong>Mechanistic.</strong> Propose and test a computational account: which components move which information, and what changes when one is intervened on. A successful account explains a specified behaviour in a specified model; it need not describe every computation the model performs.</li>
             </ul>
         </div>
@@ -79,7 +79,7 @@
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Give a safety question that a black-box evaluation cannot answer even in principle, and say what a mechanistic explanation would add.</li>
-            <li>Why is attribution (saliency, probing) not the same as mechanistic understanding? Construct a case where a saliency map is correct about <em>where</em> and wrong about <em>why</em>.</li>
+            <li>Why are attribution and probing (saliency maps, probing classifiers) not the same as mechanistic understanding? Construct a case where a saliency map is correct about <em>where</em> and wrong about <em>why</em>.</li>
             <li>Interpretability researchers describe their frontier-scale evidence as more like neuroscience than like decompilation. What does that analogy concede, and which Session-11 failure does it echo?</li>
             <li>Of the three safety payoffs (deception detection, scalable oversight, auditing), which most depends on interpretability working at <em>frontier</em> scale rather than toy scale? Why?</li>
         </ul>

@@ -62,14 +62,14 @@
                 <li><strong>Interests or well-being</strong>: what is actually good for me, which I may not prefer.</li>
                 <li><strong>Values</strong>: what I (or society) <em>ought</em> to endorse.</li>
             </ul>
-            <p style="color:#555;">These targets disagree on hard cases, and "be helpful" quietly slides between them. RLHF picks one almost by accident: a reward model trained on labeller comparisons (6.2) targets the <em>revealed, in-the-moment preferences of the annotators</em>: the most convenient signal, not the most defensible target. Naming the choice is the first job; the technical pipeline makes it for you if you don't.</p>
+            <p style="color:#555;">These targets disagree on hard cases, and "be helpful" quietly slides between them. RLHF picks one almost by accident: a reward model trained on labeller comparisons (6.2) targets the <em>stated, in-the-moment preferences of the annotators</em> (judgements they express when asked, not preferences revealed by their behaviour): the most convenient signal, not the most defensible target. Naming the choice is the first job; the technical pipeline makes it for you if you don't.</p>
         </div>
 
         <h2 class="section-title">Whose preferences? The aggregation problem</h2>
-        <p>Fix the target as "human preferences" and the harder question opens: <em>which</em> humans? People and cultures rank outcomes differently, yet a single deployed model needs one reward function. So somewhere in the pipeline, many people's conflicting preferences are compressed into one ordering. That compression is an act of <em>aggregation</em>, and aggregation is where social-choice theory has a famous warning.</p>
+        <p>Fix the target as "human preferences" and the harder question opens: <em>which</em> humans? People and cultures rank outcomes differently, yet the standard RLHF pipeline trains a single deployed model against one shared reward function. So somewhere in the pipeline, many people's conflicting preferences are compressed into one ordering. That compression is an act of <em>aggregation</em>, and aggregation is where social-choice theory has a famous warning.</p>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">"Whose values" is partly a theorem</span></h3>
-            <p>If you try to align to <em>everyone's</em> values, you must aggregate conflicting preferences into a single ordering. Social-choice theory says you cannot do this perfectly: <strong><a href="https://plato.stanford.edu/entries/arrows-theorem/" target="_blank" rel="noopener">Arrow's impossibility theorem</a></strong> shows no aggregation rule satisfies a short list of reasonable fairness conditions at once. RLHF's averaged reward model is making such an aggregation, over whichever population the annotators happened to represent.</p>
+            <p>If you align one model to <em>everyone's</em> values through a single shared reward, you must aggregate conflicting preferences into a single ordering. Social-choice theory says you cannot do this perfectly: <strong><a href="https://plato.stanford.edu/entries/arrows-theorem/" target="_blank" rel="noopener">Arrow's impossibility theorem</a></strong> shows no aggregation rule satisfies a short list of reasonable fairness conditions at once. RLHF's averaged reward model is making such an aggregation, over whichever population the annotators happened to represent.</p>
             <p style="margin-bottom:0;">This calls for precision rather than nihilism: alignment hides a choice of <em>whose</em> values, <em>how weighted</em>, and <em>aggregated by what rule</em>, and some of those choices are provably in tension.</p>
         </div>
         <div class="technical-detail">
@@ -85,7 +85,7 @@
         </div>
         <div class="warning-box">
             <h4>Be precise about what Arrow does and doesn't prove here</h4>
-            <p>Arrow assumes <em>ordinal</em> preferences with no interpersonal comparison of intensity. RLHF reward models are <em>cardinal</em>: they output a number, via the Bradley–Terry model (6.2). So they sidestep Arrow's exact hypotheses. But the escape has a price: a cardinal reward has to treat one person's strong preference as outweighing another's mild one, the interpersonal comparison Arrow refused to assume. So the theorem is a motivating analogy, not a literal proof that RLHF is impossible. Its real lesson survives the move to cardinal rewards: there is no value-free way to combine many people's preferences into one, and "average the annotators" is a substantive, contestable choice wearing the costume of a neutral default.</p>
+            <p>Arrow's theorem concerns rules that turn individual rankings into one social ranking, and RLHF's inputs are rankings of this kind: annotators' pairwise comparisons. The Bradley–Terry fit (6.2) outputs a number for each response, but that number is fitted to ordinal comparisons and used to rank responses, so it does not take RLHF outside Arrow's setting. Fitted to comparisons pooled across annotators, it behaves like the Borda count (Siththaranjan et al., 2024), which violates independence of irrelevant alternatives. It also never sees strength of preference: three annotators who mildly prefer \(A\) to \(B\) outweigh two who strongly prefer \(B\). So Arrow does not show that RLHF is impossible; it shows that RLHF's aggregation, like any rule, gives up one of the conditions. There is no value-free way to combine many people's preferences into one, and "average the annotators" is a substantive, contestable choice wearing the costume of a neutral default.</p>
         </div>
 
         <h2 class="section-title">One reward, plural values</h2>
@@ -113,7 +113,7 @@
         <ul class="styled-list">
             <li>Take a single request ("help me write this email") and say how Gabriel's six targets could each yield a different "aligned" response.</li>
             <li>Work the Condorcet cycle, then define a scoring rule: each voter gives 2 points to their first choice, 1 to their second and 0 to their third; sum points, resolving ties A before B before C. Using four voters, give two profiles where every voter’s A-versus-B ordering stays fixed but moving C changes the group’s A-versus-B ordering. Which Arrow condition fails? Separately, explain why averaging supplied cardinal ratings requires a different analysis.</li>
-            <li>RLHF's cardinal reward escapes Arrow's letter. What does it assume instead, and why is that assumption also contestable?</li>
+            <li>RLHF's reward is a number, but it is fitted to ordinal comparisons and ranks the outputs. Which of Arrow's conditions does the fit give up, and why is that a contestable choice?</li>
             <li>Does pluralistic alignment dissolve the "whose values" problem or relocate it? Where does the choice reappear?</li>
         </ul>
 

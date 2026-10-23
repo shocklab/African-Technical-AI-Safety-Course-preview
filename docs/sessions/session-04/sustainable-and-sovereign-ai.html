@@ -45,7 +45,7 @@
 
 <div class="resource-placeholder reading-core">
 <h4>Mandatory readings</h4>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/1906.05433" target="_blank" rel="noopener"><strong>Rolnick et al. (2022): "Tackling Climate Change with Machine Learning"</strong></a>: ACM Computing Surveys. A landmark survey paper by 22 researchers outlining 13 areas where ML can meaningfully contribute to climate mitigation and adaptation. Essential reading for a balanced view of AI's relationship with the environment; read the introduction for the "High Leverage" / "Long-term" / "Uncertain Impact" flags, then pick from the 13 application-domain sections (§1 "Electricity Systems" through §13 "Finance"). ≈1,500 words for the introduction plus ≈500 to 3,500 words per chosen section.</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/1906.05433" target="_blank" rel="noopener"><strong>Rolnick et al. (2022): "Tackling Climate Change with Machine Learning"</strong></a>: ACM Computing Surveys. A landmark survey paper by 22 researchers outlining 13 areas where ML can meaningfully contribute to climate mitigation and adaptation. Essential reading for a balanced view of AI's relationship with the environment; read the introduction for the "High Leverage" / "Long-term" / "Uncertain Impact" flags, then pick from the 13 application-domain sections (§1 "Electricity Systems" through §13 "Finance"). ≈1,500 words for the introduction plus ≈700 to 4,000 words per chosen section.</p>
 <p style="margin-top:10px; color:#666;">Total mandatory load: ≈3,500 words (introduction plus one typical section; the full 13-section survey is ≈27,000 words).</p>
 </div>
 <div class="resource-placeholder">
@@ -86,11 +86,11 @@
 <div class="tool-card">
 <h3>ML CO₂ Impact Calculator</h3>
 <div class="tool-url"><a href="https://mlco2.github.io/impact/" target="_blank" rel="noopener">mlco2.github.io/impact/</a></div>
-<p>A simpler web-based calculator for estimating the carbon footprint of a planned ML training run, before you run it. Useful for project planning and grant applications where you want to report your expected compute footprint.</p>
+<p>A simpler web-based calculator for estimating the carbon footprint of an ML training run from the hardware, hours and region you enter. Useful for project planning, grant applications and reporting the compute footprint of work already done.</p>
 <ul class="styled-list">
 <li>Inputs: Hardware, training duration, cloud provider/region</li>
 <li>Output: Estimated kg CO₂e for the full training run</li>
-<li>Distinction from CodeCarbon: This tool estimates in advance (before running); CodeCarbon measures in real time</li>
+<li>Distinction from CodeCarbon: This tool estimates emissions from the hardware, hours and region you enter, before or after a run; CodeCarbon tracks power use while your code runs and converts it to an emissions estimate</li>
 </ul>
 </div>
 
@@ -220,11 +220,11 @@
 <tr>
 <td><strong>Chain-of-thought prompting</strong></td>
 <td>Model reasons step-by-step in the visible response, generating significantly more output tokens</td>
-<td>~3–8× more tokens <em>(Wharton GAIL, 2025: for the non-reasoning models tested, CoT requests took 35–600% longer than direct requests)</em></td>
+<td>About 1.35–7× the response time; token counts not reported <em>(Wharton GAIL, 2025: for the non-reasoning models tested, CoT requests took 35–600% longer than direct requests)</em></td>
 </tr>
 <tr>
 <td><strong>Extended thinking / reasoning models</strong> (o1, o3, Claude with thinking enabled)</td>
-<td>Generates thousands of hidden "scratchpad" tokens before producing a visible response; users see only the final answer</td>
+<td>Generates hundreds to tens of thousands of reasoning tokens before producing a visible response; the raw reasoning is not shown, and users see the final answer and, depending on the product and settings, a summary of the reasoning</td>
 <td>About 8× more output tokens on average <em>(Epoch AI, April 2025 benchmarks)</em>; API cost depends on the model, the tokens used and caching</td>
 </tr>
 <tr>
@@ -327,9 +327,9 @@
 <p>The African Union Continental AI Strategy (adopted July 2024) is the continent's primary AI governance framework. Its environmental provisions are minimal but worth noting:</p>
 <ul class="styled-list" style="margin-top: 10px;">
 <li>Water scarcity acknowledged: The strategy explicitly states that data centre cooling "poses a threat to regions already facing water scarcity", directly relevant to an African context</li>
-<li>High-risk AI framework: "Environmental impact" is listed as a risk dimension for high-risk AI systems, in principle requiring impact assessments</li>
-<li>General principle: AI development should not harm "the environment", stated without specific implementation mechanisms</li>
-<li>AU Data Policy Framework (2022): The AU's data governance framework contains no meaningful environmental provisions</li>
+<li>Risk list: "environmental impact" is one of the dimensions of AI risk the strategy lists, but the strategy sets up no high-risk category and no environmental impact assessment requirement; it recommends impact assessments for AI systems only in general terms</li>
+<li>General principle: AI development should "not harm African people, societies or environments", with no environment-specific mechanism beyond a call for green data centres that meet ESG guidelines</li>
+<li>AU Data Policy Framework (2022): The AU's data governance framework mentions the environment only in brief, general recommendations: more sustainable electricity generation for digital infrastructure, and weighing environmental impacts and risks when building data infrastructure. It sets no targets or mechanisms</li>
 </ul>
 <p style="margin-top: 12px;">A 2025 analysis by TechPolicy.Press examining 14 African AI strategies found that only three acknowledged environmental consequences at all, and that, apart from Senegal, the strategies did not say how to address them. This gap is significant: Africa is among the world's most climate-vulnerable regions, and countries like South Africa run electricity grids that are among the world's most carbon-intensive (historically over 80% coal). AI workloads and data centres in the region inherit that carbon intensity, yet current continental AI governance does not address this.</p>
 <p style="margin-top: 8px;">UNESCO and the World Bank have been working with AU policymakers on "Green AI" pathways, and the policy gap may narrow as the Continental Strategy moves through implementation (Phase 1: 2025–2026; Phase 2: 2028–2030). For now, it is an area where researchers (particularly those based in Africa) can meaningfully contribute to policy advocacy.</p>
