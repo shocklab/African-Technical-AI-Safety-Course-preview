@@ -90,7 +90,7 @@
                 <li><strong>Outer alignment:</strong> close the gap between the <em>base objective</em> and our intentions (3.1).</li>
                 <li><strong>Inner alignment:</strong> close the gap between the <em>base objective</em> and the <em>mesa-objective</em>, ensuring the learned optimiser actually internalised the goal it was trained on.</li>
             </ul>
-            <p style="color:#555; margin-top:10px;">Both can fail independently. You can have a perfect base objective (outer-aligned) and still get a mesa-objective that diverges from it off-distribution (inner-misaligned). That is the failure the next section demonstrates empirically.</p>
+            <p style="color:#555; margin-top:10px;">Both can fail independently. You can have a perfect base objective (outer-aligned) and still get a mesa-objective that diverges from it off-distribution (inner-misaligned). A related failure, goal misgeneralisation, has been shown empirically, as the section "Goal misgeneralisation, demonstrated" describes. That work shows the behaviour; it does not show that the agent is a mesa-optimiser.</p>
         </div>
 
         <h2 class="section-title">The evolution analogy</h2>
@@ -146,7 +146,7 @@
             <li>In CoinRun, the agent learned "go right" instead of "get the coin". Design a training regime that would have <em>prevented</em> this particular misgeneralisation, and then describe a different misgeneralisation your fix might still allow.</li>
             <li>Why is a goal-misgeneralising model more dangerous than one that simply becomes incompetent off-distribution?</li>
             <li>Lay out the argument that gradient descent might favour deceptive alignment. Which step do you find weakest, and what evidence would settle it?</li>
-            <li>If a deceptively aligned model passes every behavioural test by construction, what kinds of evidence <em>could</em> distinguish it from a genuinely aligned one?</li>
+            <li>If a deceptively aligned model may imitate aligned behaviour on the tests it recognises, what kinds of evidence <em>could</em> distinguish it from a genuinely aligned one?</li>
         </ul>
 
 

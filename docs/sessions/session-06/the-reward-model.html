@@ -52,7 +52,7 @@
         </div>
         <div class="resource-placeholder">
             <h4>Optional readings</h4>
-            <p>• <strong><a href="https://www.jstor.org/stable/2334029" target="_blank" rel="noopener">Bradley, R. A. &amp; Terry, M. E. (1952), "Rank Analysis of Incomplete Block Designs: I"</a></strong> (<em>Biometrika</em> 39(3/4), 324–345): the original paired-comparison model, seventy years before anyone applied it to a chatbot.</p>
+            <p>• <strong><a href="https://www.jstor.org/stable/2334029" target="_blank" rel="noopener">Bradley, R. A. &amp; Terry, M. E. (1952), "Rank Analysis of Incomplete Block Designs: I"</a></strong> (<em>Biometrika</em> 39(3/4), 324–345): the paper that gave the Bradley–Terry paired-comparison model its name (Zermelo had published the same model in 1929), seventy years before anyone applied it to a chatbot.</p>
             <p>• <strong>Stiennon et al. (2020)</strong> (<a href="https://arxiv.org/abs/2009.01325" target="_blank" rel="noopener">arXiv:2009.01325</a>): reward modelling for summarisation, with the data-collection detail most papers omit.</p>
         </div>
 
@@ -96,7 +96,7 @@
         <h2 class="section-title">The reward model as proxy</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Goodhart exposure by construction</span></h3>
-            <p>Re-read Session 3.1 with \(r_\phi\) in the role of the proxy. We cannot write down "be helpful and honest", so we <em>learn</em> a stand-in from human comparisons, and then optimise it. Every gap between \(r_\phi\) and true human values is a place the optimiser can exploit: a response that scores high on the reward model without being good. The reward model is unbiased and useful in the region of responses it was trained on; push the policy into regions it never saw and the proxy and the goal come apart. This is what optimising a learned proxy <em>means</em>, not a flaw in any particular reward model.</p>
+            <p>Re-read Session 3.1 with \(r_\phi\) in the role of the proxy. We cannot write down "be helpful and honest", so we <em>learn</em> a stand-in from human comparisons, and then optimise it. Every gap between \(r_\phi\) and true human values is a place the optimiser can exploit: a response that scores high on the reward model without being good. The reward model is a reasonable guide in the region of responses it was trained on, though even there it inherits its raters' biases; push the policy into regions it never saw and the proxy and the goal come apart. This is what optimising a learned proxy <em>means</em>, not a flaw in any particular reward model.</p>
         </div>
         <div class="technical-detail">
             <h4>Three built-in limitations</h4>

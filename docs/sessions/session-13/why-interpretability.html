@@ -49,7 +49,7 @@
         <div class="technical-detail">
             <h4>Levels of explanation</h4>
             <ul class="styled-list">
-                <li><strong>Black-box / behavioural.</strong> Measure the output: how often does the model complete the sequence correctly, and how does that vary with the input? This is what every eval in Session 11 did. It describes the tested behaviour but does not identify the computation that produced it.</li>
+                <li><strong>Black-box / behavioural.</strong> Measure the output: how often does the model complete the sequence correctly, and how does that vary with the input? This is what the isiZulu audit in Session 11 did, and what most evals in that session do. It describes the tested behaviour but does not identify the computation that produced it.</li>
                 <li><strong>Attribution / saliency and probing.</strong> Attribution methods ask which inputs mattered: gradient-based saliency maps and feature-importance scores. Probing classifiers trained on activations ask what information a representation encodes. These methods can suggest relevant inputs or representations. A saliency map or probe still needs checks before it can support a causal account.</li>
                 <li><strong>Mechanistic.</strong> Propose and test a computational account: which components move which information, and what changes when one is intervened on. A successful account explains a specified behaviour in a specified model; it need not describe every computation the model performs.</li>
             </ul>

@@ -52,7 +52,7 @@
 
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
-            <p>• <strong>Watch: Karpathy, "The spelled-out intro to neural networks and backpropagation"</strong> (Zero to Hero, episode 1; embedded below): from the embedded timestamp (assembling neurons into a network) through the <a href="https://youtu.be/VMj-3S1tku0?t=6664" target="_blank" rel="noopener">loss-function section</a>. ~65 min video.</p>
+            <p>• <strong>Watch: Karpathy, "The spelled-out intro to neural networks and backpropagation"</strong> (Zero to Hero, episode 1; embedded below): from the embedded timestamp (backpropagation through a single neuron) through the <a href="https://youtu.be/VMj-3S1tku0?t=6664" target="_blank" rel="noopener">loss-function section</a>. ~65 min video.</p>
             <p style="margin-top:10px; color:#666;">Total mandatory load: ~65 min of video.</p>
         </div>
         <div class="resource-placeholder">
@@ -63,7 +63,7 @@
 
         <div class="info-box">
             <h4>Core material</h4>
-            <p>The primary resource for this sub-session is Andrej Karpathy's spelled-out introduction to neural networks and backpropagation (Zero to Hero, episode 1), which builds the same ideas one neuron at a time, in code. Watch from the embedded timestamp (assembling neurons into a network), then the <a href="https://youtu.be/VMj-3S1tku0?t=6664" target="_blank" rel="noopener">loss-function section</a>. The page below is the written reference for the same material.</p>
+            <p>The primary resource for this sub-session is Andrej Karpathy's spelled-out introduction to neural networks and backpropagation (Zero to Hero, episode 1), which builds the same ideas one neuron at a time, in code. Watch from the embedded timestamp (backpropagation through a single neuron), then the <a href="https://youtu.be/VMj-3S1tku0?t=6664" target="_blank" rel="noopener">loss-function section</a>. The page below is the written reference for the same material.</p>
             <div class="video-embed"><iframe src="https://www.youtube.com/embed/VMj-3S1tku0?start=3172" title="Karpathy — the spelled-out intro to neural networks and backpropagation" allowfullscreen loading="lazy"></iframe></div>
             <p style="margin-bottom:0;">A complementary written treatment at the same neuron-by-neuron level: <a href="https://sidn.baulab.info/neurons/" target="_blank" rel="noopener">"Neuron Interpretation", <em>The Structure and Interpretation of Deep Networks</em></a> (Sheridan Feucht and David Bau, 2024).</p>
         </div>
@@ -106,7 +106,7 @@
         </div>
         <div class="technical-detail">
             <h4>Gradient descent and back-propagation</h4>
-            <p style="color:#555;">The gradient \( \nabla_\theta L \) points in the direction in parameter space along which the loss rises fastest, so stepping the other way lowers it, with the learning rate \( \eta \) setting the step size. Back-propagation is the chain rule organised so that one backward pass, costing a small constant multiple of one forward pass (about twice, for a transformer), yields the gradient for <em>all</em> the parameters at once. That is what makes training billion-parameter models feasible at all. Two caveats matter later. The loss surface is wildly non-convex, so this finds a <em>low-loss region</em>, not the global minimum, and which region depends on the initialisation and the order of the data. And the result is a vast array of numbers that happens to fit the data, with no guarantee of being readable: gradient descent optimises for low loss, never for interpretability. Both points come back in Session 3 and in the interpretability weeks.</p>
+            <p style="color:#555;">The gradient \( \nabla_\theta L \) points in the direction in parameter space along which the loss rises fastest, so stepping the other way lowers it, with the learning rate \( \eta \) setting the step size. Back-propagation is the chain rule organised so that one backward pass, costing a small constant multiple of one forward pass (about twice, for a transformer), yields the gradient for <em>all</em> the parameters at once. That is what makes training billion-parameter models feasible at all. Two caveats matter later. The loss surface is wildly non-convex, so there is no guarantee this finds the global minimum: it settles into a <em>low-loss region</em>, and which region depends on the initialisation and the order of the data. And the result is a vast array of numbers that happens to fit the data, with no guarantee of being readable: gradient descent optimises for low loss, never for interpretability. Both points come back in Session 3 and in the interpretability weeks.</p>
         </div>
         <div class="info-box">
             <h4>The language-model loss</h4>

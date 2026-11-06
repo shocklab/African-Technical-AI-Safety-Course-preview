@@ -72,7 +72,7 @@
                 <li><strong>Embedding.</strong> A learned matrix \(W_E \in \mathbb{R}^{V \times d_{\text{model}}}\) maps each id to a vector in \(\mathbb{R}^{d_{\text{model}}}\) (one row of \(W_E\)). A length-\(T\) sequence becomes an activation matrix \(X \in \mathbb{R}^{T \times d_{\text{model}}}\), one row per position.</li>
                 <li><strong>Position.</strong> Self-attention is <em>permutation-equivariant</em>: shuffle the input rows and the output rows shuffle the same way; it has no built-in sense of order (because, as the next section shows, attention is a content-weighted sum with no term that depends on a position's index). So positional information is injected, either as positional embeddings added to the input before the first block or as rotary or relative schemes applied to the attention scores inside every layer.</li>
             </ul>
-            <p style="color:#555; margin-top:12px;">From here on, each transformer <em>block</em> maps a \(T \times d_{\text{model}}\) matrix to another of the same shape (internally, as we'll see, it routes through narrower matrices and back). That preserved width is the residual stream.</p>
+            <p style="color:#555; margin-top:12px;">From here on, each transformer <em>block</em> maps a \(T \times d_{\text{model}}\) matrix to another of the same shape (internally, as we'll see, it routes through narrower matrices and back). That \(T \times d_{\text{model}}\) matrix of activations, passed from block to block at the same width, is the residual stream.</p>
         </div>
 
         <h2 class="section-title">One attention head, step by step</h2>
@@ -115,7 +115,7 @@
 
         <div class="info-box">
             <h4>A worked intuition: "…the Eiffel Tower is in the city of ___"</h4>
-            <p>To predict the next token, the final position emits a query that (in some head) is best matched by the key at "Eiffel Tower". That head's attention row puts most weight on the "Eiffel Tower" position and copies its value into the final position's output, moving the information "this sentence is about the Eiffel Tower" forward to where it's needed. Attention only <em>moves</em> information like this; it is the later layers and MLPs that turn "this is about the Eiffel Tower" into the prediction "Paris". <em>Induction heads</em>, which you'll reverse-engineer in Week 7, are a famous, crisp version of this copy-by-matching behaviour.</p>
+            <p>To predict the next token, the final position emits a query that (in some head) is best matched by the key at "Eiffel Tower". That head's attention row puts most weight on the "Eiffel Tower" position and copies its value into the final position's output, moving the information "this sentence is about the Eiffel Tower" forward to where it's needed. Attention <em>moves</em> information like this. Studies of factual recall suggest that MLP layers first enrich the "Eiffel Tower" position with related facts such as "Paris", and attention heads then carry that fact to the final position. <em>Induction heads</em>, which you'll study as a worked circuit in Week 7, are a famous, crisp version of this copy-by-matching behaviour.</p>
         </div>
 
         <figure>
@@ -150,7 +150,7 @@
 <h2 class="section-title">LayerNorm and the full block</h2>
         <div class="technical-detail">
             <h4>One transformer block</h4>
-            <p style="color:#555;">A block wraps attention and MLP with <strong>LayerNorm</strong> (which rescales each position's vector to zero mean and unit variance, stabilising training) and adds each sub-layer's output back to its input. Modern transformers use the <em>pre-norm</em> arrangement:</p>
+            <p style="color:#555;">A block wraps attention and MLP with <strong>LayerNorm</strong> (which rescales each position's vector to zero mean and unit variance, then applies a learned per-dimension scale and shift, stabilising training) and adds each sub-layer's output back to its input. Modern transformers use the <em>pre-norm</em> arrangement:</p>
             <div class="formula">\[ \begin{aligned} x &\leftarrow x + \operatorname{MultiHead}(\operatorname{LayerNorm}(x)) \\ x &\leftarrow x + \operatorname{MLP}(\operatorname{LayerNorm}(x)) \end{aligned} \]</div>
             <p style="color:#555;">Stack \(L\) such blocks (12 in GPT-2 small, ~100 in frontier models). Each block reads the current state, computes a correction, and adds it back.</p>
         </div>
@@ -159,7 +159,7 @@
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The residual-stream picture</span></h3>
             <p>Notice the "\(x \leftarrow x + \ldots\)". A block never <em>replaces</em> the activations; it <em>adds</em> to them. So each position carries a running vector (the <strong>residual stream</strong>) that begins as the token+position embedding and accumulates contributions as it passes up through the layers. Every attention head and every MLP <em>reads</em> from the stream (via LayerNorm) and <em>writes</em> a vector back into it by addition.</p>
-            <p>So the residual stream is a shared communication channel: earlier components write information that later components read. "Finding a circuit" (Week 7) means identifying which components write a particular piece of information and which later ones read it: a question you can answer, because the writes are additive and the reads are linear. This additive view is the literal computation.</p>
+            <p>So the residual stream is a shared communication channel: earlier components write information that later components read. "Finding a circuit" (Week 7) means identifying which components write a particular piece of information and which later ones read it: a question you can answer, because the writes are additive and the reads are linear apart from LayerNorm's per-position rescaling. This additive view is the literal computation.</p>
         </div>
 
         <h2 class="section-title">From the residual stream to a prediction</h2>

@@ -137,7 +137,7 @@
             <p>Pan, Bhatia &amp; Steinhardt (2022) tested this directly. They built four RL environments (including traffic control, a COVID-response simulator, and a blood-glucose controller), each with a plausible but <em>misspecified</em> proxy reward, and then varied agent capability along several axes (model size, action-space resolution, observation fidelity, training time). The result: more capable agents more often exploit the misspecification, earning <em>higher</em> proxy reward and <em>lower</em> true reward.</p>
             <p>Worse than a smooth trend, they document <strong>phase transitions</strong>: capability thresholds at which behaviour flips qualitatively and the true reward drops off a cliff. Below the threshold the agent looks well-behaved; a little more capability and it tips into a regime that games the proxy hard.</p>
         </div>
-        <p>This is the rigorous version of the Session 1.3 worry and the bridge to the rest of Session 3. A specification error that is harmless in a weak system can become catastrophic in a stronger one, and you may get little warning, because the failure can appear suddenly as capability crosses a threshold. "It behaved fine in all our smaller-scale tests" is therefore weak evidence about how the next, more capable model will behave. (Pan et al. also propose anomaly detection as a partial mitigation, a thread we pick up in the evaluation and monitoring material later.)</p>
+        <p>This is the rigorous version of the Session 1.3 worry and the bridge to the rest of Session 3. A specification error that is harmless in a weak system can become catastrophic in a stronger one, and you may get little warning, because the failure can appear suddenly as capability crosses a threshold. "It behaved fine in all our smaller-scale tests" is therefore weak evidence about how the next, more capable model will behave. (Pan et al. also propose anomaly detection as a partial mitigation.)</p>
 
         <h2 class="section-title">Can a proxy be safe to optimise?</h2>
         <p>A natural hope: maybe we are just bad at writing rewards, and a sufficiently careful proxy would be safe to optimise. Skalse et al. (2022) give a discouraging formal answer.</p>
@@ -157,7 +157,7 @@
             <ul class="styled-list" style="margin-top:6px;">
                 <li>Learn the reward from richer signals instead of hand-coding it (RLHF, RLAIF, Constitutional AI, Sessions 6–7), accepting that the learned reward is itself a gameable proxy.</li>
                 <li>Supervise beyond what we can directly check: debate, recursive reward modelling, weak-to-strong (Session 8).</li>
-                <li>Constrain and monitor the optimiser rather than trusting the objective: evaluations and anomaly detection (Session 11).</li>
+                <li>Constrain and monitor the optimiser rather than trusting the objective: evaluations (Session 11).</li>
                 <li>Look inside the model to see what it is actually optimising: interpretability (Session 13).</li>
             </ul>
             <p style="color:#555; margin-top:10px;">Almost every later technique is a response to a weakness exposed here.</p>
@@ -176,7 +176,7 @@
         <div class="intro-text" style="margin-top:50px;">
             <h2>Summary and what's next</h2>
             <p>Outer alignment concerns the relationship between the specified objective and intended behaviour. The examples show ways those can diverge. The Gaussian selection model explains optimistic bias under its assumptions; it does not imply that true quality must fall. Skalse et al. characterise the demanding conditions for unrestricted unhackability, including equivalent rewards. Empirical work by Pan et al. shows that stronger optimisation can worsen gaming in particular environments.</p>
-            <p>Next (Sub-session 3.2): so far the danger needed a <em>misspecified</em> objective. We now show something more unsettling. For a capable, goal-directed system, a worrying set of sub-goals follows for <em>almost any</em> objective at all: instrumental convergence and power-seeking.</p>
+            <p>Next (Sub-session 3.2): so far the danger needed a <em>misspecified</em> objective. We now show something more unsettling. For a capable, goal-directed system, a worrying set of sub-goals is argued to follow for a <em>wide range</em> of objectives: instrumental convergence and power-seeking.</p>
         </div>
 
     </div>

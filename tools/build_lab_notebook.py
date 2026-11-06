@@ -152,7 +152,7 @@ C("# Least-squares fit of log10(L) = a - alpha * log10(C).",
 
 C("# The same authors fitted their own frontier and published it (eq. 1 of the paper):",
   "#     L(f) = (f / 5.984e22)^-0.0737 + 0.5066",
-  "# Their exponent is 0.0737, not the ~0.054 you just fitted. Same runs, different answer.",
+  "# Their exponent is 0.0737, not the ~0.054 you just fitted. Same model family, different answer.",
   "their = (compute / 5.984e22) ** -0.0737 + 0.5066",
   "",
   "print('compute        measured   their law   difference')",

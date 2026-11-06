@@ -73,7 +73,7 @@
             </div>
             <div class="card">
                 <h3>Misalignment</h3>
-                <p>The system pursues something other than what we intended. Either we specified the wrong objective (outer misalignment) or it learned an unintended one (inner misalignment). No malicious user is required. This is the distinctive, hardest, most new problem, and the centre of this course (all of Week 2).</p>
+                <p>The system pursues something other than what we intended. Either we specified the wrong objective (outer misalignment) or it learned an unintended one (inner misalignment). No malicious user is required. This is the distinctive, hardest, most new problem, and the centre of this course (all of Session 3).</p>
             </div>
             <div class="card">
                 <h3>Systemic / structural</h3>
@@ -99,7 +99,7 @@
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The widening gap</span></h3>
             <p><strong>Capabilities</strong> are what a system can do: solve problems, write code, pass exams, act in the world. <strong>Safety</strong> is whether we can rely on it to do what we want, and whether we would know if it did not. The central empirical worry of the field is a widening gap. Capabilities are improving fast and predictably (Session 2's scaling laws). Safety, meaning our ability to specify objectives, verify behaviour and retain control, is not keeping pace.</p>
-            <p>Almost every topic in this course tries to close that gap from the safety side: better specification (alignment methods, Weeks 3 and 4), better verification (evaluations and interpretability, Weeks 6 to 8), better control (robustness and the control agenda, Week 5). Keep the distinction in hand; we test new ideas against it all term.</p>
+            <p>Almost every topic in this course tries to close that gap from the safety side: better specification (alignment methods, Weeks 3 and 4), better verification (evaluations and interpretability, Weeks 6 and 7), better control (robustness, Week 5). Keep the distinction in hand; we test new ideas against it all term.</p>
         </div>
         <div class="info-box">
             <h4>Differential progress</h4>
@@ -110,16 +110,16 @@
         <p>The technical problems cluster into a handful of families, and the course is structured around them. Two reference framings, first posted six years apart, help orient you.</p>
         <div class="technical-detail">
             <h4>The classic list: "Concrete Problems in AI Safety" (Amodei et al., 2016)</h4>
-            <p style="color:#555;">The paper that made the field legible to mainstream ML named five concrete problems, grouped by what goes wrong with a system's objective or its learning and illustrated throughout with a cleaning robot: <strong>(1) avoiding negative side effects</strong>, <strong>(2) avoiding reward hacking</strong>, <strong>(3) scalable oversight</strong>, <strong>(4) safe exploration</strong>, and <strong>(5) robustness to distributional shift</strong>. Nearly a decade on, problems (2), (3) and (5) are central pillars of this course (Sessions 3.1, 8, 9). The framing has held up remarkably well.</p>
+            <p style="color:#555;">The paper that made the field legible to mainstream ML named five concrete problems, grouped by what goes wrong with a system's objective or its learning and illustrated throughout with a cleaning robot: <strong>(1) avoiding negative side effects</strong>, <strong>(2) avoiding reward hacking</strong>, <strong>(3) scalable oversight</strong>, <strong>(4) safe exploration</strong>, and <strong>(5) robustness to distributional shift</strong>. A decade on, problems (2), (3) and (5) are central pillars of this course (Sessions 3.1, 8, 9). The framing has held up remarkably well.</p>
         </div>
         <div class="technical-detail">
             <h4>The modern framing</h4>
             <p style="color:#555;">Ngo, Chan &amp; Mindermann's "The Alignment Problem from a Deep Learning Perspective" (2022; ICLR 2024) recasts these problems for the era of large pretrained models: situationally-aware policies, learned objectives, deception. That is the version we actually study. Across both framings, the technical work clusters into four families, and the course is built around them:</p>
             <ul class="styled-list">
                 <li><strong>Alignment:</strong> specifying and instilling the right objective (RLHF, RLAIF, Constitutional AI, scalable oversight). Weeks 3 and 4.</li>
-                <li><strong>Robustness and control:</strong> holding up under adversarial pressure, and staying controllable even if the model is not cooperative. Week 5.</li>
+                <li><strong>Robustness and control:</strong> holding up under adversarial pressure, and staying controllable even if the model is not cooperative. Week 5 covers robustness.</li>
                 <li><strong>Evaluation and governance:</strong> measuring what a system can and will do, and the mechanisms that make a safety policy enforceable. Week 6.</li>
-                <li><strong>Interpretability:</strong> reading a model's internals to understand why it does what it does, since behaviour alone is insufficient. Weeks 7 and 8.</li>
+                <li><strong>Interpretability:</strong> reading a model's internals to understand why it does what it does, since behaviour alone is insufficient. Week 7.</li>
             </ul>
         </div>
 

@@ -212,7 +212,7 @@ constant is not.</p>
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># The same authors fitted their own frontier and published it (eq. 1 of the paper):</span>
 <span class="c1">#     L(f) = (f / 5.984e22)^-0.0737 + 0.5066</span>
-<span class="c1"># Their exponent is 0.0737, not the ~0.054 you just fitted. Same runs, different answer.</span>
+<span class="c1"># Their exponent is 0.0737, not the ~0.054 you just fitted. Same model family, different answer.</span>
 <span class="n">their</span> <span class="o">=</span> <span class="p">(</span><span class="n">compute</span> <span class="o">/</span> <span class="mf">5.984e22</span><span class="p">)</span> <span class="o">**</span> <span class="o">-</span><span class="mf">0.0737</span> <span class="o">+</span> <span class="mf">0.5066</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">'compute        measured   their law   difference'</span><span class="p">)</span>

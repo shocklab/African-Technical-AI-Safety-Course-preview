@@ -23,7 +23,7 @@
 
         <div class="intro-text">
             <h2>What this appendix does</h2>
-            <p>Session 3.1 claimed that optimising an unbiased proxy systematically over-states the true value of whatever you select, and that the over-statement grows the harder you optimise. This page proves it. We derive the post-selection bias exactly for the Gaussian case, show how it scales when you take the maximum over many options (the role of "optimisation power"), give the distribution-free version, and map the result back to specification gaming.</p>
+            <p>Session 3.1 claimed that optimising an unbiased, noisy proxy over-states the true value of whatever you select, and that in the independent Gaussian model the over-statement grows the harder you optimise. This page proves the sign of the bias whenever each estimate is unbiased given all the true values, and derives its growth with search for independent Gaussian options. We derive the post-selection bias exactly for the Gaussian case, show how it scales when you take the maximum over many options (the role of "optimisation power"), give the distribution-free version, and map the result back to specification gaming.</p>
             <p>Prerequisites: joint Gaussians and conditional expectation, a little order-statistics / extreme-value theory, and comfort with expectations. Nothing beyond a strong second-year probability course. This is optional deep-dive material; the main thread continues in <a href="the-specification-problem.html">Session 3.1</a>.</p>
         </div>
 
@@ -36,7 +36,7 @@
         </div>
         <div class="info-box">
             <h4>The claim, precisely</h4>
-            <p>Despite the proxy being unbiased <em>before</em> selection, the selected option's proxy is biased <em>upward</em> as an estimate of its true value: \(\mathbb{E}[P_{i^*} - G_{i^*}] \ge 0\). The distortion is created by the \(\operatorname{argmax}\), not by any error in the measurement, and it grows with how hard you optimise. This post-selection over-statement is the <strong>optimizer's curse</strong> (Smith &amp; Winkler, 2006); seen through the lens of metric-gaming it is <strong>regressional Goodhart</strong> (Manheim &amp; Garrabrant, 2018).</p>
+            <p>Provided each option's noise has mean zero given all the true values, \(\mathbb{E}[\varepsilon_i \mid G_1,\ldots,G_N] = 0\), the selected option's proxy is biased <em>upward</em> as an estimate of its true value, despite the proxy being unbiased <em>before</em> selection: \(\mathbb{E}[P_{i^*} - G_{i^*}] \ge 0\). The distortion is created by the \(\operatorname{argmax}\) acting on noisy measurements, not by any bias in the measurement. In the independent Gaussian model below, it grows with how hard you optimise. This post-selection over-statement is the <strong>optimizer's curse</strong> (Smith &amp; Winkler, 2006); seen through the lens of metric-gaming it is <strong>regressional Goodhart</strong> (Manheim &amp; Garrabrant, 2018).</p>
         </div>
 
         <h2 class="section-title">② The single-option posterior</h2>
@@ -78,9 +78,9 @@
             <h4>Extreme-value scaling</h4>
             <p style="color:#555;">Let \(P_1,\ldots,P_N\) be i.i.d. \(\mathcal{N}(\mu_P, \sigma_P^2)\) with \(\sigma_P^2 = \sigma_G^2 + \sigma_\varepsilon^2\), and \(M_N = \max_i P_i\). The normal distribution lies in the Gumbel domain of attraction, with centering constant (Embrechts, Klüppelberg &amp; Mikosch, 1997)</p>
             <div class="formula">\[ b_N = \sqrt{2 \ln N} - \dfrac{\ln \ln N + \ln 4\pi}{2\sqrt{2 \ln N}}, \qquad a_N = \frac{1}{\sqrt{2 \ln N}}. \]</div>
-            <p style="color:#555;">Then \((M_N - b_N)/a_N\) converges in distribution to a standard Gumbel, whose mean is the Euler–Mascheroni constant \(\gamma \approx 0.5772\). Hence the <em>expected</em> maximum is</p>
+            <p style="color:#555;">Then \((M_N - \mu_P - \sigma_P b_N)/(\sigma_P a_N)\) converges in distribution to a standard Gumbel, whose mean is the Euler–Mascheroni constant \(\gamma \approx 0.5772\). Hence the <em>expected</em> maximum is</p>
             <div class="formula">\[ \mathbb{E}[M_N] = \mu_P + \sigma_P\!\left( b_N + \gamma \cdot a_N \right) + o\!\left(1/\sqrt{\ln N}\right) \approx \mu_P + \sigma_P\sqrt{2 \ln N} \]</div>
-            <p style="color:#555;">(leading order). (The leading term is \(\sqrt{2 \ln N}\); \(b_N\) is the precise centering constant and the \(\gamma \cdot a_N\) term is the same order as the correction, so we keep both rather than mixing them.)</p>
+            <p style="color:#555;">(leading order). (The leading term is \(\sqrt{2 \ln N}\). The correction inside \(b_N\) is of order \(\ln\ln N/\sqrt{\ln N}\), larger than the \(\gamma \cdot a_N\) term, which is of order \(1/\sqrt{\ln N}\); we keep both so that the error is \(o(1/\sqrt{\ln N})\).)</p>
         </div>
         <div class="technical-detail">
             <h4>The winner's shortfall</h4>
