@@ -200,7 +200,7 @@
 <li>Commonly used estimate: ~1 tonne CO₂e per passenger</li>
 <li>Note: figures from different calculators range from 0.5 to 1.5 tonnes; this is itself uncertain</li>
 </ul>
-<p style="margin-top: 20px; margin-bottom: 10px;">Carbon per ChatGPT text prompt:</p>
+<p style="margin-top: 20px; margin-bottom: 10px;">Carbon per text prompt:</p>
 <table class="comparison-table">
 <thead>
 <tr>
@@ -218,25 +218,25 @@
 <td>~8.5 million</td>
 </tr>
 <tr>
-<td>2 Wh</td>
-<td>Mid-range independent estimate</td>
-<td>0.70 g CO₂</td>
-<td>~1.4 million</td>
+<td>1.9 Wh</td>
+<td>Llama 3.1 405B, Hugging Face measurement for MIT Technology Review, 2025</td>
+<td>0.66 g CO₂</td>
+<td>~1.5 million</td>
 </tr>
 <tr>
-<td>8 Wh</td>
-<td>Large model, independent measurement</td>
-<td>2.8 g CO₂</td>
-<td>~359,000</td>
+<td>21.7 Wh</td>
+<td>Llama 3.1 405B, one prompt at a time on 16 GPUs (<a href="https://arxiv.org/abs/2511.05597" target="_blank" rel="noopener">arXiv:2511.05597</a>, Table IV)</td>
+<td>7.6 g CO₂</td>
+<td>~130,000</td>
 </tr>
 </tbody>
 </table>
-<p style="margin-top: 15px; color: #666;">Depending entirely on which figures you use, one transatlantic flight equals somewhere between about 359,000 and 8.5 million ChatGPT text queries. That spread reflects the difference between company-optimised infrastructure and real-world large-model deployments, as well as uncertainty about what "a ChatGPT query" even means in terms of model size and compute.</p>
+<p style="margin-top: 15px; color: #666;">Depending entirely on which figures you use, one transatlantic flight equals somewhere between about 130,000 and 8.5 million text queries. That spread reflects the difference between a provider's optimised, batched serving and a large model answering one prompt at a time, as well as uncertainty about what "a ChatGPT query" even means in terms of model size and compute.</p>
 </div>
 
 <div class="highlight-box">
 <h3><span style="color: #ffffff;">The spread across assumptions</span></h3>
-<p>That this calculation can produce answers spanning more than an order of magnitude (a factor of about 24) is itself the finding. It tells us that glib comparisons ("ChatGPT = X flights per day") depend almost entirely on unstated assumptions, and that incomplete disclosure by AI companies makes it hard to pin down a single answer.</p>
+<p>That this calculation can produce answers spanning nearly two orders of magnitude (a factor of about 64) is itself the finding. It tells us that glib comparisons ("ChatGPT = X flights per day") depend almost entirely on unstated assumptions, and that incomplete disclosure by AI companies makes it hard to pin down a single answer.</p>
 <p style="margin-top: 15px;">As researchers, the appropriate response is to present the range and to push for better disclosure, rather than picking the number that fits our preferred narrative.</p>
 </div>
 
@@ -356,7 +356,7 @@
 <ul class="styled-list" style="margin-top: 15px;">
 <li>Corporate disclosure is partial: some companies publish operational estimates or model-specific training emissions, but not the data needed for a complete footprint, so estimates involve assumptions</li>
 <li>Text vs. video is not comparable: The 5-second video estimate (~944 Wh) is roughly 2,800 to 3,900 times the reported text-prompt figures (0.34 and 0.24 Wh); these are different categories of use</li>
-<li>The flight comparison spans more than an order of magnitude: about 359,000 to 8.5 million queries per flight, depending on model size and whose figures you trust</li>
+<li>The flight comparison spans nearly two orders of magnitude: about 130,000 to 8.5 million queries per flight, depending on model size and whose figures you trust</li>
 <li>Water is underreported: Both direct cooling and indirect electricity generation consume significant water, with geographic implications</li>
 <li>Scale is what matters: Individual query costs are small; billions of queries per day is not</li>
 <li>Inference, not just training: The ongoing cost of running models at scale quickly exceeds one-time training costs</li>
