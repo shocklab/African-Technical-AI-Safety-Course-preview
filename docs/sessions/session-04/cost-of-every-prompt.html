@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 4.1 — The cost of every prompt</title>
+    <title>Session 4.1: The cost of every prompt</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 4</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-03/deception-corrigibility.html">← <span class="tn-title">3.4 · Deception and corrigibility</span></a>
-    <a class="tn-next" href="infrastructure-and-rebound.html"><span class="tn-title">4.2 · Infrastructure, scale and the rebound problem</span> →</a>
+    <a class="tn-prev" href="../session-03/deception-corrigibility.html" aria-label="Previous: 3.4 · Deception and corrigibility">← <span class="tn-title">3.4 · Deception and corrigibility</span></a>
+    <a class="tn-next" href="infrastructure-and-rebound.html" aria-label="Next: 4.2 · Infrastructure, scale and the rebound problem"><span class="tn-title">4.2 · Infrastructure, scale and the rebound problem</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -38,20 +38,20 @@
     </header>
     <div class="content">
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Session 4 — the physical substrate of scale</span></h3>
-            <p>Capability is bought with compute; compute is bought with energy, water, hardware and minerals. Why a <em>safety</em> course counts kilowatts: compute is the capability floor, which makes it the main governance lever (Session 12), and its costs fall unevenly, disproportionately on the Global South.</p>
-            <p style="margin-bottom:0;">This session's sub-sessions: 4.1 the cost of every prompt · 4.2 infrastructure &amp; the rebound problem · 4.3 critical minerals · 4.4 sustainable &amp; sovereign AI.</p>
+            <h3><span style="color:#ffffff;">Session 4: the physical substrate of scale</span></h3>
+            <p>Capability is bought with compute; compute is bought with energy, water, hardware and minerals. Why a safety course counts kilowatts: compute is the capability floor, which makes it the main governance lever (Session 12), and its costs fall unevenly, disproportionately on the Global South.</p>
+            <p style="margin-bottom:0;">This session's sub-sessions: 4.1 the cost of every prompt · 4.2 infrastructure, scale and the rebound problem · 4.3 critical minerals and the hardware supply chain · 4.4 sustainable and sovereign AI.</p>
         </div>
 <div class="intro-text">
 <h2>What we'll cover</h2>
 <p>Every time you send a message to an AI assistant, something physical happens: electricity flows through data-centre hardware on the other side of the world. This session puts numbers on that to help you think clearly about its environmental implications as a researcher and as a citizen.</p>
 <p>We will look at energy consumption from the level of a single query up to the scale of global AI usage, at water (an environmental cost that receives less attention than carbon), and at why the numbers you read in the media should always be treated with careful scepticism.</p>
-<p>This is a topic where the data are uncertain and where companies have strong incentives to present their products in the best possible light. Part of our job here is to understand <em>why</em> the numbers are uncertain.</p>
+<p>This is a topic where the data are uncertain and where companies have strong incentives to present their products in the best possible light. Part of our job here is to understand why the numbers are uncertain.</p>
 </div>
 
 <div class="resource-placeholder reading-core">
 <h4>Mandatory readings</h4>
-<p style="font-style: normal; margin-top: 8px;"><a href="https://www.nature.com/articles/d41586-024-00478-x" target="_blank" rel="noopener">Nature (2024): "Generative AI&rsquo;s environmental costs are soaring &mdash; and mostly secret"</a>: a <em>Nature</em> commentary on why accurate environmental data is so hard to get from AI companies. A good starting point for understanding the transparency problem. ≈800 words.</p>
+<p style="font-style: normal; margin-top: 8px;"><a href="https://www.nature.com/articles/d41586-024-00478-x" target="_blank" rel="noopener">Nature (2024): "Generative AI&rsquo;s environmental costs are soaring &ndash; and mostly secret"</a>: a <em>Nature</em> commentary on why accurate environmental data is so hard to get from AI companies. A good starting point for understanding the transparency problem. ≈800 words.</p>
 <p style="font-style: normal; margin-top: 8px;"><a href="https://arxiv.org/abs/2304.03271" target="_blank" rel="noopener"><strong>Li, Yang, Islam, Ren (2023): "Making AI Less Thirsty"</strong></a>: the most-cited quantitative analysis of AI water consumption. Read the paper, not just the media coverage of it; the estimation methodology is §3 ("Estimating AI's Water Footprint"), with the GPT-3 case study in §3.3. ≈5,500 words.</p>
 <p style="margin-top:10px; color:#666;">Total mandatory load: ≈6,300 words.</p>
 </div>
@@ -68,7 +68,6 @@
 
 <!-- SECTION 1: THE TRANSPARENCY PROBLEM -->
 <h2 class="section-title">The transparency problem</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Before we look at any numbers, it is worth understanding why getting accurate figures is so difficult, because the answer shapes how we interpret everything that follows.</p>
 
 <div class="card-grid">
 <div class="card">
@@ -98,7 +97,6 @@
 
 <!-- SECTION 2: ENERGY PER INTERACTION -->
 <h2 class="section-title">Energy per interaction</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Let's start at the level of a single query. How much electricity does it take to generate one response?</p>
 
 <div class="technical-detail">
 <h4>Energy consumption by task type</h4>
@@ -140,14 +138,14 @@
 <tr>
 <td>AI image generation</td>
 <td>~2–5 Wh</td>
-<td>7.2–18 seconds of a 1 kW microwave</td>
+<td>7.2 to 18 seconds of a 1 kW microwave</td>
 <td>Various; moderate confidence</td>
 </tr>
 <tr>
 <td>AI video generation (5 seconds)</td>
 <td>~3.4 MJ (~944 Wh)</td>
 <td>Approximately 57 minutes of a 1 kW microwave</td>
-<td>MIT Technology Review, 2025; about 190–470× the image estimate in this table</td>
+<td>MIT Technology Review, 2025; about 190 to 470× the image estimate in this table</td>
 </tr>
 </tbody>
 </table>
@@ -157,12 +155,12 @@
 <div class="info-box">
 <h4>Video generation</h4>
 <p>The energy cost of generating a 5-second AI video (~944 Wh, per MIT Technology Review 2025) is not a typing error. High-resolution video generation involves running a very large diffusion model many times over, the equivalent of generating hundreds or thousands of images sequentially and combining them. This figure comes from measuring open-source video generation models; proprietary models like Sora may differ.</p>
-<p style="margin-top: 8px;">For context: 944 Wh is roughly one-seventh of what an average South African household uses in a day (around 6&ndash;7 kWh): a meaningful amount for a few seconds of video, but still a fraction of daily household use.</p>
+<p style="margin-top: 8px;">For context: 944 Wh is roughly one-seventh of what an average South African household uses in a day (around 6 to 7 kWh): a meaningful amount for a few seconds of video, but still a fraction of daily household use.</p>
 </div>
 
 <!-- SECTION 2b: THE AGENTIC MULTIPLIER -->
 <h2 class="section-title">The agentic multiplier: tools like Claude Code</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">The figures above describe a single prompt: you ask, the model answers once. But the way many researchers now use AI is very different. Agentic tools (Claude Code, Codex, Cursor's agent mode, Gemini CLI) do not answer once. They run a <em>loop</em>: read files, call tools, run code, read the output, reason about it, and call the model again, often dozens of times to complete one task. Energy use scales roughly with the total number of tokens the model processes, so an agentic task can cost many times more than a single chat prompt. This section tries to put bounds on "how much more", and, as with everything in this lesson, the answer is a wide range.</p>
+<p>The figures above describe a single prompt: you ask, the model answers once. But the way many researchers now use AI is very different. Agentic tools (Claude Code, Codex, Cursor's agent mode, Gemini CLI) do not answer once. They run a loop: read files, call tools, run code, read the output, reason about it, and call the model again, often dozens of times to complete one task. Energy use scales roughly with the total number of tokens the model processes, so an agentic task can cost many times more than a single chat prompt. This section tries to put bounds on "how much more", and, as with everything in this lesson, the answer is a wide range.</p>
 <div class="warning-box">
 <h4>From prompt measurements to workloads</h4>
 <p>Reported per-prompt figures do not determine the footprint of a research workflow. Agentic tasks can involve different numbers of calls, context lengths and generated tokens. The exercise below asks you to define those inputs and identify the measurements you would need.</p>
@@ -184,12 +182,12 @@
 
 <div class="highlight-box">
 <h3><span style="color: #ffffff;">Implications for researchers</span></h3>
-<p>The per-prompt footprint of AI is small. The footprint of <em>agentic</em> AI is larger because there are so many steps. The same property that makes these tools powerful for research (they keep working autonomously) is what drives their energy use.</p>
+<p>The per-prompt footprint of AI is small. The footprint of agentic AI is larger because there are so many steps. The same property that makes these tools powerful for research (they keep working autonomously) is what drives their energy use.</p>
 <p style="margin-top: 15px;">This connects directly to the rebound problem we examine in the next session: as agentic tools make each task cheaper and easier, we tend to run far more of them. The individual cost falls; the total can still rise. The responsible choice is to use the right effort level for the job, and to be honest about how uncertain the numbers are.</p>
 </div>
 <!-- SECTION 3: THE FLIGHT COMPARISON -->
 <h2 class="section-title">A worked example: the flight comparison</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">A common comparison in media coverage: how does using AI compare to taking a transatlantic flight? Let's work through this carefully, because how you do the calculation matters enormously.</p>
+<p>How does using AI compare to taking a transatlantic flight?</p>
 
 <div class="technical-detail">
 <h4>Step-by-step calculation</h4>
@@ -242,33 +240,33 @@
 
 <!-- SECTION 3b: MACRO SHARE -->
 <h2 class="section-title">AI&rsquo;s share of global emissions</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">The per-query comparison above is useful for personal calibration, but it can&rsquo;t tell you what share of <em>global</em> emissions AI represents. For that, you have to layer estimates from primary sources and be honest about what is measured versus modelled.</p>
+<p>The per-query comparison above is useful for personal calibration, but it can&rsquo;t tell you what share of global emissions AI represents. For that, you have to layer estimates from primary sources and be honest about what is measured versus modelled.</p>
 <div class="technical-detail">
-<h4>A back-of-envelope: AI vs aviation</h4>
-<p>Step 1 &mdash; Inputs (primary sources):</p>
+<h4>A back-of-envelope: AI versus aviation</h4>
+<p>Step 1: Inputs (primary sources):</p>
 <ul>
 <li>Data centres &asymp; 1.5% of global electricity (&asymp; 415 TWh in 2024). IEA, <em><a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener">Energy and AI</a></em> (2025).</li>
 <li>AI-focused share &asymp; 0.5% of global electricity (2025). Hannah Ritchie&rsquo;s estimate from the IEA inputs, in her 2025 summary at <em><a href="https://www.sustainabilitybynumbers.com/p/ai-electricity-2025" target="_blank" rel="noopener">Sustainability by Numbers</a></em> (2026).</li>
 <li>Electricity &amp; heat &asymp; 47% of energy-related CO<sub>2</sub>; energy-related CO<sub>2</sub> &asymp; 95% of total CO<sub>2</sub> (2023). Climate Watch / <a href="https://ourworldindata.org/emissions-by-sector" target="_blank" rel="noopener">Our World in Data</a> sectoral breakdown.</li>
 </ul>
-<p style="margin-top: 12px;">Step 2 &mdash; Calculation: If AI&rsquo;s electricity were at average grid carbon intensity, AI&rsquo;s share of energy-related CO<sub>2</sub> &asymp; 0.5% &times; 47% &asymp; 0.24%. AI loads are concentrated in the US (gas-heavy) and China (coal-heavy), pushing intensity above average; the largest operators&rsquo; renewable and nuclear procurement pulls below it (though annual matching overstates hourly cleanliness). Net plausible range: 0.24&ndash;0.47% of energy-related CO<sub>2</sub>, or roughly 0.22&ndash;0.45% of total CO<sub>2</sub>.</p>
-<p style="margin-top: 12px;">Step 3 &mdash; The aviation benchmark. Aviation accounted for 2.5% of global energy-related CO<sub>2</sub> in 2023 (&asymp; 950 Mt). IEA, <em><a href="https://www.iea.org/energy-system/transport/aviation" target="_blank" rel="noopener">Aviation</a></em>. Passenger flights are &asymp; 81% of that and freight &asymp; 19%, so passenger aviation &asymp; 2% of global CO<sub>2</sub>.</p>
-<p style="margin-top: 12px;">In sum: On the total-CO<sub>2</sub> denominator, passenger air travel (&asymp; 2%) emits roughly 4&ndash;9&times; what AI does operationally right now (0.22&ndash;0.45%). AI is around 12 to 23% of passenger aviation&rsquo;s footprint at the system level.</p>
+<p style="margin-top: 12px;">Step 2: Calculation: If AI&rsquo;s electricity were at average grid carbon intensity, AI&rsquo;s share of energy-related CO<sub>2</sub> &asymp; 0.5% &times; 47% &asymp; 0.24%. AI loads are concentrated in the US (gas-heavy) and China (coal-heavy), pushing intensity above average; the largest operators&rsquo; renewable and nuclear procurement pulls below it (though annual matching overstates hourly cleanliness). Net plausible range: 0.24 to 0.47% of energy-related CO<sub>2</sub>, or roughly 0.22 to 0.45% of total CO<sub>2</sub>.</p>
+<p style="margin-top: 12px;">Step 3: The aviation benchmark. Aviation accounted for 2.5% of global energy-related CO<sub>2</sub> in 2023 (&asymp; 950 Mt). IEA, <em><a href="https://www.iea.org/energy-system/transport/aviation" target="_blank" rel="noopener">Aviation</a></em>. Passenger flights are &asymp; 81% of that and freight &asymp; 19%, so passenger aviation &asymp; 2% of global CO<sub>2</sub>.</p>
+<p style="margin-top: 12px;">In sum: On the total-CO<sub>2</sub> denominator, passenger air travel (&asymp; 2%) emits roughly 4 to 9&times; what AI does operationally right now (0.22 to 0.45%). AI is around 11 to 23% of passenger aviation&rsquo;s footprint at the system level.</p>
 </div>
 <p style="font-size: 1.05em; line-height: 1.75; margin-top: 25px;">Two caveats sharpen the comparison further:</p>
 <ul style="font-size: 1.05em; line-height: 1.75; margin-left: 25px;">
-<li style="margin-bottom: 12px;">Aviation&rsquo;s real impact is larger than the CO<sub>2</sub> alone. Non-CO<sub>2</sub> effects (contrails and NO<sub>x</sub> at altitude) push aviation&rsquo;s share of anthropogenic warming closer to 3.5&ndash;4% (Lee et al. 2021, <em><a href="https://doi.org/10.1016/j.atmosenv.2020.117834" target="_blank" rel="noopener">Atmospheric Environment</a></em>). The gap on a warming basis is wider than the gap on a CO<sub>2</sub> basis.</li>
+<li style="margin-bottom: 12px;">Aviation&rsquo;s real impact is larger than the CO<sub>2</sub> alone. Non-CO<sub>2</sub> effects (contrails and NO<sub>x</sub> at altitude) push aviation&rsquo;s share of anthropogenic warming closer to 3.5 to 4% (Lee et al. 2021, <em><a href="https://doi.org/10.1016/j.atmosenv.2020.117834" target="_blank" rel="noopener">Atmospheric Environment</a></em>). The gap on a warming basis is wider than the gap on a CO<sub>2</sub> basis.</li>
 <li style="margin-bottom: 12px;">Aviation is concentrated; AI use is broadly distributed. Only &asymp; 11% of the world&rsquo;s population flew in 2018, and the most frequent &asymp; 1% account for more than half of passenger-flight emissions (G&ouml;ssling &amp; Humpe 2020, <em><a href="https://doi.org/10.1016/j.gloenvcha.2020.102194" target="_blank" rel="noopener">Global Environmental Change</a></em>). AI use is becoming more broadly distributed, which makes the per-person picture different from the per-person flight picture even when the system-level numbers sit in the same neighbourhood.</li>
 </ul>
 <p style="font-size: 1.05em; line-height: 1.75; margin-top: 20px;">And AI&rsquo;s side of the ratio is growing fast. The IEA projects data-centre electricity roughly doubling from approximately 415 TWh (2024) to approximately 945 TWh (2030, &asymp; 3% of global electricity), with the AI-optimised slice more than quadrupling, the fastest-growing part of that load. Even so, the IEA projects data-centre CO<sub>2</sub> staying under &asymp; 1.5% of energy-sector CO<sub>2</sub> (&asymp; 300 Mt by 2035). AI would need several-fold growth relative to aviation to close the gap.</p>
 <div class="warning-box">
 <h4>Reading these numbers</h4>
-<p>These are layered estimates, not audited measurements. The 0.24&ndash;0.47% calculation rests on three assumptions, each with its own uncertainty: (a) the IEA&rsquo;s 1.5% data-centre figure, (b) Hannah Ritchie&rsquo;s one-third allocation to AI specifically, and (c) average grid intensity. Treat the headline as a well-reasoned estimate from primary sources, not as a measurement; the same scepticism the rest of this lesson asks you to apply to vendor claims applies to careful third-party estimates too.</p>
+<p>These are layered estimates, not audited measurements. The 0.24 to 0.47% calculation rests on three assumptions, each with its own uncertainty: (a) the IEA&rsquo;s 1.5% data-centre figure, (b) Hannah Ritchie&rsquo;s one-third allocation to AI specifically, and (c) average grid intensity. These calculations give an estimate from primary sources, not a measurement. The same scepticism the rest of this lesson asks you to apply to vendor claims applies to careful third-party estimates too.</p>
 <p style="margin-top: 12px;">The figures also exclude embodied emissions: chip fabrication, server manufacture, data-centre construction (concrete, steel). 4.2 and 4.3 return to those in detail, because lifecycle accounting can raise the operational number materially. And the definition of &ldquo;AI&rdquo; versus general accelerated compute is itself fuzzy: not every workload on a GPU is what most people mean by AI.</p>
 </div>
 <!-- SECTION 4: WATER -->
 <h2 class="section-title">The water footprint</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Energy gets most of the attention, but water is the environmental cost of AI that is least reported and least understood. Data centres are thirsty in two distinct ways.</p>
+<p>Energy gets most of the attention, but water is the environmental cost of AI that is least reported and least understood. Data centres are thirsty in two distinct ways.</p>
 
 <div class="card-grid">
 <div class="card">
@@ -287,7 +285,7 @@
 <ul class="styled-list">
 <li>Thermal power plants (coal, gas, nuclear) use water for steam generation and cooling</li>
 <li>Some of this water evaporates and is lost to the local supply; most of the rest goes back to its source, often warmer than when it was taken</li>
-<li>A commonly cited estimate (Li and colleagues, including Shaolei Ren, UC Riverside) for GPT-3: roughly 500 ml of water per 10–50 medium-length responses, about 30 at the US average, of which only about 13% is direct cooling water; the rest is from electricity generation</li>
+<li>A commonly cited estimate (Li and colleagues, including Shaolei Ren, UC Riverside) for GPT-3: roughly 500 ml of water per 10 to 50 medium-length responses, about 30 at the US average, of which only about 13% is direct cooling water; the rest is from electricity generation</li>
 <li>Water extracted in arid regions has very different consequences from the same volume extracted in water-abundant areas</li>
 </ul>
 </div>
@@ -295,12 +293,12 @@
 
 <div class="warning-box">
 <h4>Treating the 500 ml figure with care</h4>
-<p>The "500 ml per 30-turn conversation" figure (media shorthand for the estimate in Li et al., 2023, of about 500 ml per 10–50 GPT-3 responses) became widely cited in media coverage, often without key caveats: it is an estimate based on assumed data centre locations (US-average), a specific model generation (GPT-3 era), and indirect water attribution methods that are contested. Modern data centres vary widely in water efficiency; some use closed-loop systems that recirculate water rather than evaporating it. Treat this as an order-of-magnitude estimate. The original paper acknowledges significant uncertainty.</p>
+<p>The "500 ml per 30-turn conversation" figure (media shorthand for the estimate in Li et al., 2023, of about 500 ml per 10 to 50 GPT-3 responses) became widely cited in media coverage, often without key caveats: it is an estimate based on assumed data centre locations (US-average), a specific model generation (GPT-3 era), and indirect water attribution methods that are contested. Modern data centres vary widely in water efficiency; some use closed-loop systems that recirculate water rather than evaporating it. Treat this as an order-of-magnitude estimate. The original paper acknowledges significant uncertainty.</p>
 </div>
 
 <!-- SECTION 5: SCALE -->
 <h2 class="section-title">Putting it at scale</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Individual query costs only matter if we multiply them by usage. Let's consider what the aggregate picture looks like.</p>
+<p>Total energy use depends on both query costs and usage.</p>
 
 <div class="technical-detail">
 <h4>AI usage at global scale (2025)</h4>
@@ -331,7 +329,7 @@
 <tr>
 <td>Projected US data-centre electricity (2028)</td>
 <td>325–580 TWh/year</td>
-<td>LBNL 2024; ≈6.7–12% of US electricity</td>
+<td>LBNL 2024; ≈6.7 to 12% of US electricity</td>
 </tr>
 <tr>
 <td>US household electricity reference</td>
@@ -344,8 +342,8 @@
 </div>
 
 <div class="info-box">
-<h4>Training vs. inference: where the energy goes</h4>
-<p>Much early coverage of AI's environmental cost focused on the energy required to <em>train</em> a model: the one-time compute cost of creating GPT-4 or Claude. But for widely-deployed models, <em>inference</em> (running the model to answer queries) can easily exceed training energy over the model's lifetime.</p>
+<h4>Training versus inference: where the energy goes</h4>
+<p>Much early coverage of AI's environmental cost focused on the energy required to train a model: the one-time compute cost of creating GPT-4 or Claude. But for widely-deployed models, inference (running the model to answer queries) can easily exceed training energy over the model's lifetime.</p>
 <p style="margin-top: 8px;">With 2.5 billion queries per day, the cumulative inference cost of ChatGPT dwarfs the one-time training cost within months of deployment. This is why statements like "training GPT-3 emitted X tonnes of CO₂" need to be placed in the context of ongoing inference costs.</p>
 </div>
 
@@ -355,7 +353,7 @@
 <p>Before we can have a productive conversation about AI's environmental impact, we need to understand the numbers and their limits:</p>
 <ul class="styled-list" style="margin-top: 15px;">
 <li>Corporate disclosure is partial: some companies publish operational estimates or model-specific training emissions, but not the data needed for a complete footprint, so estimates involve assumptions</li>
-<li>Text vs. video is not comparable: The 5-second video estimate (~944 Wh) is roughly 2,800 to 3,900 times the reported text-prompt figures (0.34 and 0.24 Wh); these are different categories of use</li>
+<li>Text versus video is not comparable: The 5-second video estimate (~944 Wh) is roughly 2,800 to 3,900 times the reported text-prompt figures (0.34 and 0.24 Wh); these are different categories of use</li>
 <li>The flight comparison spans nearly two orders of magnitude: about 130,000 to 8.5 million queries per flight, depending on model size and whose figures you trust</li>
 <li>Water is underreported: Both direct cooling and indirect electricity generation consume significant water, with geographic implications</li>
 <li>Scale is what matters: Individual query costs are small; billions of queries per day is not</li>
@@ -366,10 +364,10 @@
 </div>
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-03/deception-corrigibility.html"><span class="nav-label">← Previous</span><span class="nav-title">3.4 · Deception and corrigibility</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="infrastructure-and-rebound.html"><span class="nav-label">Next →</span><span class="nav-title">4.2 · Infrastructure, scale and the rebound problem</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-03/deception-corrigibility.html" aria-label="Previous: 3.4 · Deception and corrigibility"><span class="nav-label">← Previous</span><span class="nav-title">3.4 · Deception and corrigibility</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="infrastructure-and-rebound.html" aria-label="Next: 4.2 · Infrastructure, scale and the rebound problem"><span class="nav-label">Next →</span><span class="nav-title">4.2 · Infrastructure, scale and the rebound problem</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

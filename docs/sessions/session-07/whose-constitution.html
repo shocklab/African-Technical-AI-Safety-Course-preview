@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.4 — Whose constitution?</title>
+    <title>Session 7.4: Whose constitution?</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 7</summary>
@@ -27,8 +27,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="rlaif-and-self-rewarding.html">← <span class="tn-title">7.3 · RLAIF and self-rewarding</span></a>
-    <a class="tn-next" href="model-specifications.html"><span class="tn-title">7.5 · Model specifications</span> →</a>
+    <a class="tn-prev" href="rlaif-and-self-rewarding.html" aria-label="Previous: 7.3 · RLAIF and self-rewarding">← <span class="tn-title">7.3 · RLAIF and self-rewarding</span></a>
+    <a class="tn-next" href="model-specifications.html" aria-label="Next: 7.5 · Model specifications"><span class="tn-title">7.5 · Model specifications</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -51,10 +51,10 @@
 
         <h2 class="section-title">Collective Constitutional AI</h2>
         <p>Huang et al. (2024) asked a sample of the public to write the constitution, and trained a real model on the result.</p>
-        <p>The method is careful. They recruited a representative sample of 1,002 US adults and used <strong>Polis</strong> (a deliberation platform where participants propose short statements and vote on each other's), gathering 1,127 statements and around 38,000 votes. Statements were selected by <em>group-aware consensus</em>, which favours principles that command agreement across opinion clusters rather than within a single bloc, a deliberate guard against majority capture. The surviving statements became a "Public" constitution, and they trained a model on it identically to a baseline model trained on Anthropic's own "Standard" constitution, changing nothing else, so any difference traces to the constitution alone.</p>
+        <p>The method is careful. They recruited a representative sample of 1,002 US adults and used <strong>Polis</strong> (a deliberation platform where participants propose short statements and vote on each other's), gathering 1,127 statements and around 38,000 votes. Statements were selected by group-aware consensus, which favours principles that command agreement across opinion clusters rather than within a single bloc, a deliberate guard against majority capture. The surviving statements became a "Public" constitution, and they trained a model on it identically to a baseline model trained on Anthropic's own "Standard" constitution, changing nothing else, so any difference traces to the constitution alone.</p>
         <div class="info-box">
             <h4>What the public constitution changed</h4>
-            <p>The two constitutions overlapped about 50% in concepts, so the public reproduced much of the experts' document and then diverged in revealing ways: the public principles leaned harder on <em>objectivity and impartiality</em>, on <em>accessibility</em> (including for people with disabilities), and on stating desired behaviour positively rather than listing prohibitions. The trained model held its ground on capability (equivalent on MMLU and the GSM8K maths benchmark, and on helpfulness and harmlessness) while scoring lower social bias across all nine dimensions of the BBQ bias benchmark than the standard model. Public input measurably reduced bias without costing capability. As a proof of concept that the document can be opened up, it works.</p>
+            <p>The two constitutions overlapped about 50% in concepts, so the public reproduced much of the experts' document and then diverged in revealing ways: the public principles leaned harder on objectivity and impartiality, on accessibility (including for people with disabilities), and on stating desired behaviour positively rather than listing prohibitions. The trained model held its ground on capability (equivalent on MMLU and the GSM8K maths benchmark, and on helpfulness and harmlessness) while scoring lower social bias across all nine dimensions of the BBQ bias benchmark than the standard model. Public input measurably reduced bias without costing capability. As a proof of concept that the document can be opened up, it works.</p>
         </div>
 
         <h2 class="section-title">The US-only sample</h2>
@@ -66,13 +66,13 @@
         <p>This is where 7.3's technical worry meets 7.4's normative one. AI feedback inherits the base model's competence profile, which is steeply tilted toward high-resource languages, so a feedback model judges harmfulness confidently in English and unreliably in low-resource African languages. The consequence is measurable, and it is the result this course keeps returning to. Yong et al. (2023) translated a benchmark of harmful requests out of English and back: against GPT-4, the attack-success rate rose from under 1% in English to roughly 79% when combining low-resource languages (Zulu, Scots Gaelic, Hmong, Guarani), with isiZulu alone around 53%. The guardrails were, in effect, English-language guardrails. Those numbers are a 2023 snapshot of that year's GPT-4: frontier models have since been hardened against this specific attack and the headline rates no longer reproduce on them, but the gap persists on smaller and open-weight models, whose safety training in low-resource languages is thinner still.</p>
         <div class="warning-box">
             <h4>Combined versus per-language rates</h4>
-            <p>The 79% is the <em>combined</em> low-resource figure: an adversary free to pick the best of several low-resource languages succeeds about four times in five. Any single language is lower: isiZulu ~53%, Scots Gaelic ~43%. Stating "isiZulu jailbreaks GPT-4 79% of the time" overstates the per-language result and is the kind of loose summary Session 1 trained you to catch. The claim that survives is sharp enough: a safety system that holds in English fails most of the time once an attacker can try a few low-resource languages, using nothing more than a public translation tool.</p>
+            <p>The 79% is the combined low-resource figure: an adversary free to pick the best of several low-resource languages succeeds about four times in five. Any single language is lower: isiZulu ~53%, Scots Gaelic ~43%. Stating "isiZulu jailbreaks GPT-4 79% of the time" overstates the per-language result and is the kind of loose summary Session 1 trained you to catch. The claim that survives is sharp enough: a safety system that holds in English fails most of the time once an attacker can try a few low-resource languages, using nothing more than a public translation tool.</p>
         </div>
         <p>Now compound it with AI feedback. A self-judging or constitution-following loop in isiZulu pairs a weaker generator with a weaker judge, each unable to catch the other's failures, and produces safety labels no one in the loop is competent to verify. The cheapest, most scalable alignment signal in the field is least trustworthy where the populations are least represented and the human fallback is also thinnest. That is not a diversity footnote. It is a robustness and evaluation failure sitting at the technical core of the method, and it falls on this continent first.</p>
 
         <h2 class="section-title">Participation without power</h2>
         <p>Asking people for input is not the same as giving them control, and the gap has a literature.</p>
-        <p>Collective Constitutional AI is a participatory method, and participatory methods carry a known risk: that consultation becomes a legitimacy stamp while real decisions stay with the developer. Birhane et al. (2022), in <em>Power to the People?</em>, map this directly for AI: they warn that participation is prone to <em>cooptation</em> and to <em>conflation</em> with unrelated activities, and they insist on asking who the primary beneficiaries of a participatory exercise are. (The catchier label often attached to this failure, "participation-washing", is Sloane et al.'s coinage rather than Birhane's; attribute it correctly if you use it.) The test they propose is the one to apply to any "public input" scheme, including Collective CAI: does the public set the agenda and hold a veto, or do they vote on statements inside a frame the developer already fixed, with the developer retaining every downstream choice? Genuine participation moves power; tokenistic participation moves only the appearance of it.</p>
+        <p>Collective Constitutional AI is a participatory method, and participatory methods carry a known risk: that consultation becomes a legitimacy stamp while real decisions stay with the developer. Birhane et al. (2022), in <em>Power to the People?</em>, map this directly for AI: they warn that participation is prone to <em>cooptation</em> and to <em>conflation</em> with unrelated activities, and they insist on asking who the primary beneficiaries of a participatory exercise are. (The catchier label often attached to this failure, "participation-washing", is <a href="https://doi.org/10.1145/3551624.3555285" target="_blank" rel="noopener">Sloane et al.’s (2022)</a> coinage rather than Birhane's; attribute it correctly if you use it.) The test they propose is the one to apply to any "public input" scheme, including Collective CAI: does the public set the agenda and hold a veto, or do they vote on statements inside a frame the developer already fixed, with the developer retaining every downstream choice? Genuine participation moves power; tokenistic participation moves only the appearance of it.</p>
 
         <h2 class="section-title">Data and feedback sovereignty</h2>
         <p>The alternative to being consulted is owning the pipeline: the data and the feedback that shape models of and for a community.</p>
@@ -122,10 +122,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="rlaif-and-self-rewarding.html"><span class="nav-label">← Previous</span><span class="nav-title">7.3 · RLAIF and self-rewarding</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="model-specifications.html"><span class="nav-label">Next →</span><span class="nav-title">7.5 · Model specifications</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="rlaif-and-self-rewarding.html" aria-label="Previous: 7.3 · RLAIF and self-rewarding"><span class="nav-label">← Previous</span><span class="nav-title">7.3 · RLAIF and self-rewarding</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="model-specifications.html" aria-label="Next: 7.5 · Model specifications"><span class="nav-label">Next →</span><span class="nav-title">7.5 · Model specifications</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

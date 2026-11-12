@@ -17,10 +17,10 @@ import re, sys, pathlib
 ROOT = pathlib.Path(__file__).parent / "docs" / "sessions"
 CHECK = "--check" in sys.argv
 
-ARXIV = re.compile(r'(?<!/abs/)(?<!">)arXiv:(\d{4}\.\d{4,5})(?!</a>)')
+ARXIV = re.compile(r'(?<!/abs/)(?<!">)arXiv:(\d{4}\.\d{4,5}(?:v\d+)?)(?![\dv]|</a>)')
 ARXIV_REPL = r'<a href="https://arxiv.org/abs/\1" target="_blank" rel="noopener">arXiv:\1</a>'
 # Some pages wrap the ID in <code> (so MathJax skips it): arXiv:<code>1803.04585</code>
-ARXIV_CODE = re.compile(r'(?<!">)arXiv:<code>(\d{4}\.\d{4,5})</code>')
+ARXIV_CODE = re.compile(r'(?<!">)arXiv:<code>(\d{4}\.\d{4,5}(?:v\d+)?)</code>')
 ARXIV_CODE_REPL = r'<a href="https://arxiv.org/abs/\1" target="_blank" rel="noopener">arXiv:<code>\1</code></a>'
 
 A = '<a href="{url}" target="_blank" rel="noopener">'

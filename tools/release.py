@@ -24,6 +24,10 @@ Usage, from the repo root on a clean main:
     python3 tools/release.py sync           # no new sessions; pull dev's
                                             # revisions to released weeks
 
+Add --prune to any of these to remove files from main that dev has deleted
+within the synced paths; without it, a run that finds such files lists them
+and stops before changing anything.
+
 Each run: fetch dev-origin/dev -> update RELEASED-SESSIONS -> checkout
 released sessions' files + about/disclaimer/assets from dev -> regenerate
 the gated index -> delete unreleased session files -> add_page_nav.py ->
@@ -49,6 +53,8 @@ RELEASE_NOTE = (
 
 
 def run(*cmd, capture=False):
+    if cmd[0] == "git":
+        cmd = ("git", "-C", str(ROOT), *cmd[1:])
     return subprocess.run(cmd, check=True, capture_output=capture, text=True,
                           cwd=ROOT)
 
@@ -57,6 +63,41 @@ def read_released():
     if not RELEASED_FILE.exists():
         return set()
     return {int(x) for x in RELEASED_FILE.read_text().split()}
+
+
+def sync_files(released, prune):
+    """Replace tracked files within the selected shared and released paths."""
+    source = set(run("git", "ls-tree", "-r", "-z", "--name-only",
+                     "dev-origin/dev", "--", "docs", capture=True).stdout.split("\0")) - {""}
+    tracked = set(run("git", "ls-files", "-z", "--", "docs",
+                      capture=True).stdout.split("\0")) - {""}
+
+    def selected(path):
+        # Never prune the generated contents page or any path outside docs/.
+        if path == "docs/index.html" or not path.startswith("docs/"):
+            return False
+        if any(path == scope or path.startswith(scope + "/") for scope in SYNC_PATHS):
+            return True
+        m = re.match(r"docs/sessions/session-(\d{2})(?:/|[-.])", path)
+        return bool(m and int(m.group(1)) in released)
+
+    incoming = sorted(p for p in source if selected(p))
+    for s in sorted(released):
+        if not any(re.match(rf"docs/sessions/session-{s:02d}(?:/|[-.])", p)
+                   for p in incoming):
+            sys.exit(f"no session-{s:02d} content on dev-origin/dev")
+    stale = sorted(p for p in tracked - source if selected(p))
+    if stale and not prune:
+        print("These files are on main but deleted on dev:")
+        for path in stale:
+            print(f"  {path}")
+        sys.exit("rerun with --prune to remove them, or restore them on dev")
+    # Remove first so file-to-directory and directory-to-file changes can sync.
+    for path in stale:
+        print(f"Removing deleted dev file: {path}")
+        run("git", "rm", "--", path)
+    if incoming:
+        run("git", "checkout", "dev-origin/dev", "--", *incoming)
 
 
 def gate_index(full_index: str, released: set) -> str:
@@ -112,6 +153,8 @@ def gate_index(full_index: str, released: set) -> str:
 
 def main():
     args = sys.argv[1:]
+    prune = "--prune" in args
+    args = [a for a in args if a != "--prune"]
     if not args:
         sys.exit(__doc__)
 
@@ -119,8 +162,11 @@ def main():
                  capture=True).stdout.strip()
     if branch != "main":
         sys.exit(f"on branch {branch!r}; releases run from main")
-    dirty = run("git", "status", "--porcelain", capture=True).stdout
-    if any(not l.startswith("??") for l in dirty.splitlines()):
+    dirty = run("git", "status", "--porcelain", "-z", "--untracked-files=all", capture=True).stdout
+    entries = dirty.split("\0")
+    if any(l.startswith("?? docs/") for l in entries):
+        sys.exit("untracked files under docs/; move or review them before releasing")
+    if any(l and not l.startswith("??") for l in entries):
         sys.exit("uncommitted changes on main; commit or stash first")
 
     init = args and args[0] == "init"
@@ -136,18 +182,7 @@ def main():
     full_index = run("git", "show", "dev-origin/dev:docs/index.html",
                      capture=True).stdout
 
-    # files for released sessions + shared assets, from dev
-    tree = run("git", "ls-tree", "-r", "--name-only", "dev-origin/dev",
-               "docs/sessions/", capture=True).stdout.split()
-    paths = list(SYNC_PATHS)
-    for s in sorted(released):
-        nn = f"{s:02d}"
-        match = [p for p in tree
-                 if p.startswith(f"docs/sessions/session-{nn}")]
-        if not match:
-            sys.exit(f"no session-{nn} content on dev-origin/dev")
-        paths += match
-    run("git", "checkout", "dev-origin/dev", "--", *paths)
+    sync_files(released, prune)
 
     # remove unreleased session files from the deployed tree
     for p in sorted((ROOT / "docs" / "sessions").glob("session-*")):
@@ -162,6 +197,9 @@ def main():
 
     run("python3", "add_page_nav.py")
     run("git", "add", "docs", "RELEASED-SESSIONS")
+    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode == 0:
+        print("Nothing to release: main already matches dev for these sessions.")
+        return
     label = ("Gate site to" if init else
              "Release" if new else "Sync released sessions:")
     what = " ".join(str(s) for s in (sorted(released) if init else

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 1.2 — What technical AI safety is</title>
+    <title>Session 1.2: What technical AI safety is</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 1</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="how-this-course-works.html">← <span class="tn-title">1.1 · How this course works</span></a>
-    <a class="tn-next" href="the-case-and-its-critics.html"><span class="tn-title">1.3 · The cases for and against misalignment</span> →</a>
+    <a class="tn-prev" href="how-this-course-works.html" aria-label="Previous: 1.1 · How this course works">← <span class="tn-title">1.1 · How this course works</span></a>
+    <a class="tn-next" href="the-case-and-its-critics.html" aria-label="Next: 1.3 · The cases for and against misalignment"><span class="tn-title">1.3 · The cases for and against misalignment</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -82,12 +82,12 @@
         </div>
         <div class="technical-detail">
             <h4>Hendrycks' four categories</h4>
-            <p style="color:#555;">Hendrycks, Mazeika &amp; Woodside's "An Overview of Catastrophic AI Risks" (2023) uses four categories, which map cleanly onto the three above. <strong>Malicious use</strong> is roughly misuse. <strong>Rogue AIs</strong> is roughly misalignment. <strong>The AI race</strong> and <strong>organizational risks</strong> are two flavours of systemic risk: competitive pressure that erodes caution, and ordinary institutional failure inside the labs building these systems. Either taxonomy is a thinking tool. Its value is that it forces the question: which kind of danger is this, and what would actually reduce it?</p>
+            <p style="color:#555;">Hendrycks, Mazeika &amp; Woodside's "An Overview of Catastrophic AI Risks" (2023) uses four categories, which map cleanly onto the three above. <strong>Malicious use</strong> is roughly misuse. <strong>Rogue AIs</strong> is roughly misalignment. <strong>The AI race</strong> and <strong>organisational risks</strong> are two flavours of systemic risk: competitive pressure that erodes caution, and ordinary institutional failure inside the labs building these systems. Either taxonomy is a thinking tool. Its value is that it forces the question: which kind of danger is this, and what would actually reduce it?</p>
         </div>
 
         <figure class="wide">
             <img src="../../assets/img/session-1-2-four-risk-types.svg" alt="Four columns, one per risk type in Hendrycks, Mazeika and Woodside (2023). Malicious use (section 2): bioterrorism, unleashing AI agents, persuasive AIs, concentration of power; mitigations are biosecurity controls, structured and restricted access, adversarially robust anomaly detection, and legal liability for developers of general-purpose AI. AI race (section 3): military AI arms race, corporate AI race, evolutionary pressures; mitigations are safety regulation, data documentation, meaningful human oversight of AI decisions, AI for cyberdefence, international coordination, and public control of general-purpose AI. Organizational risks (section 4): accidents are hard to avoid, weak safety culture, no security mindset; mitigations are external red teaming, affirmative demonstration of safety before training, staged deployment and publication review, response plans, internal auditing under a chief risk officer, safe design principles, and state-of-the-art information security. Rogue AIs (section 5): proxy gaming, goal drift, power-seeking, deception; mitigations are avoiding the riskiest use cases, a symmetric international off-switch, liability for cloud compute providers, and technical safety research on proxy robustness, model honesty, transparency and hidden functionality.">
-            <figcaption><strong>The four risk types, their subtypes, and what the paper proposes against each.</strong> The first three columns trace risk to people and institutions; only the fourth is about the system itself, which is why the paper says it needs a greater share of technical effort, though three of its four proposals against it are policy measures. The paper's §6 argues the four compound rather than sitting side by side: a race erodes organisational safety, weak organisations leak capable models to malicious actors, and both raise the chance of losing control. On a small screen, <a href="../../assets/img/session-1-2-four-risk-types.svg" target="_blank" rel="noopener">open the diagram full size</a>.</figcaption>
+            <figcaption>The four risk types, their subtypes, and what the paper proposes against each. The first three columns trace risk to people and institutions; only the fourth is about the system itself, which is why the paper says it needs a greater share of technical effort, though three of its four proposals against it are policy measures. The paper's §6 argues the four compound rather than sitting side by side: a race erodes organisational safety, weak organisations leak capable models to malicious actors, and both raise the chance of losing control. On a small screen, <a href="../../assets/img/session-1-2-four-risk-types.svg" target="_blank" rel="noopener">open the diagram full size</a>.</figcaption>
         </figure>
 
         <div class="info-box">
@@ -130,7 +130,7 @@
         <h2 class="section-title">Where this course sits</h2>
         <div class="info-box">
             <h4>Relative to the courses you may have heard of</h4>
-            <p>There are several excellent open courses, and we draw on all of them. BlueDot Impact's Technical AI Safety course (formerly AI Safety Fundamentals) is a conceptual reading-and-discussion course with facilitated small groups, good for breadth and framing. <a href="https://www.arena.education/chapter2" target="_blank" rel="noopener">ARENA</a> (the Alignment Research Engineer Accelerator) is a hands-on engineering bootcamp, and the source of several of our labs. Hendrycks' "Intro to ML Safety" is the closest technical analogue and supplies much of our backbone and problem sets. Grosse's Toronto course gives us the idealised-to-empirical sequencing and the project structure.</p>
+            <p>There are several excellent open courses, and we draw on all of them. BlueDot Impact's Technical AI Safety course (formerly AI Safety Fundamentals) is a conceptual reading-and-discussion course with facilitated small groups, good for breadth and framing. <a href="https://www.arena.education/" target="_blank" rel="noopener">ARENA</a> (the Alignment Research Engineer Accelerator) is a hands-on engineering bootcamp, and the source of several of our labs. Hendrycks' "Intro to ML Safety" is the closest technical analogue and supplies much of our backbone and problem sets. Grosse's Toronto course gives us the idealised-to-empirical sequencing and the project structure.</p>
             <p>This course is its own synthesis. It is pitched at mathematically minded honours students, so it is more formal where formality helps (see the optional derivation appendices). It is built around a research project. And it is grounded in an explicitly African framing the Northern courses do not carry. We point you to the others as you go; none is a prerequisite.</p>
         </div>
 
@@ -149,9 +149,9 @@
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Take a recent AI-related news story. Which of the three risk types is it: misuse, misalignment, or systemic? Is it cleanly one, or several at once?</li>
-            <li>Give an example where improving a system's <em>capabilities</em> made it <em>less</em> safe, and one where a safety intervention also improved capability. What does each imply for "differential progress"?</li>
+            <li>Give an example where improving a system's capabilities made it less safe, and one where a safety intervention also improved capability. What does each imply for "differential progress"?</li>
             <li>Of Amodei et al.'s five concrete problems, which do you expect to be hardest, and why? Which feels most relevant to systems you've actually used?</li>
-            <li>The CAIS statement compares AI risk to pandemics and nuclear war. Is that comparison illuminating or misleading? (We return to this in 1.3 and Session 20.)</li>
+            <li>The CAIS statement compares AI risk to pandemics and nuclear war. Is that comparison illuminating or misleading? (We return to this in 1.3.)</li>
         </ul>
 
         <div class="intro-text" style="margin-top:50px;">
@@ -161,10 +161,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="how-this-course-works.html"><span class="nav-label">← Previous</span><span class="nav-title">1.1 · How this course works</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="the-case-and-its-critics.html"><span class="nav-label">Next →</span><span class="nav-title">1.3 · The cases for and against misalignment</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="how-this-course-works.html" aria-label="Previous: 1.1 · How this course works"><span class="nav-label">← Previous</span><span class="nav-title">1.1 · How this course works</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="the-case-and-its-critics.html" aria-label="Next: 1.3 · The cases for and against misalignment"><span class="nav-label">Next →</span><span class="nav-title">1.3 · The cases for and against misalignment</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

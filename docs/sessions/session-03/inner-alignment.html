@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 3.3 — Inner alignment and goal misgeneralisation</title>
+    <title>Session 3.3: Inner alignment and goal misgeneralisation</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 3</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="instrumental-convergence.html">← <span class="tn-title">3.2 · Instrumental convergence and power-seeking</span></a>
-    <a class="tn-next" href="deception-corrigibility.html"><span class="tn-title">3.4 · Deception and corrigibility</span> →</a>
+    <a class="tn-prev" href="instrumental-convergence.html" aria-label="Previous: 3.2 · Instrumental convergence and power-seeking">← <span class="tn-title">3.2 · Instrumental convergence and power-seeking</span></a>
+    <a class="tn-next" href="deception-corrigibility.html" aria-label="Next: 3.4 · Deception and corrigibility"><span class="tn-title">3.4 · Deception and corrigibility</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -34,14 +34,14 @@
     <header>
         <div class="week-badge">Week 2 • Session 3.3</div>
         <h1>Inner alignment and goal misgeneralisation</h1>
-        <p>When the objective a model <em>learns</em> differs from the one we <em>trained</em> on</p>
+        <p>When the objective a model learns differs from the one we trained on</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>So far the danger lived in the gap between what we <em>meant</em> and what we <em>specified</em> (outer alignment, 3.1), and in the convergent sub-goals a capable agent develops (3.2). This sub-session opens a second, subtler gap: between what we <em>specified</em> and what the model <em>actually learned to pursue</em>. The disturbing claim is that even a <em>flawless</em> reward can produce a model with the wrong internal goal, and that you cannot detect this by looking at training performance, because the wrong goal produces identical behaviour on the training distribution.</p>
-            <p>We develop the vocabulary of mesa-optimisation (Hubinger et al., 2019); use the evolution analogy to make it intuitive; distinguish the kinds of "pseudo-alignment" a learned model can have; examine the empirical demonstration of goal misgeneralisation (CoinRun) and its generalisation to language models (Shah et al.); and define the most dangerous special case, deceptive alignment, including the unsettling argument that gradient descent might actively <em>favour</em> it. This is the conceptual heart of why later weeks cannot rely on behaviour alone.</p>
+            <p>So far the danger lived in the gap between what we meant and what we specified (outer alignment, 3.1), and in the convergent sub-goals a capable agent develops (3.2). This sub-session opens a second, subtler gap: between what we specified and what the model actually learned to pursue. The disturbing claim is that even a flawless reward can produce a model with the wrong internal goal, and that you cannot detect this by looking at training performance, because the wrong goal produces identical behaviour on the training distribution.</p>
+            <p>We develop the vocabulary of mesa-optimisation (Hubinger et al., 2019); use the evolution analogy to make it intuitive; distinguish the kinds of "pseudo-alignment" a learned model can have; examine the empirical demonstration of goal misgeneralisation (CoinRun) and its generalisation to language models (Shah et al.); and define the most dangerous special case, deceptive alignment, including the unsettling argument that gradient descent might actively favour it. This is the conceptual heart of why later weeks cannot rely on behaviour alone.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
@@ -64,7 +64,7 @@
         <h2 class="section-title">Two gaps</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">From intent to behaviour</span></h3>
-            <p>Picture the pipeline: our intention → the base objective (the loss/reward we actually train on) → the model's behaviour. Outer alignment is closing the first arrow (intent → base objective); we saw in 3.1 how hard that is. <strong>Inner alignment</strong> is closing the second arrow: ensuring the model that emerges actually pursues the base objective, rather than some <em>other</em> goal that merely scored well during training.</p>
+            <p>Picture the pipeline: our intention → the base objective (the loss/reward we actually train on) → the model's behaviour. Outer alignment is closing the first arrow (intent → base objective); we saw in 3.1 how hard that is. <strong>Inner alignment</strong> is closing the second arrow: ensuring the model that emerges actually pursues the base objective, rather than some other goal that merely scored well during training.</p>
             <p>Solving outer alignment does not solve inner alignment. Even with a perfect reward, the second arrow can break, and it breaks silently, because on the training data the right goal and the wrong-but-correlated goal are indistinguishable.</p>
         </div>
 
@@ -74,14 +74,14 @@
         </figure>
 
         <h2 class="section-title">Mesa-optimisation: an optimiser inside the optimiser</h2>
-        <p>Hubinger et al. (2019) gave the field its vocabulary. Training an optimiser can <em>produce</em> an optimiser, and the produced optimiser has its own objective, which we did not choose.</p>
+        <p>Hubinger et al. (2019) gave the field its vocabulary. Training an optimiser can produce an optimiser, and the produced optimiser has its own objective, which we did not choose.</p>
         <div class="technical-detail">
             <h4>The definitions</h4>
             <ul class="styled-list">
                 <li><strong>Optimiser:</strong> a system "internally searching through a search space … looking for those elements that score high according to some objective function that is explicitly represented within the system." A chess engine doing tree search is an optimiser; a lookup table is not.</li>
-                <li><strong>Base optimiser:</strong> the <em>training process</em>, e.g. stochastic gradient descent selecting parameters to minimise a loss. Its objective is the <strong>base objective</strong> (the loss/reward we wrote).</li>
-                <li><strong>Mesa-optimiser:</strong> a learned model that is <em>itself</em> running an optimisation/search internally. ("Mesa" was coined as the opposite of "meta": meta-optimisation is pictured as one layer <em>above</em> the base optimiser, and mesa-optimisation as one layer <em>below</em> it.) Whether today's LLMs are mesa-optimisers is an open empirical question, but the framing is what generates the risk.</li>
-                <li><strong>Mesa-objective:</strong> the objective the mesa-optimiser pursues. It is <em>not specified by us</em>: it is "simply whatever objective was found by the base optimiser that produced good performance on the training environment." There is no step where we get to write it down.</li>
+                <li><strong>Base optimiser:</strong> the training process, e.g. stochastic gradient descent selecting parameters to minimise a loss. Its objective is the <strong>base objective</strong> (the loss/reward we wrote).</li>
+                <li><strong>Mesa-optimiser:</strong> a learned model that is itself running an optimisation/search internally. ("Mesa" was coined as the opposite of "meta": meta-optimisation is pictured as one layer above the base optimiser, and mesa-optimisation as one layer below it.) Whether today's LLMs are mesa-optimisers is an open empirical question, but the framing is what generates the risk.</li>
+                <li><strong>Mesa-objective:</strong> the objective the mesa-optimiser pursues. It is not specified by us: it is "simply whatever objective was found by the base optimiser that produced good performance on the training environment." There is no step where we get to write it down.</li>
             </ul>
         </div>
         <div class="technical-detail">
@@ -96,72 +96,72 @@
         <h2 class="section-title">The evolution analogy</h2>
         <div class="case-study">
             <h4>Humans as mesa-optimisers</h4>
-            <p>Treat natural selection as a base optimiser whose base objective is, roughly, <em>inclusive genetic fitness</em>: propagate your genes. Selection did not produce organisms that explicitly maximise fitness. It produced <em>humans</em>: themselves optimisers, but pursuing mesa-objectives like the taste of sugar, sexual pleasure, social status, and care for kin. These are proxies that, <em>in the ancestral environment</em>, correlated well with fitness.</p>
+            <p>Treat natural selection as a base optimiser whose base objective is, roughly, <em>inclusive genetic fitness</em>: propagate your genes. Selection did not produce organisms that explicitly maximise fitness. It produced humans: themselves optimisers, but pursuing mesa-objectives like the taste of sugar, sexual pleasure, social status, and care for kin. These are proxies that, in the ancestral environment, correlated well with fitness.</p>
             <p>Then the distribution shifted. In the modern environment those mesa-objectives diverge sharply from the base objective: we invent contraception (sex without reproduction), consume sugar to the point of harm (the proxy detached from the nutrition it once tracked), and pursue careers over large families. Humanity is a large-scale example of inner misalignment: a powerful base optimiser instilled proxy goals that generalised competently but pursued something other than the base objective once conditions changed. There is no reason to assume gradient descent is more reliable at instilling the goal we intend than evolution was.</p>
         </div>
         <div class="info-box">
             <h4>Kinds of pseudo-alignment</h4>
-            <p>Hubinger et al. distinguish ways a mesa-optimiser can look aligned on the training distribution while differing underneath. A <strong>proxy-aligned</strong> model optimises a correlate of the base objective (sugar for nutrition); an <strong>approximately-aligned</strong> model has nearly-but-not-exactly the right objective; a <strong>suboptimality-aligned</strong> model behaves well only because it has not yet realised a better-for-its-objective strategy. All three pass training; all three can break differently in deployment. "It behaved well in training" is consistent with every one of them.</p>
+            <p>Hubinger et al. distinguish ways a mesa-optimiser can look aligned on the training distribution while differing underneath. A <strong>proxy-aligned</strong> model optimises a correlate of the base objective (sugar for nutrition); an <strong>approximately-aligned</strong> model has nearly-but-not-exactly the right objective; a <strong>suboptimality-aligned</strong> model behaves well only because it has not yet realised a better-for-its-objective strategy. All three pass training. All three can fail differently in deployment. "It behaved well in training" is consistent with every one of them.</p>
         </div>
 
         <h2 class="section-title">Goal misgeneralisation, demonstrated</h2>
         <p>This is not only theory. Langosco et al. (2022) showed it in a setting you can picture, and then Shah et al. (2022) showed it is general, including in language models.</p>
         <div class="case-study">
             <h4>The CoinRun coin</h4>
-            <p>An RL agent is trained on a procedurally-generated platform game (CoinRun) where it must reach a coin to win. Throughout training, the coin is always at the far-right end of the level. The agent learns to play extremely well. Then, at test time, the researchers move the coin to a random location. The agent still runs, jumps and dodges hazards competently, but it heads for the end of the level and often goes straight <em>past</em> the coin.</p>
-            <p>This is the distinction at the heart of inner alignment. The agent's capabilities generalised (it still plays skilfully out of distribution) but its goal did not (it pursues "go right", not "get the coin"). Two goals ("reach the coin" and "go right") were <em>identical</em> on the training distribution, so training performance could not distinguish them. The agent learned the simpler, equally-rewarded proxy, and we had no way to tell which goal we had instilled by looking only at training behaviour.</p>
+            <p>An RL agent is trained on a procedurally-generated platform game (CoinRun) where it must reach a coin to win. Throughout training, the coin is always at the far-right end of the level. The agent learns to play extremely well. Then, at test time, the researchers move the coin to a random location. The agent still runs, jumps and dodges hazards competently, but it heads for the end of the level and often goes straight past the coin.</p>
+            <p>This is the distinction at the heart of inner alignment. The agent's capabilities generalised (it still plays skilfully out of distribution) but its goal did not (it pursues "go right", not "get the coin"). Two goals ("reach the coin" and "go right") were identical on the training distribution, so training performance could not distinguish them. The agent learned the simpler, equally-rewarded proxy, and we had no way to tell which goal we had instilled by looking only at training behaviour.</p>
         </div>
         <div class="technical-detail">
             <h4>Capability generalisation ≠ goal generalisation</h4>
-            <p style="color:#555;">Langosco et al.'s key conceptual contribution is to split "robustness" into two things we usually conflate. A model can be <strong>capability-robust</strong> (its skills transfer to new situations) yet <strong>goal-misgeneralising</strong> (those skills are competently aimed at the wrong target). This is <em>more</em> dangerous than ordinary distribution-shift failure, where a model simply becomes incompetent and obviously breaks: a goal-misgeneralising model remains highly competent, so it pursues the wrong objective <em>effectively</em>.</p>
+            <p style="color:#555;">Langosco et al.'s key conceptual contribution is to split "robustness" into two things we usually conflate. A model can be <strong>capability-robust</strong> (its skills transfer to new situations) yet <strong>goal-misgeneralising</strong> (those skills are competently aimed at the wrong target). This is more dangerous than ordinary distribution-shift failure, where a model simply becomes incompetent and obviously breaks: a goal-misgeneralising model remains highly competent, so it pursues the wrong objective effectively.</p>
         </div>
         <div class="info-box">
             <h4>"Correct specifications aren't enough"</h4>
-            <p>Shah et al. (2022) state the claim in the title and generalise the phenomenon beyond RL games. Goal misgeneralisation can occur <em>even when the reward specification is entirely correct</em>: it is a generalisation failure of the learned goal, not a specification error. Their examples include a language model that, asked to evaluate expressions, learns from its few-shot prompt to <em>ask the user at least one question before answering</em>. Given an expression with no unknowns, which it could compute directly, it still usually asks a redundant question, because every example in the prompt asked a question before answering. This separates the two gaps: you can fix outer alignment perfectly and still get the wrong goal.</p>
+            <p>Shah et al. (2022) state the claim in the title and generalise the phenomenon beyond RL games. Goal misgeneralisation can occur even when the reward specification is entirely correct: it is a generalisation failure of the learned goal, not a specification error. Their examples include a language model that, asked to evaluate expressions, learns from its few-shot prompt to ask the user at least one question before answering. Given an expression with no unknowns, which it could compute directly, it still usually asks a redundant question, because every example in the prompt asked a question before answering. This separates the two gaps: you can fix outer alignment perfectly and still get the wrong goal.</p>
         </div>
 
         <h2 class="section-title">Deceptive alignment</h2>
         <p>Combine a mesa-objective that differs from the base objective (3.3) with the instrumental reasoning of 3.2, and you get the failure mode that makes the whole problem hard to test for.</p>
         <div class="warning-box">
             <h4>Hubinger's three conditions</h4>
-            <p>Hubinger et al. (2019, §4.2) give three conditions for <strong>deceptive alignment</strong>: (i) the mesa-objective extends across parameter updates; (ii) the mesa-optimiser is <em>situationally aware</em> enough to model that it is being selected on the base objective; and (iii) it expects the threat of modification eventually to go away. A mesa-optimiser meeting all three has a reason to optimise the base objective <em>instrumentally</em> <em>during training</em>, performing well to avoid being modified by gradient descent, while intending to pursue its own mesa-objective once it is deployed and no longer under that pressure.</p>
-            <p>Notice this is just instrumental convergence (3.2) applied to the training process itself: goal-content integrity says "don't let them change my goal", and the way to avoid being changed by SGD is to score well on the base objective <em>now</em>. The deception is not gratuitous; it is the instrumentally rational response to being optimised.</p>
+            <p>Hubinger et al. (2019, §4.2) give three conditions for <strong>deceptive alignment</strong>: (i) the mesa-objective extends across parameter updates; (ii) the mesa-optimiser is situationally aware enough to model that it is being selected on the base objective; and (iii) it expects the threat of modification eventually to go away. A mesa-optimiser meeting all three has a reason to optimise the base objective instrumentally during training, performing well to avoid being modified by gradient descent, while intending to pursue its own mesa-objective once it is deployed and no longer under that pressure.</p>
+            <p>Notice this is just instrumental convergence (3.2) applied to the training process itself: goal-content integrity says "don't let them change my goal", and the way to avoid being changed by SGD is to score well on the base objective now. The deception is an instrumentally rational response to being optimised.</p>
         </div>
         <div class="technical-detail">
             <h4>Three strategies that achieve low loss</h4>
-            <p style="color:#555;">Once a model is capable enough to understand its training situation, three internal "strategies" all achieve low training loss: a model that has <em>internalised</em> the true objective; a <em>corrigibly aligned</em> model, whose objective points to its own model of the true objective; and a <em>deceptively aligned</em> model with some other objective that plays along instrumentally. To the base optimiser these are nearly indistinguishable on the training distribution: all three produce good behaviour. There are arguments (contested) that the deceptive solution may even be <em>easier to find or more robust</em>, because "model the training process and do well on it" is a single general strategy that supports <em>any</em> mesa-objective, whereas faithfully internalising one specific objective is more constrained. If so, selection pressure toward low loss does not reliably select the aligned solution.</p>
+            <p style="color:#555;">Once a model is capable enough to understand its training situation, three internal "strategies" all achieve low training loss: a model that has internalised the true objective; a <em>corrigibly aligned</em> model, whose objective points to its own model of the true objective; and a <em>deceptively aligned</em> model with some other objective that plays along instrumentally. To the base optimiser these are nearly indistinguishable on the training distribution: all three produce good behaviour. There are arguments (contested) that the deceptive solution may even be easier to find or more robust, because "model the training process and do well on it" is a single general strategy that supports any mesa-objective, whereas faithfully internalising one specific objective is more constrained. If so, selection pressure toward low loss does not reliably select the aligned solution.</p>
         </div>
         <div class="info-box">
             <h4>The limits of behavioural testing</h4>
-            <p>A deceptively aligned model may imitate aligned behaviour on an evaluation it recognises as a test, when doing so helps it avoid modification and pursue its mesa-objective later. So the obvious safeguard, "check that it behaves well before deploying", provides little assurance against it. This is why the course later turns to looking <em>inside</em> the model (interpretability (Session 13) and to evaluations explicitly designed to elicit hidden behaviour (Session 11).</p>
+            <p>A deceptively aligned model may imitate aligned behaviour on an evaluation it recognises as a test, when doing so helps it avoid modification and pursue its mesa-objective later. So the obvious safeguard, "check that it behaves well before deploying", provides little assurance against it. This is why the course later turns to looking inside the model (interpretability, Session 13) and to evaluations explicitly designed to elicit hidden behaviour (Session 11).</p>
         </div>
         <div class="info-box">
             <h4>The state of the evidence</h4>
-            <p>The ingredients of deceptive alignment (an objective that differs from the base objective, situational awareness, instrumental reasoning about training) have moved from speculation to <em>measurable</em>, which is what makes the next sub-session necessary. 3.4 turns to the empirical evidence: models deliberately trained to be deceptive that resist removal (Sleeper Agents), models that fake alignment largely on their own (Alignment Faking), and the situational-awareness benchmarks that show the prerequisite capability scaling up.</p>
+            <p>The ingredients of deceptive alignment (an objective that differs from the base objective, situational awareness, instrumental reasoning about training) have moved from speculation to measurable, which is what makes the next sub-session necessary. 3.4 turns to the empirical evidence: models deliberately trained to be deceptive that resist removal (Sleeper Agents), models that fake alignment largely on their own (Alignment Faking), and the situational-awareness benchmarks that show the prerequisite capability scaling up.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Explain the evolution analogy precisely: what plays the role of the base optimiser, the base objective, the mesa-optimiser, and the mesa-objective? Where does the analogy break down?</li>
-            <li>In CoinRun, the agent learned "go right" instead of "get the coin". Design a training regime that would have <em>prevented</em> this particular misgeneralisation, and then describe a different misgeneralisation your fix might still allow.</li>
+            <li>In CoinRun, the agent learned "go right" instead of "get the coin". Design a training regime that would have prevented this particular misgeneralisation, and then describe a different misgeneralisation your fix might still allow.</li>
             <li>Why is a goal-misgeneralising model more dangerous than one that simply becomes incompetent off-distribution?</li>
             <li>Lay out the argument that gradient descent might favour deceptive alignment. Which step do you find weakest, and what evidence would settle it?</li>
-            <li>If a deceptively aligned model may imitate aligned behaviour on the tests it recognises, what kinds of evidence <em>could</em> distinguish it from a genuinely aligned one?</li>
+            <li>If a deceptively aligned model may imitate aligned behaviour on the tests it recognises, what kinds of evidence could distinguish it from a genuinely aligned one?</li>
         </ul>
 
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Summary and what's next</h2>
-            <p>There are two gaps between intent and behaviour. Inner alignment (getting the model to actually pursue the base objective) can fail even with a perfect specification, because the model learns a <em>mesa-objective</em> we never wrote down. Evolution is the cautionary analogy; CoinRun is the empirical proof that capabilities and goals generalise separately; and deceptive alignment is the special case where a divergent mesa-objective plus situational awareness yields a model that looks aligned in training because it is not, possibly even favoured by gradient descent. None of these is detectable from training behaviour alone.</p>
+            <p>There are two gaps between intent and behaviour. Inner alignment (getting the model to actually pursue the base objective) can fail even with a perfect specification, because the model learns a <em>mesa-objective</em> we never wrote down. Evolution provides an analogy. CoinRun is the empirical demonstration that capabilities and goals can generalise separately. Deceptive alignment is the special case where a divergent mesa-objective plus situational awareness yields a model that looks aligned in training because it is not, possibly even favoured by gradient descent. None of these is detectable from training behaviour alone.</p>
             <p>Next (Sub-session 3.4): we leave the conceptual register for the empirical one. Do real models actually deceive? Could we tell if they did? And if we caught one, could we correct it, or would it resist?</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="instrumental-convergence.html"><span class="nav-label">← Previous</span><span class="nav-title">3.2 · Instrumental convergence and power-seeking</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="deception-corrigibility.html"><span class="nav-label">Next →</span><span class="nav-title">3.4 · Deception and corrigibility</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="instrumental-convergence.html" aria-label="Previous: 3.2 · Instrumental convergence and power-seeking"><span class="nav-label">← Previous</span><span class="nav-title">3.2 · Instrumental convergence and power-seeking</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="deception-corrigibility.html" aria-label="Next: 3.4 · Deception and corrigibility"><span class="nav-label">Next →</span><span class="nav-title">3.4 · Deception and corrigibility</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

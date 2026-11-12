@@ -6,15 +6,18 @@ Usage:  python3 tools/render_notebooks.py            # render all
 
 The .ipynb stays the thing students download and run; the HTML is so the
 notebook can be read on the site without downloading anything. Re-run after
-editing a notebook. nbconvert's "basic" template gives us the cell markup
-only, which we wrap in the course shell so it matches the lesson pages.
+editing a notebook. Existing page shells are retained, with their titles
+updated from BACKLINKS. Missing HTML pages use the course shell below.
 """
 import html
+import copy
 import pathlib
 import re
-import subprocess
 import sys
+from html.parser import HTMLParser
 from urllib.parse import unquote
+import nbformat
+from nbconvert import HTMLExporter
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LABS = ROOT / "docs" / "labs"
@@ -84,25 +87,35 @@ PAGE = """<!DOCTYPE html>
 
 # which lesson page each notebook belongs to
 BACKLINKS = {
+    "session-11-5-audit":
+        ("../sessions/session-11/lab-isizulu-eval.html",
+         "11.5 · Lab: audit a multilingual safety eval",
+         "Session 11.5: Lab: audit a multilingual safety eval",
+         "Audit a multilingual safety eval"),
+    "session-9-4-multilingual-safety":
+        ("../sessions/session-09/lab-isizulu-robustness.html",
+         "9.4 · Lab: multilingual safety evaluation",
+         "Session 9.4: Lab: multilingual safety evaluation",
+         "Multilingual safety evaluation"),
     "session-7-6-constitutional-ai":
         ("../sessions/session-07/lab-constitutional-ai.html",
          "7.6 · Lab: measuring an AI judge",
-         "Session 7.6 — Lab notebook",
+         "Session 7.6: Lab: measuring an AI judge",
          "Measuring an AI judge"),
     "session-6-5-reward-models":
         ("../sessions/session-06/lab-rlhf.html",
          "6.5 · Lab: reward models and over-optimisation",
-         "Session 6.5 — Lab notebook",
+         "Session 6.5: Lab: reward models and over-optimisation",
          "Reward models and over-optimisation"),
     "session-5-4-base-vs-instruct":
         ("../sessions/session-05/lab-nanochat.html",
          "5.4 · Lab: from base model to assistant",
-         "Session 5.4 — Lab notebook",
+         "Session 5.4: Lab: from base model to assistant (nanochat)",
          "From base model to assistant"),
     "session-2-5-scaling-and-transformerlens":
         ("../sessions/session-02/lab-scaling-and-transformerlens.html",
          "2.5 · Lab: scaling laws and a first look inside a model",
-         "Session 2.5 — Lab notebook",
+         "Session 2.5: Lab: scaling laws and a first look inside a model",
          "Scaling laws and a first look inside a model"),
 }
 
@@ -126,27 +139,75 @@ def dollars_to_backslash(markup):
     return "".join(parts)
 
 
+def notebook_bounds(markup):
+    """Locate the notebook div's contents without depending on nav formatting."""
+    class Bounds(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=False)
+            self.lines = [0]
+            self.lines += [m.end() for m in re.finditer("\n", markup)]
+            self.depth = 0
+            self.start = self.end = None
+
+        def absolute_offset(self):
+            line, column = self.getpos()
+            return self.lines[line - 1] + column
+
+        def handle_starttag(self, tag, attrs):
+            if tag != "div" or self.end is not None:
+                return
+            if self.depth:
+                self.depth += 1
+            elif "notebook" in (dict(attrs).get("class") or "").split():
+                self.start = self.absolute_offset() + len(self.get_starttag_text())
+                self.depth = 1
+
+        def handle_endtag(self, tag):
+            if tag == "div" and self.depth:
+                self.depth -= 1
+                if not self.depth:
+                    self.end = self.absolute_offset()
+
+    parser = Bounds()
+    parser.feed(markup)
+    if parser.start is None or parser.end is None:
+        raise ValueError("existing wrapper has no complete notebook div")
+    return parser.start, parser.end
+
+
 def render(nb_path):
     stem = nb_path.stem
-    out = subprocess.run(
-        [sys.executable, "-m", "nbconvert", "--to", "html", "--template", "basic",
-         "--stdout", str(nb_path)],
-        capture_output=True, text=True, check=True).stdout
+    notebook = nbformat.read(nb_path, as_version=4)
+    nbformat.validate(notebook)
+    notebook = copy.deepcopy(notebook)
+    if notebook.cells and notebook.cells[0].cell_type == "markdown":
+        notebook.cells[0].source = re.sub(r"^# [^\n]+\n+", "", notebook.cells[0].source, count=1)
+    exporter = HTMLExporter(template_name="basic")
+    exporter.exclude_input_prompt = True
+    exporter.exclude_output_prompt = True
+    out, _ = exporter.from_notebook_node(notebook)
     # nbconvert emits empty output wrappers for unexecuted cells; drop them
     out = re.sub(r'<div class="jp-Cell-outputWrapper">\s*</div>', "", out)
     # and pilcrow anchor links on every heading
     out = re.sub(r'<a class="anchor-link"[^>]*>.*?</a>', "", out, flags=re.S)
-    # the shell already prints the title, so drop the notebook's own first h1
-    out = re.sub(r"<h1[^>]*>.*?</h1>", "", out, count=1, flags=re.S)
     out = dollars_to_backslash(out)
     # Match decoded fragment targets when nbconvert percent-encodes heading IDs.
     out = re.sub(r'id="([^"\n]+)"', lambda m: 'id="' + html.escape(unquote(m.group(1)), quote=True) + '"', out)
     back, back_title, heading, subtitle = BACKLINKS.get(
         stem, ("../index.html", "Contents", stem, "Lab notebook"))
-    page = PAGE.format(title=html.escape(heading), heading=heading, subtitle=subtitle,
-                       repo=REPO, ipynb=nb_path.name, back=back, back_title=back_title,
-                       body=out)
     dest = nb_path.with_suffix(".html")
+    if dest.exists():
+        old = dest.read_text(encoding="utf-8")
+        start, end = notebook_bounds(old)
+        prefix = old[:start]
+        # Refresh the generic lab title while preserving the rest of the shell.
+        prefix = re.sub(r"<title>.*?</title>", lambda m: "<title>" + html.escape(heading) + "</title>", prefix, count=1, flags=re.S)
+        prefix = re.sub(r"<h1\b[^>]*>.*?</h1>", lambda m: "<h1>" + html.escape(heading) + "</h1>", prefix, count=1, flags=re.S)
+        page = prefix + "\n" + out + "\n    " + old[end:]
+    else:
+        page = PAGE.format(title=html.escape(heading), heading=html.escape(heading), subtitle=subtitle,
+                           repo=REPO, ipynb=nb_path.name, back=back, back_title=back_title,
+                           body=out)
     dest.write_text(page, encoding="utf-8")
     return dest, len(page)
 

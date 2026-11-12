@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 8.1 — Scalable oversight</title>
+    <title>Session 8.1: Scalable oversight</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 8</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-07/lab-constitutional-ai.html">← <span class="tn-title">7.6 · Lab: measuring an AI judge</span></a>
-    <a class="tn-next" href="ethical-frameworks-four-lenses.html"><span class="tn-title">8.2 · Four ethical lenses</span> →</a>
+    <a class="tn-prev" href="../session-07/lab-constitutional-ai.html" aria-label="Previous: 7.6 · Lab: measuring an AI judge">← <span class="tn-title">7.6 · Lab: measuring an AI judge</span></a>
+    <a class="tn-next" href="ethical-frameworks-four-lenses.html" aria-label="Next: 8.2 · Four ethical lenses"><span class="tn-title">8.2 · Four ethical lenses</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -39,9 +39,9 @@
     <div class="content">
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Session 8 — scalable oversight &amp; "whose values?"</span></h3>
+            <h3><span style="color:#ffffff;">Session 8: scalable oversight and "whose values?"</span></h3>
             <p>Session 7 showed how labs scale feedback by replacing human raters with AI (RLAIF, Constitutional AI). That sharpens a problem rather than solving it, and forces a second, normative question the engineering cannot dodge.</p>
-            <p style="margin-bottom:0;">This session's sub-sessions: 8.1 the supervision gap &amp; scalable oversight · 8.2 ethical frameworks &amp; the four lenses · 8.3 Ubuntu, relational ethics &amp; the Just AI framework · 8.4 whose values? preference aggregation &amp; the alignment target.</p>
+            <p style="margin-bottom:0;">This session's sub-sessions: 8.1 scalable oversight · 8.2 four ethical lenses · 8.3 Ubuntu and relational ethics · 8.4 whose values?</p>
         </div>
 
         <div class="intro-text">
@@ -54,12 +54,12 @@
         <p>Training signals are imperfect evidence of the behaviour we want. A model may generalise beyond its supervisors, but their errors can also persist or be amplified. Scalable oversight asks how to train and evaluate a stronger system when unaided humans cannot reliably assess its answers. The weak-to-strong results below make the distinction between possible generalisation and reliable oversight concrete.</p>
         <div class="info-box">
             <h4>Unaided human checking at the frontier</h4>
-            <p>For a 10,000-line refactor, a novel mathematical proof, or a subtle security audit, a human may be unable to tell a correct answer from a confident wrong one. Two things then go wrong at once. The signal becomes <em>noisier</em>, which can limit what the model learns; and, worse, optimising against a judge who can be fooled actively rewards <em>persuasiveness</em> over <em>correctness</em> (the Goodhart dynamic of Session 3, now aimed straight at the overseer). The signal does not just fade where we need it most; it can point the wrong way.</p>
+            <p>For a 10,000-line refactor, a novel mathematical proof, or a subtle security audit, a human may be unable to tell a correct answer from a confident wrong one. Two things then go wrong at once. The signal becomes noisier, which can limit what the model learns. Worse, optimising against a judge who can be fooled actively rewards persuasiveness over correctness (the Goodhart dynamic of Session 3, now aimed straight at the overseer). The signal does not just fade where we need it most; it can point the wrong way.</p>
         </div>
         <p>Supporting a limited overseer with tools, assistants or structured tasks may improve the feedback they provide. The methods below propose different forms of support and different ways to test their reliability.</p>
 
         <h2 class="section-title">Studying the gap before we have superhuman models: sandwiching</h2>
-        <p>There is an obvious methodological trap: the systems we most need to oversee do not exist yet, so we cannot experiment on them. <strong>Sandwiching</strong>, proposed by Cotra (2021) and operationalised by Bowman et al. (2022), is the field's way around it. Pick a task on which a current model is already more capable than a <em>non-expert</em> human, but for which a separate <em>expert</em> (or ground-truth answer) can score the result: medical questions for a layperson, say, or code review for a non-programmer. The non-expert, equipped with the oversight protocol you want to test, tries to supervise the model toward the expert's answer. If they succeed, the protocol has scaled a weak overseer's judgement; if they fail, you have found a real limit, now, on hardware you have.</p>
+        <p>There is an obvious methodological trap: the systems we most need to oversee do not exist yet, so we cannot experiment on them. <strong>Sandwiching</strong>, proposed by Cotra (2021) and operationalised by Bowman et al. (2022), is the field's way around it. Pick a task on which a current model is already more capable than a non-expert human, but for which a separate expert (or ground-truth answer) can score the result: medical questions for a layperson, say, or code review for a non-programmer. The non-expert, equipped with the oversight protocol you want to test, tries to supervise the model toward the expert's answer. If they succeed, the protocol has scaled a weak overseer's judgement; if they fail, you have found a real limit, now, on hardware you have.</p>
         <figure class="wide">
             <img src="../../assets/img/session-8-1-sandwiching.svg" alt="The same task and model answer go to an unaided non-expert and a non-expert using an oversight aid. Their judgements are compared with an expert answer to test whether the aid improves the non-expert's assessment. This is a proposed test design, not an experimental result.">
             <figcaption>A sandwiching test compares judgements against an expert reference. The diagram shows the design, not a finding about any particular protocol. <a href="../../assets/img/session-8-1-sandwiching.svg">Open the diagram at full size</a>.</figcaption>
@@ -67,15 +67,15 @@
 
         <div class="info-box">
             <h4>Comparing oversight protocols</h4>
-            <p>Sandwiching turns "scalable oversight" from a slogan into something measurable. It lets a lab compare debate against plain Q&amp;A, or AI-assisted critique against unaided judgement, on the same task, and report which protocol closes more of the non-expert-to-expert gap. Much of the empirical work in this area is now reported in this frame, and it is a good source of student projects (Week 9): take a sandwiching task in a language or domain that the published work ignores, and measure whether the protocol still holds.</p>
+            <p>Sandwiching turns "scalable oversight" from a slogan into something measurable. It lets a lab compare debate against plain Q&amp;A, or AI-assisted critique against unaided judgement, on the same task, and report which protocol closes more of the non-expert-to-expert gap. Much of the empirical work in this area is now reported in this frame, and it is a good source of student projects (Week 7, after Session 13): take a sandwiching task in a language or domain that the published work ignores, and measure whether the protocol still holds.</p>
         </div>
 
         <h2 class="section-title">Five ways to amplify a limited overseer</h2>
-        <p>The proposals differ in <em>how</em> they extend the overseer, but share one aim: keep the human anchored to the truth while the model does the heavy lifting.</p>
+        <p>The proposals differ in how they extend the overseer, but share one aim: keep the human anchored to the truth while the model does the heavy lifting.</p>
         <div class="card-grid">
             <div class="card">
                 <h3>Task decomposition (iterated amplification)</h3>
-                <p>Break a hard question into sub-questions a human, helped by model assistants, <em>can</em> answer, and recurse. Christiano et al. (2018) formalise this as amplifying a weak human expert by letting the expert consult copies of the model being trained. The bet: hard judgements decompose into checkable pieces. The risk: the decomposition may not be faithful, and small per-step errors compound up the tree.</p>
+                <p>Break a hard question into sub-questions a human, helped by model assistants, can answer, and recurse. Christiano et al. (2018) formalise this as amplifying a weak human expert by letting the expert consult copies of the model being trained. The bet: hard judgements decompose into checkable pieces. The risk: the decomposition may not be faithful, and small per-step errors compound up the tree.</p>
             </div>
             <div class="card">
                 <h3>Recursive reward modelling</h3>
@@ -87,34 +87,37 @@
             </div>
             <div class="card">
                 <h3>AI-assisted evaluation</h3>
-                <p>Saunders et al. (2022) train models to <em>critique</em> outputs, to surface the flaws a human would otherwise miss. The human stays the judge, but with a sharper lens. The critic itself can miss or fabricate problems, so it assists rather than replaces.</p>
+                <p>Saunders et al. (2022) train models to critique outputs, to surface the flaws a human would otherwise miss. The human stays the judge, but with a sharper lens. The critic itself can miss or fabricate problems, so it assists rather than replaces.</p>
             </div>
             <div class="card">
                 <h3>AI feedback at scale (RLAIF / Constitutional AI)</h3>
-                <p>Bai et al. (2022) replace most human labels with model-generated feedback steered by a written <em>constitution</em> (Session 7). This scales oversight cheaply, but relocates the hard question to "whose constitution, and who wrote it?" Sub-session 8.4 takes that up.</p>
+                <p>Bai et al. (2022) replace most human labels with model-generated feedback steered by a written constitution (Session 7). This scales oversight cheaply, but relocates the hard question to "whose constitution, and who wrote it?" Sub-session 8.4 takes that up.</p>
             </div>
         </div>
-        <p>Notice the two limits that recur across the list. The decomposition methods assume hard judgements break cleanly into easy ones; the competitive and assistance methods assume the human judge cannot be manipulated by a sufficiently capable arguer. Debate leans on the second assumption most heavily, and it is also where it is most contested: the "obfuscated argument" problem shows a dishonest debater can sometimes bury a flaw in a sub-tree too large for the judge to check, so persuasion can still beat truth. These are the open theoretical questions of the field, not implementation bugs to be patched.</p>
+        <p>Notice the two limits that recur across the list. The decomposition methods assume hard judgements break cleanly into easy ones; the competitive and assistance methods assume the human judge cannot be manipulated by a sufficiently capable arguer. Debate leans on the second assumption most heavily, and it is also where it is most contested: <a href="https://www.alignmentforum.org/posts/PJLABqQ962hZEqhdB/debate-update-obfuscated-arguments-problem" target="_blank" rel="noopener">Barnes and Christiano’s (2020) "obfuscated argument" problem</a> shows a dishonest debater can sometimes bury a flaw in a sub-tree too large for the judge to check, so persuasion can still beat truth. These are the open theoretical questions of the field, not implementation bugs to be patched.</p>
 
         <h2 class="section-title">Weak-to-strong generalisation</h2>
         <div class="technical-detail">
             <h4>The limits of naive weak supervision</h4>
-            <p style="color:#555;">Burns et al. (2023) study the analogy head-on. If a future human is a <em>weak</em> supervisor of a <em>strong</em> model, what does naive supervision get you? They stand in for the pair by fine-tuning a strong model (say GPT-4) on labels produced by a much smaller model from the same family with roughly GPT-2-level capability, and ask how much of the strong model's latent capability the weak labels elicit. The finding cuts both ways: the strong model generalises <em>past</em> its noisy supervisor, though it still imitates some of the weak labels' mistakes, and on NLP tasks it typically recovers about half of the performance gap between the weak supervisor and a strong model trained on ground-truth labels. But a real gap remains; naive weak supervision leaves capability, and with it alignment, on the table. Closing that gap, so a weak overseer can elicit a strong model's <em>full</em> competence and not a degraded copy, is the concrete form the superalignment problem takes.</p>
+            <p style="color:#555;">Burns et al. (2023) study the analogy head-on. If a future human is a weak supervisor of a strong model, what does naive supervision get you? They stand in for the pair by fine-tuning a strong model (say GPT-4) on labels produced by a much smaller model from the same family with roughly GPT-2-level capability, and ask how much of the strong model's latent capability the weak labels elicit. The finding cuts both ways: the strong model generalises past its noisy supervisor, though it still imitates some of the weak labels' mistakes, and for the largest students on NLP tasks it often recovers more than half of the performance gap between the weak supervisor and a strong model trained on ground-truth labels. But a real gap remains; naive weak supervision leaves capability, and with it alignment, on the table. Closing that gap, so a weak overseer can elicit a strong model's full competence and not a degraded copy, is the concrete form the superalignment problem takes.</p>
+            <p>Burns et al. define performance gap recovered (PGR) as</p>
+            <div class="formula">\[ \mathrm{PGR} = \frac{S_{\text{w2s}}-S_{\text{weak}}}{S_{\text{strong ceiling}}-S_{\text{weak}}}. \]</div>
+            <p>Here \(S_{\text{weak}}\) is the weak supervisor’s score, \(S_{\text{w2s}}\) is the strong student’s score after training on weak labels, and \(S_{\text{strong ceiling}}\) is the score of the strong model trained on ground-truth labels. The denominator must be non-zero. For the largest students on NLP classification tasks, PGR is often above 0.5. On the <a href="https://arxiv.org/abs/2312.09390" target="_blank" rel="noopener">ChatGPT reward-modelling task</a>, naive weak supervision usually recovers roughly 10% of the gap and almost never exceeds 20%, even for relatively small supervisor–student compute gaps. This is the preference-prediction task used in RLHF; the study does not run the subsequent RL step.</p>
         </div>
 
         <h2 class="section-title">Limits of the five methods</h2>
         <p>Each method amplifies human judgement; none removes the human's vulnerability to a capable enough system that wants to exploit it. A debate judge can still be dazzled; a decomposition can still hide a decisive error in an unchecked branch; AI feedback inherits whatever the feedback model gets wrong. The methods raise the bar an overseer can clear, which is real and valuable, and they give us something to measure with sandwiching. They do not yet provide a guarantee that scales without limit.</p>
         <div class="warning-box">
             <h4>Known failure modes</h4>
-            <p>Debate, amplification, recursive reward modelling, AI-assisted critique and weak-to-strong are live research directions with known failure modes: collusion, obfuscated arguments, judges that anchor on fluency, critics that fabricate. Read them as the current state of an unsolved problem. This is why the course also pursues a complementary bet: instead of only watching a model's <em>outputs</em>, look inside its <em>computation</em> (interpretability, Session 13), so oversight does not depend solely on a human grading text a model may have learned to game.</p>
+            <p>Debate, amplification, recursive reward modelling, AI-assisted critique and weak-to-strong are live research directions with known failure modes: collusion, obfuscated arguments, judges that anchor on fluency, critics that fabricate. Read them as the current state of an unsolved problem. This is why the course also pursues a complementary bet: instead of only watching a model's outputs, look inside its computation (interpretability, Session 13), so oversight does not depend solely on a human grading text a model may have learned to game.</p>
         </div>
 
-        <p>The researchers who built these methods are hedging too. Paul Christiano co-authored two of the papers on this page, the debate proposal and iterated amplification, and in August 2026 he returned as executive director of the <a href="https://www.lesswrong.com/posts/vLFh8HP3hyNy9MCwe/returning-to-arc" target="_blank" rel="noopener">Alignment Research Center</a>, which is betting on something else. He locates the difficulty a level below oversight: &ldquo;I (and many others) think this incomprehensibility is at the root of the alignment problem. Because we don&rsquo;t understand why a neural network works, we have no idea what changes to the input distribution might cause it to stop working.&rdquo; A behavioural loss function, he wrote in a reply below the post, &ldquo;cannot depend at all on how the model behaves out of distribution&rdquo;, because behaviour on the distribution you happened to test is the only evidence it ever gets. The five families on this page all rely on behavioural signals of this kind. He frames ARC&rsquo;s search for mechanistic explanations as a backup plan for the case where the current approaches break down before we reach superhuman systems. Note what he does not say: the post makes no argument that amplification or debate was a mistake, and does not mention them. It is a researcher hedging his own agenda, and the interpretability weeks pick up the other side of that hedge.</p>
+        <p>The researchers who built these methods are hedging too. Paul Christiano co-authored two of the papers on this page, the debate proposal and iterated amplification, and in August 2026 he returned as executive director of the <a href="https://www.lesswrong.com/posts/vLFh8HP3hyNy9MCwe/returning-to-arc" target="_blank" rel="noopener">Alignment Research Center</a>, which is betting on something else. He locates the difficulty a level below oversight: &ldquo;I (and many others) think this incomprehensibility is at the root of the alignment problem. Because we don&rsquo;t understand why a neural network works, we have no idea what changes to the input distribution might cause it to stop working.&rdquo; A behavioural loss function, he wrote in a reply below the post, &ldquo;cannot depend at all on how the model behaves out of distribution&rdquo;, because behaviour on the distribution you happened to test is the only evidence it ever gets. The five families on this page all rely on behavioural signals of this kind. He frames ARC&rsquo;s search for mechanistic explanations as a backup plan for the case where the current approaches break down before we reach superhuman systems. Note what he does not say: the post makes no argument that amplification or debate was a mistake, and does not mention them. It is a researcher hedging his own agenda, and Session 13 examines mechanistic explanations.</p>
 
         <h2 class="section-title">Oversight in low-resource languages</h2>
         <div class="info-box">
             <h4>Assumptions behind every protocol</h4>
-            <p>Every protocol here assumes an overseer who can at least understand the task and follow the arguments, usually in the relevant language, and checking a protocol needs experts or trusted labels. A sandwiching study needs non-expert overseers <em>and</em> a ground truth to score them against, from experts or from labelled data; a constitution encodes the principles of whoever wrote it. For most African languages the model is already weaker (the data gap of Session 2.3), expert evaluators and labelled benchmarks are scarcer, and the published oversight results were almost all measured in English. So the supervision gap is largest where the tools to close it are least developed. "Can a non-expert reliably oversee a model in isiZulu?" is both a fair exam question and an open research problem, and it connects directly to whose values the oversight is steering toward (8.4) and to how we evaluate any of this (Session 11).</p>
+            <p>Every protocol here assumes an overseer who can at least understand the task and follow the arguments, usually in the relevant language, and checking a protocol needs experts or trusted labels. A sandwiching study needs non-expert overseers and a ground truth to score them against, from experts or from labelled data; a constitution encodes the principles of whoever wrote it. For most African languages the model is already weaker (the data gap of Session 2.3), expert evaluators and labelled benchmarks are scarcer, and the published oversight results were almost all measured in English. So the supervision gap is largest where the tools to close it are least developed. "Can a non-expert reliably oversee a model in isiZulu?" is both a fair exam question and an open research problem, and it connects directly to whose values the oversight is steering toward (8.4) and to how we evaluate any of this (Session 11).</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -144,15 +147,15 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Suppose oversight worked perfectly. You would still have to decide what you are overseeing <em>toward</em>. "Aligned" is a relation to a target, not a property a model has on its own. Sub-session 8.2 introduces the four philosophical lenses for reasoning about that target; 8.3 brings in Ubuntu and relational ethics; 8.4 shows the choice is also a mathematical constraint.</p>
+            <p>Suppose oversight worked perfectly. You would still have to decide what you are overseeing toward. "Aligned" is a relation to a target, not a property a model has on its own. Sub-session 8.2 introduces the four philosophical lenses for reasoning about that target; 8.3 brings in Ubuntu and relational ethics; 8.4 shows the choice is also a mathematical constraint.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-07/lab-constitutional-ai.html"><span class="nav-label">← Previous</span><span class="nav-title">7.6 · Lab: measuring an AI judge</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="ethical-frameworks-four-lenses.html"><span class="nav-label">Next →</span><span class="nav-title">8.2 · Four ethical lenses</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-07/lab-constitutional-ai.html" aria-label="Previous: 7.6 · Lab: measuring an AI judge"><span class="nav-label">← Previous</span><span class="nav-title">7.6 · Lab: measuring an AI judge</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="ethical-frameworks-four-lenses.html" aria-label="Next: 8.2 · Four ethical lenses"><span class="nav-label">Next →</span><span class="nav-title">8.2 · Four ethical lenses</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

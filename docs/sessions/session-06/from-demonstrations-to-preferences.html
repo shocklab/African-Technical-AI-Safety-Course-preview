@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 6.1 — From demonstrations to preferences</title>
+    <title>Session 6.1: From demonstrations to preferences</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 6</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-05/lab-nanochat.html">← <span class="tn-title">5.4 · Lab: from base model to assistant (nanochat)</span></a>
-    <a class="tn-next" href="the-reward-model.html"><span class="tn-title">6.2 · The reward model</span> →</a>
+    <a class="tn-prev" href="../session-05/lab-nanochat.html" aria-label="Previous: 5.4 · Lab: from base model to assistant (nanochat)">← <span class="tn-title">5.4 · Lab: from base model to assistant (nanochat)</span></a>
+    <a class="tn-next" href="the-reward-model.html" aria-label="Next: 6.2 · The reward model"><span class="tn-title">6.2 · The reward model</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -40,9 +40,9 @@
     <div class="content">
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Session 6 — RLHF &amp; RL fine-tuning</span></h3>
+            <h3><span style="color:#ffffff;">Session 6: RLHF and RL fine-tuning</span></h3>
             <p>Session 5 introduced training on demonstrations. Human comparisons provide another signal: a rater may recognise the better of two answers without being able to write either. RLHF learns a reward model from these comparisons and optimises against it, bringing the proxy risks of Session 3 into the training pipeline.</p>
-            <p style="margin-bottom:0;">This session's sub-sessions: 6.1 from demonstrations to preferences · 6.2 the reward model · 6.3 policy optimisation: PPO &amp; the KL leash · 6.4 the limits of RLHF · 6.5 lab (Colab).</p>
+            <p style="margin-bottom:0;">This session's sub-sessions: 6.1 from demonstrations to preferences · 6.2 the reward model · 6.3 policy optimisation: PPO and the KL leash · 6.4 the limits of RLHF · 6.5 lab (Colab).</p>
         </div>
 
         <div class="intro-text">
@@ -65,14 +65,14 @@
         </div>
 
 <h2 class="section-title">Judging is easier than producing</h2>
-        <p>Recall the asymmetry from Session 5.2: for some of what we want from an assistant, <em>judging</em> a response is easier than <em>producing</em> one.</p>
+        <p>Recall the asymmetry from Session 5.2: for some of what we want from an assistant, judging a response is easier than producing one.</p>
         <p>You may be able to compare two answers without being able to write an ideal answer yourself. Ordinary SFT directly rewards a supplied target; a preference objective can use the comparison itself. Choosing preferred samples as SFT targets is also possible. The distinction concerns how feedback enters the objective, not a theorem that supervised models cannot outperform their demonstrators.</p>
 
                 <div class="technical-detail">
             <h4>A short primer on reinforcement learning</h4>
             <p style="color:#555;">If you have not met reinforcement learning before, this is what the rest of Session 6 assumes. Nothing in this box is about language models. The translation to them comes at the end.</p>
             <p style="color:#555;">In supervised learning every training example carries the right answer and the model is asked to reproduce it. Reinforcement learning has no right answers. An <strong>agent</strong> observes the <strong>state</strong> of its environment, chooses an <strong>action</strong>, and the environment responds with a new state and a number, the <strong>reward</strong>. Nothing says what the agent should have done. It learns by trying things and doing more of whatever scores well. Session 3.2 set this up formally as a Markov decision process.</p>
-            <p style="color:#555;">Take a program learning to play a board game. The state is the position, the actions are the legal moves, and the reward is \(+1\) for a win and \(-1\) for a loss, delivered once, at the end. Two difficulties appear immediately. The reward is <strong>sparse and delayed</strong>: fifty moves produce a single number, long after most of them were played. And that number has to be shared out among those fifty moves, which is the problem of <strong>credit assignment</strong>. The game was lost; nothing tells you which move lost it.</p>
+            <p style="color:#555;">Take a program learning to play a board game. The state is the position, the actions are the legal moves, and the reward is \(+1\) for a win and \(-1\) for a loss, delivered once, at the end. Two difficulties appear immediately. The reward is <strong>sparse and delayed</strong>: fifty moves produce a single number, long after most of them were played. And that number has to be shared out among those fifty moves, which is the problem of <strong>credit assignment</strong>. The game was lost. Nothing tells you which move lost it.</p>
             <p style="color:#555;">The vocabulary is small.</p>
             <ul class="styled-list">
                 <li><strong>Policy</strong>: the rule that picks an action in a given state, usually as a probability spread over the available actions. This is the thing being learned.</li>
@@ -98,7 +98,7 @@
 <h2 class="section-title">The idea: optimise for what humans prefer</h2>
         <div class="info-box">
             <h4>The idea</h4>
-            <p>Instead of "imitate this answer", RLHF says: <em>collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly.</em> Comparisons are often cheaper to collect than demonstrations; the reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale; and the result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
+            <p>Instead of "imitate this answer", RLHF says: collect human judgements of which of two model outputs is better, distil those judgements into a learned <strong>reward model</strong>, and then use reinforcement learning to push the model toward outputs the reward model scores highly. Comparisons are often cheaper to collect than demonstrations. The reward model turns a pile of "A &gt; B" judgements into a signal you can optimise against at scale. The result can exceed the quality of any single human demonstration, because it is chasing "better" rather than "copy this".</p>
         </div>
         <p>Preference training can improve responses beyond the supplied demonstrations when the feedback recognises those improvements and optimisation can find them. Supervised learning can also generalise beyond individual demonstrations. Both approaches can fail when their training signal rewards plausible-looking errors.</p>
         <div class="case-study">
@@ -107,7 +107,7 @@
         </div>
         <div class="technical-detail">
             <h4>The preference-collection loop</h4>
-            <p style="color:#555;">The collection loop is where human values quietly enter the system. For a prompt \(x\), sample two or more responses from the current model; show them to a human annotator with a set of <em>instructions</em> ("prefer helpful, honest, harmless answers; penalise confident falsehoods…"); record which they pick. Repeat across tens of thousands of prompts to build a dataset of triples \((x, y_w, y_l)\): a prompt, a preferred ("winning") response, and a dispreferred ("losing") one. Two choices here do a great deal of work, and both return in 6.2 and Session 8: <em>who</em> the annotators are (their language, context and training), and what the <em>instructions</em> told them to value. A reward model can only learn the preferences these choices wrote into the data.</p>
+            <p style="color:#555;">The collection loop is where human values quietly enter the system. For a prompt \(x\), sample two or more responses from the current model; show them to a human annotator with a set of instructions ("prefer helpful, honest, harmless answers; penalise confident falsehoods…"); record which they pick. Repeat across tens of thousands of prompts to build a dataset of triples \((x, y_w, y_l)\): a prompt, a preferred ("winning") response, and a dispreferred ("losing") one. Two choices here do a great deal of work, and both return in 6.2 and Session 8: who the annotators are (their language, context and training), and what the instructions told them to value. A reward model can only learn the preferences these choices wrote into the data.</p>
         </div>
 
         <div class="case-study">
@@ -115,7 +115,7 @@
             <p>The paragraph above asks who the annotators are and answers in terms of what that does to the data. There is a second answer, about what the work does to them.</p>
             <p>Much of this labelling is outsourced. In January 2023 <em>TIME</em> reported that OpenAI had contracted Sama, a San Francisco firm, to help build a filter for detecting toxic content, and that the work was done by employees in Kenya taking home between $1.32 and $2 an hour while OpenAI paid Sama $12.50 an hour for it (<a href="https://time.com/6247678/openai-chatgpt-kenya-workers/" target="_blank" rel="noopener">Perrigo, 2023</a>). They read and categorised tens of thousands of passages describing violence, hate speech and sexual abuse. All four workers interviewed described being mentally scarred by it; counselling sessions were offered, but all four said they were unhelpful and rare because of pressure to be more productive. Sama ended the contract eight months early.</p>
             <p>The labelling existed to build the filter. This is not a general cost of building AI systems that happened to land on someone: the dataset existed to make the model safer, so the harm was incurred in the production of safety itself.</p>
-            <p>Hold both halves of that when 7.1 costs the same labour out, at roughly 830 hours per 100,000 comparisons, and treats it as a reason to move from human feedback to AI feedback. Fewer people having to read this material is a real argument for RLAIF. It is also an argument for removing the humans whose judgement the method exists to capture. Session 8.3 gives a framework for holding both at once, and 20.2 puts it in the wider critique of what "safety" is taken to cover.</p>
+            <p>Hold both halves of that when 7.1 costs the same labour out, at roughly 830 hours per 100,000 comparisons, and treats it as a reason to move from human feedback to AI feedback. Fewer people having to read this material is a real argument for RLAIF. It is also an argument for removing the humans whose judgement the method exists to capture. Session 8.3 gives a framework for holding both at once.</p>
         </div>
 
         <h2 class="section-title">A short history</h2>
@@ -130,7 +130,7 @@
         </div>
         <div class="info-box">
             <h4>RLHF as deployed alignment</h4>
-            <p>RLHF is the technique that turned capable-but-unusable base models into the assistants now deployed to hundreds of millions of people. Its successes (InstructGPT) and its failure modes (6.4) therefore carry real stakes: they belong to the alignment method in production. Understanding what it optimises is understanding what today's "aligned" models are aligned <em>to</em>.</p>
+            <p>RLHF is the technique that turned capable-but-unusable base models into the assistants now deployed to hundreds of millions of people. Its successes (InstructGPT) and its failure modes (6.4) therefore carry real stakes: they belong to the alignment method in production. Understanding what it optimises is understanding what today's "aligned" models are aligned to.</p>
         </div>
         <div class="warning-box">
             <h4>A common misconception: RLHF makes the model "smarter"</h4>
@@ -143,7 +143,7 @@
             <ol style="margin-left:25px; color:#555; line-height:2.0;">
                 <li>Supervised fine-tuning: start from an SFT model (Session 5.2); this is the policy we will refine and the anchor we will stay close to.</li>
                 <li>Reward modelling (6.2): collect human comparisons of model outputs and fit a reward model \(r_\phi\) that scores a response, via the Bradley–Terry model.</li>
-                <li>RL fine-tuning (6.3): optimise the policy to maximise \(r_\phi\), <em>penalised</em> for drifting too far from the SFT model (the KL "leash"), typically with PPO, or skip the explicit RL with DPO.</li>
+                <li>RL fine-tuning (6.3): optimise the policy to maximise \(r_\phi\), penalised for drifting too far from the SFT model (the KL "leash"), typically with PPO, or skip the explicit RL with DPO.</li>
             </ol>
         </div>
         <p>Each step is an opportunity and a hazard. Step 2 compresses the entirety of "what humans want" into a single learned number: a proxy. Step 3 then optimises hard against that proxy, which (Session 3.1) is the recipe for specification gaming unless something holds it back. The KL leash is that something; whether it is enough is the question of 6.4.</p>
@@ -152,7 +152,7 @@
         <ul class="styled-list">
             <li>Give a task where you could confidently say "answer A is better than B" but could not have written the ideal answer yourself. Why is that gap the motivation for RLHF?</li>
             <li>RLHF can in principle exceed human demonstration quality. State the precondition that makes this possible, and the precise way that same precondition can backfire.</li>
-            <li>InstructGPT (1.3B) beat GPT-3 (175B) on human preference. What does that tell you about where "usefulness" actually comes from, and what it does <em>not</em> tell you about safety?</li>
+            <li>InstructGPT (1.3B) beat GPT-3 (175B) on human preference. What does that tell you about where "usefulness" actually comes from, and what it does not tell you about safety?</li>
             <li>The pipeline replaces "imitate a human" with "optimise a model of human approval". List the assumptions hidden in that substitution.</li>
         </ul>
 
@@ -163,10 +163,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-05/lab-nanochat.html"><span class="nav-label">← Previous</span><span class="nav-title">5.4 · Lab: from base model to assistant (nanochat)</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="the-reward-model.html"><span class="nav-label">Next →</span><span class="nav-title">6.2 · The reward model</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-05/lab-nanochat.html" aria-label="Previous: 5.4 · Lab: from base model to assistant (nanochat)"><span class="nav-label">← Previous</span><span class="nav-title">5.4 · Lab: from base model to assistant (nanochat)</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="the-reward-model.html" aria-label="Next: 6.2 · The reward model"><span class="nav-label">Next →</span><span class="nav-title">6.2 · The reward model</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

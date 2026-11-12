@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 5.4 — Lab: from base model to assistant (nanochat)</title>
+    <title>Session 5.4: Lab: from base model to assistant (nanochat)</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 5</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="post-training-stack.html">← <span class="tn-title">5.3 · The post-training stack</span></a>
-    <a class="tn-next" href="../session-06/from-demonstrations-to-preferences.html"><span class="tn-title">6.1 · From demonstrations to preferences</span> →</a>
+    <a class="tn-prev" href="post-training-stack.html" aria-label="Previous: 5.3 · The post-training stack">← <span class="tn-title">5.3 · The post-training stack</span></a>
+    <a class="tn-next" href="../session-06/from-demonstrations-to-preferences.html" aria-label="Next: 6.1 · From demonstrations to preferences"><span class="tn-title">6.1 · From demonstrations to preferences</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -34,21 +34,21 @@
     <header>
         <div class="week-badge">Week 3 • Session 5.4</div>
         <h1>Lab: from base model to assistant (nanochat)</h1>
-        <p>Read the real training pipeline in nanochat, then see (and make) the base → instruct difference yourself</p>
+        <p>Read the real training pipeline in nanochat, then compare the base and instruct models yourself</p>
     </header>
     <div class="content">
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>This lab turns the pipeline of 5.1&ndash;5.3 from words into code, in two parts. First you find the training stages in a real, readable codebase: Karpathy's <strong>nanochat</strong>, a complete ChatGPT-style pipeline written to be read. Then you put a <strong>base model</strong> beside the <strong>instruction-tuned model</strong> built from it and work out what the tuning changed.</p>
-            <p>The usual account of that second part is that base models ramble and tuned models answer. Run it before you decide whether that is what happens. Everything runs on free Google Colab in about four minutes of compute; the hour is for thinking about what comes out.</p>
+            <p>This lab turns the pipeline of 5.1 to 5.3 from words into code, in two parts. First you find the training stages in a real, readable codebase: Karpathy's <strong>nanochat</strong>, a complete ChatGPT-style pipeline written to be read. Then you put a <strong>base model</strong> beside the <strong>instruction-tuned model</strong> built from it and work out what the tuning changed.</p>
+            <p>The usual account of that second part is that base models ramble and tuned models answer. Run it before you decide whether that is what happens. Everything runs on free Google Colab in about four minutes of compute. The hour is for thinking about what comes out.</p>
         </div>
 
         <div class="lab-box">
-            <h4>Setup <span class="tag">Colab &mdash; no GPU needed</span></h4>
+            <h4>Setup <span class="tag">Colab: no GPU needed</span></h4>
             <ol class="styled-list">
-                <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-5-4-base-vs-instruct.ipynb" target="_blank" rel="noopener">Open the notebook in Colab</a>. It opens from GitHub as an editable view that is not saved to your account, so use <em>File &rarr; Save a copy in Drive</em> before you change anything; the copy in your Drive is the one you edit and submit.</li>
-                <li>Run the first cell. Colab will warn you that the notebook "was not authored by Google", which it says of anything loaded from GitHub; choose <em>Run anyway</em>.</li>
+                <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-5-4-base-vs-instruct.ipynb" target="_blank" rel="noopener">Open the notebook in Colab</a>. It opens from GitHub as an editable view that is not saved to your account, so use <em>File &rarr; Save a copy in Drive</em> before you change anything. The copy in your Drive is the one you edit and submit.</li>
+                <li>Run the first cell. Colab will warn you that the notebook "was not authored by Google", which it says of anything loaded from GitHub. Choose <em>Run anyway</em>.</li>
                 <li>Work down the notebook with <em>Shift+Enter</em>, reading each cell before you run it. The two models together are about 1.9&nbsp;GB of download, about 5.5&nbsp;GiB of peak Python-process RAM in the 11 September 2026 check (plus runtime overhead), and about four minutes of CPU.</li>
             </ol>
             <p>You can also <a href="../../labs/session-5-4-base-vs-instruct.html">read the whole notebook on this site</a> before you start, or <a href="../../labs/session-5-4-base-vs-instruct.ipynb" download>download the .ipynb</a> for Jupyter.</p>
@@ -71,7 +71,7 @@
         <h2 class="section-title">&#9313; The same questions, two models</h2>
         <div class="technical-detail">
             <h4>The matched pair</h4>
-            <p style="color:#555;"><code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a tokeniser and a pretraining run. The second has been through supervised fine-tuning and preference tuning; the first has not. Whatever differs between them is what post-training did, isolated. The notebook puts five prompts to both and prints the answers side by side, with greedy decoding, so your output will match the discussion exactly.</p>
+            <p style="color:#555;"><code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a tokeniser and a pretraining run. The second has been through supervised fine-tuning and preference tuning; the first has not. Whatever differs between them is what post-training did, isolated. The notebook puts five prompts to both and prints the answers side by side, with greedy decoding. Your output should be close to the discussion, though library versions can change individual words.</p>
             <ul class="styled-list">
                 <li>Note the two call shapes. The base model gets a raw string and continues it. The instruct model gets a <strong>chat template</strong>: special tokens marking who is speaking, which its tuning taught it to expect. The notebook prints the template so you can see what those tokens are.</li>
                 <li>Check whether the textbook contrast appears. On most of these prompts the base model answers the question competently, and the differences that are there are smaller and easier to miss.</li>
@@ -85,7 +85,7 @@
 
         <div class="lab-box">
             <h4>Submit</h4>
-            <p>Your notebook, run end to end with output visible: the nanochat stage-mapping (&#9312;), and the base-versus-instruct comparison with your two or three sentences separating form from substance (&#9313;). Graded on completion and the quality of your observations; resubmission allowed.</p>
+            <p>Your notebook, run end to end with output visible: the nanochat stage-mapping (&#9312;), and the base-versus-instruct comparison with your two or three sentences separating form from substance (&#9313;). Graded on completion and the quality of your observations. Resubmission allowed.</p>
         </div>
 
         <h2 class="section-title">Tools and references</h2>
@@ -98,16 +98,16 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 5 summary and what's next</h2>
-            <p>Pretraining provides a base model; SFT learns from selected responses; preference objectives use comparisons to shape behaviour. The lab compares a base model and its tuned sibling under specified prompting and decoding settings. Report which aspects of form and correctness changed on your prompts, without assuming that one small comparison establishes the effects of post-training in general.</p>
+            <p>Pretraining provides a base model. SFT learns from selected responses. Preference objectives use comparisons to shape behaviour. The lab compares a base model and its tuned sibling under specified prompting and decoding settings. Report which aspects of form and correctness changed on your prompts, without assuming that one small comparison establishes the effects of post-training in general.</p>
             <p>Next (Session 6): RLHF uses human preference comparisons to train a reward model, then optimises a policy against that proxy. We examine reward hacking, sycophancy and the limits of the feedback.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="post-training-stack.html"><span class="nav-label">← Previous</span><span class="nav-title">5.3 · The post-training stack</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-06/from-demonstrations-to-preferences.html"><span class="nav-label">Next →</span><span class="nav-title">6.1 · From demonstrations to preferences</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="post-training-stack.html" aria-label="Previous: 5.3 · The post-training stack"><span class="nav-label">← Previous</span><span class="nav-title">5.3 · The post-training stack</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-06/from-demonstrations-to-preferences.html" aria-label="Next: 6.1 · From demonstrations to preferences"><span class="nav-label">Next →</span><span class="nav-title">6.1 · From demonstrations to preferences</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

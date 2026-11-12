@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>African Technical AI Safety — Honours Course (UCT)</title>
+    <title>African Technical AI Safety: Honours Course (UCT)</title>
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
     *{ margin:0; padding:0; box-sizing:border-box; }
@@ -33,7 +33,7 @@
     .lesson-list a{ color:var(--ink); text-decoration:none; padding:7px 14px; display:block; border-left:2px solid transparent; transition:all 0.15s ease; }
     .lesson-list a:hover{ background:var(--tint); border-left:2px solid var(--navy); color:var(--navy); }
     .lesson-list .soon{ color:#9aa3ab; padding:7px 14px; display:block; border-left:2px solid transparent; }
-    .lesson-list .soon::after{ content:' — coming soon'; font-family:var(--mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#b6bdc4; }
+    .lesson-list .soon::after{ content:': coming soon'; font-family:var(--mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#b6bdc4; }
     .badge-built{ display:inline-block; font-family:var(--mono); color:var(--blue); font-size:0.62rem; letter-spacing:1px; text-transform:uppercase; margin-left:8px; vertical-align:middle; }
     .badge-built::before{ content:'· '; }
     .session-group{ font-family:var(--display); color:var(--navy); font-weight:500; font-size:1.05rem; padding:6px 0 6px 14px; border-left:2px solid var(--navy); margin-top:6px; }
@@ -62,12 +62,12 @@
     <div class="content">
 
         <div class="caveat-banner">
-            <p><span id="release-note">The 2026 taught route is complete here: Sessions 1–9, then 11–13, followed by a project.</span> <strong>A note on these materials:</strong> The design, presentation, and content of these pages have been created and enhanced using AI tools (primarily Claude by Anthropic). Materials are checked during preparation, but errors are still possible, particularly in links, citations, or statistics. If you spot anything wrong, please email <a href="mailto:jonathan.shock@uct.ac.za">jonathan.shock@uct.ac.za</a>. See the <a href="ai-disclaimer.html">full AI content disclaimer</a>.</p>
+            <p><span id="release-note">The 2026 taught route is complete here: Sessions 1 to 9, then 11 to 13, followed by a project.</span> <strong>A note on these materials:</strong> The design, presentation, and content of these pages have been created and enhanced using AI tools (primarily Claude by Anthropic). Materials are checked during preparation, but errors are still possible, particularly in links, citations, or statistics. If you spot anything wrong, please email <a href="mailto:jonathan.shock@uct.ac.za">jonathan.shock@uct.ac.za</a>. See the <a href="ai-disclaimer.html">full AI content disclaimer</a>.</p>
         </div>
 
         <div class="intro-section">
             <h2>About this course</h2>
-            <p>A technical introduction to AI safety for students who understand neural networks and can program in Python. The 2026 taught route covers Sessions 1–9, then evaluations, technical governance and one worked interpretability case in Sessions 11–13, followed by a research project. Session 10 is skipped; the numbering follows the original course plan.</p>
+            <p>A technical introduction to AI safety for students who understand neural networks and can program in Python. The 2026 taught route covers Sessions 1 to 9, then evaluations, technical governance and one worked interpretability case in Sessions 11 to 13, followed by a research project. Session 10 is skipped; the numbering follows the original course plan.</p>
             <p style="margin-top:12px;">What makes it <em>African</em> technical AI safety is a through-line rather than a single week: frontier models are <strong>measurably less safe in African languages</strong> (a robustness and evaluation problem); compute, energy and data sovereignty shape who can build and govern these systems; and relational ethics and the present-harms debate ask, throughout, <strong>whose safety, whose risks, whose values?</strong> The labs and project are built to run on Google Colab.</p>
             <p style="margin-top:12px;">The development of this course was supported by the International Development Research Centre (IDRC) and the UK Foreign, Commonwealth &amp; Development Office (FCDO) through the <a href="https://ai.uct.ac.za/african-hub-ai-safety-peace-security" target="_blank" rel="noopener">African Hub on AI Safety, Peace and Security</a>. This work was carried out with financial support from UK International Development and the International Development Research Centre, Ottawa, Canada as part of the AI for Development: Responsible AI, Empowering People Program (AI4D). The views expressed herein do not necessarily represent those of IDRC or its Board of Governors, or the UK government’s official policies.</p>
 
@@ -75,7 +75,7 @@
         </div>
 
         <!-- ===== PART I ===== -->
-        <div class="part-label">Part I · Foundations and the safety problem</div>
+        <div class="part-label">Part 1 · Foundations and the safety problem</div>
 
         <div class="week-section">
             <div class="week-header"><div class="week-number">1</div><h2>Orientation and foundations</h2></div>
@@ -127,7 +127,7 @@
         </div>
 
         <!-- ===== PART II ===== -->
-        <div class="part-label">Part II · How models are trained and aligned</div>
+        <div class="part-label">Part 2 · How models are trained and aligned</div>
 
         <div class="week-section">
             <div class="week-header"><div class="week-number">3</div><h2>LLM training, end to end</h2></div>
@@ -181,7 +181,7 @@
         </div>
 
         <!-- ===== PART III ===== -->
-        <div class="part-label">Part III · Robustness, evaluation and governance</div>
+        <div class="part-label">Part 3 · Robustness, evaluation and governance</div>
         <div class="week-section">
             <div class="week-header"><div class="week-number">5</div><h2>Robustness and adversarial ML</h2></div>
             <ul class="lesson-list"><li><div class="session-group">Session 9 · Robustness and adversarial ML</div><ul class="subsession-list">
@@ -202,7 +202,7 @@
                 <li><a href="sessions/session-11/lab-isizulu-eval.html">11.5 · Lab: audit a multilingual safety eval</a></li>
             </ul></li><li><a href="sessions/session-12-technical-ai-governance.html">Session 12 · Technical AI governance</a></li></ul>
         </div>
-        <div class="part-label">Part IV · Interpretability and project</div>
+        <div class="part-label">Part 4 · Interpretability and project</div>
         <div class="week-section">
             <div class="week-header"><div class="week-number">7</div><h2>One circuit, then project work</h2></div>
             <ul class="lesson-list"><li><div class="session-group">Session 13 · Interpretability and its limits</div><ul class="subsession-list">
@@ -229,7 +229,6 @@
                         <li><a href="sessions/session-10/lab-trusted-monitor.html">10.5 · Lab: build a trusted monitor</a></li>
                     </ul>
                 </li>
-            </ul>
             </ul>
         </div>
 
@@ -320,7 +319,6 @@
             </ul>
         </div>
 
-    </div>
         <!-- DEV-ONLY-END -->
     </div>
 

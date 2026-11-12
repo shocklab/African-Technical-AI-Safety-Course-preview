@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 724" width="1240" height="724" font-family="Source Serif 4, Georgia, 'Times New Roman', serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 744" width="1240" height="744" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" role="img" aria-labelledby="title desc">
+<title id="title">RLHF and the PPO policy update</title>
+<desc id="desc">The policy generates responses scored by a reward model and a KL penalty to a frozen reference policy. In PPO, the sampling-policy snapshot defines a probability ratio. The ratio and clipped ratio combine with critic-based advantages in a surrogate objective used to update the policy. The snapshot is refreshed for each new batch.</desc>
 <defs>
 <marker id="ah-2a5298" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2a5298"/></marker>
 <marker id="ah-003A70" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#003A70"/></marker>
@@ -45,7 +47,7 @@
 <path d="M990 244 L990 322 L334 322 L334 186" fill="none" stroke="#003A70" stroke-width="1.6" marker-end="url(#ah-003A70)"/>
 <text x="662" y="314" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#003A70">update θ to raise the objective, then repeat</text>
 <line x1="34" y1="352" x2="1206" y2="352" stroke="#e4e8ec" stroke-width="1.4" stroke-dasharray="7 5"/>
-<rect x="34" y="372" width="1172" height="246" rx="8" fill="#f5f7f9" stroke="#e4e8ec" stroke-width="1.4" stroke-dasharray="7 5"/>
+<rect x="34" y="372" width="1172" height="282" rx="8" fill="#f5f7f9" stroke="#e4e8ec" stroke-width="1.4" stroke-dasharray="7 5"/>
 <text x="56" y="398" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" fill="#5a6672" letter-spacing="1">PPO’S BOOKKEEPING · READ PAST THIS ON A FIRST PASS</text>
 <text x="56" y="421" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="13.5" fill="#2c3e50">Sampling is expensive, so PPO reuses one batch of responses for several gradient steps. That is the only reason a third policy exists.</text>
 <rect x="56" y="436" width="248" height="84" rx="6" fill="#ffffff" stroke="#5a6672" stroke-width="1.6"/>
@@ -54,31 +56,35 @@
 <text x="180.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">the batch was sampled from</text>
 <rect x="336" y="436" width="248" height="84" rx="6" fill="#ffffff" stroke="#5a6672" stroke-width="1.6"/>
 <text x="460.0" y="464" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="16.5" fill="#003A70">Probability ratio</text>
-<text x="460.0" y="486" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">ρ = πθ(y) / πold(y):</text>
-<text x="460.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">how far θ has drifted</text>
+<text x="460.0" y="486" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">ρt = πθ(yt | h) / πold(yt | h)</text>
+<text x="460.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">h = prompt and earlier tokens</text>
 <rect x="616" y="436" width="248" height="84" rx="6" fill="#ffffff" stroke="#5a6672" stroke-width="1.6"/>
-<text x="740.0" y="464" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="16.5" fill="#003A70">Clip</text>
-<text x="740.0" y="486" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">hold ρ inside 1 ± ε so one</text>
-<text x="740.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">batch cannot move θ far</text>
+<text x="740.0" y="464" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="16.5" fill="#003A70">Clipped ratio</text>
+<text x="740.0" y="486" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">clip(ρ, 1 − ε, 1 + ε)</text>
+<text x="740.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">used in the surrogate below</text>
 <rect x="896" y="436" width="248" height="84" rx="6" fill="#ffffff" stroke="#5a6672" stroke-width="1.6"/>
 <text x="1020.0" y="464" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="16.5" fill="#003A70">Advantage  Â</text>
-<text x="1020.0" y="486" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">was this response better</text>
-<text x="1020.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">than expected?</text>
+<text x="1020.0" y="486" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">critic-based estimate:</text>
+<text x="1020.0" y="502" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">better than expected?</text>
 <path d="M304 478.0 L334 478.0" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
 <path d="M584 478.0 L614 478.0" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
-<path d="M864 478.0 L894 478.0" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
-<path d="M1020.0 520 L1020.0 542 L180.0 542 L180.0 522" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
-<text x="620" y="538" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#5a6672">refresh πold every few steps and go again</text>
-<text x="56" y="575" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="13" fill="#5a6672">πold is not πref. πold is refreshed constantly and only keeps the update stable; πref is frozen for the whole run, and is what the KL penalty measures against.</text>
-<text x="56" y="596" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="13" fill="#5a6672">“Better than expected” needs a baseline for what was expected. A second network, the critic, is trained alongside the policy to supply it.</text>
-<text x="34" y="658" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" fill="#5a6672" letter-spacing="1">THREE POLICIES, ONE JOB EACH</text>
-<rect x="34" y="674" width="11" height="11" rx="2" fill="#003A70"/>
-<text x="53" y="684" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="12.5" fill="#003A70">πθ</text>
-<text x="96" y="684" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">the one being trained</text>
-<rect x="434" y="674" width="11" height="11" rx="2" fill="#8a6d1f"/>
-<text x="453" y="684" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="12.5" fill="#003A70">πref</text>
-<text x="496" y="684" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">frozen; the leash measures distance from it</text>
-<rect x="834" y="674" width="11" height="11" rx="2" fill="#5a6672"/>
-<text x="853" y="684" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="12.5" fill="#003A70">πold</text>
-<text x="896" y="684" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">a recent snapshot; PPO detail only</text>
+<path d="M740 520 V542 H824 V552" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
+<path d="M1020 520 V542 H936 V552" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
+<path d="M460 520 V570 H658" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
+<rect x="660" y="554" width="484" height="44" rx="6" fill="#ffffff" stroke="#003A70" stroke-width="1.6"/>
+<text x="902" y="581" text-anchor="middle" font-size="15" fill="#003A70">Policy update: maximise E[min(ρÂ, clip(ρ)Â)]</text>
+<path d="M660 590 H180 V522" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
+<text x="340" y="579" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#5a6672">new batch: refresh πold</text>
+<text x="56" y="618" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="13" fill="#5a6672">πold is not πref. πold is refreshed constantly and only keeps the update stable; πref is frozen for the whole run, and is what the KL penalty measures against.</text>
+<text x="56" y="638" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="13" fill="#5a6672">“Better than expected” needs a baseline for what was expected. A second network, the critic, is trained alongside the policy to supply it.</text>
+<text x="34" y="678" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" fill="#5a6672" letter-spacing="1">THREE POLICIES, ONE JOB EACH</text>
+<rect x="34" y="694" width="11" height="11" rx="2" fill="#003A70"/>
+<text x="53" y="704" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="12.5" fill="#003A70">πθ</text>
+<text x="96" y="704" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">the one being trained</text>
+<rect x="434" y="694" width="11" height="11" rx="2" fill="#8a6d1f"/>
+<text x="453" y="704" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="12.5" fill="#003A70">πref</text>
+<text x="496" y="704" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">frozen; the leash measures distance from it</text>
+<rect x="834" y="694" width="11" height="11" rx="2" fill="#5a6672"/>
+<text x="853" y="704" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="12.5" fill="#003A70">πold</text>
+<text x="896" y="704" text-anchor="start" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#2c3e50">a recent snapshot; PPO detail only</text>
 </svg>

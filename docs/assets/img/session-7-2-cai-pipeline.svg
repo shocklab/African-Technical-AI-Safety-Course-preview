@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 812" width="1240" height="812" font-family="Source Serif 4, Georgia, 'Times New Roman', serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 812" width="1240" height="812" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" role="img" aria-labelledby="title desc">
+<title id="title">Constitutional AI training phases</title>
+<desc id="desc">In Phase 1, a helpful model repeatedly critiques and revises answers using constitutional principles. Revisions and helpful samples train a pretrained model to produce SL-CAI. In Phase 2, AI harmlessness comparisons and human helpfulness comparisons train a preference model. Reinforcement learning using that reward model produces RL-CAI from SL-CAI.</desc>
 <defs>
 <marker id="ah-2a5298" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2a5298"/></marker>
 <marker id="ah-003A70" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#003A70"/></marker>
@@ -21,8 +23,8 @@
 <text x="342.0" y="171" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">answers a red-team</text>
 <text x="342.0" y="186" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">prompt, then critiques</text>
 <text x="342.0" y="201" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">and revises its own answer</text>
-<path d="M342 214 L342 238 L300 238 L300 214" fill="none" stroke="#2a5298" stroke-width="1.6" marker-end="url(#ah-2a5298)"/>
-<text x="390" y="244" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#5a6672">repeat a few times</text>
+<path d="M342 214 V250 H276 V214" fill="none" stroke="#2a5298" stroke-width="1.6" marker-end="url(#ah-2a5298)"/>
+<text x="347" y="274" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#5a6672">repeat a few times</text>
 <rect x="470" y="126" width="158" height="68" rx="6" fill="#ffffff" stroke="#5a6672" stroke-width="1.6"/>
 <text x="549.0" y="151" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="15.5" fill="#003A70">Final revisions</text>
 <text x="549.0" y="171" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">the harmless answers</text>
@@ -66,7 +68,7 @@
 <rect x="694" y="496" width="196" height="72" rx="6" fill="#eef4f0" stroke="#3f6b52" stroke-width="1.6"/>
 <text x="792.0" y="521" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="15.5" fill="#003A70">Human comparisons</text>
 <text x="792.0" y="541" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">helpfulness</text>
-<rect x="938" y="434" width="128" height="100" rx="6" fill="#ffffff" stroke="#003A70" stroke-width="1.6"/>
+<rect x="938" y="434" width="128" height="100" rx="6" fill="#ffffff" stroke="#5a6672" stroke-width="1.6"/>
 <text x="1002.0" y="459" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="13" fill="#003A70">Preference model</text>
 <text x="1002.0" y="479" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">one hybrid model:</text>
 <text x="1002.0" y="494" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#2c3e50">AI harmlessness,</text>
@@ -77,9 +79,14 @@
 <path d="M646 470 L692 440" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
 <path d="M890 428 L936 462" fill="none" stroke="#8a6d1f" stroke-width="1.6" marker-end="url(#ah-8a6d1f)"/>
 <path d="M890 526 L936 500" fill="none" stroke="#3f6b52" stroke-width="1.6" marker-end="url(#ah-3f6b52)"/>
-<path d="M1002 534 L1002 618 L248 618 L248 432 L254 432" fill="none" stroke="#003A70" stroke-width="1.6" marker-end="url(#ah-003A70)"/>
-<text x="676" y="612" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#003A70">optimise SL-CAI against it with PPO, under the KL leash of 6.3</text>
-<text x="676" y="644" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#5a6672">the constitution does not appear in the RL step itself: it is already inside the reward model</text>
+<rect x="1090" y="446" width="100" height="76" rx="6" fill="#ffffff" stroke="#003A70" stroke-width="1.6"/>
+<text x="1140" y="476" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="15.5" fill="#003A70">RL-CAI</text>
+<text x="1140" y="500" text-anchor="middle" font-size="12" fill="#2c3e50">trained policy</text>
+<path d="M1066 484 H1088" fill="none" stroke="#5a6672" stroke-width="1.6" marker-end="url(#ah-5a6672)"/>
+<path d="M416 454 H438 V590 H1140 V524" fill="none" stroke="#003A70" stroke-width="1.6" marker-end="url(#ah-003A70)"/>
+<path d="M1002 534 V588" fill="none" stroke="#003A70" stroke-width="1.6" marker-end="url(#ah-003A70)"/>
+<text x="676" y="582" text-anchor="middle" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#003A70">optimise SL-CAI with PPO using the preference model’s reward (6.3)</text>
+<text x="676" y="644" text-anchor="middle" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" font-size="12" fill="#5a6672">the preference model was trained on comparisons made using constitutional principles</text>
 <text x="34" y="700" text-anchor="start" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" fill="#5a6672" letter-spacing="1">WHICH MODEL IS WHICH</text>
 <rect x="34" y="720" width="13" height="13" rx="2" fill="#ffffff" stroke="#2a5298" stroke-width="1.8"/>
 <text x="56" y="731" text-anchor="start" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="12.5" fill="#003A70">Helpful-only model</text>

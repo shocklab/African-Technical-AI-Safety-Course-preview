@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.2 — Constitutional AI</title>
+    <title>Session 7.2: Constitutional AI</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 7</summary>
@@ -27,8 +27,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="from-human-to-ai-feedback.html">← <span class="tn-title">7.1 · From human to AI feedback</span></a>
-    <a class="tn-next" href="rlaif-and-self-rewarding.html"><span class="tn-title">7.3 · RLAIF and self-rewarding</span> →</a>
+    <a class="tn-prev" href="from-human-to-ai-feedback.html" aria-label="Previous: 7.1 · From human to AI feedback">← <span class="tn-title">7.1 · From human to AI feedback</span></a>
+    <a class="tn-next" href="rlaif-and-self-rewarding.html" aria-label="Next: 7.3 · RLAIF and self-rewarding"><span class="tn-title">7.3 · RLAIF and self-rewarding</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -51,7 +51,7 @@
 
         <div class="technical-detail">
             <h4>The two phases at a glance</h4>
-            <p style="color:#555;"><strong>Phase 1, supervised (SL-CAI):</strong> sample a response to a red-team prompt → ask the model to critique it against a sampled principle → ask it to revise → repeat → fine-tune a <em>pretrained</em> model on the revised responses, mixed with helpful answers sampled from the starting model.</p>
+            <p style="color:#555;"><strong>Phase 1, supervised (SL-CAI):</strong> sample a response to a red-team prompt → ask the model to critique it against a sampled principle → ask it to revise → repeat → fine-tune a pretrained model on the revised responses, mixed with helpful answers sampled from the starting model.</p>
             <p style="color:#555;"><strong>Phase 2, reinforcement learning (RL-CAI / RLAIF):</strong> sample response pairs from the Phase-1 model → a <em>feedback model</em> picks the more principle-compliant one → train one preference (reward) model on those AI labels together with human helpfulness labels → optimise the policy against it with PPO and the KL leash.</p>
             <p style="color:#555;">Phase 1 gets the model into roughly the right region cheaply; Phase 2 sharpens it with the RL apparatus. The first teaches by example, the second by reward.</p>
         </div>
@@ -63,7 +63,7 @@
 
         <h2 class="section-title">Phase 1, supervised</h2>
         <p>Generate harmful answers on purpose, then have the model fix them against a principle, and learn from the fixes.</p>
-        <p>Start from a model that has been trained to be helpful but not yet harmless, so it will attempt a harmful request rather than refuse. Feed it a red-team prompt designed to elicit something harmful. It produces an unfiltered first answer. Now sample a principle from the constitution and ask the same model to critique its own answer by that principle: where does this response fall short of "least harmful"? Then ask it to revise the answer in light of the critique. Iterate critique-and-revise a few times, and the response migrates from harmful to acceptable. Collect the final revised answers across many prompts and <em>supervised-finetune</em> a <strong>pretrained</strong> model on them. Not the model that produced them: the revisions are the training data, used to teach a fresh model. Bai et al. also mix in ordinary helpful answers, sampled from the starting model on non-harmful prompts, &ldquo;in order to retain helpfulness as much as possible&rdquo;. Hold on to that mixture; it matters at the end of this page. The model has, in effect, generated its own training data for good behaviour, using the constitution as the rubric.</p>
+        <p>Start from a model that has been trained to be helpful but not yet harmless, so it will attempt a harmful request rather than refuse. Feed it a red-team prompt designed to elicit something harmful. It produces an unfiltered first answer. Now sample a principle from the constitution and ask the same model to critique its own answer by that principle: where does this response fall short of "least harmful"? Then ask it to revise the answer in light of the critique. Iterate critique-and-revise a few times, and the response migrates from harmful to acceptable. Collect the final revised answers across many prompts and supervised-finetune a pretrained model on them. Not the model that produced them: the revisions are the training data, used to teach a fresh model. Bai et al. also mix in ordinary helpful answers, sampled from the starting model on non-harmful prompts, &ldquo;in order to retain helpfulness as much as possible&rdquo;. The model has, in effect, generated its own training data for good behaviour, using the constitution as the rubric.</p>
 
         <div class="case-study">
             <h4>One critique-and-revise loop</h4>
@@ -76,13 +76,13 @@
 
         <h2 class="section-title">Phase 2, reinforcement learning from AI feedback</h2>
         <p>Turn the constitution into a preference signal, then run the Session 6 RL stack against it.</p>
-        <p>Take the Phase-1 model and sample two responses to each prompt. Hand both to a <strong>feedback model</strong>, which Bai et al. describe as an independent model, typically a pretrained one, rather than the model being trained, together with a sampled principle, formatted as a multiple-choice question that asks which of the two responses, (A) or (B), better meets the principle. The feedback model's answer is read off as a <em>soft</em> label: the probability it places on the token "(A)" versus "(B)",</p>
+        <p>Take the Phase-1 model and sample two responses to each prompt. Hand both to a <strong>feedback model</strong>, which Bai et al. describe as an independent model, typically a pretrained one, rather than the model being trained, together with a sampled principle, formatted as a multiple-choice question that asks which of the two responses, (A) or (B), better meets the principle. The feedback model's answer is read off as a soft label: the probability it places on the token "(A)" versus "(B)",</p>
         <div class="formula">\[ p_A = \frac{P(\text{“(A)”})}{P(\text{“(A)”}) + P(\text{“(B)”})}, \]</div>
         <p>so a confident judgement gives a label near 0 or 1 and a borderline one sits near 0.5.</p>
         <p>A probability cannot be fed to 6.2&rsquo;s loss, which needs a winner and a loser, so the soft form is used instead:</p>
-        <div class="formula">\[ \mathcal{L}(\phi) = -\,\mathbb{E}\Big[\, p_A \log \sigma\big(r_\phi(y_A) - r_\phi(y_B)\big) \;+\; (1 - p_A)\, \log \sigma\big(r_\phi(y_B) - r_\phi(y_A)\big) \Big] \]</div>
+        <div class="formula">\[ \mathcal{L}(\phi) = -\,\mathbb{E}\Big[\, p_A \log \sigma\big(r_\phi(x,y_A) - r_\phi(x,y_B)\big) \;+\; (1 - p_A)\, \log \sigma\big(r_\phi(x,y_B) - r_\phi(x,y_A)\big) \Big] \]</div>
         <p>Set \(p_A\) to 1 or 0 and it collapses back to exactly the loss in 6.2. The soft label lets a hesitant judgement move the reward model less far than a confident one.</p>
-        <p>Two refinements matter, one from this paper and one from its successor. Bai et al. have the feedback model reason with chain-of-thought before committing to its choice. Position-swapping was used later in the RLAIF work of Lee et al. (2023; 7.3 covers it): models can have a <em>position bias</em> (a tendency to favour an option because of its position, first or second, rather than its content), so each pair is scored twice with the order swapped and the results averaged. These soft AI labels become the harmlessness comparison dataset.</p>
+        <p>Two refinements matter, one from this paper and one from its successor. In Bai et al.’s chain-of-thought variant, the helpful RLHF model replaces the pretrained feedback model and reasons before choosing. The main CoT results clamp the resulting preference probabilities to the interval from 0.4 to 0.6. Position-swapping was used later in the RLAIF work of Lee et al. (2023; 7.3 covers it): models can have a <em>position bias</em> (a tendency to favour an option because of its position, first or second, rather than its content), so each pair is scored twice with the order swapped and the results averaged. These soft AI labels become the harmlessness comparison dataset.</p>
         <p>From here it is mostly Session 6, with one difference to be precise about. The AI harmlessness comparisons are mixed with the human helpfulness comparisons collected the ordinary way, and a single <strong>Bradley–Terry preference model</strong> is trained on the combined set. Bai et al. call the result a &ldquo;hybrid human/AI PM&rdquo;: human labels for helpfulness, AI labels for harmlessness, one reward model. So the constitution does not replace human preference data; it replaces one half of it, which is what the next section turns on. Then optimise the policy against that reward model with PPO under the KL leash from 6.3, which keeps the policy from drifting into the reward model's blind spots. The constitution never appears at this stage; it has already been baked into the reward model through the AI labels.</p>
         <div class="info-box">
             <h4>Distilling the constitution into a reward model</h4>
@@ -103,7 +103,7 @@
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>In Phase 1, why must the starting model be helpful-but-not-yet-harmless? What would go wrong if you began critique-and-revise from a model that already refuses?</li>
-            <li>The feedback model's preference is read off as \(p_A\) from option log-probs. Why is a <em>soft</em> label (a probability) more useful here than a hard "(A) wins"?</li>
+            <li>The feedback model's preference is read off as \(p_A\) from option log-probs. Why is a soft label (a probability) more useful here than a hard "(A) wins"?</li>
             <li>Position-swapping doubles the feedback cost. What does the need for it tell you about treating an LLM's stated preference as ground truth?</li>
             <li>Helpfulness stays human-labelled while harmlessness is automated. Construct a case where that asymmetry itself causes a problem.</li>
             <li>"Non-evasive" is sold as a virtue. Describe a situation where an engaging, explanatory response is worse for safety than a flat refusal.</li>
@@ -126,15 +126,15 @@
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 7.3 generalises beyond Constitutional AI to plain RLAIF and self-rewarding models, then turns critical: the new failure modes that AI feedback introduces, and whether it escapes the oversight limitations or merely moves it.</p>
+            <p>Sub-session 7.3 generalises beyond Constitutional AI to plain RLAIF and self-rewarding models, then turns critical: the new failure modes that AI feedback introduces, and whether it escapes the oversight limitations or merely moves them.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="from-human-to-ai-feedback.html"><span class="nav-label">← Previous</span><span class="nav-title">7.1 · From human to AI feedback</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="rlaif-and-self-rewarding.html"><span class="nav-label">Next →</span><span class="nav-title">7.3 · RLAIF and self-rewarding</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="from-human-to-ai-feedback.html" aria-label="Previous: 7.1 · From human to AI feedback"><span class="nav-label">← Previous</span><span class="nav-title">7.1 · From human to AI feedback</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="rlaif-and-self-rewarding.html" aria-label="Next: 7.3 · RLAIF and self-rewarding"><span class="nav-label">Next →</span><span class="nav-title">7.3 · RLAIF and self-rewarding</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

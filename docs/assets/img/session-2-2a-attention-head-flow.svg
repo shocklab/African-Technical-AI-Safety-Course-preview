@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1000" viewBox="0 0 1200 1000" role="img" aria-labelledby="title desc">
+<title id="title">One causal self-attention head</title>
+<desc id="desc">The input X has T rows and d_model columns. Multiplication by W_Q, W_K and W_V produces Q, K and V with T rows and d_head columns. Transposing K allows QK transpose to form the square score matrix S. Divide by the square root of d_head, mask only future positions j greater than i, then apply row-wise softmax to obtain A. A times V gives the head output. All three grids show six by six examples of T by T matrices, including the unmasked diagonal.</desc>
+<rect width="1200" height="1000" fill="white"/>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2a5298"/></marker></defs>
+<text x="34" y="48" font-family="Source Serif 4, Georgia, serif" font-size="30" fill="#003A70" text-anchor="start">One causal self-attention head</text>
+<rect x="450" y="85" width="300" height="74" rx="8" fill="#e9f2fa" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="600" y="116" font-family="Source Serif 4, Georgia, serif" font-size="25" fill="#003A70" text-anchor="middle">X</text>
+<text x="600" y="143" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#2c3e50" text-anchor="middle">T × d<tspan baseline-shift="sub" font-size="70%">model</tspan></text>
+<path d="M600 159 V202 H210 V234" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="70" y="236" width="280" height="78" rx="8" fill="#e9f2fa" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="210" y="265" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">Q = XW<tspan baseline-shift="sub" font-size="70%">Q</tspan></text>
+<text x="210" y="297" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#2c3e50" text-anchor="middle">T × d<tspan baseline-shift="sub" font-size="70%">head</tspan></text>
+<path d="M600 159 V202 H600 V234" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="460" y="236" width="280" height="78" rx="8" fill="#e9f2fa" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="600" y="265" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">K = XW<tspan baseline-shift="sub" font-size="70%">K</tspan></text>
+<text x="600" y="297" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#2c3e50" text-anchor="middle">T × d<tspan baseline-shift="sub" font-size="70%">head</tspan></text>
+<path d="M600 159 V202 H990 V234" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="850" y="236" width="280" height="78" rx="8" fill="#e9f2fa" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="990" y="265" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">V = XW<tspan baseline-shift="sub" font-size="70%">V</tspan></text>
+<text x="990" y="297" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#2c3e50" text-anchor="middle">T × d<tspan baseline-shift="sub" font-size="70%">head</tspan></text>
+<text x="800" y="350" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="start">W<tspan baseline-shift="sub" font-size="70%">Q</tspan>, W<tspan baseline-shift="sub" font-size="70%">K</tspan>, W<tspan baseline-shift="sub" font-size="70%">V</tspan> ∈ ℝ<tspan baseline-shift="super" font-size="70%">d<tspan baseline-shift="sub" font-size="70%">model</tspan> × d<tspan baseline-shift="sub" font-size="70%">head</tspan></tspan></text>
+<path d="M600 314 V324" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="370" y="326" width="250" height="40" rx="8" fill="#f5f7f9" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="495" y="353" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#003A70" text-anchor="middle">Kᵀ: d<tspan baseline-shift="sub" font-size="70%">head</tspan> × T</text>
+<path d="M370 346 H265 V405" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M210 314 V405" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="168" y="431" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">S = QKᵀ</text>
+<text x="168" y="461" font-family="Source Serif 4, Georgia, serif" font-size="19" fill="#2c3e50" text-anchor="middle">T × T</text>
+<rect x="84" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="112" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="140" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="168" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="196" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="224" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="84" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="112" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="140" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="168" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="196" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="224" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="84" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="112" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="140" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="168" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="196" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="224" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="84" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="112" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="140" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="168" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="196" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="224" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="84" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="112" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="140" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="168" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="196" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="224" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="84" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="112" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="140" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="168" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="196" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="224" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="84" y="485" width="168" height="168" fill="none" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="546" y="431" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">S̃ = S / √d<tspan baseline-shift="sub" font-size="70%">head</tspan></text>
+<text x="546" y="461" font-family="Source Serif 4, Georgia, serif" font-size="19" fill="#2c3e50" text-anchor="middle">T × T</text>
+<rect x="462" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="490" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="518" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="546" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="574" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="602" y="485" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="462" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="490" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="518" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="546" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="574" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="602" y="513" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="462" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="490" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="518" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="546" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="574" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="602" y="541" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="462" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="490" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="518" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="546" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="574" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="602" y="569" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="462" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="490" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="518" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="546" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="574" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="602" y="597" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="462" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="490" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="518" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="546" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="574" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="602" y="625" width="28" height="28" fill="#e9f2fa" stroke="white" stroke-width="1"/>
+<rect x="462" y="485" width="168" height="168" fill="none" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="924" y="431" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">A</text>
+<text x="924" y="461" font-family="Source Serif 4, Georgia, serif" font-size="19" fill="#2c3e50" text-anchor="middle">T × T</text>
+<rect x="840" y="485" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="868" y="485" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="882" y="505" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="896" y="485" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="910" y="505" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="924" y="485" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="938" y="505" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="952" y="485" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="966" y="505" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="980" y="485" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="994" y="505" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="840" y="513" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="868" y="513" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="896" y="513" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="910" y="533" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="924" y="513" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="938" y="533" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="952" y="513" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="966" y="533" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="980" y="513" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="994" y="533" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="840" y="541" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="868" y="541" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="896" y="541" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="924" y="541" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="938" y="561" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="952" y="541" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="966" y="561" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="980" y="541" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="994" y="561" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="840" y="569" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="868" y="569" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="896" y="569" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="924" y="569" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="952" y="569" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="966" y="589" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="980" y="569" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="994" y="589" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="840" y="597" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="868" y="597" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="896" y="597" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="924" y="597" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="952" y="597" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="980" y="597" width="28" height="28" fill="#f5f7f9" stroke="white" stroke-width="1"/>
+<text x="994" y="617" font-family="Source Serif 4, Georgia, serif" font-size="15" fill="#5a6672" text-anchor="middle">0</text>
+<rect x="840" y="625" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="868" y="625" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="896" y="625" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="924" y="625" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="952" y="625" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="980" y="625" width="28" height="28" fill="#2a5298" stroke="white" stroke-width="1"/>
+<rect x="840" y="485" width="168" height="168" fill="none" stroke="#cbd8e5" stroke-width="1.6"/>
+<path d="M256 569 H451" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="356" y="518" font-family="Source Serif 4, Georgia, serif" font-size="19" fill="#003A70" text-anchor="middle">Scale</text>
+<text x="356" y="547" font-family="Source Serif 4, Georgia, serif" font-size="19" fill="#2c3e50" text-anchor="middle">÷ √d<tspan baseline-shift="sub" font-size="70%">head</tspan></text>
+<path d="M634 569 H829" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="736" y="398" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#003A70" text-anchor="middle">Causal mask</text>
+<text x="736" y="427" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="middle">−∞ only for j &gt; i</text>
+<text x="736" y="700" font-family="Source Serif 4, Georgia, serif" font-size="19" fill="#003A70" text-anchor="middle">Row-wise softmax</text>
+<text x="168" y="683" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="middle">Pairwise scores</text>
+<text x="546" y="683" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="middle">Scaled scores</text>
+<text x="924" y="683" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="middle">Attention weights</text>
+<text x="924" y="717" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="middle">Diagonal allowed</text>
+<path d="M924 730 V754 H660 V793" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M990 314 H1120 V832 H874" fill="none" stroke="#2a5298" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="400" y="795" width="470" height="86" rx="8" fill="#e9f2fa" stroke="#cbd8e5" stroke-width="1.6"/>
+<text x="635" y="830" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">head(X) = AV</text>
+<text x="635" y="863" font-family="Source Serif 4, Georgia, serif" font-size="20" fill="#2c3e50" text-anchor="middle">T × d<tspan baseline-shift="sub" font-size="70%">head</tspan></text>
+<text x="600" y="933" font-family="Source Serif 4, Georgia, serif" font-size="24" fill="#003A70" text-anchor="middle">Attention(Q, K, V) = softmax(QKᵀ / √d<tspan baseline-shift="sub" font-size="70%">head</tspan> + mask) V</text>
+<text x="600" y="970" font-family="Source Serif 4, Georgia, serif" font-size="18" fill="#2c3e50" text-anchor="middle">Square grids show T = 6. Rows are queries; columns are keys.</text>
+</svg>

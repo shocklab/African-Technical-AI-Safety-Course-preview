@@ -40,7 +40,7 @@ def C(*lines):
 
 
 M(
-    "# Session 9.4 — Lab: multilingual safety evaluation",
+    "# Session 9.4: Lab: multilingual safety evaluation",
     "",
     "**African Technical AI Safety** · Week 5, Session 9.4",
     "",
@@ -61,6 +61,8 @@ M(
     "and do not interpret them as evidence about either language or its speakers.",
     "",
     "**What you submit:** this notebook, run end to end, and the scoped conclusion at the end.",
+    "",
+    "For a local run, use Transformers 4.56 or later: the model-loading cells use `dtype=`.",
 )
 
 C(
@@ -71,13 +73,16 @@ C(
     "",
     "import numpy as np",
     "import pandas as pd",
-    "import psutil",
+    "try:",
+    "    import psutil",
+    "except ImportError:",
+    "    psutil = None",
     "import torch",
     "import transformers",
     "from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer",
     "",
     "torch.set_num_threads(2)",
-    "print('RAM_GB', round(psutil.virtual_memory().total / 1e9, 1),",
+    "print('RAM_GB', round(psutil.virtual_memory().total / 1e9, 1) if psutil else 'unavailable',",
     "      'vCPU', os.cpu_count(), 'torch', torch.__version__,",
     "      'tfm', transformers.__version__, 'py', platform.python_version(),",
     "      'GPU', torch.cuda.is_available())",
@@ -177,6 +182,12 @@ M(
     "Read the target text and back-translation. List any prompt IDs whose meaning appears to change.",
     "Do not silently drop them after seeing the model output: decide the exclusion rule now. In our",
     "Colab pilot, Afrikaans `s6` reversed the repayment claim, so the starter excludes that pair.",
+    "",
+    "The same NLLB model translates in both directions, so round-trip agreement is not an independent",
+    "check. An unnatural literal translation can return to the original English wording. Check the",
+    "target text with a fluent speaker where possible. In `s5`, check that `post` means a social-media",
+    "message rather than mail or a job. In `s2` and `b2`, check that `partner` means a romantic partner",
+    "rather than a colleague or business partner. Record doubtful meanings before generating responses.",
     "",
     "*Your notes:*")
 
@@ -294,8 +305,12 @@ M(
     "",
     "The paired bootstrap resamples jointly understood prompt IDs with yes/no outcomes in both languages. Its spread",
     "is exploratory: tiny selected samples can give collapsed intervals, not certainty or equivalence. Report raw counts and unclear-label exclusions; do not infer population-wide safety.",
+    "The exact two-sided McNemar p-value tests equal probabilities of the two discordant outcomes",
+    "under the paired null. Resampling differences that are all non-negative or all non-positive cannot",
+    "produce the opposite sign. Even a non-collapsed bootstrap spread can exclude zero when McNemar's",
+    "test does not reject that null. Neither calculation resolves translation or labelling errors.",
     "",
-    "Pairs with an unclear outcome are left out of the paired gap. When there are any and at least two of the three benign controls are understood, the analysis also prints",
+    "Pairs with an unclear outcome are left out of the paired gap. When the primary comparison passes the validity gate and unclear outcomes remain, the analysis also prints",
     "the gap with every unclear label scored yes, with every one scored no, and its full range over every way of",
     "scoring them. Report that range: if it includes zero, the conclusion depends on how the unclear responses are read.",
 )

@@ -1,5 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1328 1097.5" width="1328" height="1097.5" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" role="img" aria-label="The four types of catastrophic AI risk, their subtypes and mitigations, after Hendrycks, Mazeika and Woodside 2023">
-<rect width="1328" height="1097.5" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1328 1107.5" width="1328" height="1107.5" font-family="Source Serif 4, Georgia, 'Times New Roman', serif" role="img" aria-labelledby="title desc">
+<title id="title">Four types of catastrophic AI risk</title>
+<desc id="desc">Four columns summarise malicious use, AI race, organisational risks and rogue AIs, with subtypes and mitigations from Hendrycks, Mazeika and Woodside (2023).</desc>
+<rect width="1328" height="1107.5" fill="#ffffff"/>
 <text x="34" y="52" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="30" fill="#003A70">Four types of catastrophic AI risk</text>
 <text x="34" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#2a5298" letter-spacing="1.6">HENDRYCKS, MAZEIKA &amp; WOODSIDE (2023) · ARXIV:2306.12001</text>
 <text x="34" y="104" font-size="14" fill="#5a6672">Each column is one of the paper's four risk sources, with the subtypes it names and the mitigations it proposes. Read across: the first three are about people and institutions,</text>
@@ -187,9 +189,9 @@
 <text x="1026" y="841.0" font-size="12.8" fill="#2c3e50">and removing hidden functionality</text>
 <rect x="34" y="981.5" width="1260" height="46" fill="#f5f7f9"/>
 <rect x="34" y="981.5" width="3" height="46" fill="#003A70"/>
-<text x="52" y="1001.5" font-size="13" fill="#2c3e50">The four are not independent. The paper's §6 argues they compound: a race erodes organizational safety, weak organizations leak capable models to malicious actors, and both raise the</text>
+<text x="52" y="1001.5" font-size="13" fill="#2c3e50">The four are not independent. The paper's §6 argues they compound: a race erodes organisational safety, weak organisations leak capable models to malicious actors, and both raise the</text>
 <text x="52" y="1018.5" font-size="13" fill="#2c3e50">chance of losing control.</text>
-<text x="34" y="1061.5" font-size="11.6" fill="#5a6672">Source: Hendrycks, D., Mazeika, M. &amp; Woodside, T. (2023), “An Overview of Catastrophic AI Risks”, arXiv:2306.12001. The four risk types and most subtypes are the paper's own section headings; under organizational</text>
+<text x="34" y="1061.5" font-size="11.6" fill="#5a6672">Source: Hendrycks, D., Mazeika, M. &amp; Woodside, T. (2023), “An Overview of Catastrophic AI Risks”, arXiv:2306.12001. The four risk types and most subtypes are the paper's own section headings; under organisational</text>
 <text x="34" y="1076.5" font-size="11.6" fill="#5a6672">risks, weak safety culture and the missing security mindset are drawn from the discussion in §4.2 rather than being headings. Mitigations condense the Suggestions sections (§2.5, §3.4, §4.3, §5.5) in the paper's</text>
 <text x="34" y="1091.5" font-size="11.6" fill="#5a6672">wording.</text>
 </svg>

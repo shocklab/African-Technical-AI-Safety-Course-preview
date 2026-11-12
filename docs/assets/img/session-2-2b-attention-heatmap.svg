@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 730" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="730" viewBox="0 0 860 730" role="img" aria-labelledby="title desc">
 <title id="title">Illustrative causal attention weights</title>
 <desc id="desc">Eight token positions. Rows sum to one and future positions have zero weight. The last row assigns 0.4 each to Eiffel and Tower.</desc>
 <rect width="860" height="730" fill="white"/>
@@ -66,13 +66,13 @@
 <text x="709" y="292" text-anchor="middle" font-size="17" fill="#16344d">0</text>
 <text x="110" y="356" text-anchor="end" font-size="17">is</text>
 <rect x="132" y="317" width="76" height="63" fill="rgb(114,148,175)" stroke="white"/>
-<text x="170" y="356" text-anchor="middle" font-size="17" fill="#16344d">0.25</text>
+<text x="170" y="356" text-anchor="middle" font-size="17" fill="#001f33">0.25</text>
 <rect x="209" y="317" width="76" height="63" fill="rgb(114,148,175)" stroke="white"/>
-<text x="247" y="356" text-anchor="middle" font-size="17" fill="#16344d">0.25</text>
+<text x="247" y="356" text-anchor="middle" font-size="17" fill="#001f33">0.25</text>
 <rect x="286" y="317" width="76" height="63" fill="rgb(114,148,175)" stroke="white"/>
-<text x="324" y="356" text-anchor="middle" font-size="17" fill="#16344d">0.25</text>
+<text x="324" y="356" text-anchor="middle" font-size="17" fill="#001f33">0.25</text>
 <rect x="363" y="317" width="76" height="63" fill="rgb(114,148,175)" stroke="white"/>
-<text x="401" y="356" text-anchor="middle" font-size="17" fill="#16344d">0.25</text>
+<text x="401" y="356" text-anchor="middle" font-size="17" fill="#001f33">0.25</text>
 <rect x="440" y="317" width="76" height="63" fill="#f3f4f5" stroke="white"/>
 <text x="478" y="356" text-anchor="middle" font-size="17" fill="#16344d">0</text>
 <rect x="517" y="317" width="76" height="63" fill="#f3f4f5" stroke="white"/>

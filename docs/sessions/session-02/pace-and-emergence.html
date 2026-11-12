@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 2.4 — Pace of progress, emergence and takeoff</title>
+    <title>Session 2.4: Pace of progress, emergence and takeoff</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 2</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="neural-scaling-laws.html">← <span class="tn-title">2.3 · Neural scaling laws</span></a>
-    <a class="tn-next" href="lab-scaling-and-transformerlens.html"><span class="tn-title">2.5 · Lab: scaling laws and a first look inside a model</span> →</a>
+    <a class="tn-prev" href="neural-scaling-laws.html" aria-label="Previous: 2.3 · Neural scaling laws">← <span class="tn-title">2.3 · Neural scaling laws</span></a>
+    <a class="tn-next" href="lab-scaling-and-transformerlens.html" aria-label="Next: 2.5 · Lab: scaling laws and a first look inside a model"><span class="tn-title">2.5 · Lab: scaling laws and a first look inside a model</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -41,7 +41,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Scaling laws (2.3) describe a smooth fall in loss, yet headlines describe abilities that appear "all at once". This sub-session separates what we can measure (how fast compute and capability have grown) from what is contested: whether new abilities <em>emerge</em> discontinuously at scale, or only seem to because of how we score them. We work the metric mechanism behind that dispute with real numbers, place it inside the deeper tension between predictable loss and surprising behaviour, and draw the safety conclusion: where forecasting fails, you have to measure directly.</p>
+            <p>Scaling laws (2.3) describe a smooth fall in loss, yet headlines describe abilities that appear "all at once". This sub-session separates what we can measure (how fast compute and capability have grown) from what is contested: whether new abilities emerge discontinuously at scale, or only seem to because of how we score them. We work the metric mechanism behind that dispute with real numbers, place it inside the deeper tension between predictable loss and surprising behaviour, and draw the safety conclusion: where forecasting fails, you have to measure directly.</p>
         </div>
 
         <div class="resource-placeholder reading-core">
@@ -73,7 +73,7 @@
                 <li>The output side is measured too. METR's <strong>time horizon</strong> metric asks how long a task (in the time it takes a skilled human) a model can complete with 50% reliability; on their software-task suite that horizon has doubled roughly every seven months since 2019, reaching about 50 minutes for frontier models by early 2025 (Kwa et al., 2025). Capability itself, not only the compute behind it, has a measured trend line.</li>
                 <li>The trends are trackable. Groups like Epoch AI maintain public datasets of model compute, parameters and data: the empirical basis for any claim about how fast the field is moving.</li>
             </ul>
-            <p style="color:#555; margin-top:12px;">You will work with this data directly in the 2.5 lab. When someone says AI is accelerating, or stalling, ask <em>which measured quantity, over what window?</em></p>
+            <p style="color:#555; margin-top:12px;">You will work with this data directly in the 2.5 lab. When someone says AI is accelerating, or stalling, ask which measured quantity, over what window?</p>
         </div>
         <p>A projected compute trend can inform plans for future training runs, but it does not schedule specific capabilities. Those depend on data, algorithms and how performance is evaluated. Large training budgets also concentrate access to frontier development, a governance issue considered in Session 4.</p>
 
@@ -82,27 +82,27 @@
         <div class="card-grid">
             <div class="card">
                 <h3>The claim: emergence is real</h3>
-                <p>Wei et al. (2022), drawing on the BIG-Bench suite, documented <strong>emergent abilities</strong>: tasks (multi-step arithmetic, word unscrambling, certain reasoning benchmarks) on which performance stays near chance until a scale threshold, then jumps sharply. They define an ability as emergent if it is absent in smaller models and cannot be extrapolated from their scaling curve. If real, this matters for safety: a dangerous capability could appear <em>without warning</em> as models scale.</p>
+                <p>Wei et al. (2022), drawing on the BIG-Bench suite, documented <strong>emergent abilities</strong>: tasks (multi-step arithmetic, word unscrambling, certain reasoning benchmarks) on which performance stays near chance until a scale threshold, then jumps sharply. They define an ability as emergent if it is absent in smaller models and cannot be extrapolated from their scaling curve. If real, this matters for safety: a dangerous capability could appear without warning as models scale.</p>
             </div>
             <div class="card">
                 <h3>The rebuttal: a mirage?</h3>
-                <p>Schaeffer, Miranda &amp; Koyejo (2023; NeurIPS Outstanding Paper Award) argued the sharpness is often manufactured by the <em>metric</em>. Score the same runs with a harsh all-or-nothing measure and you see a jump; score them with a smooth measure and the same data show gradual, predictable improvement. On this view much of "emergence" is in the ruler, not the model.</p>
+                <p>Schaeffer, Miranda &amp; Koyejo (2023; NeurIPS Outstanding Paper Award) argued the sharpness is often manufactured by the metric. Score the same runs with a harsh all-or-nothing measure and you see a jump; score them with a smooth measure and the same data show gradual, predictable improvement. On this view much of "emergence" is in the ruler, not the model.</p>
             </div>
         </div>
         <p>The tasks Wei et al. flagged run from the harmless to the pointed: three-digit addition, transliteration, unscrambling words, multi-step reasoning, and following chain-of-thought prompts that smaller models ignore. For safety the worry is not arithmetic but the same pattern in capabilities we would rather catch early: writing working code, using external tools, persuading a person, or recognising that it is being tested. If those follow the arithmetic curve, they could sit near-absent in every model anyone has checked and present in the next one.</p>
 
         <div class="case-study">
             <h4>A worked example: exact-match scoring</h4>
-            <p>Take a task whose answer is a 5-token string, scored by <strong>exact match</strong> (all five tokens right, or zero credit). Suppose the model's per-token accuracy \(p\) improves <em>smoothly</em> with scale: \(p = 0.3, 0.5, 0.7, 0.9\) across four model sizes. If token errors are roughly independent, the exact-match score is \(p^5\):</p>
+            <p>Take a task whose answer is a 5-token string, scored by <strong>exact match</strong> (all five tokens right, or zero credit). Suppose the model's per-token accuracy \(p\) improves smoothly with scale: \(p = 0.3, 0.5, 0.7, 0.9\) across four model sizes. If token errors are roughly independent, the exact-match score is \(p^5\):</p>
             <div class="formula">\[ 0.3^5 \approx 0.002, \quad 0.5^5 \approx 0.03, \quad 0.7^5 \approx 0.17, \quad 0.9^5 \approx 0.59. \]</div>
             <p>The underlying skill rose in even steps, but the reported score crawls along near zero and then leaps: an "emergence" curve produced entirely by raising a smoothly-improving quantity to a power. Schaeffer et al. show the converse too: replace exact match with token edit distance, or multiple-choice grade with the Brier score, and the cliff turns into a ramp. Same models, different ruler, opposite story.</p>
         </div>
 
         <h2 class="section-title">The two layers of the dispute</h2>
-        <p>The synthesis is that both readings hold, at different layers. The <em>underlying</em> quantity (loss, or per-token accuracy) improves smoothly and fairly predictably, as 2.3 led us to expect. The <em>user-facing</em> ability, the thing you actually deploy, is frequently a thresholded pass-or-fail quantity, and those can flip sharply even when what drives them moves smoothly. Knowing that a jump is "only" a metric artefact does not help you if the metric is the capability you care about.</p>
+        <p>The synthesis is that both readings hold, at different layers. The underlying quantity (loss, or per-token accuracy) improves smoothly and fairly predictably, as 2.3 led us to expect. The user-facing ability, the thing you actually deploy, is frequently a thresholded pass-or-fail quantity, and those can flip sharply even when what drives them moves smoothly. Knowing that a jump is "only" a metric artefact does not help you if the metric is the capability you care about.</p>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Predictable in the aggregate, surprising in the specific</span></h3>
-            <p>Ganguli et al. (2022) name the structural tension: scaling makes the <em>aggregate</em> loss highly predictable, while leaving <em>specific</em> capabilities (which task switches on at which scale) surprising. You can forecast the curve without being able to forecast what a model on that curve will newly be able to do. For a safety field that is the worst combination: the quantity we can predict is the one we worry about least, and the behaviours we worry about most arrive on a schedule we cannot read in advance.</p>
+            <p>Ganguli et al. (2022) name the structural tension: scaling makes the aggregate loss highly predictable, while leaving specific capabilities (which task switches on at which scale) surprising. You can forecast the curve without being able to forecast what a model on that curve will newly be able to do. For a safety field that is the worst combination: the quantity we can predict is the one we worry about least, and the behaviours we worry about most arrive on a schedule we cannot read in advance.</p>
         </div>
         <p>So the dispute is not a tempest in a benchmark. It tells you which forecasting tools to trust. Smooth loss curves are reliable for budgeting and for predicting loss; they are weak instruments for answering "at what scale does this system become able to design a working exploit, or reliably deceive a grader?" That second kind of question is thresholded, deployment-relevant, and where extrapolation is least safe.</p>
         <p>The track record supports caution. Few forecasters called in-context learning in advance, or the degree to which chain-of-thought prompting would unlock multi-step reasoning; both were noticed after they appeared, not predicted before. That is the predictability-and-surprise pattern in practice: the aggregate curve ran on schedule while the specific new behaviours were not anticipated. None of this licenses panic, but it argues against leaning on extrapolation as a safety guarantee.</p>
@@ -110,7 +110,7 @@
         <h2 class="section-title">Recursive self-improvement and takeoff</h2>
         <p>The strongest version of the pace question is a feedback loop: what happens when AI systems do the work of improving AI?</p>
         <p>The idea is old (I. J. Good named the "intelligence explosion" in 1965), but it now has quantitative treatments you can inspect and argue with. Davidson (2023) builds a compute-centric model in which AI progress is driven by compute and algorithmic R&amp;D, and asks what happens as AI itself automates that R&amp;D. In the framework's median run, once AI can automate about 20% of cognitive tasks (weighted by economic value), full automation follows in roughly three years, with clearly superhuman systems shortly after. <strong>Takeoff speed</strong> names the disputed quantity: how fast capability grows once the loop closes, from "fast takeoff" (months) to "slow takeoff" (decades). The answer hangs on assumptions about returns to software R&amp;D and compute bottlenecks, and you can vary those yourself in the model's <a href="https://takeoffspeeds.com/" target="_blank" rel="noopener">interactive version</a>.</p>
-        <p>The loop is no longer purely hypothetical. Anthropic reported in 2026 that Claude writes over 80% of the company's production code and that the task horizons it handles reliably have been doubling roughly every four months, faster than METR's earlier seven-month estimate (Favaro &amp; Clark, 2026). That is a frontier lab's self-report, so apply the Session 1.4 checklist to it; but it is also direct measured evidence on the input side of Davidson's model, where the model itself has to assume it. Davidson, Hadshar &amp; MacAskill (2025) separate three feedback loops that could each sustain an explosion: a <em>software</em> explosion (AI improves algorithms alone), an <em>AI-technology</em> explosion (adding chip design), and a <em>full-stack</em> explosion (adding chip production). They estimate the three could multiply effective compute by roughly 12, 18 and 23 orders of magnitude respectively before hitting physical limits. The structural point matters more than any single number: even if the software loop alone proves insufficient, the slower loops that run through hardware could still produce acceleration, on longer timescales and with more visible industrial footprints.</p>
+        <p>The loop is no longer purely hypothetical. Anthropic reported in 2026 that Claude writes over 80% of the company's production code and that the task horizons it handles reliably have been doubling roughly every four months, faster than METR's earlier seven-month estimate (Favaro &amp; Clark, 2026). That is a frontier lab's self-report, so apply the Session 1.4 checklist to it; but it is also direct measured evidence on the input side of Davidson's model, where the model itself has to assume it. Davidson, Hadshar &amp; MacAskill (2025) separate three feedback loops that could each sustain an explosion: a software explosion (AI improves algorithms alone), an AI-technology explosion (adding chip design), and a full-stack explosion (adding chip production). They estimate the three could multiply effective compute by roughly 12, 18 and 23 orders of magnitude respectively before hitting physical limits. The structural point matters more than any single number: even if the software loop alone proves insufficient, the slower loops that run through hardware could still produce acceleration, on longer timescales and with more visible industrial footprints.</p>
         <div class="info-box">
             <h4>Takeoff and the forecasting asymmetry</h4>
             <p>These are models, not measurements, and this sub-session's discipline applies to them directly: ask which input assumptions drive the conclusion, and what near-term evidence would move them. Recursive self-improvement is also where the emergence dispute bites hardest, because "can the model automate AI research?" is exactly the kind of thresholded, deployment-relevant capability that aggregate loss curves are weakest at predicting. That is why AI-R&amp;D automation now appears as a standard threat model in pre-deployment capability evaluations (Session 11), and why compute, the input most readily metered, anchors the governance levers of Sessions 4 and 12.</p>
@@ -118,11 +118,11 @@
 
         <div class="info-box">
             <h4>The calibrated take</h4>
-            <p>Aggregate progress is fast and, in loss terms, fairly predictable. Whether a <em>specific</em> capability arrives smoothly or sharply is unsettled and metric-dependent. So confident predictions of "imminent superintelligence" and of "it has plateaued" are both overclaiming from the same thin evidence. The prudent posture is identical under either reading: build the ability to <em>measure</em> capabilities and <em>detect</em> dangerous ones directly, before deployment (Session 11), rather than trusting any extrapolation to tell you when a threshold will be crossed.</p>
+            <p>Aggregate progress is fast and, in loss terms, fairly predictable. Whether a specific capability arrives smoothly or sharply is unsettled and metric-dependent. So confident predictions of "imminent superintelligence" and of "it has plateaued" are both overclaiming from the same thin evidence. The prudent posture is identical under either reading: build the ability to measure capabilities and detect dangerous ones directly, before deployment (Session 11), rather than trusting any extrapolation to tell you when a threshold will be crossed.</p>
         </div>
         <div class="info-box">
             <h4>Whose ruler, whose language</h4>
-            <p>Every emergence curve is measured on some benchmark, and almost all of the standard ones are English. That has two consequences for African-language safety. A useful capability can look "switched on" when scored in English while remaining well below threshold in isiZulu or Amharic, because the data that drives the underlying \(p\) is far thinner there (2.3). And a <em>risk</em> (a jailbreak that works, a harmful instruction followed) can be invisible to an English-only evaluation while being live in another language. Which ruler you pick, and in which language, decides what capabilities and what dangers you are even able to see. We make this the heart of the evaluations session (Session 11).</p>
+            <p>Every emergence curve is measured on some benchmark, and almost all of the standard ones are English. That has two consequences for African-language safety. A useful capability can look "switched on" when scored in English while remaining well below threshold in isiZulu or Amharic, because the data that drives the underlying \(p\) is far thinner there (2.3). And a risk (a jailbreak that works, a harmful instruction followed) can be invisible to an English-only evaluation while being live in another language. Which ruler you pick, and in which language, decides what capabilities and what dangers you are even able to see. We make this the heart of the evaluations session (Session 11).</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -141,10 +141,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="neural-scaling-laws.html"><span class="nav-label">← Previous</span><span class="nav-title">2.3 · Neural scaling laws</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-scaling-and-transformerlens.html"><span class="nav-label">Next →</span><span class="nav-title">2.5 · Lab: scaling laws and a first look inside a model</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="neural-scaling-laws.html" aria-label="Previous: 2.3 · Neural scaling laws"><span class="nav-label">← Previous</span><span class="nav-title">2.3 · Neural scaling laws</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="lab-scaling-and-transformerlens.html" aria-label="Next: 2.5 · Lab: scaling laws and a first look inside a model"><span class="nav-label">Next →</span><span class="nav-title">2.5 · Lab: scaling laws and a first look inside a model</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

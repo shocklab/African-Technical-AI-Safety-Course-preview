@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 8.4 — Whose values?</title>
+    <title>Session 8.4: Whose values?</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 8</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="ubuntu-relational-ethics.html">← <span class="tn-title">8.3 · Ubuntu and relational ethics</span></a>
-    <a class="tn-next" href="../session-09/adversarial-examples.html"><span class="tn-title">9.1 · Adversarial examples and threat models</span> →</a>
+    <a class="tn-prev" href="ubuntu-relational-ethics.html" aria-label="Previous: 8.3 · Ubuntu and relational ethics">← <span class="tn-title">8.3 · Ubuntu and relational ethics</span></a>
+    <a class="tn-next" href="../session-09/adversarial-examples.html" aria-label="Next: 9.1 · Adversarial examples and threat models"><span class="tn-title">9.1 · Adversarial examples and threat models</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -44,13 +44,13 @@
         </div>
 
         <h2 class="section-title">The normative turn</h2>
-        <p>"Aligned" is not a property a model has on its own. It is a relation to a target, and the target is a values choice. RLHF's reward model is silently encoding <em>some</em> population's averaged preferences; the question is whose, and whether that is even coherent.</p>
+        <p>"Aligned" is not a property a model has on its own. It is a relation to a target, and the target is a values choice. RLHF's reward model is silently encoding some population's averaged preferences. The question is whose, and whether that is even coherent.</p>
         <div class="info-box">
-            <h4>From 8.2–8.3, carried forward</h4>
+            <h4>Sessions 8.2 and 8.3</h4>
             <p>The four lenses (8.2) disagree about what a "good" output is; relational ethics (8.3) asks whose voices set the values and whose harms are even legible to the reward model. Both land on the same practical question for an alignment engineer: when you write a constitution, choose annotators, or define a reward, you are usually answering "whose values?" implicitly.</p>
         </div>
 
-        <h2 class="section-title">Aligned to <em>what</em>? The target problem</h2>
+        <h2 class="section-title">Aligned to what? The target problem</h2>
         <p>Before "whose", settle "what". Gabriel (2020) points out that "align AI with human values" can mean at least six different things, and they come apart in practice:</p>
         <div class="technical-detail">
             <h4>Six targets that diverge</h4>
@@ -58,40 +58,40 @@
                 <li><strong>Instructions</strong>: do what I literally said (and inherit every loophole of the specification problem, Session 3.1).</li>
                 <li><strong>Expressed intentions</strong>: do what I meant.</li>
                 <li><strong>Revealed preferences</strong>: do what my choices imply I want (which may be short-sighted or manipulated).</li>
-                <li><strong>Informed or idealised preferences</strong>: what I <em>would</em> want if I were better informed and more rational.</li>
+                <li><strong>Informed or idealised preferences</strong>: what I would want if I were better informed and more rational.</li>
                 <li><strong>Interests or well-being</strong>: what is actually good for me, which I may not prefer.</li>
-                <li><strong>Values</strong>: what I (or society) <em>ought</em> to endorse.</li>
+                <li><strong>Values</strong>: what I (or society) ought to endorse.</li>
             </ul>
-            <p style="color:#555;">These targets disagree on hard cases, and "be helpful" quietly slides between them. RLHF picks one almost by accident: a reward model trained on labeller comparisons (6.2) targets the <em>stated, in-the-moment preferences of the annotators</em> (judgements they express when asked, not preferences revealed by their behaviour): the most convenient signal, not the most defensible target. Naming the choice is the first job; the technical pipeline makes it for you if you don't.</p>
+            <p style="color:#555;">These targets disagree on hard cases, and "be helpful" quietly slides between them. RLHF picks one almost by accident: a reward model trained on labeller comparisons (6.2) targets the stated, in-the-moment preferences of the annotators (judgements they express when asked, not preferences revealed by their behaviour): the most convenient signal, not the most defensible target. Naming the choice is the first job; the technical pipeline makes it for you if you don't.</p>
         </div>
 
         <h2 class="section-title">Whose preferences? The aggregation problem</h2>
-        <p>Fix the target as "human preferences" and the harder question opens: <em>which</em> humans? People and cultures rank outcomes differently, yet the standard RLHF pipeline trains a single deployed model against one shared reward function. So somewhere in the pipeline, many people's conflicting preferences are compressed into one ordering. That compression is an act of <em>aggregation</em>, and aggregation is where social-choice theory has a famous warning.</p>
+        <p>Fix the target as "human preferences" and the harder question opens: which humans? People and cultures rank outcomes differently, yet the standard RLHF pipeline trains a single deployed model against one shared reward function. So somewhere in the pipeline, many people's conflicting preferences are compressed into one ordering. That compression is an act of <em>aggregation</em>, and aggregation is where social-choice theory has a famous warning.</p>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">"Whose values" is partly a theorem</span></h3>
-            <p>If you align one model to <em>everyone's</em> values through a single shared reward, you must aggregate conflicting preferences into a single ordering. Social-choice theory says you cannot do this perfectly: <strong><a href="https://plato.stanford.edu/entries/arrows-theorem/" target="_blank" rel="noopener">Arrow's impossibility theorem</a></strong> shows no aggregation rule satisfies a short list of reasonable fairness conditions at once. RLHF's averaged reward model is making such an aggregation, over whichever population the annotators happened to represent.</p>
-            <p style="margin-bottom:0;">This calls for precision rather than nihilism: alignment hides a choice of <em>whose</em> values, <em>how weighted</em>, and <em>aggregated by what rule</em>, and some of those choices are provably in tension.</p>
+            <p>If you align one model to everyone's values through a single shared reward, you must aggregate conflicting preferences into a single ordering. Social-choice theory says you cannot do this perfectly: <strong><a href="https://plato.stanford.edu/entries/arrows-theorem/" target="_blank" rel="noopener">Arrow's impossibility theorem</a></strong> shows no aggregation rule satisfies a short list of reasonable fairness conditions at once. RLHF's averaged reward model is making such an aggregation, over whichever population the annotators happened to represent.</p>
+            <p style="margin-bottom:0;">This calls for precision rather than nihilism: alignment hides a choice of whose values, how weighted, and aggregated by what rule, and some of those choices are provably in tension.</p>
         </div>
         <div class="technical-detail">
             <h4>Arrow's theorem and the Condorcet cycle</h4>
-            <p style="color:#555;">Arrow's theorem (1951) considers any rule that turns the preference orderings of individuals into a single social ordering over three or more options. No such rule can satisfy all of the following at once:</p>
+            <p style="color:#555;">Arrow's theorem (1951) considers rules that turn complete, transitive rankings from at least two individuals into a complete, transitive social ranking over at least three options. No such rule can satisfy all of the following at once:</p>
             <ul class="styled-list">
                 <li><strong>Unrestricted domain</strong>: it works for every possible profile of individual preferences.</li>
                 <li><strong>Pareto (unanimity)</strong>: if everyone prefers \(X\) to \(Y\), society does too.</li>
-                <li><strong>Independence of irrelevant alternatives</strong>: society's ranking of \(X\) vs \(Y\) depends only on how individuals rank \(X\) vs \(Y\), not on some third option \(Z\).</li>
+                <li><strong>Independence of irrelevant alternatives</strong>: society's ranking of \(X\) versus \(Y\) depends only on how individuals rank \(X\) versus \(Y\), not on some third option \(Z\).</li>
                 <li><strong>Non-dictatorship</strong>: no single individual's preference always decides the outcome.</li>
             </ul>
-            <p style="color:#555;">The conclusion is stark: the only rule satisfying the first three is a <em>dictatorship</em>, which breaks the fourth. The intuition is the <strong>Condorcet cycle</strong>. Take three voters and three options, with preferences \(A\!\succ\!B\!\succ\!C\), \(B\!\succ\!C\!\succ\!A\), and \(C\!\succ\!A\!\succ\!B\). Majority vote prefers \(A\) to \(B\) (two voters), \(B\) to \(C\) (two voters), and \(C\) to \(A\) (two voters): a cycle with no consistent winner. Aggregating honest preferences can produce an incoherent group "preference", so any rule that always returns a consistent answer has quietly sacrificed one of Arrow's conditions.</p>
+            <p style="color:#555;">The conclusion is stark: the only rule satisfying the first three is a dictatorship, which breaks the fourth. The intuition is the <strong>Condorcet cycle</strong>. Take three voters and three options, with preferences \(A\!\succ\!B\!\succ\!C\), \(B\!\succ\!C\!\succ\!A\), and \(C\!\succ\!A\!\succ\!B\). Majority vote prefers \(A\) to \(B\) (two voters), \(B\) to \(C\) (two voters), and \(C\) to \(A\) (two voters): a cycle with no consistent winner. Aggregating honest preferences can produce an incoherent group "preference", so any rule that always returns a consistent answer has quietly sacrificed one of Arrow's conditions.</p>
         </div>
         <div class="warning-box">
             <h4>Be precise about what Arrow does and doesn't prove here</h4>
-            <p>Arrow's theorem concerns rules that turn individual rankings into one social ranking, and RLHF's inputs are rankings of this kind: annotators' pairwise comparisons. The Bradley–Terry fit (6.2) outputs a number for each response, but that number is fitted to ordinal comparisons and used to rank responses, so it does not take RLHF outside Arrow's setting. Fitted to comparisons pooled across annotators, it behaves like the Borda count (Siththaranjan et al., 2024), which violates independence of irrelevant alternatives. It also never sees strength of preference: three annotators who mildly prefer \(A\) to \(B\) outweigh two who strongly prefer \(B\). So Arrow does not show that RLHF is impossible; it shows that RLHF's aggregation, like any rule, gives up one of the conditions. There is no value-free way to combine many people's preferences into one, and "average the annotators" is a substantive, contestable choice wearing the costume of a neutral default.</p>
+            <p>Arrow's theorem concerns rules that turn individual rankings into one social ranking, and RLHF's inputs are rankings of this kind: annotators' pairwise comparisons. The Bradley–Terry fit (6.2) outputs a number for each response, but that number is fitted to ordinal comparisons and used to rank responses, so it does not take RLHF outside Arrow's setting. When comparisons are elicited for uniformly random pairs of options, the unconstrained Bradley–Terry fit to pooled comparisons ranks options like the Borda count (Siththaranjan, Laidlaw &amp; Hadfield-Menell, 2024), which violates independence of irrelevant alternatives. It also never sees strength of preference: three annotators who mildly prefer \(A\) to \(B\) outweigh two who strongly prefer \(B\). So Arrow does not show that RLHF is impossible; it shows that RLHF's aggregation, like any rule, gives up one of the conditions. There is no value-free way to combine many people's preferences into one, and "average the annotators" is a substantive, contestable choice wearing the costume of a neutral default.</p>
         </div>
 
         <h2 class="section-title">One reward, plural values</h2>
         <p>The deeper discomfort is that collapsing many people's many values onto a single scalar (6.2) forces trade-offs the model then makes silently: helpful versus harmless, this culture's norms versus that one's. Three research directions take the plurality seriously rather than averaging it away:</p>
         <div class="card-grid">
-            <div class="card"><h3>Pluralistic alignment</h3><p>Sorensen et al. (2024) argue a model should represent a <em>distribution</em> of human values (able to articulate and serve multiple reasonable positions) rather than collapse to one, and lay out what that would require of data and evaluation.</p></div>
+            <div class="card"><h3>Pluralistic alignment</h3><p>Sorensen et al. (2024) argue a model should represent a distribution of human values (able to articulate and serve multiple reasonable positions) rather than collapse to one, and lay out what that would require of data and evaluation.</p></div>
             <div class="card"><h3>Social choice for alignment</h3><p>Conitzer et al. (2024) note that RLHF is already doing preference aggregation badly and implicitly, and argue the mature theory of social choice, including voting, should be used to design how diverse human feedback is combined.</p></div>
             <div class="card"><h3>Explicit constitutions</h3><p>Constitutional AI (Bai et al., 2022; Session 7) writes the principles down so they can be argued over, rather than leaving them latent in annotator behaviour. It makes the choice visible, and moves the question to "whose constitution, ratified how?"</p></div>
         </div>
@@ -129,22 +129,23 @@
             <p>• <strong>Gabriel, the rest of the paper</strong> (≈10,500 words): the six candidate alignment targets, taken up in this page's own argument.</p>
             <p>• <strong>Conitzer et al. (2024), "Social Choice Should Guide AI Alignment in Dealing with Diverse Human Feedback"</strong> (<a href="https://arxiv.org/abs/2404.10271" target="_blank" rel="noopener">arXiv:2404.10271</a>): ≈7,500 words.</p>
             <p>• <strong>Sorensen et al. (2024), "A Roadmap to Pluralistic Alignment"</strong> (<a href="https://arxiv.org/abs/2402.05070" target="_blank" rel="noopener">arXiv:2402.05070</a>): ≈7,200 words.</p>
-            <p>• <strong>Bai et al. (2022), "Constitutional AI"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>): the explicit-principles route; revisited in Session 7.</p>
+            <p>• <strong>Bai et al. (2022), "Constitutional AI"</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>): the explicit-principles route; covered in Session 7.</p>
+            <p>• <strong>Siththaranjan, Laidlaw &amp; Hadfield-Menell (2024), "Distributional Preference Learning: Understanding and Accounting for Hidden Context in RLHF"</strong> (<a href="https://arxiv.org/abs/2312.08358" target="_blank" rel="noopener">arXiv:2312.08358</a>): Section 3 (Theorem 3.1) and Appendix B.2 on Bradley–Terry preference learning and Borda count.</p>
             <p>• <a href="https://alignment-w2024.notion.site/" target="_blank" rel="noopener">Grosse, CSC2547 Lecture 12 &ldquo;Whose Values?&rdquo; reading set</a> (U. Toronto).</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 8 summary and what's next</h2>
-            <p>Scalable oversight (8.1) is the attempt to keep a weak overseer's signal tied to the truth as models outstrip us. None of debate, recursive decomposition, sandwiching, or weak-to-strong is yet solved. And even perfect oversight cannot escape the prior question of <em>whose</em> values the system targets: at once an ethical choice (the four lenses, 8.2; relational ethics, 8.3) and a mathematical constraint (Arrow, 8.4).</p>
+            <p>Scalable oversight (8.1) is the attempt to keep a weak overseer's signal tied to the truth as models outstrip us. None of debate, recursive decomposition, sandwiching, or weak-to-strong is yet solved. And even perfect oversight cannot escape the prior question of whose values the system targets: at once an ethical choice (the four lenses, 8.2; relational ethics, 8.3) and a mathematical constraint (Arrow, 8.4).</p>
             <p>Next (Week 5, Session 9): robustness. What happens when the system is adversarially attacked. Session 9 starts with adversarial examples in image classifiers. Sub-session 9.3 then makes "whose values" concrete: in a 2023 study, GPT-4's safety training held for English prompts but often failed when the same prompts were translated into isiZulu.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="ubuntu-relational-ethics.html"><span class="nav-label">← Previous</span><span class="nav-title">8.3 · Ubuntu and relational ethics</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-09/adversarial-examples.html"><span class="nav-label">Next →</span><span class="nav-title">9.1 · Adversarial examples and threat models</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="ubuntu-relational-ethics.html" aria-label="Previous: 8.3 · Ubuntu and relational ethics"><span class="nav-label">← Previous</span><span class="nav-title">8.3 · Ubuntu and relational ethics</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-09/adversarial-examples.html" aria-label="Next: 9.1 · Adversarial examples and threat models"><span class="nav-label">Next →</span><span class="nav-title">9.1 · Adversarial examples and threat models</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

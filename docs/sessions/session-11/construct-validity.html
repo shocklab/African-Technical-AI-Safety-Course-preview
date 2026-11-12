@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 11.3 — Does the eval measure what it claims?</title>
+    <title>Session 11.3: Does the eval measure what it claims?</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 11</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="dangerous-capability-evals.html">← <span class="tn-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
-    <a class="tn-next" href="statistics-of-evals.html"><span class="tn-title">11.4 · The statistics of evals</span> →</a>
+    <a class="tn-prev" href="dangerous-capability-evals.html" aria-label="Previous: 11.2 · Dangerous-capability evals: elicitation and sandbagging">← <span class="tn-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
+    <a class="tn-next" href="statistics-of-evals.html" aria-label="Next: 11.4 · The statistics of evals"><span class="tn-title">11.4 · The statistics of evals</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -41,7 +41,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Suppose you elicited perfectly and the model did not sandbag. There is still a prior question: does the eval measure the thing its name claims? A benchmark called "reasoning" might measure pattern-matching; "dangerous knowledge" might measure recall of facts that are not the bottleneck to harm. This is the question of validity, and the evaluation literature is belatedly importing it from a field that has wrestled with it for a century: psychometrics. We bring in the vocabulary, organise it around the "everything in the whole wide world" critique, and use a worked example to show how the choice of <em>metric</em> alone changes the curve drawn from the same per-step accuracy, the mechanism Schaeffer et al. (2023) identify behind some apparent emergent jumps. Validity asks whether the tested tasks support the broader claim, including claims that extend from English to other languages.</p>
+            <p>Suppose you elicited perfectly and the model did not sandbag. There is still a prior question: does the eval measure the thing its name claims? A benchmark called "reasoning" might measure pattern-matching. "Dangerous knowledge" might measure recall of facts that are not the bottleneck to harm. This is the question of validity, and the evaluation literature is belatedly importing it from a field that has wrestled with it for a century: psychometrics. We bring in the vocabulary, organise it around the "everything in the whole wide world" critique, and use a worked example to show how the choice of metric alone changes the curve drawn from the same per-step accuracy, the mechanism Schaeffer et al. (2023) identify behind some apparent emergent jumps. Validity asks whether the tested tasks support the broader claim, including claims that extend from English to other languages.</p>
         </div>
 
         <h2 class="section-title">Validity, borrowed from psychometrics</h2>
@@ -60,16 +60,16 @@
 
         <h2 class="section-title">The "everything in the whole wide world" problem</h2>
 
-        <p>Raji, Bender and colleagues (2021) use the title of a children's book in which Grover tours a museum claiming to showcase everything in the whole wide world; its rooms hold small assortments of particular things, and the tour ends at a door marked "Everything Else" that opens onto the world outside. Benchmarks marketed as measuring "general" language understanding or reasoning, they argue, rest on the same move: a finite, particular set of tasks is presented as a proxy for an open-ended human ability, and a high score is read as evidence of the general capacity. The paper's diagnosis is explicitly about construct validity (these benchmarks "cannot possibly capture anything representative" of the sweeping claims made about them), and it identifies three recurring limits: task design that is narrower than the claim, data stripped of its real-world context, and benchmarks used by communities for purposes their construction never justified. A high benchmark score supports a claim about the tested tasks. A broader claim about reasoning needs evidence that those tasks represent the proposed ability.</p>
+        <p>Raji, Bender and colleagues (2021) use the title of a children's book in which Grover tours a museum claiming to showcase everything in the whole wide world. Its rooms hold small assortments of particular things, and the tour ends at a door marked "Everything Else" that opens onto the world outside. Benchmarks marketed as measuring "general" language understanding or reasoning, they argue, rest on the same move: a finite, particular set of tasks is presented as a proxy for an open-ended human ability, and a high score is read as evidence of the general capacity. The paper's diagnosis is explicitly about construct validity (these benchmarks "cannot possibly capture anything representative" of the sweeping claims made about them), and it identifies three recurring limits: task design that is narrower than the claim, data stripped of its real-world context, and benchmarks used by communities for purposes their construction never justified. A high benchmark score supports a claim about the tested tasks. A broader claim about reasoning needs evidence that those tasks represent the proposed ability.</p>
 
         <div class="technical-detail">
             <h4>The construct question, applied to WMDP</h4>
-            <p style="color:#555;">Make it concrete with a hazardous-knowledge benchmark. <a href="https://arxiv.org/html/2403.03218v3#A4.SS1">WMDP</a> measures performance on hazardous-knowledge multiple-choice questions. Its score does not distinguish recall from understanding or reasoning. The construct it is used to stand for is <em>uplift</em>: how much the model raises a malicious actor's chance of actually causing harm. Are those the same? Hazardous knowledge may contribute to uplift, but it is not sufficient: building a weapon is gated by tacit skill, materials, and lab access that no multiple-choice question tests, and conversely a model that fails the quiz might still help by reasoning rather than recalling. WMDP therefore tests hazardous knowledge, while its <em>criterion</em> validity for "uplift" remains uncertain. A threshold based on WMDP is a threshold on this test of hazardous knowledge. The further inference to real-world harm requires separate evidence.</p>
+            <p style="color:#555;">Make it concrete with a hazardous-knowledge benchmark. <a href="https://arxiv.org/html/2403.03218v3#A4.SS1">WMDP</a> measures performance on hazardous-knowledge multiple-choice questions. Its score does not distinguish recall from understanding or reasoning. The construct it is used to stand for is <em>uplift</em>: how much the model raises a malicious actor's chance of actually causing harm. Are those the same? Hazardous knowledge may contribute to uplift, but it is not sufficient: building a weapon is gated by tacit skill, materials, and lab access that no multiple-choice question tests, and conversely a model that fails the quiz might still help by reasoning rather than recalling. WMDP therefore tests hazardous knowledge, while its criterion validity for "uplift" remains uncertain. A threshold based on WMDP is a threshold on this test of hazardous knowledge. The further inference to real-world harm requires separate evidence.</p>
         </div>
 
         <h2 class="section-title">Metric choice and apparent emergence</h2>
 
-        <p>Session 2.4 met this as the "emergence mirage," and it belongs here too as a demonstration that a measurement choice can manufacture a scientific claim. Schaeffer et al. (2023) showed that some apparent "emergent abilities" (capabilities that seem to switch on abruptly at some scale) can arise from the choice of a nonlinear or discontinuous metric. Exact-match scoring requires the whole multi-token answer to be correct. It can make improvement appear flat at first and much steeper later. In their examples, rescoring the same model outputs with more gradual metrics, such as token edit distance or Brier score, revealed smoother improvement. The model outputs are unchanged; only the scoring rule differs. We do not re-derive the argument here (it is in 2.4), but its moral is a validity moral: the metric is part of the construct, and a scoring rule can affect the apparent trend. Exact match may be appropriate when the whole answer must be correct; a smoother metric is not automatically more valid. Choose the metric to match the outcome of interest.</p>
+        <p>Session 2.4 met this as the "emergence mirage," and it belongs here too as a demonstration that a measurement choice can manufacture a scientific claim. Schaeffer et al. (2023) showed that some apparent "emergent abilities" (capabilities that seem to switch on abruptly at some scale) can arise from the choice of a nonlinear or discontinuous metric. Exact-match scoring requires the whole multi-token answer to be correct. It can make improvement appear flat at first and much steeper later. In their examples, rescoring the same model outputs with more gradual metrics, such as token edit distance or Brier score, revealed smoother improvement. The model outputs are unchanged. Only the scoring rule differs. We do not re-derive the argument here (it is in 2.4), but its moral is a validity moral: the metric is part of the construct, and a scoring rule can affect the apparent trend. Exact match may be appropriate when the whole answer must be correct. A smoother metric is not automatically more valid. Choose the metric to match the outcome of interest.</p>
         <div class="info-box">
             <h4>Worked: exact-match versus a continuous metric</h4>
             <p>For a classroom calculation, assume five independent steps, each correct with probability \(p\). The expected exact-match success probability is \(p^5\); the expected fraction of correct steps is \(p\). Plot these two theoretical curves. They describe different outcomes and can look very different despite the same per-step probabilities. A finite sample of model outputs need not match either expectation exactly, and correlated steps need not give \(p^5\). This calculation is separate from the multilingual safety lab in 11.5.</p>
@@ -77,13 +77,13 @@
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Construct validity and English-only benchmarks</span></h3>
-            <p>The same validity question applies across languages. A benchmark built from English text, scored as "language understanding," and used to certify a model as broadly capable or broadly safe, is making the everything-in-the-whole-wide-world move: a narrow, English slice presented as the general construct. That is a <em>construct-validity</em> failure, and it is the same limit illustrated by the isiZulu safety result from Session 1. A claim about safety across languages therefore needs tests in those languages. "We measured safety" must be qualified by the distribution sampled, and a benchmark that samples English and claims to measure safety has overstated its construct in the way Raji and Bender describe.</p>
+            <p>The same validity question applies across languages. A benchmark built from English text, scored as "language understanding," and used to certify a model as broadly capable or broadly safe, is making the everything-in-the-whole-wide-world move: a narrow, English slice presented as the general construct. That is a construct-validity failure, and it is the same limit illustrated by the isiZulu safety result from Session 1. A claim about safety across languages therefore needs tests in those languages. "We measured safety" must be qualified by the distribution sampled, and a benchmark that samples English and claims to measure safety has overstated its construct in the way Raji and Bender describe.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Distinguish reliability from validity with an example of an eval that is reliable but invalid. Which is easier to detect, and why?</li>
-            <li>WMDP samples hazardous-knowledge questions. What evidence would you need to establish its <em>criterion</em> validity for "uplift to cause harm"? Why is that evidence hard to get?</li>
+            <li>WMDP samples hazardous-knowledge questions. What evidence would you need to establish its criterion validity for "uplift to cause harm"? Why is that evidence hard to get?</li>
             <li>Assuming independent steps with equal success probabilities, show that expected exact-match success on a 5-step task is \(p^5\) for per-step accuracy \(p\). Compare \(p^5\) with \(p\) at \(p=0.5, 0.7, 0.9\). How does the nonlinear score change the shape of the plot?</li>
             <li>Explain, in construct-validity terms, why an English-only safety benchmark over-claims when it is reported as measuring "safety." How is this the same error as the museum that claims to showcase everything in the whole wide world?</li>
         </ul>
@@ -105,10 +105,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="dangerous-capability-evals.html"><span class="nav-label">← Previous</span><span class="nav-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="statistics-of-evals.html"><span class="nav-label">Next →</span><span class="nav-title">11.4 · The statistics of evals</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="dangerous-capability-evals.html" aria-label="Previous: 11.2 · Dangerous-capability evals: elicitation and sandbagging"><span class="nav-label">← Previous</span><span class="nav-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="statistics-of-evals.html" aria-label="Next: 11.4 · The statistics of evals"><span class="nav-label">Next →</span><span class="nav-title">11.4 · The statistics of evals</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

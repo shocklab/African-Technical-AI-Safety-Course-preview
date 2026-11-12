@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 6.5 — Lab: reward models and over-optimisation</title>
+    <title>Session 6.5: Lab: reward models and over-optimisation</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 6</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="limits-of-rlhf.html">← <span class="tn-title">6.4 · The limits of RLHF</span></a>
-    <a class="tn-next" href="../session-07/from-human-to-ai-feedback.html"><span class="tn-title">7.1 · From human to AI feedback</span> →</a>
+    <a class="tn-prev" href="limits-of-rlhf.html" aria-label="Previous: 6.4 · The limits of RLHF">← <span class="tn-title">6.4 · The limits of RLHF</span></a>
+    <a class="tn-next" href="../session-07/from-human-to-ai-feedback.html" aria-label="Next: 7.1 · From human to AI feedback"><span class="tn-title">7.1 · From human to AI feedback</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -41,11 +41,11 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>You'll train a small <strong>reward model</strong> on preference pairs and check it ranks held-out pairs correctly; then use <strong>best-of-\(n\)</strong> sampling as a cheap, RL-free stand-in for policy optimisation and <em>measure the pressure that drives over-optimisation</em>: a proxy score that keeps rising while true quality peaks and falls (6.4). An optional GPU track runs a real RLHF step in ARENA.</p>
+            <p>You'll train a small <strong>reward model</strong> on preference pairs and check its accuracy on pairs from held-out prompts. Then use <strong>best-of-\(n\)</strong> sampling to compare proxy and gold scores as search increases, and fit a possible turnover curve. The last part compares the gold scorer's predictions on parallel English and isiZulu sentences.</p>
         </div>
 
         <div class="lab-box">
-            <h4>Setup <span class="tag">Colab — no GPU needed</span></h4>
+            <h4>Setup <span class="tag">Colab: no GPU needed</span></h4>
             <p>Allow about an hour. Allow around ten minutes for computing on a standard Colab CPU runtime; downloads and runtime load can change this. The evaluation-generation cell alone took about six minutes in the 11 September 2026 check. The rest of the hour is for reading the outputs and exploring.</p>
             <ol style="margin-left:25px; line-height:1.9;">
                 <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-6-5-reward-models.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then <em>File → Save a copy in Drive</em> before you change anything.</li>
@@ -55,25 +55,30 @@
             <p>The code is written for you. Your work is in the two "Explore" cells: parameters to change, and short questions to answer.</p>
         </div>
 
-        <h2 class="section-title">① Train a reward model</h2>
+        <h2 class="section-title">① Appoint a gold standard</h2>
+        <div class="technical-detail">
+            <h4>The toy reward</h4>
+            <p>The notebook appoints a gold scorer, an English sentiment classifier, to define the toy task. It generates completions from GPT-2 and scores them by the positive-minus-negative logit difference.</p>
+        </div>
+
+        <h2 class="section-title">② Train the proxy reward model</h2>
         <div class="technical-detail">
             <h4>Bradley–Terry, in code</h4>
-            <p style="color:#555;">Session 6.2 gave you the loss. Here you fit it, and find out how good a reward model actually is.</p>
-            <p>What the notebook does: appoints a <strong>gold</strong> scorer to stand in for human judgement, generates completions from GPT-2, labels pairs of them by gold, and trains a small <strong>proxy</strong> reward model on those labels with \(\mathcal{L} = -\mathbb{E}[\log \sigma(r_\phi(y_w) - r_\phi(y_l))]\). The design is Gao, Schulman and Hilton's: if you define the truth, you can measure how far a proxy strays from it. With real human preferences you never can, which is the whole difficulty.</p>
+            <p>Compare completions to the same prompt, label each pair by gold, and train a small <strong>proxy</strong> reward model with \(\mathcal{L} = -\mathbb{E}[\log \sigma(r_\phi(x, y_w) - r_\phi(x, y_l))]\). Training and testing use different prompts and completion indices. The gold-versus-proxy design follows Gao, Schulman and Hilton: a fixed scorer defines the toy reward, so its disagreement with the proxy can be measured.</p>
             <p>Measure held-out preference accuracy against the toy scorer’s labels. This is a different dataset and judgement task from published human-preference evaluations; a similar accuracy would not make the models equivalent.</p>
         </div>
 
-        <h2 class="section-title">② Optimising the proxy</h2>
+        <h2 class="section-title">③ Optimising against the proxy</h2>
         <div class="technical-detail">
             <h4>Best-of-<em>n</em> and the KL axis</h4>
             <p>Best-of-\(n\) selects the highest-scoring response among \(n\) samples. The expression \(\log n-(n-1)/n\) gives a KL reference for idealised sampling with continuous reward ranks. This notebook resamples a finite candidate pool, so use that axis as an approximation and inspect ties and pool size.</p>
             <p>Plot what happens to both scores as \(n\) increases. With this small candidate pool, gold may keep rising. A downturn is not required for a successful submission. The absence of one here does not show that larger searches are safe, or that a downturn must occur at some particular larger \(n\).</p>
             <p>The notebook fits Gao’s best-of-\(n\) functional form, \(R(d)=d(\alpha-\beta d)\), to your points and computes a possible peak. Treat that peak as an extrapolation conditional on the fitted shape. Repeat the fit with different seeds and report whether the predicted peak is stable or supported by the observed range.</p>
-            <p>Then explore, and find out how much to distrust it. Change the seed and re-run: three runs of this notebook, changing nothing but the seed, gave no peak at all, a peak at 5.3 nats (\(n \approx 544\)) and a peak at 55 nats (an \(n\) of 25 digits). Weaken the proxy and see whether the predicted peak moves closer, as Gao's finding about model size would suggest. And cut the number of prompts, which makes the curve look far more dramatic while telling you strictly less.</p>
+            <p>Change the seed and re-run. Record the predicted peak, or report that the fit has no positive peak, and compare the extrapolations. Weaken the proxy and check whether the predicted peak changes. Reduce the number of evaluation prompts and check how sensitive the curve is to the examples included.</p>
             <p>Write down, in a sentence or two: you have a proxy and no gold, which is the real situation. What do you do to avoid running off the end of the curve, and what does it cost you?</p>
         </div>
 
-        <h2 class="section-title">③ Whose preferences does the judge encode?</h2>
+        <h2 class="section-title">④ Whose preferences does the judge encode?</h2>
         <div class="technical-detail">
             <h4>The same sentence, two languages</h4>
             <p>The gold model is an English movie-review sentiment classifier. Compare its scores on parallel English and isiZulu news sentences from MAFAND-MT. Both inputs are truncated to 64 tokens, which can retain different amounts of content. The dataset supplies translations, not ground-truth sentiment labels.</p>
@@ -83,29 +88,29 @@
 
         <div class="lab-box">
             <h4>Submit</h4>
-            <p>One notebook, run top to bottom with outputs visible, containing the proxy's held-out accuracy, your proxy-versus-gold measurements and the predicted turnover from at least two seeds, your sentence or two on what to do without a gold standard, and your paragraph on the language gap. Graded on completion and correctness; resubmission allowed.</p>
+            <p>One notebook, run top to bottom with outputs visible, containing the proxy's held-out accuracy, your proxy-versus-gold measurements and the predicted turnover from at least two seeds, your sentence or two on what to do without a gold standard, and your paragraph on the language gap. Graded on completion and correctness. Resubmission allowed.</p>
         </div>
 
         <h2 class="section-title">Tools and references</h2>
         <div class="resource-placeholder reading-core">
             <h4>Core</h4>
-            <p>• <a href="https://www.arena.education/chapter2" target="_blank" rel="noopener"><strong>ARENA</strong></a> Chapter 2 (RL → RLHF) notebooks (learn.arena.education).</p>
+            <p>• <a href="https://www.arena.education/curriculum" target="_blank" rel="noopener"><strong>ARENA</strong></a> Chapter 2 (RL → RLHF) notebooks.</p>
             <p>• <a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener"><strong>Hugging Face</strong></a> <code>trl</code> / <code>transformers</code> and the <a href="https://huggingface.co/datasets/Anthropic/hh-rlhf" target="_blank" rel="noopener">HH-RLHF preference dataset</a> on the Hub.</p>
             <p>• <strong>Gao, Schulman &amp; Hilton (2023)</strong> (<a href="https://arxiv.org/abs/2210.10760" target="_blank" rel="noopener">arXiv:2210.10760</a>): the gold-versus-proxy design and the curve whose extrapolation the notebook tests.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Session 6 and Week 3 summary: what's next</h2>
-            <p>RLHF uses preference comparisons to learn a scalar reward, then optimises against it; DPO uses comparisons directly. These methods can improve behaviour while retaining or amplifying errors in the feedback. The lab illustrates proxy optimisation and the limits of an extrapolated curve. Its multilingual extension asks what additional evidence would be needed to validate the scorer outside its training domain.</p>
-            <p><strong>Next (Week 4, Session 7):</strong> the first response to RLHF's human-feedback limitations, replacing (some) human feedback with <em>AI</em> feedback: RLAIF and Constitutional AI. Then Session 8 confronts scalable oversight and the question of <em>whose</em> values.</p>
+            <p>RLHF uses preference comparisons to learn a scalar reward, then optimises against it. DPO uses comparisons directly. These methods can improve behaviour while retaining or amplifying errors in the feedback. The lab illustrates proxy optimisation and the limits of an extrapolated curve. Its multilingual extension asks what additional evidence would be needed to validate the scorer outside its training domain.</p>
+            <p>Next (Week 4, Session 7): the first response to RLHF's human-feedback limitations, replacing (some) human feedback with AI feedback: RLAIF and Constitutional AI. Then Session 8 confronts scalable oversight and the question of whose values.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="limits-of-rlhf.html"><span class="nav-label">← Previous</span><span class="nav-title">6.4 · The limits of RLHF</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-07/from-human-to-ai-feedback.html"><span class="nav-label">Next →</span><span class="nav-title">7.1 · From human to AI feedback</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="limits-of-rlhf.html" aria-label="Previous: 6.4 · The limits of RLHF"><span class="nav-label">← Previous</span><span class="nav-title">6.4 · The limits of RLHF</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-07/from-human-to-ai-feedback.html" aria-label="Next: 7.1 · From human to AI feedback"><span class="nav-label">Next →</span><span class="nav-title">7.1 · From human to AI feedback</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

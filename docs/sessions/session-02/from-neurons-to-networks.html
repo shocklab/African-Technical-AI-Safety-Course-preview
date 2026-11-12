@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 2.1 — From neurons to networks</title>
+    <title>Session 2.1: From neurons to networks</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 2</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-01/safety-is-not-solved.html">← <span class="tn-title">1.4 · Safety isn't solved</span></a>
-    <a class="tn-next" href="inside-the-transformer.html"><span class="tn-title">2.2 · Inside the transformer</span> →</a>
+    <a class="tn-prev" href="../session-01/safety-is-not-solved.html" aria-label="Previous: 1.4 · Safety isn&#x27;t solved">← <span class="tn-title">1.4 · Safety isn't solved</span></a>
+    <a class="tn-next" href="inside-the-transformer.html" aria-label="Next: 2.2 · Inside the transformer"><span class="tn-title">2.2 · Inside the transformer</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -40,9 +40,9 @@
     <div class="content">
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Week 1 — deep learning &amp; scaling laws</span></h3>
+            <h3><span style="color:#ffffff;">Week 1: deep learning and scaling laws</span></h3>
             <p>To reason about how these systems fail, you need a working picture of how they're built. This session rebuilds that picture at the level a mathematician wants (functions, parameters, gradients), then shows why capability scales so predictably with size.</p>
-            <p style="margin-bottom:0;">This session's sub-sessions: 2.1 from neurons to networks · 2.2 inside the transformer · 2.3 neural scaling laws · 2.4 pace of progress, emergence and takeoff · 2.5 lab (Colab).</p>
+            <p style="margin-bottom:0;">This session's sub-sessions: 2.1 from neurons to networks · 2.2 inside the transformer · 2.3 neural scaling laws · 2.4 pace of progress, emergence and takeoff · 2.5 lab: scaling laws and a first look inside a model.</p>
         </div>
 
         <div class="intro-text">
@@ -64,7 +64,7 @@
         <div class="info-box">
             <h4>Core material</h4>
             <p>The primary resource for this sub-session is Andrej Karpathy's spelled-out introduction to neural networks and backpropagation (Zero to Hero, episode 1), which builds the same ideas one neuron at a time, in code. Watch from the embedded timestamp (backpropagation through a single neuron), then the <a href="https://youtu.be/VMj-3S1tku0?t=6664" target="_blank" rel="noopener">loss-function section</a>. The page below is the written reference for the same material.</p>
-            <div class="video-embed"><iframe src="https://www.youtube.com/embed/VMj-3S1tku0?start=3172" title="Karpathy — the spelled-out intro to neural networks and backpropagation" allowfullscreen loading="lazy"></iframe></div>
+            <div class="video-embed"><iframe src="https://www.youtube.com/embed/VMj-3S1tku0?start=3172" title="Karpathy: the spelled-out intro to neural networks and backpropagation" allowfullscreen loading="lazy"></iframe></div>
             <p style="margin-bottom:0;">A complementary written treatment at the same neuron-by-neuron level: <a href="https://sidn.baulab.info/neurons/" target="_blank" rel="noopener">"Neuron Interpretation", <em>The Structure and Interpretation of Deep Networks</em></a> (Sheridan Feucht and David Bau, 2024).</p>
         </div>
 
@@ -72,15 +72,15 @@
         <p>Strip away the biology metaphor and a neural network is a function \( f_\theta : \mathbb{R}^n \to \mathbb{R}^m \) with a great many parameters \( \theta \).</p>
         <div class="technical-detail">
             <h4>From a neuron to a layer</h4>
-            <p style="color:#555;">Start with a single <strong>neuron</strong>: it takes an input vector \( x \in \mathbb{R}^{d_{\text{in}}} \), forms a weighted sum with its own weight vector \( w \) and bias \( b \), and passes the result through a nonlinearity, producing one scalar: \( a = \sigma(w \cdot x + b) \). Now stack \( d_{\text{out}} \) neurons side by side and collect their weight vectors as the <em>rows</em> of a matrix \( W \). The whole <strong>layer</strong> then computes a vector in one shot:</p>
+            <p style="color:#555;">Start with a single <strong>neuron</strong>: it takes an input vector \( x \in \mathbb{R}^{d_{\text{in}}} \), forms a weighted sum with its own weight vector \( w \) and bias \( b \), and passes the result through a nonlinearity, producing one scalar: \( a = \sigma(w \cdot x + b) \). Now stack \( d_{\text{out}} \) neurons side by side and collect their weight vectors as the rows of a matrix \( W \). The whole <strong>layer</strong> then computes a vector in one shot:</p>
             <div class="formula">\[ h = \sigma(Wx + b), \qquad W \in \mathbb{R}^{d_{\text{out}} \times d_{\text{in}}}, \quad b,\, h \in \mathbb{R}^{d_{\text{out}}} \]</div>
-            <p style="color:#555;">Here \( \sigma \) is applied <em>elementwise</em> (the same scalar function to each component), and a common simple choice is ReLU, \( \sigma(z) = \max(0, z) \). A <strong>deep network</strong> chains \( L \) such layers, each feeding the next:</p>
+            <p style="color:#555;">Here \( \sigma \) is applied elementwise (the same scalar function to each component), and a common simple choice is ReLU, \( \sigma(z) = \max(0, z) \). A <strong>deep network</strong> chains \( L \) such layers, each feeding the next:</p>
             <div class="formula">\[ h^{(\ell)} = \sigma\!\left(W^{(\ell)} h^{(\ell-1)} + b^{(\ell)}\right), \qquad h^{(0)} = x \]</div>
-            <p style="color:#555;">and the full collection of weights and biases \( \{W^{(\ell)},\, b^{(\ell)}\} \) is what we bundled into the parameters \( \theta \). Without \( \sigma \) the composition of linear maps would collapse to a single linear map; the nonlinearity is what lets depth buy expressive power. By the universal-approximation results such a network can approximate essentially any function; the engineering question is whether <em>gradient descent can find</em> parameters that do so.</p>
+            <p style="color:#555;">and the full collection of weights and biases \( \{W^{(\ell)},\, b^{(\ell)}\} \) is what we bundled into the parameters \( \theta \). Without \( \sigma \) the composition of linear maps would collapse to a single linear map; the nonlinearity is what lets depth buy expressive power. By the universal-approximation results such a network can approximate essentially any function; the engineering question is whether gradient descent can find parameters that do so.</p>
         </div>
 
         <figure>
-            <img src="../../assets/img/session-2-1-neuron-layer-network.jpg" alt="Three panels. (A) A single neuron: inputs x1, x2, x3 with weights w1, w2, w3 feed a node that computes the weighted sum plus a bias and then a nonlinearity, giving the scalar a = σ(w·x + b). (B) A layer: an input vector fully connected to a column of neurons, producing the vector h = σ(Wx + b), with x in ℝ^d_in, W in ℝ^(d_out×d_in) and h in ℝ^d_out, and each neuron's weight vector forming one row of W. (C) A network: several such layers stacked left to right, with x entering and ŷ leaving, computing h^(l) = σ(W^(l) h^(l−1) + b^(l)) over depth L.">
+            <img src="../../assets/img/session-2-1-neuron-layer-network.svg" alt="Three panels. (A) A single neuron: inputs x1, x2, x3 with weights w1, w2, w3 feed a node that computes the weighted sum plus a bias and then a nonlinearity, giving the scalar a = σ(w·x + b). (B) A layer: an input vector fully connected to a column of neurons, producing the vector h = σ(Wx + b), with x in ℝ^d_in, W in ℝ^(d_out×d_in) and h in ℝ^d_out, and each neuron's weight vector forming one row of W. (C) A network: several such layers stacked left to right, with x entering and ŷ leaving, computing h^(ℓ) = σ(W^(ℓ) h^(ℓ−1) + b^(ℓ)) over depth L.">
             <figcaption><strong>From a neuron to a network.</strong> (A) one neuron, \( a = \sigma(w \cdot x + b) \); (B) a layer stacks neurons into \( h = \sigma(Wx + b) \), where each neuron's weights are one row of \( W \); (C) a deep network chains \( L \) such layers. Without the nonlinearity the whole stack would collapse to a single linear map.</figcaption>
         </figure>
 
@@ -90,7 +90,7 @@
         </div>
         <div class="technical-detail">
             <h4>Collapse without a nonlinearity</h4>
-            <p style="color:#555;">Here is why \(\sigma\) is not optional. Drop it, and two layers compose to \(W_2(W_1 x + b_1) + b_2 = (W_2 W_1)\,x + (W_2 b_1 + b_2)\), which is just one affine map \(W' x + b'\). Without a nonlinearity, a network of <em>any</em> depth collapses to a single linear layer and can only draw straight decision boundaries; no amount of stacking buys anything. Insert ReLU between the layers and the collapse is blocked: each layer bends the input space along a different set of hyperplanes, and composing many such bends lets the network carve the highly non-linear regions real data lives in. That is the formal content behind "depth buys expressive power", and the reason every block in a transformer (2.2) carries a nonlinearity.</p>
+            <p style="color:#555;">Here is why \(\sigma\) is not optional. Drop it, and two layers compose to \(W_2(W_1 x + b_1) + b_2 = (W_2 W_1)\,x + (W_2 b_1 + b_2)\), which is just one affine map \(W' x + b'\). Without a nonlinearity, a network of any depth collapses to a single linear layer and can only draw straight decision boundaries; no amount of stacking buys anything. Insert ReLU between the layers and the collapse is blocked: each layer bends the input space along a different set of hyperplanes, and composing many such bends lets the network carve the highly non-linear regions real data lives in. That is the formal content behind "depth buys expressive power", and the reason every block in a transformer (2.2) carries a nonlinearity.</p>
         </div>
 
         <h2 class="section-title">Training = minimising a loss</h2>
@@ -106,13 +106,13 @@
         </div>
         <div class="technical-detail">
             <h4>Gradient descent and back-propagation</h4>
-            <p style="color:#555;">The gradient \( \nabla_\theta L \) points in the direction in parameter space along which the loss rises fastest, so stepping the other way lowers it, with the learning rate \( \eta \) setting the step size. Back-propagation is the chain rule organised so that one backward pass, costing a small constant multiple of one forward pass (about twice, for a transformer), yields the gradient for <em>all</em> the parameters at once. That is what makes training billion-parameter models feasible at all. Two caveats matter later. The loss surface is wildly non-convex, so there is no guarantee this finds the global minimum: it settles into a <em>low-loss region</em>, and which region depends on the initialisation and the order of the data. And the result is a vast array of numbers that happens to fit the data, with no guarantee of being readable: gradient descent optimises for low loss, never for interpretability. Both points come back in Session 3 and in the interpretability weeks.</p>
+            <p style="color:#555;">The gradient \( \nabla_\theta L \) points in the direction in parameter space along which the loss rises fastest, so stepping the other way lowers it, with the learning rate \( \eta \) setting the step size. Back-propagation is the chain rule organised so that one backward pass, costing a small constant multiple of one forward pass (about twice, for a transformer), yields the gradient for all the parameters at once. That is what makes training billion-parameter models feasible at all. Two caveats matter later. The loss surface is wildly non-convex, so there is no guarantee this finds the global minimum: it settles into a low-loss region, and which region depends on the initialisation and the order of the data. And the result is a vast array of numbers that happens to fit the data, with no guarantee of being readable: gradient descent optimises for low loss, never for interpretability. Both points come back in Session 3 and in Session 13.</p>
         </div>
         <div class="info-box">
             <h4>The language-model loss</h4>
             <p>A language model is trained to predict the next <strong>token</strong> (a chunk of text, defined precisely in Session 2.2) given the tokens before it. At each position it outputs a probability distribution \( p_\theta \) over the whole vocabulary (the <em>softmax</em> of its output scores; softmax is defined in 2.2), and the loss is the <strong>cross-entropy</strong>:</p>
-            <div class="formula">\[ L = -\frac{1}{T} \sum_i \log p_\theta\!\left(t_i \mid t_{&lt;i}\right) \]</div>
-            <p>where \( t_i \) is the true token at position \( i \) and \( t_{&lt;i} \) all tokens before it. (General cross-entropy is \( -\sum p_{\text{true}} \log p_\theta \); because the true "distribution" puts all its mass on the one token that occurred, the sum collapses to the negative log-probability of that token.) So minimising \( L \) means making the correct token as probable as possible. Two things follow: this is the "loss" that falls as a power law in Session 2.3; and the model is never told <em>how</em> to be right, only scored on the probability it placed on what came next.</p>
+            <div class="formula">\[ L = -\frac{1}{T} \sum_{i=1}^T \log p_\theta\!\left(t_i \mid t_{&lt;i}\right) \]</div>
+            <p>where \( t_i \) is the true token at position \( i \) and \( t_{&lt;i} \) all tokens before it. (General cross-entropy is \( -\sum p_{\text{true}} \log p_\theta \); because the true "distribution" puts all its mass on the one token that occurred, the sum collapses to the negative log-probability of that token.) So minimising \( L \) means making the correct token as probable as possible. Two things follow: this is the "loss" that falls as a power law in Session 2.3; and the model is never told how to be right, only scored on the probability it placed on what came next.</p>
         </div>
 
         <h2 class="section-title">Consequences for safety</h2>
@@ -122,7 +122,7 @@
         </div>
         <div class="info-box">
             <h4>Specification and opacity</h4>
-            <p>First, the objective is a specification problem: get the loss subtly wrong and you get subtly wrong behaviour, at scale (Session 3, Goodhart). Second, the parameters are opaque: gradient descent finds <em>a</em> solution, not an interpretable one, which is why we need mechanistic interpretability (Session 13) to read back out what the network learned.</p>
+            <p>First, the objective is a specification problem: get the loss subtly wrong and you get subtly wrong behaviour, at scale (Session 3, Goodhart). Second, the parameters are opaque: gradient descent finds a solution, not an interpretable one, which is why we need mechanistic interpretability (Session 13) to read back out what the network learned.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
@@ -132,10 +132,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-01/safety-is-not-solved.html"><span class="nav-label">← Previous</span><span class="nav-title">1.4 · Safety isn't solved</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="inside-the-transformer.html"><span class="nav-label">Next →</span><span class="nav-title">2.2 · Inside the transformer</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-01/safety-is-not-solved.html" aria-label="Previous: 1.4 · Safety isn&#x27;t solved"><span class="nav-label">← Previous</span><span class="nav-title">1.4 · Safety isn't solved</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="inside-the-transformer.html" aria-label="Next: 2.2 · Inside the transformer"><span class="nav-label">Next →</span><span class="nav-title">2.2 · Inside the transformer</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

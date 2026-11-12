@@ -60,16 +60,13 @@ def page_html(path):
                       "", body, flags=re.S)
     body = re.sub(r'<div class="intro-text" style="margin-top:50px;">.*$',
                   "", body, flags=re.S)
-    body = re.sub(r"<figure>.*?</figure>", "<p><i>[figure]</i></p>", body, flags=re.S)
+    body = re.sub(r"<figure\b[^>]*>.*?</figure>", "<p><i>[figure]</i></p>", body, flags=re.S)
     body = re.sub(r"<svg.*?</svg>", "<p><i>[diagram]</i></p>", body, flags=re.S)
-    # strip class/style attributes; in full mode <a> keeps its href, or the
-    # readings arrive as unlinked text (they are the point of the editing copy)
+    # Strip presentation attributes while retaining link destinations in both modes.
     tags = "div|p|h2|h3|h4|ul|li|table|thead|tbody|tr|td|th|span"
-    if not full:
-        tags += "|a"
     body = re.sub(rf'<({tags})\s[^>]*>', r"<\1>", body)
-    if full:
-        body = re.sub(r'<a\s[^>]*?href="([^"]+)"[^>]*>', r'<a href="\1">', body)
+    body = re.sub(r'<a\s[^>]*?href=([\"\x27])(.*?)\1[^>]*>',
+                  lambda m: '<a href="' + H.escape(H.unescape(m.group(2)), quote=True) + '">', body)
     body = re.sub(r"</?div>", "", body)
     body = re.sub(r"</?span>", "", body)
     # pandoc dereferences iframe src and inlines whatever it fetches (YouTube's

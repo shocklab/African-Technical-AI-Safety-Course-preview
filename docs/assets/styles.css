@@ -65,7 +65,8 @@ body{
   .top-nav{ padding:10px 24px; gap:12px; }
   .top-nav .tn-title{ display:none; }
   .top-nav .tn-prev, .top-nav .tn-next{ max-width:none; }
-  .top-nav .tn-menu ul{ left:auto; right:0; transform:none; }
+  .top-nav .tn-menu{ position:static; }
+  .top-nav .tn-menu ul{ left:12px; right:12px; min-width:0; max-width:none; transform:none; }
 }
 
 /* --- AI transparency notice --- */
@@ -74,11 +75,11 @@ body{
 .ai-notice a{ color:var(--navy); text-decoration:underline; }
 
 /* --- Header --- */
-header{ background:var(--paper); color:var(--ink); padding:50px 48px 30px; }
-header::after{ content:""; display:block; width:56px; height:3px; background:var(--navy); margin-top:24px; }
+header, .header{ background:var(--paper); color:var(--ink); padding:50px 48px 30px; }
+header::after, .header::after{ content:""; display:block; width:56px; height:3px; background:var(--navy); margin-top:24px; }
 .week-badge{ display:inline-block; font-family:var(--mono); font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
-header h1{ font-family:var(--display); font-weight:500; font-size:2.6rem; line-height:1.08; letter-spacing:-0.5px; color:var(--navy); margin:0; }
-header p{ font-size:1.12rem; color:var(--muted); max-width:60ch; margin:14px 0 0; line-height:1.5; }
+header h1, .header h1{ font-family:var(--display); font-weight:500; font-size:2.6rem; line-height:1.08; letter-spacing:-0.5px; color:var(--navy); margin:0; }
+header p, .header p{ font-size:1.12rem; color:var(--muted); max-width:60ch; margin:14px 0 0; line-height:1.5; }
 
 /* --- Content wrapper --- */
 .content{ padding:42px 48px 8px; }
@@ -100,9 +101,15 @@ header p{ font-size:1.12rem; color:var(--muted); max-width:60ch; margin:14px 0 0
 .card p:last-child{ margin-bottom:0; }
 
 /* --- Lists --- */
-.styled-list{ list-style:none; margin:14px 0; }
+.content ul, .content ol, .notebook ul, .notebook ol{ padding-left:22px; }
+.content .lesson-list, .content .subsession-list{ padding-left:0; }
+.content .decision-framework ol, .content ul[style*="margin-left"], .content ol[style*="margin-left"]{ padding-left:0; }
+.content .styled-list, .notebook .styled-list, .styled-list{ list-style:none; margin:14px 0; padding-left:0; }
 .styled-list li{ padding:6px 0 6px 24px; color:var(--ink); position:relative; line-height:1.65; }
 .styled-list li::before{ content:'\25B8'; position:absolute; left:0; color:var(--navy); }
+ol.styled-list{ counter-reset:step; }
+ol.styled-list > li{ counter-increment:step; padding-left:2.5em; }
+ol.styled-list > li::before{ content:counter(step) "."; width:2em; text-align:right; }
 
 /* --- Strong call-out (solid navy) --- */
 .highlight-box{ background:var(--navy); color:#fff; padding:28px 30px; border-radius:8px; margin:36px 0; }
@@ -110,6 +117,9 @@ header p{ font-size:1.12rem; color:var(--muted); max-width:60ch; margin:14px 0 0
 .highlight-box p{ font-size:1.02rem; line-height:1.7; color:#dce7f2; margin-bottom:10px; }
 .highlight-box p:last-child{ margin-bottom:0; }
 .highlight-box a{ color:#bcd4ec; }
+.highlight-box .styled-list li{ color:#dce7f2; }
+.highlight-box .styled-list li::before{ color:#bcd4ec; }
+.highlight-box code{ background:#163f66; color:#fff; }
 
 /* --- Left-rule call-outs --- */
 .info-box{ background:var(--tint); border-left:3px solid var(--navy); padding:18px 24px; margin:22px 0; }
@@ -117,7 +127,7 @@ header p{ font-size:1.12rem; color:var(--muted); max-width:60ch; margin:14px 0 0
 .info-box p{ color:var(--ink); line-height:1.7; }
 
 .warning-box{ background:#fff8e8; border-left:3px solid #e0a200; padding:18px 24px; margin:22px 0; }
-.warning-box h4{ font-family:var(--display); color:#9a6b00; font-size:1.15rem; font-weight:500; margin-bottom:8px; }
+.warning-box h4{ font-family:var(--display); color:#8a5f00; font-size:1.15rem; font-weight:500; margin-bottom:8px; }
 .warning-box p{ color:#5d4e1f; line-height:1.7; }
 
 .technical-detail{ background:var(--paper); border:1px solid var(--rule); border-radius:8px; padding:22px 24px; margin:22px 0; }
@@ -134,10 +144,10 @@ header p{ font-size:1.12rem; color:var(--muted); max-width:60ch; margin:14px 0 0
 .reading-core{ border-top-color:var(--navy); }
 
 /* --- Tables --- */
-.comparison-table{ width:100%; border-collapse:collapse; margin:24px 0; font-size:0.96rem; }
-.comparison-table th{ background:var(--navy); color:#fff; padding:12px 14px; text-align:left; font-family:var(--mono); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:500; }
-.comparison-table td{ padding:11px 14px; border-bottom:1px solid var(--rule); color:var(--ink); vertical-align:top; }
-.comparison-table tr:last-child td{ border-bottom:none; }
+.content table, .comparison-table{ width:100%; border-collapse:collapse; margin:24px 0; font-size:0.96rem; }
+.content table th, .comparison-table th{ background:var(--navy); color:#fff; padding:12px 14px; text-align:left; font-family:var(--mono); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:500; }
+.content table td, .comparison-table td{ padding:11px 14px; border-bottom:1px solid var(--rule); color:var(--ink); vertical-align:top; }
+.content table tr:last-child td, .comparison-table tr:last-child td{ border-bottom:none; }
 
 /* --- Decision framework / numbered steps --- */
 .decision-framework{ background:var(--tint); border-left:3px solid var(--navy); padding:24px 28px; margin:28px 0; }
@@ -162,7 +172,17 @@ code{ background:#eef2f6; padding:1px 6px; border-radius:4px; font-size:0.86em; 
 /* --- In-content links --- */
 .content a{ color:var(--blue); text-decoration:underline; text-underline-offset:2px; text-decoration-thickness:0.6px; }
 .content a:hover{ color:var(--navy); }
+.content .highlight-box a{ color:#bcd4ec; }
+.content .highlight-box a:hover{ color:#fff; }
 .resource-placeholder a{ font-weight:400; }
+
+/* The contents page also defines these selectors in its local stylesheet. */
+.content .lesson-list .soon, .content .lesson-list .soon::after{ color:#66707a; }
+
+:focus-visible{ outline:3px solid #a45216; outline-offset:3px; }
+.top-nav :focus-visible, .back-nav :focus-visible, .highlight-box :focus-visible{ outline-color:#fff; }
+.top-nav .tn-menu ul :focus-visible{ outline-color:var(--navy); }
+mjx-container[jax="SVG"][display="true"]{ max-width:100%; overflow-x:auto; overflow-y:hidden; padding:3px 0; }
 
 /* --- Figures --- */
 figure{ margin:32px auto; text-align:center; }
@@ -188,14 +208,38 @@ figcaption code{ background:#eef2f6; }
 @media (max-width:768px){
   body{ padding:0; }
   .container{ border:none; }
-  header{ padding:36px 24px 24px; }
-  header h1{ font-size:2rem; }
+  header, .header{ padding:36px 24px 24px; }
+  header h1, .header h1{ font-size:2rem; }
   .content{ padding:30px 24px 8px; }
   .back-nav, .ai-notice{ padding-left:24px; padding-right:24px; }
   .card-grid{ grid-template-columns:1fr; }
   .section-title{ font-size:1.5rem; }
   .page-nav{ flex-direction:column; padding:24px; }
   .page-nav .next{ text-align:left; }
+}
+
+@media (max-width:640px){
+  .content table, .comparison-table{ display:block; max-width:100%; overflow-x:auto; }
+}
+
+@media print{
+  body{ padding:0; background:#fff; color:#000; font-size:11pt; }
+  .container{ max-width:none; border:none; }
+  .top-nav, .back-nav, .page-nav{ display:none; }
+  header, .header{ padding:0 0 16pt; }
+  .content{ padding:0; }
+  .highlight-box{ background:#fff; color:#000; border:1px solid #555; padding:12pt; }
+  .highlight-box h3, .highlight-box h3 span, .highlight-box p,
+  .highlight-box .styled-list li, .highlight-box .styled-list li::before,
+  .highlight-box code, .content .highlight-box a{ color:#000 !important; background:transparent; }
+  .content a{ color:#000; }
+  .content table, .comparison-table{ display:table; width:100%; overflow:visible; font-size:9pt; }
+  .content table th, .comparison-table th{ color:#000; background:#fff; border:1px solid #555; }
+  .content table td, .comparison-table td{ color:#000; border:1px solid #aaa; }
+  figure.wide{ width:100%; margin-left:0; transform:none; }
+  figure, tr{ break-inside:avoid; }
+  h1, h2, h3, h4{ break-after:avoid; }
+  mjx-container[jax="SVG"][display="true"]{ overflow:visible; }
 }
 
 /* Embedded video (core-material boxes, Session 2) */

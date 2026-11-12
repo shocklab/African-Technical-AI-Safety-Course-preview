@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 1.1 — How this course works</title>
+    <title>Session 1.1: How this course works</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 1</summary>
@@ -25,7 +25,7 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-next" href="what-technical-ai-safety-is.html"><span class="tn-title">1.2 · What technical AI safety is</span> →</a>
+    <a class="tn-next" href="what-technical-ai-safety-is.html" aria-label="Next: 1.2 · What technical AI safety is"><span class="tn-title">1.2 · What technical AI safety is</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -38,9 +38,9 @@
     <div class="content">
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Week 1 — orientation and foundations</span></h3>
+            <h3><span style="color:#ffffff;">Week 1: orientation and foundations</span></h3>
             <p>Welcome. This first week sets things up before the safety content starts. It covers how the course runs (1.1), what technical AI safety is (1.2), the case for the field and the strongest arguments against it (1.3), and a concrete demonstration that the problem is unsolved, especially in an African context (1.4). Session 2 then rebuilds the deep-learning foundations the rest of the course depends on.</p>
-            <p style="margin-bottom:0;">This session's sub-sessions: 1.1 how this course works · 1.2 what technical AI safety is · 1.3 the case and its critics · 1.4 safety isn't solved.</p>
+            <p style="margin-bottom:0;">This session's sub-sessions: 1.1 how this course works · 1.2 what technical AI safety is · 1.3 the cases for and against misalignment · 1.4 safety isn't solved.</p>
         </div>
 
         <div class="intro-text">
@@ -58,13 +58,12 @@
         </div>
 
         <h2 class="section-title">The shape of the course</h2>
-        <p>The 2026 taught route covers Sessions 1–9, then 11–13 and a project. Session 10 is skipped; the numbers follow the original course plan. We start with idealised, formal questions, move to messy empirical practice, and end with your own research.</p>
+        <p>The 2026 taught route covers Sessions 1 to 9, then 11 to 13 and a project. Session 10 is skipped; the numbers follow the original course plan. We start with idealised, formal questions, move to messy empirical practice, and end with your own research.</p>
         <div class="card-grid">
-            <div class="card"><h3>Part 1 · Foundations and the problem</h3><p>What technical AI safety is. The deep-learning and scaling foundations. The core alignment problem: specification, instrumental convergence, inner misalignment, deception. The physical substrate of compute, energy and minerals that all of it rests on.</p></div>
-            <div class="card"><h3>Part 2 · Training and aligning</h3><p>How a frontier model is actually built (pretraining, supervised fine-tuning, RLHF), then the methods meant to align it: RLAIF, Constitutional AI, scalable oversight, and the question of whose values.</p></div>
-            <div class="card"><h3>Part 3 · Robust, controllable, evaluable</h3><p>Adversarial robustness and jailbreaks. Evaluations and technical governance: how we measure what a system can and will do, and what makes a safety policy enforceable.</p></div>
-            <div class="card"><h3>Part 4 · Mechanistic interpretability</h3><p>Opening the model up with one worked induction-head circuit and its evidence limits. Behaviour alone cannot tell us whether a model is safe, a point Week 2 foreshadows.</p></div>
-            <div class="card"><h3>Part 5 · Research project</h3><p>A scoped, Colab-feasible safety project. You produce a short paper plus code, present it to the class, and review each other's work. The project follows Session 13.</p></div>
+            <div class="card"><h3>Part 1 · Foundations and the safety problem</h3><p>What technical AI safety is. The deep-learning and scaling foundations. The core alignment problem: specification, instrumental convergence, inner misalignment, deception. The physical substrate of compute, energy and minerals that all of it rests on.</p></div>
+            <div class="card"><h3>Part 2 · How models are trained and aligned</h3><p>How a frontier model is actually built (pretraining, supervised fine-tuning, RLHF), then the methods meant to align it: RLAIF, Constitutional AI, scalable oversight, and the question of whose values.</p></div>
+            <div class="card"><h3>Part 3 · Robustness, evaluation and governance</h3><p>Adversarial robustness and jailbreaks. Evaluations and technical governance: how we measure what a system can and will do, and what makes a safety policy enforceable.</p></div>
+            <div class="card"><h3>Part 4 · Interpretability and project</h3><p>Opening the model up with one worked induction-head circuit and its evidence limits. Behaviour alone cannot tell us whether a model is safe, a point Week 2 foreshadows. A scoped, Colab-feasible safety project. You produce a short paper plus code, present it to the class, and review each other's work. The project follows Session 13.</p></div>
         </div>
         <div class="info-box">
             <h4>The two-act structure</h4>
@@ -115,7 +114,7 @@
         <p>A few habits, learned from watching how this material tends to go wrong for students.</p>
         <ul class="styled-list">
             <li>Read critically. Section 1.4 gives you a checklist: claim versus evidence, what is the eval, who is the population, what would falsify it. Apply it to every reading, including these pages.</li>
-            <li>Do the labs. The difference between "I understand attention" and "I found an induction head in GPT-2" is the difference between this course working for you and not. The labs are where the abstractions become real.</li>
+            <li>Do the labs. The difference between "I understand attention" and "I inspected GPT-2's residual stream in TransformerLens" is the difference between this course working for you and not. The labs are where the abstractions become real.</li>
             <li>Take a side in the seminars. Several sessions ask you to argue a position you may not hold. That is the fastest way to discover which premises your position rests on.</li>
             <li>Keep a running map. Almost every later technique answers a weakness exposed earlier; the alignment problem in Week 2 motivates everything after it. Note the connections, because the assessment rewards you for seeing them.</li>
             <li>Hold uncertainty. Resist the pull to either doom or dismissal. On many questions here the position is a probability, not a verdict, and you will be assessed on the quality of your reasoning.</li>
@@ -148,10 +147,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
+<nav class="page-nav" aria-label="Lesson navigation">
   <span class="nav-empty"></span>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="what-technical-ai-safety-is.html"><span class="nav-label">Next →</span><span class="nav-title">1.2 · What technical AI safety is</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="what-technical-ai-safety-is.html" aria-label="Next: 1.2 · What technical AI safety is"><span class="nav-label">Next →</span><span class="nav-title">1.2 · What technical AI safety is</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

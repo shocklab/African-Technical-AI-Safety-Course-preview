@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 13.1 — Why open the black box?</title>
+    <title>Session 13.1: Why open the black box?</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 13</summary>
@@ -23,14 +23,14 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-12-technical-ai-governance.html">← <span class="tn-title">Session 12 · Technical AI governance</span></a>
-    <a class="tn-next" href="one-circuit-and-its-limits.html"><span class="tn-title">13.2 · One circuit and its limits</span> →</a>
+    <a class="tn-prev" href="../session-12-technical-ai-governance.html" aria-label="Previous: Session 12 · Technical AI governance">← <span class="tn-title">Session 12 · Technical AI governance</span></a>
+    <a class="tn-next" href="one-circuit-and-its-limits.html" aria-label="Next: 13.2 · One circuit and its limits"><span class="tn-title">13.2 · One circuit and its limits</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
     <div class="ai-notice"><strong>Note:</strong> This page was developed with Claude and revised with OpenAI Codex; the reading list has been reference-checked. Spot an error? Email jonathan.shock@uct.ac.za.</div>
     <header>
-        <div class="week-badge">Session 13.1</div>
+        <div class="week-badge">Week 7 • Session 13.1</div>
         <h1>Why open the black box?</h1>
         <p>What mechanistic interpretability is, how it differs from saliency and from black-box evaluation, and the state of the reverse-engineering ambition</p>
     </header>
@@ -58,7 +58,7 @@
 
         <h2 class="section-title">Interpretability is the white-box arm of evaluation</h2>
 
-        <p>Recall the taxonomy from 11.1: evaluations are <em>behavioural</em> (read inputs and outputs only) or <em>internal</em> (read activations and weights). Mechanistic interpretability uses internal access to propose and test a computational account. In Session 11.2, a model can appear incapable on an evaluation while retaining a capability. Internal evidence may help distinguish inability from underperformance, though a probe also needs validation. A model that recognises an evaluation and changes its behaviour may make behavioural evidence unreliable. Internal tests can add evidence, provided the probes and interventions are themselves validated. Current interpretability methods are not a general defence against deceptive behaviour.</p>
+        <p>Recall the taxonomy from 11.1: evaluations are behavioural (read inputs and outputs only) or internal (read activations and weights). Mechanistic interpretability uses internal access to propose and test a computational account. In Session 11.2, a model can appear incapable on an evaluation while retaining a capability. Internal evidence may help distinguish inability from underperformance, though a probe also needs validation. A model that recognises an evaluation and changes its behaviour may make behavioural evidence unreliable. Internal tests can add evidence, provided the probes and interventions are themselves validated. Current interpretability methods are not a general defence against deceptive behaviour.</p>
 
         <h2 class="section-title">The reverse-engineering ambition</h2>
 
@@ -73,15 +73,15 @@
         <p>Researchers hope internal evidence will help detect deception (Session 3.4), support oversight (Session 8.1) and make independent audits more informative (Session 12). Each use remains uncertain for frontier models. The next page tests a narrow mechanistic claim in a small model and asks what that result licenses us to conclude.</p>
         <div class="info-box">
             <h4>The African-lens angle</h4>
-            <p>An African governance question here is access to model internals: interpretability can operate on a model's <em>weights</em> without needing the developer's training data or cooperation, which could help an institution that has access to the weights of a model it did not train. Whether the features and circuits a model learns are shared across languages, or specific to the high-resource ones, is a real and open question with direct consequences for isiZulu and other low-resource languages. The circuit example does not test how mechanisms vary across languages.</p>
+            <p>An African governance question here is access to model internals: interpretability can operate on a model's weights without needing the developer's training data or cooperation, which could help an institution that has access to the weights of a model it did not train. Whether the features and circuits a model learns are shared across languages, or specific to the high-resource ones, is a real and open question with direct consequences for isiZulu and other low-resource languages. The circuit example does not test how mechanisms vary across languages.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>Give a safety question that a black-box evaluation cannot answer even in principle, and say what a mechanistic explanation would add.</li>
-            <li>Why are attribution and probing (saliency maps, probing classifiers) not the same as mechanistic understanding? Construct a case where a saliency map is correct about <em>where</em> and wrong about <em>why</em>.</li>
+            <li>Why are attribution and probing (saliency maps, probing classifiers) not the same as mechanistic understanding? Construct a case where a saliency map is correct about where and wrong about why.</li>
             <li>Interpretability researchers describe their frontier-scale evidence as more like neuroscience than like decompilation. What does that analogy concede, and which Session-11 failure does it echo?</li>
-            <li>Of the three safety payoffs (deception detection, scalable oversight, auditing), which most depends on interpretability working at <em>frontier</em> scale rather than toy scale? Why?</li>
+            <li>Of the three safety payoffs (deception detection, scalable oversight, auditing), which most depends on interpretability working at frontier scale rather than toy scale? Why?</li>
         </ul>
 
         <h2 class="section-title">Readings</h2>
@@ -105,10 +105,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-12-technical-ai-governance.html"><span class="nav-label">← Previous</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="one-circuit-and-its-limits.html"><span class="nav-label">Next →</span><span class="nav-title">13.2 · One circuit and its limits</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-12-technical-ai-governance.html" aria-label="Previous: Session 12 · Technical AI governance"><span class="nav-label">← Previous</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="one-circuit-and-its-limits.html" aria-label="Next: 13.2 · One circuit and its limits"><span class="nav-label">Next →</span><span class="nav-title">13.2 · One circuit and its limits</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

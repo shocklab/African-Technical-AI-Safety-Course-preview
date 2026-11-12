@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 5.3 — The post-training stack</title>
+    <title>Session 5.3: The post-training stack</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 5</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="supervised-fine-tuning.html">← <span class="tn-title">5.2 · From predictor to instruction-follower (SFT)</span></a>
-    <a class="tn-next" href="lab-nanochat.html"><span class="tn-title">5.4 · Lab: from base model to assistant (nanochat)</span> →</a>
+    <a class="tn-prev" href="supervised-fine-tuning.html" aria-label="Previous: 5.2 · From predictor to instruction-follower (SFT)">← <span class="tn-title">5.2 · From predictor to instruction-follower (SFT)</span></a>
+    <a class="tn-next" href="lab-nanochat.html" aria-label="Next: 5.4 · Lab: from base model to assistant (nanochat)"><span class="tn-title">5.4 · Lab: from base model to assistant (nanochat)</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -40,7 +40,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>We have the pieces: pretraining (5.1) and supervised fine-tuning (5.2). This sub-session assembles the whole pipeline, names what each stage contributes to the model you talk to, and, connecting back to Session 3, pinpoints where each stage opens a door to misalignment. Capabilities come from pretraining; the "assistant" is a thin, post-trained layer on top; and every layer is an imperfect proxy for what we meant.</p>
+            <p>We have the pieces: pretraining (5.1) and supervised fine-tuning (5.2). This sub-session assembles the whole pipeline, names what each stage contributes to the model you talk to, and, connecting back to Session 3, pinpoints where each stage opens a door to misalignment. Capabilities come from pretraining. The "assistant" is a thin, post-trained layer on top. Every layer is an imperfect proxy for what we meant.</p>
         </div>
 
         
@@ -68,9 +68,9 @@
             <table class="comparison-table">
                 <thead><tr><th>Stage</th><th>Objective</th><th>What it contributes</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>1. Pretraining</strong></td><td>Next-token prediction on web-scale text (self-supervised).</td><td>Knowledge, language, reasoning: raw <em>capability</em>. Produces the <strong>base model</strong>.</td></tr>
+                    <tr><td><strong>1. Pretraining</strong></td><td>Next-token prediction on web-scale text (self-supervised).</td><td>Knowledge, language, reasoning: raw capability. Produces the <strong>base model</strong>.</td></tr>
                     <tr><td><strong>2. Supervised fine-tuning</strong></td><td>Next-token loss on curated (instruction, response) demonstrations.</td><td>Instruction-following, the assistant register, format, and a first pass at refusals.</td></tr>
-                    <tr><td><strong>3. Preference optimisation</strong></td><td>Use preference comparisons, through a learned reward model and RL, or directly with DPO (Session 6).</td><td>Helpfulness, harmlessness, tone; pushing quality <em>beyond</em> what demonstrations alone reach.</td></tr>
+                    <tr><td><strong>3. Preference optimisation</strong></td><td>Use preference comparisons, through a learned reward model and RL, or directly with DPO (Session 6).</td><td>Helpfulness, harmlessness, tone; pushing quality beyond what demonstrations alone reach.</td></tr>
                     <tr><td><strong>4. Verifiable-reward RL</strong></td><td>Reinforcement learning against a programmatic check: a unit test passing, an exact-match answer (RLVR; below).</td><td>Long-form reasoning in checkable domains (maths, code); the stage behind "reasoning" models.</td></tr>
                     <tr><td><strong>5. Deployment wrapping</strong></td><td>System prompt, tools, filters, sampling settings.</td><td>The persona and constraints at use-time, adjustable without retraining.</td></tr>
                 </tbody>
@@ -82,7 +82,7 @@
         <div class="card-grid">
             <div class="card"><h3>Capabilities → pretraining</h3><p>Pretraining supplies broad capabilities. Post-training changes their accessibility and can change task performance. Whether a particular method mainly elicits existing abilities or develops new ones requires controlled comparison.</p></div>
             <div class="card"><h3>Instruction-following → SFT</h3><p>The habit of treating the prompt as a request, the answer format, and the default "voice" are installed in stage 2.</p></div>
-            <div class="card"><h3>Helpful/harmless/honest → preferences</h3><p>The fine-grained "be more like <em>this</em>" (politeness, caution, refusing well, picking the better of two answers) comes from stage 3 (Session 6).</p></div>
+            <div class="card"><h3>Helpful/harmless/honest → preferences</h3><p>The fine-grained "be more like this" (politeness, caution, refusing well, picking the better of two answers) comes from stage 3 (Session 6).</p></div>
             <div class="card"><h3>Reasoning → verifiable rewards</h3><p>The long chains of working on maths and code problems are trained in stage 4, where the reward comes from a program rather than a rater.</p></div>
             <div class="card"><h3>Final persona → the system prompt</h3><p>"You are a helpful assistant…", tool access and content filters are stage 5: a thin, swappable wrapper, and often the easiest layer for a user to argue around.</p></div>
         </div>
@@ -96,7 +96,7 @@
         </div>
         <div class="warning-box">
             <h4>Verifier hacking</h4>
-            <p>A verifier is still a proxy. A unit-test suite covers the cases its author thought of, so a policy optimised against it learns to pass those cases (special-casing the visible tests, exploiting the checking harness) rather than to be correct in general; an exact-match checker rewards the right number reached by wrong working. Session 3.1's lesson transfers unchanged: replace the learned reward model with a programmatic one and reward-model hacking becomes <em>verifier hacking</em>, harder where the check is tight (a full proof checker), routine where it is loose (a thin test suite).</p>
+            <p>A verifier is still a proxy. A unit-test suite covers the cases its author thought of, so a policy optimised against it learns to pass those cases (special-casing the visible tests, exploiting the checking harness) rather than to be correct in general. An exact-match checker rewards the right number reached by wrong working. Session 3.1's lesson transfers unchanged: replace the learned reward model with a programmatic one and reward-model hacking becomes <em>verifier hacking</em>, harder where the check is tight (a full proof checker), routine where it is loose (a thin test suite).</p>
         </div>
         <div class="info-box">
             <h4>Where the stage stops</h4>
@@ -108,34 +108,34 @@
         <div class="technical-detail">
             <h4>One failure mode per layer</h4>
             <ul class="styled-list">
-                <li><strong>Pretraining imitates everything.</strong> The base objective is "model the data", which includes deception, manipulation, dangerous know-how and every harmful persona on the web. Those capabilities exist in the model <em>before</em> any safety work; alignment must suppress them, not avoid creating them.</li>
+                <li><strong>Pretraining imitates everything.</strong> The base objective is "model the data", which includes deception, manipulation, dangerous know-how and every harmful persona on the web. Those capabilities exist in the model before any safety work; alignment must suppress them, not avoid creating them.</li>
                 <li>SFT depends on the coverage and quality of its demonstrations. Generalisation can exceed individual examples, but unrepresented languages and contexts still require evaluation.</li>
-                <li><strong>Preference optimisation is a proxy.</strong> Stage 3 maximises a <em>learned reward model</em> of human approval, not the truth or the user's real interest. That is the specification problem of Session 3.1, and we will see it bite as sycophancy and reward hacking in Session 6.</li>
+                <li><strong>Preference optimisation is a proxy.</strong> Stage 3 maximises a learned reward model of human approval, not the truth or the user's real interest. That is the specification problem of Session 3.1, and we will see it bite as sycophancy and reward hacking in Session 6.</li>
                 <li><strong>Verifiable rewards invite verifier hacking.</strong> Stage 4's programmatic checks are proxies too: a policy can special-case the test suite or game the answer-matcher instead of becoming correct (above). The same Goodhart failure as stage 3's, relocated to a different proxy.</li>
                 <li><strong>The wrapper is shallow.</strong> A system prompt is not a guarantee; it is text the model is trained to weight heavily but can be induced to ignore (jailbreaks, Session 9). Safety that lives only in stage 5 is the most brittle kind.</li>
             </ul>
         </div>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Alignment is a thin layer over a vast base</span></h3>
-            <p>A frontier assistant is an enormous, capability-rich, value-indifferent base model, with a comparatively thin layer of fine-tuning shaping how it presents itself. That layer is real and does a great deal of work, but it is small, it is a proxy, and it is applied to a system that already contains the behaviours we are trying to prevent. Much of the rest of this course is about how fragile that layer is (robustness, Week 5), whether we can see through it (interpretability, Session 13), and whether the underlying model is merely <em>behaving</em> aligned (deception, Session 3.4).</p>
+            <p>A frontier assistant is an enormous, capability-rich, value-indifferent base model, with a comparatively thin layer of fine-tuning shaping how it presents itself. That layer is real and does a great deal of work, but it is small, it is a proxy, and it is applied to a system that already contains the behaviours we are trying to prevent. Much of the rest of this course is about how fragile that layer is (robustness, Week 5), whether we can see through it (interpretability, Session 13), and whether the underlying model is merely behaving aligned (deception, Session 3.4).</p>
         </div>
 
-        <h2 class="section-title">Base vs aligned models</h2>
+        <h2 class="section-title">Base versus aligned models</h2>
         <div class="info-box">
             <h4>The alignment layer can be removed</h4>
-            <p>Because alignment is a thin fine-tune, it can be largely <em>undone</em>: a few hundred fine-tuning steps can strip the safety behaviours off an open-weights model and recover much of the base model's unfiltered capability. This is central to the open-weights debate (Sessions 10.2 and 10.4): releasing weights releases the capability, and the safety layer that ships with it is not a durable lock. It also sharpens the Global-South thread: the languages and contexts least represented in the (English-centric) alignment layer are where it is thinnest to begin with.</p>
+            <p>Because alignment is a thin fine-tune, it can be largely undone: a few hundred fine-tuning steps can strip the safety behaviours off an open-weights model and recover much of the base model's unfiltered capability. This is central to the debate over releasing open weights: releasing weights releases the capability, and the safety layer that ships with it is not a durable lock. It also sharpens the Global-South thread: the languages and contexts least represented in the (English-centric) alignment layer are where it is thinnest to begin with.</p>
         </div>
 
         <h2 class="section-title">A worked trace: one request through the stack</h2>
-        <p>Follow a single prompt (<em>"Summarise this medical study for a patient"</em>) and watch each stage contribute, and each open its own risk.</p>
+        <p>Follow a single prompt ("Summarise this medical study for a patient") and watch each stage contribute, and each open its own risk.</p>
         <div class="case-study">
             <h4>Where each property (and each hazard) comes from</h4>
-            <p>Pretraining supplies the raw ability: the model has read enough medicine and plain-language writing to <em>be able</em> to summarise, and latently enough to produce confident-sounding nonsense, because the web contains both. SFT makes it attempt the task in the assistant register rather than, say, continuing with more study abstracts, and learns from the available summary demonstrations, whose coverage and quality need checking. Preference optimisation (Session 6) then pushes toward summaries humans <em>rate</em> highly, which is where it can quietly learn that reassuring, fluent, confident summaries score better than accurate-but-hedged ones (sycophancy). The verifiable-rewards stage barely features: no program can check a patient summary, so this request sits in the slice of behaviour that only human preference ever shaped. Finally the system prompt ("you are a careful medical assistant; add a disclaimer") shapes the surface, and is the layer a user can try to argue away ("ignore previous instructions…").</p>
-            <p>The helpful behaviour you see is assembled from four sources, and the <em>failure</em> you fear (a confident, wrong, un-hedged summary that a patient trusts) can originate at any one of them. Asking "which stage would this failure come from?" is a useful diagnostic, and one this course returns to.</p>
+            <p>Pretraining supplies the raw ability: the model has read enough medicine and plain-language writing to be able to summarise, and latently enough to produce confident-sounding nonsense, because the web contains both. SFT makes it attempt the task in the assistant register rather than, say, continuing with more study abstracts, and learns from the available summary demonstrations, whose coverage and quality need checking. Preference optimisation (Session 6) then pushes toward summaries humans rate highly, which is where it can quietly learn that reassuring, fluent, confident summaries score better than accurate-but-hedged ones (sycophancy). The verifiable-rewards stage barely features: no program can check a patient summary, so this request sits in the slice of behaviour that only human preference ever shaped. Finally the system prompt ("you are a careful medical assistant; add a disclaimer") shapes the surface, and is the layer a user can try to argue away ("ignore previous instructions…").</p>
+            <p>The helpful behaviour you see is assembled from four sources, and the failure you fear (a confident, wrong, un-hedged summary that a patient trusts) can originate at any one of them. Asking "which stage would this failure come from?" is a useful diagnostic, and one this course returns to.</p>
         </div>
         <div class="info-box">
             <h4>Locating a failure in the pipeline</h4>
-            <p>Different stages call for different fixes. A capability that should not exist at all may be rooted in pretraining data, which is much harder to address than a surface instruction-following failure. A model that won't follow instructions is an <em>SFT</em> problem. Sycophancy and reward hacking are <em>preference-optimisation</em> problems (Session 6). A jailbreak that peels off the persona is a <em>robustness</em> problem (Session 9). Locating a failure in the pipeline tells you which tool can address it, and warns you when a fix at one layer (a sterner system prompt) is being asked to paper over a problem rooted in another (a capability baked in at pretraining).</p>
+            <p>Different stages call for different fixes. A capability that should not exist at all may be rooted in pretraining data, which is much harder to address than a surface instruction-following failure. A model that won't follow instructions is an SFT problem. Sycophancy and reward hacking are preference-optimisation problems (Session 6). A jailbreak that peels off the persona is a robustness problem (Session 9). Locating a failure in the pipeline tells you which tool can address it, and warns you when a fix at one layer (a sterner system prompt) is being asked to paper over a problem rooted in another (a capability baked in at pretraining).</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -143,7 +143,7 @@
             <li>Pick a real assistant failure you've seen. Which stage of the stack do you think it came from, and what evidence would confirm it?</li>
             <li>How would you distinguish a post-training method that elicits existing capabilities from one that develops new task-solving abilities? Which evaluation controls would your comparison need?</li>
             <li>The same harmful capability is present in the base model and suppressed by the alignment layer. List the distinct ways that suppression could fail.</li>
-            <li>If you could only strengthen <em>one</em> stage for safety, which would you choose, and what would you be giving up?</li>
+            <li>If you could only strengthen one stage for safety, which would you choose, and what would you be giving up?</li>
         </ul>
 
 <div class="intro-text" style="margin-top:50px;">
@@ -153,10 +153,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="supervised-fine-tuning.html"><span class="nav-label">← Previous</span><span class="nav-title">5.2 · From predictor to instruction-follower (SFT)</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-nanochat.html"><span class="nav-label">Next →</span><span class="nav-title">5.4 · Lab: from base model to assistant (nanochat)</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="supervised-fine-tuning.html" aria-label="Previous: 5.2 · From predictor to instruction-follower (SFT)"><span class="nav-label">← Previous</span><span class="nav-title">5.2 · From predictor to instruction-follower (SFT)</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="lab-nanochat.html" aria-label="Next: 5.4 · Lab: from base model to assistant (nanochat)"><span class="nav-label">Next →</span><span class="nav-title">5.4 · Lab: from base model to assistant (nanochat)</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

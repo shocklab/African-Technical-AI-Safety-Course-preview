@@ -164,6 +164,7 @@ STALE = re.compile(r"(Week\s+\d|[Nn]ext week|[Tt]his week)")
 
 
 def main():
+    raise SystemExit("Historical migration disabled: edit the existing lesson pages in dev.")
     for job in JOBS:
         html = job["src"].read_text(encoding="utf-8")
         content = extract_content(html)

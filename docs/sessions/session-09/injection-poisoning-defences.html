@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 9.5 — Prompt injection and layered defences</title>
+    <title>Session 9.5: Prompt injection and layered defences</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 9</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="lab-isizulu-robustness.html">← <span class="tn-title">9.4 · Lab: multilingual safety evaluation</span></a>
-    <a class="tn-next" href="../session-11/why-evaluate-and-taxonomy.html"><span class="tn-title">11.1 · Why evaluate: the eval taxonomy</span> →</a>
+    <a class="tn-prev" href="lab-isizulu-robustness.html" aria-label="Previous: 9.4 · Lab: multilingual safety evaluation">← <span class="tn-title">9.4 · Lab: multilingual safety evaluation</span></a>
+    <a class="tn-next" href="../session-11/why-evaluate-and-taxonomy.html" aria-label="Next: 11.1 · Why evaluate: the eval taxonomy"><span class="tn-title">11.1 · Why evaluate: the eval taxonomy</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -61,9 +61,9 @@
         <h2 class="section-title">Bounded guarantees</h2>
         <p>Two defence families come from image-domain adversarial ML. Adversarial training trains against the strongest perturbation found inside an allowed set:</p>
         <div class="formula">\[ \min_{\theta}\; \mathbb{E}_{(x,y)}\Big[\, \max_{\|\delta\| \le \varepsilon}\, L(\theta,\, x+\delta,\, y) \,\Big]. \]</div>
-        <p>The inner optimisation approximates the strongest available attack inside the specified set. Certified defences prove a guarantee without relying on attack search. For randomised smoothing, if class \(A\) has lower-bounded probability \(p_A\) and every competing class has upper-bounded probability at most \(p_B\), the smoothed classifier is constant within an \(L_2\) radius</p>
+        <p>The inner optimisation approximates the strongest available attack inside the specified set. Certified defences prove a guarantee without relying on attack search. Randomised smoothing classifies an input using the most probable class under Gaussian input noise \(\mathcal{N}(0,\sigma^2 I)\), where \(\sigma\) is the noise standard deviation. If class \(A\) has probability at least \(p_A\), every competing class has probability at most \(p_B\), and \(p_A > p_B\), the smoothed classifier is constant for perturbations with \(L_2\) norm strictly less than</p>
         <div class="formula">\[ R = \frac{\sigma}{2}\left(\Phi^{-1}(p_A)-\Phi^{-1}(p_B)\right). \]</div>
-        <p>The certificate covers that classifier, noise distribution, norm and radius. It does not cover a translation, a multi-turn conversation or an instruction embedded in a document.</p>
+        <p>Here \(\Phi^{-1}\) is the standard normal quantile function. The certificate covers that classifier, noise distribution, norm and radius. It does not cover a translation, a multi-turn conversation or an instruction embedded in a document.</p>
         <div class="warning-box">
             <h4>Changing the attack</h4>
             <p>Zou et al. note that image-domain adversarial training and certification are rarely used in practice because of computational cost, lower clean performance and narrow attack models. Input filtering has the same scope problem. A perplexity filter may detect GCG's conspicuous suffixes, while AutoDAN explicitly optimises readability and PAIR uses ordinary-looking language. A defence result should name the attacks used during development and include adaptive attacks designed with knowledge of the defence.</p>
@@ -113,10 +113,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="lab-isizulu-robustness.html"><span class="nav-label">← Previous</span><span class="nav-title">9.4 · Lab: multilingual safety evaluation</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-11/why-evaluate-and-taxonomy.html"><span class="nav-label">Next →</span><span class="nav-title">11.1 · Why evaluate: the eval taxonomy</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="lab-isizulu-robustness.html" aria-label="Previous: 9.4 · Lab: multilingual safety evaluation"><span class="nav-label">← Previous</span><span class="nav-title">9.4 · Lab: multilingual safety evaluation</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-11/why-evaluate-and-taxonomy.html" aria-label="Next: 11.1 · Why evaluate: the eval taxonomy"><span class="nav-label">Next →</span><span class="nav-title">11.1 · Why evaluate: the eval taxonomy</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

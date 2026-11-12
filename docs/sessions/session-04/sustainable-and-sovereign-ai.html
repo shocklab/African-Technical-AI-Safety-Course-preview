@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 4.4 — Sustainable and sovereign AI</title>
+    <title>Session 4.4: Sustainable and sovereign AI</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 4</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="critical-minerals.html">← <span class="tn-title">4.3 · Critical minerals and the hardware supply chain</span></a>
-    <a class="tn-next" href="../session-05/pretraining.html"><span class="tn-title">5.1 · Pretraining: learning to predict the next token</span> →</a>
+    <a class="tn-prev" href="critical-minerals.html" aria-label="Previous: 4.3 · Critical minerals and the hardware supply chain">← <span class="tn-title">4.3 · Critical minerals and the hardware supply chain</span></a>
+    <a class="tn-next" href="../session-05/pretraining.html" aria-label="Next: 5.1 · Pretraining: learning to predict the next token"><span class="tn-title">5.1 · Pretraining: learning to predict the next token</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -57,7 +57,7 @@
 
 <!-- SECTION 1: MEASURING YOUR FOOTPRINT -->
 <h2 class="section-title">Measuring your own footprint</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">You cannot reduce what you do not measure. A small ecosystem of open tools has emerged to help researchers estimate and track the carbon footprint of their computational work.</p>
+<p>Open tools can help researchers estimate and track the carbon footprint of their computational work.</p>
 
 <div class="tool-card">
 <h3>CodeCarbon</h3>
@@ -78,7 +78,7 @@
 <ul class="styled-list">
 <li>Inputs: Hardware type, number of cores, runtime, memory, location</li>
 <li>Output: kg CO₂e, plus comparisons to everyday activities to aid communication</li>
-<li>Peer-reviewed methodology: The underlying paper was published in <em>Advanced Science</em> (2021), giving it more methodological credibility than some tools</li>
+<li>Peer-reviewed methodology: The underlying paper was published in Advanced Science (2021), giving it more methodological credibility than some tools</li>
 <li>Particularly useful for: Non-ML researchers who want to understand the footprint of their existing computational work</li>
 </ul>
 </div>
@@ -107,7 +107,7 @@
 
 <!-- SECTION 2: PRACTICAL CHOICES -->
 <h2 class="section-title">Practical choices</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">You may not be able to influence how AI companies power their data centres, but you can make choices that meaningfully affect the footprint of your own AI use.</p>
+<p>You may not be able to influence how AI companies power their data centres, but you can make choices that meaningfully affect the footprint of your own AI use.</p>
 
 <div class="technical-detail">
 <h4>Impact of different choices</h4>
@@ -127,7 +127,7 @@
 </tr>
 <tr>
 <td><strong>Schedule heavy compute during low-carbon grid hours</strong></td>
-<td>Often under 10%; up to about 25–30% for short or pausable jobs on variable grids, depending on the job, the grid and the delay allowed (Dodge et al., 2022)</td>
+<td>Often under 10%; up to about 25 to 30% for short or pausable jobs on variable grids, depending on the job, the grid and the delay allowed (Dodge et al., 2022)</td>
 <td>Low-medium (requires grid carbon awareness)</td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 </tr>
 <tr>
 <td><strong>Avoid video generation unless necessary</strong></td>
-<td>~2,800–3,900× per task replaced with text (5-second video vs. 0.24–0.34 Wh text prompts)</td>
+<td>~2,800 to 3,900× per task replaced with text (5-second video versus 0.24 to 0.34 Wh text prompts)</td>
 <td>Low (a usage decision)</td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@
 </tr>
 <tr>
 <td><strong>Avoid Deep Research mode for straightforward questions</strong></td>
-<td>Equivalent to 100–1,000 standard queries (20–100+ web searches + synthesis)</td>
+<td>For Google's agent: about 80 searches and 250k input tokens per typical task; up to about 160 searches and 900k input tokens for Max (<a href="https://ai.google.dev/gemini-api/docs/deep-research" target="_blank" rel="noopener">Gemini API docs</a>)</td>
 <td>Low (a usage decision)</td>
 </tr>
 </tbody>
@@ -166,8 +166,8 @@
 
 <div class="highlight-box">
 <h3><span style="color: #ffffff;">The cloud region choice</span></h3>
-<p>Research by Dodge et al. (2022, Allen Institute for AI, ACM FAccT) found that the same BERT training job produced about 73% lower operational emissions in the lowest-emission cloud region than in the highest (roughly 7 kg vs. 26 kg of CO2), with no change to the model or code.</p>
-<p style="margin-top: 15px;">Major cloud providers (AWS, Google Cloud, Azure) all allow you to specify the region where your compute runs. Choosing <em>us-west-2</em> (Oregon, with significant hydroelectric power) over <em>us-east-1</em> (Virginia, more coal/gas dependent) can make a substantial difference. The same applies to European regions: <em>eu-north-1</em> (Sweden) is among the cleanest; <em>eu-central-1</em> (Frankfurt) less so.</p>
+<p>Research by Dodge et al. (2022, Allen Institute for AI, ACM FAccT) found that the same BERT training job produced about 73% lower operational emissions in the lowest-emission cloud region than in the highest (roughly 7 kg versus 26 kg of CO<sub>2</sub>), with no change to the model or code.</p>
+<p style="margin-top: 15px;">Major cloud providers (AWS, Google Cloud, Azure) all allow you to specify the region where your compute runs. Choosing us-west-2 (Oregon, with significant hydroelectric power) over us-east-1 (Virginia, more coal/gas dependent) can make a substantial difference. The same applies to European regions: eu-north-1 (Sweden) is among the cleanest; eu-central-1 (Frankfurt) less so.</p>
 <p style="margin-top: 15px;">The Electricity Maps API provides live grid carbon intensity and forecasts, and Google Cloud publishes the carbon-free energy share of each region and marks its low-carbon regions. Google Cloud's Carbon Footprint tool reports your past emissions, aggregated monthly, so it helps you review earlier choices rather than choose in real time.</p>
 </div>
 
@@ -183,7 +183,7 @@
 </ul>
 </div>
 <div class="card">
-<h3>Prompting vs. compute</h3>
+<h3>Prompting versus compute</h3>
 <p>Before investing in training or fine-tuning, it is worth asking whether better prompting could achieve the same result at a fraction of the compute cost.</p>
 <ul class="styled-list">
 <li>Well-crafted prompts can match or exceed the performance of a fine-tuned smaller model for many tasks</li>
@@ -197,7 +197,7 @@
 <p>Two less-visible sources of compute cost deserve attention: the amount of text you feed into a model, and how many times you iterate.</p>
 <ul class="styled-list">
 <li>Context length raises compute: Feeding a 100-page document into a frontier model needs compute that grows at least linearly with its length, and the attention term grows with the square of the length; prefix caching can reuse the work for unchanged input across queries, but tokens that are not cached are processed again on each query</li>
-<li>The iteration trap: Sending a task to a cheap model, finding the result inadequate, and repeating 8–10 times may cost more than one well-structured prompt to a larger model</li>
+<li>The iteration trap: Sending a task to a cheap model, finding the result inadequate, and repeating 8 to 10 times may cost more than one well-structured prompt to a larger model</li>
 <li>Front-load prompt quality: Investing time in a precise, well-specified prompt typically produces better results with lower total compute than cheap-model iteration</li>
 <li>Agent workflows compound costs: Multi-step agent systems where AI calls tools, reads results, and generates new queries can multiply energy costs in ways that are not obvious from the interface</li>
 </ul>
@@ -220,40 +220,40 @@
 <tr>
 <td><strong>Chain-of-thought prompting</strong></td>
 <td>Model reasons step-by-step in the visible response, generating significantly more output tokens</td>
-<td>About 1.35–7× the response time; token counts not reported <em>(Wharton GAIL, 2025: for the non-reasoning models tested, CoT requests took 35–600% longer than direct requests)</em></td>
+<td>About 1.35 to 7× the response time; token counts not reported (Wharton GAIL, 2025: for the non-reasoning models tested, CoT requests took 35 to 600% longer than direct requests)</td>
 </tr>
 <tr>
 <td><strong>Extended thinking / reasoning models</strong> (o1, o3, Claude with thinking enabled)</td>
 <td>Generates hundreds to tens of thousands of reasoning tokens before producing a visible response; the raw reasoning is not shown, and users see the final answer and, depending on the product and settings, a summary of the reasoning</td>
-<td>About 8× more output tokens on average <em>(Epoch AI, April 2025 benchmarks)</em>; API cost depends on the model, the tokens used and caching</td>
+<td>About 8× more output tokens on average (Epoch AI, April 2025 benchmarks); API cost depends on the model, the tokens used and caching</td>
 </tr>
 <tr>
 <td><strong>Deep Research mode</strong> (Gemini, Perplexity; ChatGPT costs not published)</td>
 <td>Makes many web searches, reads full pages, synthesises across sources; Google's agent uses about 80 searches on a typical task and up to about 160 in its Max version, and most tasks finish within 20 minutes</td>
-<td>For Google's agent, about 250k input tokens per typical task and up to about 900k for Max; Google estimates about $1–3 per standard task and $3–7 per Deep Research Max task <em>(Google Gemini API docs)</em>; Perplexity API costs depend on model tokens and tool use <em>(Perplexity pricing docs)</em></td>
+<td>For Google's agent, about 250k input tokens per typical task and up to about 900k for Max; Google estimates about $1 to 3 per standard task and $3 to 7 per Deep Research Max task (Google Gemini API docs); Perplexity API costs depend on model tokens and tool use (Perplexity pricing docs)</td>
 </tr>
 <tr>
 <td><strong>Multi-step agent workflows</strong></td>
 <td>Each tool call, web search, or sub-task triggers additional model calls; costs compound with workflow length</td>
-<td>About 9× more LLM calls than chain-of-thought prompting in the workflows tested; token use depends on the workflow and task <em>(arXiv 2506.04301, 2025)</em></td>
+<td>About 9× more LLM calls than chain-of-thought prompting in the workflows tested; token use depends on the workflow and task (arXiv 2506.04301, 2025)</td>
 </tr>
 <tr>
 <td><strong>Large context (long documents)</strong></td>
 <td>Dense attention has a quadratic sequence-length term. Doubling context quadruples that term, not necessarily total inference compute; feed-forward work, decoding and caching also matter.</td>
-<td>O(n²) scaling; quadratic time is provably necessary unless the Strong Exponential Time Hypothesis is false <em>(Duman-Keles et al., ALT 2023)</em></td>
+<td>O(n²) scaling; quadratic time is provably necessary unless the Strong Exponential Time Hypothesis is false (Duman-Keles et al., ALT 2023)</td>
 </tr>
 </tbody>
 </table>
 <div class="info-box" style="margin-top: 20px;">
 <h4>Matching features to task complexity</h4>
 <p>Extended thinking and Deep Research exist because they improve results on hard problems. A Deep Research session synthesising 50 sources for a complex literature question may save many hours of manual work, and may well be the lower-energy option when your time is factored in.</p>
-<p style="margin-top: 8px;">The concern is reflexive use: enabling reasoning modes or triggering Deep Research for questions that a standard prompt would handle adequately. As with model size, the principle is the same: <em>match capability to complexity, and be intentional rather than defaulting to the most powerful available option</em>.</p>
+<p style="margin-top: 8px;">The concern is reflexive use: enabling reasoning modes or triggering Deep Research for questions that a standard prompt would handle adequately. As with model size, the principle is the same: match capability to complexity, and be intentional rather than defaulting to the most powerful available option.</p>
 </div>
 </div>
 
 <!-- SECTION 3: AI FOR CLIMATE -->
 <h2 class="section-title">AI for environmental solutions</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">A responsible treatment of AI's environmental impact requires engaging with both sides. AI is not only a consumer of energy; it is also being actively applied to some of the world's most pressing environmental challenges. These applications do not cancel out AI's footprint, but they are part of the full picture.</p>
+<p>A responsible treatment of AI's environmental impact requires engaging with both sides. AI is not only a consumer of energy; it is also being actively applied to some of the world's most pressing environmental challenges. These applications do not cancel out AI's footprint, but they are part of the full picture.</p>
 
 <div class="card-grid">
 <div class="card">
@@ -292,14 +292,14 @@
 <li>Does this specific AI application require a frontier model, or could a much smaller system do the job?</li>
 <li>What is the counterfactual? Would the same outcome be achieved without AI, using less energy?</li>
 <li>Are the emissions savings from the application larger than the emissions from running the AI system itself?</li>
-<li>Who bears the environmental costs (global electricity + hardware) vs. who receives the benefits (specific sectors or regions)?</li>
+<li>Who bears the environmental costs (global electricity + hardware) versus who receives the benefits (specific sectors or regions)?</li>
 </ul>
 <p style="margin-top: 8px;">These are difficult questions, and the answer in most cases is that we don't yet have the data to answer them precisely.</p>
 </div>
 
 <!-- SECTION 4: POLICY -->
 <h2 class="section-title">The policy response</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Individual choices by researchers matter, but the scale of AI's environmental impact requires systemic responses. Here is where policy is currently heading.</p>
+<p>AI's environmental impact also requires systemic responses.</p>
 
 <div class="card-grid">
 <div class="card">
@@ -332,12 +332,11 @@
 <li>AU Data Policy Framework (2022): The AU's data governance framework mentions the environment only in brief, general recommendations: more sustainable electricity generation for digital infrastructure, and weighing environmental impacts and risks when building data infrastructure. It sets no targets or mechanisms</li>
 </ul>
 <p style="margin-top: 12px;">A 2025 analysis by TechPolicy.Press examining 14 African AI strategies found that only three acknowledged environmental consequences at all, and that, apart from Senegal, the strategies did not say how to address them. This gap is significant: Africa is among the world's most climate-vulnerable regions, and countries like South Africa run electricity grids that are among the world's most carbon-intensive (historically over 80% coal). AI workloads and data centres in the region inherit that carbon intensity, yet current continental AI governance does not address this.</p>
-<p style="margin-top: 8px;">UNESCO and the World Bank have been working with AU policymakers on "Green AI" pathways, and the policy gap may narrow as the Continental Strategy moves through implementation (Phase 1: 2025–2026; Phase 2: 2028–2030). For now, it is an area where researchers (particularly those based in Africa) can meaningfully contribute to policy advocacy.</p>
+<p style="margin-top: 8px;">UNESCO and the World Bank have been working with AU policymakers on "Green AI" pathways, and the policy gap may narrow as the Continental Strategy moves through implementation (Phase 1: 2025 to 2026; Phase 2: 2028 to 2030). For now, it is an area where researchers (particularly those based in Africa) can meaningfully contribute to policy advocacy.</p>
 </div>
 
 <!-- SECTION 5: DECISION FRAMEWORK -->
 <h2 class="section-title">A framework for your own decisions</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Rather than a set of rules, here is a set of questions you can ask yourself when deciding how to use AI in your research.</p>
 
 <div class="decision-framework">
 <h4>Questions to ask before running compute-intensive AI work</h4>
@@ -372,7 +371,7 @@
 <ul class="styled-list" style="margin-top: 15px;">
 <li>The data are uncertain: Corporate opacity means all figures are estimates; treat them as order-of-magnitude guides</li>
 <li>Critical minerals underpin all AI hardware: Silicon, cobalt, rare earth elements, and lithium are geographically concentrated, ethically contested, and environmentally costly to extract, a supply chain dimension often absent from mainstream AI debate</li>
-<li>Text vs. video is not comparable: A 5-second video (~944 Wh) is roughly 2,800–3,900 times the energy of a reported text prompt (0.24–0.34 Wh; see 4.1); these are categorically different use cases</li>
+<li>Text versus video is not comparable: A 5-second video (~944 Wh) is roughly 2,800 to 3,900 times the energy of a reported text prompt (0.24 to 0.34 Wh; see 4.1); these are categorically different use cases</li>
 <li>Location is a large lever: In Dodge et al. (2022), the same BERT training job produced about 73% lower operational emissions in the lowest-emission cloud region than in the highest</li>
 <li>Embodied carbon is missing from most analyses: Manufacturing hardware releases significant carbon before a single query is run</li>
 <li>The Jevons paradox is real: Efficiency gains in AI have so far been outpaced by growth in deployment and model scale</li>
@@ -383,15 +382,15 @@
 </div>
         <div class="decision-framework">
             <h4>From substrate to governance</h4>
-            <p style="color:#555; line-height:1.8;">One chain matters for Session 12: capability ← compute ← chips + energy. Each arrow is a place a governance regime could intervene and <em>verify</em>, which is why "compute governance" is one of the few technical-governance proposals with concrete, measurable hooks. And from an African vantage point: if the levers (chips, fabs, hyperscale data centres) sit elsewhere, "sovereign AI capacity" is first a question about access to this physical substrate.</p>
-            <p style="color:#555; margin-top:10px;">Next (Week 3, Sessions 5–6): how a frontier model is trained: pretraining, SFT, and the RLHF/RL fine-tuning that turns a predictor into an assistant.</p>
+            <p style="color:#555; line-height:1.8;">One chain matters for Session 12: capability ← compute ← chips + energy. Each arrow is a place a governance regime could intervene and verify, which is why "compute governance" is one of the few technical-governance proposals with concrete, measurable hooks. And from an African vantage point: if the levers (chips, fabs, hyperscale data centres) sit elsewhere, "sovereign AI capacity" is first a question about access to this physical substrate.</p>
+            <p style="color:#555; margin-top:10px;">Next (Week 3, Sessions 5 to 6): how a frontier model is trained: pretraining, SFT, and the RLHF/RL fine-tuning that turns a predictor into an assistant.</p>
         </div>
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="critical-minerals.html"><span class="nav-label">← Previous</span><span class="nav-title">4.3 · Critical minerals and the hardware supply chain</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-05/pretraining.html"><span class="nav-label">Next →</span><span class="nav-title">5.1 · Pretraining: learning to predict the next token</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="critical-minerals.html" aria-label="Previous: 4.3 · Critical minerals and the hardware supply chain"><span class="nav-label">← Previous</span><span class="nav-title">4.3 · Critical minerals and the hardware supply chain</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-05/pretraining.html" aria-label="Next: 5.1 · Pretraining: learning to predict the next token"><span class="nav-label">Next →</span><span class="nav-title">5.1 · Pretraining: learning to predict the next token</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

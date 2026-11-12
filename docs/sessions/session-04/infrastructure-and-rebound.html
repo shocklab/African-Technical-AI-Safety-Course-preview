@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 4.2 — Infrastructure, scale and the rebound problem</title>
+    <title>Session 4.2: Infrastructure, scale and the rebound problem</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 4</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="cost-of-every-prompt.html">← <span class="tn-title">4.1 · The cost of every prompt</span></a>
-    <a class="tn-next" href="critical-minerals.html"><span class="tn-title">4.3 · Critical minerals and the hardware supply chain</span> →</a>
+    <a class="tn-prev" href="cost-of-every-prompt.html" aria-label="Previous: 4.1 · The cost of every prompt">← <span class="tn-title">4.1 · The cost of every prompt</span></a>
+    <a class="tn-next" href="critical-minerals.html" aria-label="Next: 4.3 · Critical minerals and the hardware supply chain"><span class="tn-title">4.3 · Critical minerals and the hardware supply chain</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -54,7 +54,6 @@
 
 <!-- SECTION 1: DATA CENTRES -->
 <h2 class="section-title">Inside a data centre</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">To understand AI's energy footprint, it helps to understand what a data centre is and where the energy goes.</p>
 
 <div class="card-grid">
 <div class="card">
@@ -74,7 +73,7 @@
 <li>Air cooling: Energy-intensive but uses little water; standard in older data centres</li>
 <li>Evaporative cooling: More energy-efficient but consumes large volumes of water (as discussed in 4.1)</li>
 <li>Liquid cooling: Emerging approach that pipes coolant directly to chips; reduces both energy and water use but requires specialised hardware</li>
-<li><strong>Power Usage Effectiveness (PUE):</strong> Industry metric for data-centre infrastructure efficiency, equal to total facility energy divided by IT equipment energy; 1.0 = perfect (all energy reaches the IT equipment), 1.5 = 50% extra energy on top of the IT load for cooling, power conversion and other facility overheads. Modern hyperscaler data centres achieve ~1.1–1.2; older facilities often 1.4–2.0</li>
+<li><strong>Power Usage Effectiveness (PUE):</strong> Industry metric for data-centre infrastructure efficiency, equal to total facility energy divided by IT equipment energy; 1.0 = perfect (all energy reaches the IT equipment), 1.5 = 50% extra energy on top of the IT load for cooling, power conversion and other facility overheads. Modern hyperscaler data centres achieve ~1.1 to 1.2; older facilities often 1.4 to 2.0</li>
 </ul>
 </div>
 <div class="card">
@@ -90,7 +89,7 @@
 
 <!-- SECTION 2: POWER SOURCES -->
 <h2 class="section-title">Where the electricity comes from</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">The carbon footprint of AI electricity use depends entirely on how that electricity is generated, and this varies enormously by geography and by time of day.</p>
+<p>The carbon footprint of AI electricity use depends entirely on how that electricity is generated, and this varies enormously by geography and by time of day.</p>
 
 <div class="technical-detail">
 <h4>Carbon intensity of electricity by location</h4>
@@ -121,8 +120,8 @@
 </tr>
 <tr>
 <td><strong>US average</strong></td>
-<td>~0.39</td>
-<td>~60% fossil fuels (gas + coal), 40% nuclear + renewables (EIA, 2024)</td>
+<td>~0.36</td>
+<td>~60% fossil fuels (gas + coal), 40% nuclear + renewables (<a href="https://www.eia.gov/electricity/state/unitedstates/" target="_blank" rel="noopener">EIA, 2024 data</a>). EIA reports 785 lb CO₂/MWh (about 0.36 kg/kWh); Session 4.1 uses EPA eGRID2023's 0.348 kg/kWh, a different series and year</td>
 </tr>
 <tr>
 <td><strong>Australia</strong></td>
@@ -159,7 +158,7 @@
 <h4>Case study: nuclear and the AI energy rush</h4>
 <p>The scale of AI's electricity demands is forcing AI companies to think creatively about power supply, and sometimes controversially:</p>
 <ul class="styled-list" style="margin-top: 10px;">
-<li>Three Mile Island (Microsoft): Microsoft signed a 20-year power purchase agreement with Constellation Energy to restart Unit 1 of the Three Mile Island nuclear plant in Pennsylvania (closed since 2019), to match the power used by its data centres in the PJM grid region, which includes Pennsylvania, with carbon-free energy. September 2024 marked that <em>announcement</em>, not a restart: the reactor (to be renamed the Crane Clean Energy Center) is scheduled to come back online around 2027, after an estimated $1.6&nbsp;billion refurbishment and pending Nuclear Regulatory Commission approval.</li>
+<li>Three Mile Island (Microsoft): Microsoft signed a 20-year power purchase agreement with Constellation Energy to restart Unit 1 of the Three Mile Island nuclear plant in Pennsylvania (closed since 2019), to match the power used by its data centres in the PJM grid region, which includes Pennsylvania, with carbon-free energy. September 2024 marked that announcement, not a restart: the reactor (to be renamed the Crane Clean Energy Center) is scheduled to come back online around 2027, after an estimated $1.6&nbsp;billion refurbishment and pending Nuclear Regulatory Commission approval.</li>
 <li>xAI in Memphis: Elon Musk's xAI company operated a data centre on gas turbine generators while awaiting grid connection permits. Reports in 2024 indicated generators running at significant capacity before permanent utility power was connected.</li>
 <li>What this tells us: When grid connection is too slow or too carbon-heavy, AI companies are willing to invest in or restart generation capacity directly, a sign of how seriously they view electricity supply as a constraint on AI growth.</li>
 </ul>
@@ -172,12 +171,12 @@
 
 <!-- SECTION 3: EMBODIED CARBON -->
 <h2 class="section-title">Embodied carbon: the cost of making the hardware</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Almost all analyses of AI's carbon footprint focus on electricity consumption during operation. But there is another carbon cost that is often omitted: the emissions released when manufacturing the hardware in the first place.</p>
+<p>Almost all analyses of AI's carbon footprint focus on electricity consumption during operation. But there is another carbon cost that is often omitted: the emissions released when manufacturing the hardware in the first place.</p>
 
 <div class="highlight-box">
 <h3><span style="color: #ffffff;">Semiconductor manufacturing emissions</span></h3>
 <p>Semiconductor manufacturing is one of the most energy and materials-intensive industrial processes in existence. Fabricating a modern AI chip requires hundreds of processing steps, ultrapure water, specialised gases, and enormous amounts of electricity, typically from grids that are not carbon-neutral.</p>
-<p style="margin-top: 15px;">Research by Gupta et al. (2021, Harvard/Meta) found that for computing hardware overall, embodied emissions (the carbon released in manufacturing) can represent 50–80% of the total lifecycle carbon footprint. This is particularly significant for AI hardware, because GPUs are replaced on rapid cycles as new, more powerful chips become available.</p>
+<p style="margin-top: 15px;">Gupta et al. (2021) found that manufacturing accounted for roughly 75% of lifecycle emissions for the battery-powered devices they studied. With solar or wind electricity, manufacturing exceeded 80% in their Intel and AMD lifecycle comparisons. These shares depend on the device, its lifetime and its electricity source; they are not a general estimate for AI servers.</p>
 </div>
 
 <div class="card-grid">
@@ -193,7 +192,7 @@
 </div>
 <div class="card">
 <h3>Rapid hardware turnover</h3>
-<p>AI companies are replacing GPU generations very rapidly; NVIDIA releases new flagship architectures roughly every 1–2 years (Ampere → Hopper → Blackwell).</p>
+<p>AI companies are replacing GPU generations very rapidly; NVIDIA releases new flagship architectures roughly every 1 to 2 years (Ampere → Hopper → Blackwell).</p>
 <ul class="styled-list">
 <li>Each replacement cycle requires manufacturing new hardware and disposing of old hardware</li>
 <li>The manufacturing emissions of a data centre's GPU fleet are incurred again each cycle</li>
@@ -205,7 +204,7 @@
 
 <!-- SECTION 4: GROWTH TRAJECTORY -->
 <h2 class="section-title">The growth trajectory</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Individual query costs and per-data-centre figures only tell part of the story. The trajectory of AI energy demand matters as much as the current level.</p>
+<p>Individual query costs and per-data-centre figures only tell part of the story. The trajectory of AI energy demand matters as much as the current level.</p>
 
 <div class="technical-detail">
 <h4>US data centre electricity demand: past and projected</h4>
@@ -231,7 +230,7 @@
 <tr>
 <td><strong>2028 (projected)</strong></td>
 <td>325–580 TWh/year</td>
-<td>LBNL 2024; ≈6.7–12% of US electricity. High uncertainty.</td>
+<td>LBNL 2024; ≈6.7 to 12% of US electricity. High uncertainty.</td>
 </tr>
 </tbody>
 </table>
@@ -245,12 +244,11 @@
 <li>Electricity for AI-optimised data centres more than quadrupling by 2030, the fastest-growing part of the total.</li>
 <li>Data-centre CO<sub>2</sub> staying under &asymp; 1.5% of energy-sector CO<sub>2</sub> (&asymp; 180 Mt in 2024 rising to &asymp; 300 Mt by 2035).</li>
 </ul>
-<p style="margin-top: 12px;">For comparison, Hannah Ritchie's analysis of the IEA's World Energy Outlook 2024 projections (<em><a href="https://www.sustainabilitybynumbers.com/p/ai-energy-demand" target="_blank" rel="noopener">Sustainability by Numbers</a></em>, November 2024) put the increase in <em>total data-centre</em> electricity demand by 2030 at &asymp; 223 TWh, about 3% of global demand growth, on the order of South Africa's annual electricity use, and well below the projected 2030 increase from air conditioning (&asymp; 697 TWh) or electric vehicles (&asymp; 854 TWh). Those figures come from an earlier projection vintage than the Energy and AI numbers above, but the comparison survives the revision: the trajectory is steep on its own terms; it is not steep enough on its own to dominate the broader electricity-demand picture.</p>
+<p style="margin-top: 12px;">For comparison, Hannah Ritchie's analysis of the IEA's World Energy Outlook 2024 projections (<em><a href="https://www.sustainabilitybynumbers.com/p/ai-energy-demand" target="_blank" rel="noopener">Sustainability by Numbers</a></em>, November 2024) put the increase in total data-centre electricity demand by 2030 at &asymp; 223 TWh, about 3% of global demand growth, on the order of South Africa's annual electricity use, and well below the projected 2030 increase from air conditioning (&asymp; 697 TWh) or electric vehicles (&asymp; 854 TWh). Those figures come from an earlier projection vintage than the Energy and AI numbers above, but the comparison survives the revision: the trajectory is steep on its own terms; it is not steep enough on its own to dominate the broader electricity-demand picture.</p>
 </div>
 
 <!-- SECTION 5: JEVONS PARADOX -->
 <h2 class="section-title">The rebound problem: Jevons paradox</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Perhaps the most important concept for thinking clearly about AI's long-term environmental trajectory, and one that receives far too little attention in optimistic narratives about AI efficiency improvements.</p>
 
 <div class="highlight-box">
 <h3><span style="color: #ffffff;">The Jevons paradox</span></h3>
@@ -290,12 +288,11 @@
 
 <div class="warning-box">
 <h4>Reading the efficiency claims critically</h4>
-<p>When AI companies or optimistic commentators cite efficiency improvements (e.g. "our new model uses 44% less energy per query"), this is valuable information, but it does not tell you what happens to <em>total</em> energy use if deployment grows faster than efficiency improves. Always ask: what is the denominator? Efficiency per query, or total annual energy consumption?</p>
+<p>When AI companies or optimistic commentators cite efficiency improvements (e.g. "our new model uses 44% less energy per query"), this is valuable information, but it does not tell you what happens to total energy use if deployment grows faster than efficiency improves. Always ask: what is the denominator? Efficiency per query, or total annual energy consumption?</p>
 </div>
 
 <!-- SECTION 6: WHAT COMPANIES ARE DOING -->
 <h2 class="section-title">Corporate environmental action</h2>
-<p style="font-size: 1.1em; color: #555; margin-bottom: 30px;">Understanding what AI companies are doing, versus what they say they're doing, is essential background for any researcher or policymaker engaging with this topic.</p>
 
 <div class="card-grid">
 <div class="card">
@@ -313,8 +310,8 @@
 <ul class="styled-list">
 <li>Clean supply is not keeping pace with demand: the IEA projects that renewables will meet only about half of the growth in data-centre electricity demand to 2030, with gas and coal meeting over 40%. A company can buy enough renewable energy to match its annual use while its data centres still draw fossil power hour by hour</li>
 <li>Disclosure is patchy and inconsistent: much of what companies publish, especially per-model or per-query figures, is voluntary and in formats they choose. Mandatory rules, such as the EU's data-centre reporting and the CSRD, cover only some companies and metrics, and outside checks usually give limited assurance on selected metrics</li>
-<li>Embodied carbon is rarely attributed to AI: large operators such as Google now report hardware manufacturing and data-centre construction emissions in their Scope 3 totals, but these are left out of headline claims such as 100% renewable matching and PUE, and are seldom broken out per model or per workload</li>
-<li>Scope 3 emissions: The indirect emissions from supply chains (including chip manufacturing) appear in some large operators' totals, but are often missing from headline claims and per-model figures</li>
+<li>Embodied carbon is rarely attributed to AI: large operators such as Google now report hardware manufacturing and data-centre construction emissions in their Scope 3 totals, but these are left out of public claims such as 100% renewable matching and PUE, and are seldom broken out per model or per workload</li>
+<li>Scope 3 emissions: The indirect emissions from supply chains (including chip manufacturing) appear in some large operators' totals, but are often missing from public claims and per-model figures</li>
 <li>Nuclear and gas bridging: In some cases, companies are accepting or actively facilitating fossil fuel or nuclear generation to meet short-term demand</li>
 </ul>
 </div>
@@ -325,9 +322,9 @@
 <h2>Summary and key takeaways</h2>
 <ul class="styled-list" style="margin-top: 15px;">
 <li>Location affects carbon impact: In the BERT example in Dodge et al. (2022), the same workload had about 73% lower operational emissions in the lowest-emission region than in the highest; region choice is one of the largest levers for individual researchers</li>
-<li>Embodied carbon is seldom counted in headline figures: Manufacturing GPUs and building data centres releases significant carbon that large operators report in their Scope 3 totals but that is left out of claims such as 100% renewable matching and PUE</li>
+<li>Embodied carbon is seldom counted in reported figures: Manufacturing GPUs and building data centres releases significant carbon that large operators report in their Scope 3 totals but that is left out of claims such as 100% renewable matching and PUE</li>
 <li>US grid is ~60% fossil fuels: Company "100% renewable" claims use accounting methods that do not change this physical reality at the point of consumption</li>
-<li>Data-centre electricity demand is growing rapidly: US data-centre electricity use rose from ~58 TWh in 2014 to 176 TWh in 2023 (4.4% of US electricity), with LBNL projecting 325–580 TWh in 2028</li>
+<li>Data-centre electricity demand is growing rapidly: US data-centre electricity use rose from ~58 TWh in 2014 to 176 TWh in 2023 (4.4% of US electricity), with LBNL projecting 325 to 580 TWh in 2028</li>
 <li>Jevons paradox is the central challenge: Efficiency gains in AI hardware and algorithms have so far been outpaced by growth in deployment and model scale</li>
 <li>Companies are doing real things, but not enough: Renewable purchasing and efficiency improvements are real but insufficient to keep pace with demand growth</li>
 </ul>
@@ -335,10 +332,10 @@
 </div>
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="cost-of-every-prompt.html"><span class="nav-label">← Previous</span><span class="nav-title">4.1 · The cost of every prompt</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="critical-minerals.html"><span class="nav-label">Next →</span><span class="nav-title">4.3 · Critical minerals and the hardware supply chain</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="cost-of-every-prompt.html" aria-label="Previous: 4.1 · The cost of every prompt"><span class="nav-label">← Previous</span><span class="nav-title">4.1 · The cost of every prompt</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="critical-minerals.html" aria-label="Next: 4.3 · Critical minerals and the hardware supply chain"><span class="nav-label">Next →</span><span class="nav-title">4.3 · Critical minerals and the hardware supply chain</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

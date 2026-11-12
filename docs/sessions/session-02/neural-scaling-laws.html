@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 2.3 — Neural scaling laws</title>
+    <title>Session 2.3: Neural scaling laws</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 2</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="inside-the-transformer.html">← <span class="tn-title">2.2 · Inside the transformer</span></a>
-    <a class="tn-next" href="pace-and-emergence.html"><span class="tn-title">2.4 · Pace of progress, emergence and takeoff</span> →</a>
+    <a class="tn-prev" href="inside-the-transformer.html" aria-label="Previous: 2.2 · Inside the transformer">← <span class="tn-title">2.2 · Inside the transformer</span></a>
+    <a class="tn-next" href="pace-and-emergence.html" aria-label="Next: 2.4 · Pace of progress, emergence and takeoff"><span class="tn-title">2.4 · Pace of progress, emergence and takeoff</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -62,12 +62,12 @@
         <p>Kaplan et al. (2020) measured the test loss \(L\) of language models across roughly seven orders of magnitude and found it scales as a power law in each of three quantities (model parameters \(N\), dataset size \(D\), and training compute \(C\)) whenever the other two are not the bottleneck.</p>
         <p>Written out, the three relationships are</p>
         <div class="formula">\[ L(N) \approx \left( \frac{N_c}{N} \right)^{\alpha_N}, \qquad L(D) \approx \left( \frac{D_c}{D} \right)^{\alpha_D}, \qquad L(C) \approx \left( \frac{C_c}{C} \right)^{\alpha_C}. \]</div>
-        <p>Each is a straight line on a log–log plot, with slope equal to minus the exponent. The exponents are small and positive: Kaplan estimated \(\alpha_N \approx 0.076\), \(\alpha_D \approx 0.095\), and \(\alpha_C^{\min} \approx 0.05\) along the compute-efficient frontier (the plain compute exponent is \(\alpha_C \approx 0.057\)). A small exponent means diminishing returns: a \(10\times\) increase in parameters cuts the (reducible) loss by only a factor of about \(10^{0.076} \approx 1.19\). But the line does not bend down to a plateau anywhere in the studied range.</p>
+        <p>Each is a straight line on a log–log plot, with slope equal to minus the exponent. The exponents are small and positive: Kaplan estimated \(\alpha_N \approx 0.076\), \(\alpha_D \approx 0.095\), and \(\alpha_C^{\min} \approx 0.05\) along the compute-efficient frontier (the plain compute exponent is \(\alpha_C \approx 0.057\)). A small exponent means diminishing returns: a \(10\times\) increase in parameters cuts the loss by only a factor of about \(10^{0.076} \approx 1.19\). But the line does not bend down to a plateau anywhere in the studied range.</p>
         <div class="technical-detail">
             <h4>An irreducible floor</h4>
-            <p style="color:#555;">Loss cannot fall to zero: natural language has irreducible unpredictability, so there is an entropy floor \(L_\infty\) no model can beat. The complete form of the law separates that floor from the part scale can buy:</p>
-            <div class="formula">\[ L(N) = L_\infty + \left( \frac{N_c}{N} \right)^{\alpha_N}. \]</div>
-            <p style="color:#555;">The power law describes the <em>reducible</em> loss, the gap above the floor. Two facts make the finding remarkable: its regularity (clean power laws over many orders of magnitude) and its smoothness (no plateau in sight). Within wide limits, architectural details (exact depth, width, number of attention heads) move the loss far less than scale does. That is what licenses talking about "scale" as a single dial.</p>
+            <p style="color:#555;">Loss cannot fall to zero: natural language has irreducible unpredictability, so there is an entropy floor \(L_\infty\) no model can beat. A floored model separates the irreducible loss from the part that decreases with scale, with a coefficient \(A_N\) and exponent \(a_N\) fitted separately from Kaplan's:</p>
+            <div class="formula">\[ L(N) = L_\infty + A_N N^{-a_N}. \]</div>
+            <p style="color:#555;">In this model, the power-law term describes the reducible loss, the gap above the floor. Kaplan's fit above uses total loss without an explicit floor. Two facts make the finding remarkable: its regularity (clean power laws over many orders of magnitude) and its smoothness (no plateau in sight). Within wide limits, architectural details (exact depth, width, number of attention heads) move the loss far less than scale does. That is what licenses talking about "scale" as a single dial.</p>
         </div>
 
         <h2 class="section-title">The cost of training</h2>
@@ -86,17 +86,17 @@
         <h2 class="section-title">Compute-optimal training: Chinchilla</h2>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Spend a fixed compute budget well</span></h3>
-            <p>Hoffmann et al. (2022), the <strong>Chinchilla</strong> paper, fitted a single parametric law to loss as a joint function of size and data, then asked how to split a fixed budget. Their result: the field had been training models that were too <em>large</em> and too <em>data-starved</em>. For compute-optimal training, parameters and tokens should grow in <em>near-equal proportion</em>, at roughly 20 training tokens per parameter. A smaller model trained on more data beats a much larger model trained on less, at the same compute.</p>
+            <p>Hoffmann et al. (2022), the <strong>Chinchilla</strong> paper, fitted a single parametric law to loss as a joint function of size and data, then asked how to split a fixed budget. Their result: the field had been training models that were too large and too data-starved. For compute-optimal training, parameters and tokens should grow in near-equal proportion, at roughly 20 training tokens per parameter. A smaller model trained on more data beats a much larger model trained on less, at the same compute.</p>
         </div>
         <p>The law they fitted decomposes loss into the entropy floor plus a finite-model penalty plus a finite-data penalty:</p>
         <div class="formula">\[ L(N, D) = E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}}. \]</div>
-        <p>The estimated exponents come out close to each other (\(\alpha \approx 0.34\), \(\beta \approx 0.28\)). Minimising \(L\) subject to \(C \approx 6ND\) gives optimal \(N \propto C^{0.46}\) and \(D \propto C^{0.54}\), close to the square root of the budget, so the ratio \(D/N\) grows only slowly as you scale. The 20-tokens-per-parameter rule comes from the paper's other two methods, which put both exponents at about 0.5 and give 20 to 25 tokens per parameter from 1B to 280B parameters, and from Chinchilla itself (1.4T tokens for 70B parameters). This parametric fit gives more, about 40 to 70 tokens per parameter over 10B to 280B parameters.</p>
+        <p>The estimated exponents come out close to each other (\(\alpha \approx 0.34\), \(\beta \approx 0.28\)). These describe the reducible terms above \(E \approx 1.69\), so they are not directly comparable to Kaplan's total-loss exponents. Minimising \(L\) subject to \(C \approx 6ND\) gives optimal \(N \propto C^{\beta/(\alpha+\beta)}\) and \(D \propto C^{\alpha/(\alpha+\beta)}\). The rounded loss exponents above give 0.45 and 0.55. The paper reports 0.46 and 0.54 from its fit. These imply growth close to the square root of the budget, so the ratio \(D/N\) grows only slowly as you scale. The 20-tokens-per-parameter rule comes from the paper's other two methods, which put both exponents at about 0.5 and give 20 to 25 tokens per parameter from 1B to 280B parameters, and from Chinchilla itself (1.4T tokens for 70B parameters). This parametric fit gives more, about 40 to 70 tokens per parameter over 10B to 280B parameters.</p>
         <div class="case-study">
-            <h4>Chinchilla vs Gopher: the budget arithmetic</h4>
-            <p>At a fixed budget of about \(5.8 \times 10^{23}\) FLOPs, DeepMind had trained <strong>Gopher</strong> at 280B parameters. Chinchilla spent the <em>same</em> compute on a 70B model trained on 1.4T tokens (four times smaller, about 4.7 times more data than Gopher's 300B tokens) and beat Gopher on the large majority of evaluation tasks. Check the arithmetic with \(C \approx 6ND\): \(6 \times (70\times10^9) \times (1.4\times10^{12}) \approx 5.9\times10^{23}\), and \(1.4\text{T} / 70\text{B} = 20\) tokens per parameter.</p>
+            <h4>Chinchilla versus Gopher: the budget arithmetic</h4>
+            <p>At a fixed budget of about \(5.8 \times 10^{23}\) FLOPs, DeepMind had trained <strong>Gopher</strong> at 280B parameters. Chinchilla spent the same compute on a 70B model trained on 1.4T tokens (four times smaller, about 4.7 times more data than Gopher's 300B tokens) and beat Gopher on the large majority of evaluation tasks. Check the arithmetic with \(C \approx 6ND\): \(6 \times (70\times10^9) \times (1.4\times10^{12}) \approx 5.9\times10^{23}\), and \(1.4\text{T} / 70\text{B} = 20\) tokens per parameter.</p>
             <p>Now run it forward. Suppose you hold a budget \(C = 10^{24}\) FLOPs and follow the rule \(D \approx 20N\). Then \(C \approx 6N(20N) = 120\,N^2\), so \(N \approx \sqrt{10^{24}/120} \approx 9\times10^{10}\), about a 90B-parameter model, trained on \(D \approx 1.8\) trillion tokens. The law turns a vague "make it bigger" into a specific, checkable recipe.</p>
         </div>
-        <p>The ratio is a rule for minimising loss at a fixed <em>training</em> budget, and production models no longer follow it: once a model will be served at scale, inference cost dominates, so it pays to overtrain a smaller model far past the Chinchilla point. Llama 3 8B, for example, was trained on about 15 trillion tokens, roughly 1,875 per parameter against the rule's 20.</p>
+        <p>The ratio is a rule for minimising loss at a fixed training budget, and production models no longer follow it: once a model will be served at scale, inference cost dominates, so it pays to overtrain a smaller model far past the Chinchilla point. Llama 3 8B, for example, was trained on about 15 trillion tokens, roughly 1,875 per parameter against the rule's 20.</p>
         <div class="info-box">
             <h4>The correction to Kaplan</h4>
             <p>This is an example of an empirical result being overturned by a better-controlled one. Kaplan et al. (2020) had concluded that model size should grow much faster than data, which is why the models of that era (GPT-3 at 175B parameters on 300B tokens, under two tokens per parameter) were enormous and badly undertrained. Chinchilla traced the discrepancy partly to the learning-rate schedule. Kaplan used a single fixed cosine schedule rather than decaying it to match each shorter training horizon. That inflated the loss estimates for the smaller-data runs, made training on less data look less effective than it is, and pushed the apparent optimum toward over-large, under-trained models. Later work (Porian et al., 2024) reconciled the two laws by correcting the compute accounting for the output layer, the warmup duration and the scale-dependent optimiser tuning, and found that careful learning-rate decay was not essential. For a safety course the record is worth keeping in mind: confident, widely-followed scaling advice was wrong for two years, and only careful re-measurement caught it.</p>
@@ -106,41 +106,41 @@
         <p>If data must scale in step with parameters, then data becomes a binding constraint alongside chips, because high-quality human text is finite. Villalobos et al. (2022) estimate that the usable stock of public, high-quality text could be effectively exhausted within this decade if demand keeps growing at recent rates. That projection drives the current scramble for synthetic data, multi-epoch training, and licensing deals. It is also why "what are we training on?" is now a frontier research question rather than a detail.</p>
         <div class="info-box">
             <h4>African languages and the data term</h4>
-            <p>Read the law again with the data term in view. A model is starved of capability in any language for which the \(B/D^{\beta}\) penalty stays large, that is, wherever high-quality training text is scarce. For most African languages it is very scarce: isiZulu, Yoruba, Amharic and hundreds of others contribute a tiny fraction of the web text these models see. So the weaker performance and thinner safety guarantees in those languages are, in large part, a <em>scaling-inputs</em> gap rather than an architecture gap. "Just scale the model up" does not close it. That is why data sovereignty (Session 4) and in-language evaluation (Session 11) are technical safety questions, not diversity add-ons. The isiZulu-jailbreak result from Session 1 is this law biting.</p>
+            <p>Read the law again with the data term in view. A model is starved of capability in any language for which the \(B/D^{\beta}\) penalty stays large, that is, wherever high-quality training text is scarce. For most African languages it is very scarce: isiZulu, Yoruba, Amharic and hundreds of others contribute a tiny fraction of the web text these models see. So the weaker performance and thinner safety guarantees in those languages are, in large part, a scaling-inputs gap rather than an architecture gap. "Just scale the model up" does not close it. That is why data sovereignty (Session 4) and in-language evaluation (Session 11) are technical safety questions, not diversity add-ons. The isiZulu-jailbreak result from Session 1 is this law biting.</p>
         </div>
 
         <h2 class="section-title">The forecasting asymmetry</h2>
         <p>The reason a safety course opens with an empirical curve is that the curve sets the terms of the whole problem.</p>
         <div class="card-grid">
-            <div class="card"><h3>Capability is forecastable</h3><p>Loss, and more loosely many capabilities, can be <em>predicted</em> before a model is built. Frontier labs commit budgets to larger systems partly <em>because</em> the payoff is foreseeable. Capability sits on a planned trajectory that you can extrapolate.</p></div>
+            <div class="card"><h3>Capability is forecastable</h3><p>Loss, and more loosely many capabilities, can be predicted before a model is built. Frontier labs commit budgets to larger systems partly because the payoff is foreseeable. Capability sits on a planned trajectory that you can extrapolate.</p></div>
             <div class="card"><h3>Safety is not forecastable the same way</h3><p>There is no clean scaling law for "will not deceive its overseer" or "is robust to jailbreaks". The quantity we can extrapolate is the one we worry about least; the properties we care about most resist this kind of prediction.</p></div>
             <div class="card"><h3>Compute becomes the lever</h3><p>If capability tracks compute, then compute is the thing you can forecast, meter, and govern (Sessions 4 and 12). Scaling laws are the reason "compute governance" is even a coherent idea.</p></div>
         </div>
         <p>That asymmetry is the core of the field. We can buy a known reduction in loss with a known quantity of compute and data, and we cannot buy a known increase in honesty or controllability the same way. Progress on the axis we can measure is funded and scheduled; progress on the axes we cannot is neither. Much of the rest of the course is an attempt to build measurement and control for the properties that scaling does not hand us for free.</p>
         <div class="warning-box">
-            <h4>What scaling laws do <em>not</em> say</h4>
-            <p>They describe smooth falls in <em>aggregate loss</em>. They do not promise that every specific capability appears smoothly as scale grows, nor that loss keeps falling forever, nor that more scale is the only route to capability. The relationship between a smoothly-falling loss and the sometimes-sudden appearance of a specific skill is the controversy we take up next.</p>
+            <h4>What scaling laws do not say</h4>
+            <p>They describe smooth falls in aggregate loss. They do not promise that every specific capability appears smoothly as scale grows, nor that loss keeps falling forever, nor that more scale is the only route to capability. The relationship between a smoothly-falling loss and the sometimes-sudden appearance of a specific skill is the controversy we take up next.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
             <li>The fitted loss exponents \(\alpha \approx 0.34\) and \(\beta \approx 0.28\) are close to each other. Show why that makes the optimal \(N\) and \(D\) both grow close to the square root of the budget, so that the tokens-per-parameter ratio changes only slowly.</li>
             <li>Kaplan and Chinchilla both studied language-model training losses and reached different advice about how to split compute between model size and data. What does that disagreement tell you about how much to trust a single scaling study?</li>
-            <li>"Capability is forecastable; safety is not." Name one capability you think <em>is</em> on a predictable curve and one safety property you think is not. Say what makes the difference.</li>
+            <li>"Capability is forecastable; safety is not." Name one capability you think is on a predictable curve and one safety property you think is not. Say what makes the difference.</li>
             <li>If the binding constraint becomes data rather than compute, which governance levers (Session 12) lose their grip, and which become more important?</li>
         </ul>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Loss falls smoothly, but do <em>abilities</em>? Sub-session 2.4 takes on the "emergence" debate: whether new skills appear suddenly at scale or whether that suddenness is an artefact of how we measure, and what each answer would mean for predicting dangerous capabilities.</p>
+            <p>Loss falls smoothly, but do abilities? Sub-session 2.4 takes on the "emergence" debate: whether new skills appear suddenly at scale or whether that suddenness is an artefact of how we measure, and what each answer would mean for predicting dangerous capabilities.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="inside-the-transformer.html"><span class="nav-label">← Previous</span><span class="nav-title">2.2 · Inside the transformer</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="pace-and-emergence.html"><span class="nav-label">Next →</span><span class="nav-title">2.4 · Pace of progress, emergence and takeoff</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="inside-the-transformer.html" aria-label="Previous: 2.2 · Inside the transformer"><span class="nav-label">← Previous</span><span class="nav-title">2.2 · Inside the transformer</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="pace-and-emergence.html" aria-label="Next: 2.4 · Pace of progress, emergence and takeoff"><span class="nav-label">Next →</span><span class="nav-title">2.4 · Pace of progress, emergence and takeoff</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

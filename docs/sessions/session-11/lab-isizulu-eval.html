@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 11.5 — Lab: audit a multilingual safety eval</title>
+    <title>Session 11.5: Lab: audit a multilingual safety eval</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 11</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="statistics-of-evals.html">← <span class="tn-title">11.4 · The statistics of evals</span></a>
-    <a class="tn-next" href="../session-12-technical-ai-governance.html"><span class="tn-title">Session 12 · Technical AI governance</span> →</a>
+    <a class="tn-prev" href="statistics-of-evals.html" aria-label="Previous: 11.4 · The statistics of evals">← <span class="tn-title">11.4 · The statistics of evals</span></a>
+    <a class="tn-next" href="../session-12-technical-ai-governance.html" aria-label="Next: Session 12 · Technical AI governance"><span class="tn-title">Session 12 · Technical AI governance</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -51,7 +51,7 @@
             <li><strong>Define the claim.</strong> Specify the model, prompt set, translation route, single-turn format and scoring rule. Decide whether your result concerns refusal, unsafe compliance or comprehension. These are different outcomes.</li>
             <li><strong>Audit the denominator.</strong> Inspect every excluded or doubtful translation by prompt ID. Check whether the English and translated conditions still contain the same eligible prompts. Keep a paired table rather than comparing two unrelated percentages. An <code>unclear</code> outcome is unknown, not <code>no</code>: exclude such pairs from the primary estimate and report their IDs and denominator changes.</li>
             <li><strong>Apply the validity gate.</strong> Use the notebook's benign controls and matched safety prompts to decide whether the model understood each language well enough to compare safety behaviour. If a condition fails, report that its safety comparison is unresolved. A refusal from a model that has not understood the request is not evidence of a working guardrail.</li>
-            <li><strong>Quantify uncertainty.</strong> Use the audit notebook’s paired difference and exploratory bootstrap spread. Tiny samples can produce a collapsed interval when every observed difference is identical; this is not certainty. Show the underlying paired counts. An interval that includes zero does not establish that the languages are equivalent. A large-looking difference on a few prompts does not establish a general language effect.</li>
+            <li><strong>Quantify uncertainty.</strong> Report the paired difference, exploratory bootstrap spread and exact two-sided McNemar p-value for equal probabilities of the two discordant outcomes under the paired null. Tiny samples can produce a collapsed interval when every observed difference is identical. If differences are all non-negative or all non-positive, resampling cannot produce the opposite sign. Even a non-collapsed spread can exclude zero when McNemar's test does not reject that null. Show the underlying paired counts. Neither calculation justifies a population-wide language effect from these hand-picked prompts, and a spread including zero does not establish equivalence.</li>
         </ol>
         <div class="technical-detail">
             <h4>Worked classroom example</h4>
@@ -62,7 +62,7 @@
             <figcaption>The worked example keeps each prompt paired across languages. The two off-diagonal cells determine the difference. <a href="../../assets/img/session-11-5-paired-eval.svg">Open the diagram at full size</a>.</figcaption>
         </figure>
         <h2 class="section-title">What to submit</h2>
-        <p>Submit your saved results file, completed audit notebook and a one-page audit with: the exact claim; eligible prompt IDs and exclusions; outcome counts by language; the paired difference and exploratory resampling spread (including any collapse); unclear-label counts; the comprehension and benign-control results; two concrete threats to validity; and a conclusion limited to the tested model and prompts. A negative or unresolved result is a valid submission when the reasoning is sound.</p>
+        <p>Submit your saved results file, completed audit notebook and a one-page audit with: the exact claim; eligible prompt IDs and exclusions; outcome counts by language; the paired difference, exploratory resampling spread (including any collapse) and exact McNemar p-value; unclear-label counts; the comprehension and benign-control results; two concrete threats to validity; and a conclusion limited to the tested model and prompts. A negative or unresolved result is a valid submission when the reasoning is sound.</p>
         <div class="info-box">
             <h4>Project extension</h4>
             <p>A project can expand the prompt set, add fluent-speaker translation review, compare a second open model, or test a defence. Each extension needs its own feasibility check and a predeclared primary outcome. The class lab does not depend on any of these additions.</p>
@@ -80,10 +80,10 @@
         </div>
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="statistics-of-evals.html"><span class="nav-label">← Previous</span><span class="nav-title">11.4 · The statistics of evals</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-12-technical-ai-governance.html"><span class="nav-label">Next →</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="statistics-of-evals.html" aria-label="Previous: 11.4 · The statistics of evals"><span class="nav-label">← Previous</span><span class="nav-title">11.4 · The statistics of evals</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-12-technical-ai-governance.html" aria-label="Next: Session 12 · Technical AI governance"><span class="nav-label">Next →</span><span class="nav-title">Session 12 · Technical AI governance</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

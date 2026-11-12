@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.1 — From human to AI feedback</title>
+    <title>Session 7.1: From human to AI feedback</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 7</summary>
@@ -27,8 +27,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-06/lab-rlhf.html">← <span class="tn-title">6.5 · Lab: reward models and over-optimisation</span></a>
-    <a class="tn-next" href="constitutional-ai.html"><span class="tn-title">7.2 · Constitutional AI</span> →</a>
+    <a class="tn-prev" href="../session-06/lab-rlhf.html" aria-label="Previous: 6.5 · Lab: reward models and over-optimisation">← <span class="tn-title">6.5 · Lab: reward models and over-optimisation</span></a>
+    <a class="tn-next" href="constitutional-ai.html" aria-label="Next: 7.2 · Constitutional AI"><span class="tn-title">7.2 · Constitutional AI</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -46,9 +46,9 @@
         </div>
 
         <h2 class="section-title">The wall at the end of Session 6</h2>
-        <p>Two limits closed in on RLHF at once: an <em>evaluation</em> limit and a <em>throughput</em> limit.</p>
+        <p>Two limits closed in on RLHF at once: an evaluation limit and a throughput limit.</p>
         <p>When labellers cannot reliably judge an answer, their preferences can favour fluent errors. More labels may reduce random noise, but do not by themselves remove shared mistakes. A reward model can generalise beyond the labels it receives; whether that generalisation improves judgement needs independent evaluation.</p>
-        <p>The throughput limit is more mundane and just as binding. Frontier preference datasets run to hundreds of thousands of human comparisons; each one is a person reading two responses and deciding. That is slow, costly, and hard to scale to every new capability, language, and harm you would like to cover. Lee et al. estimate AI preference labelling at more than ten times cheaper than human annotation. It returns labels in seconds, not days. When a method is both cheaper and faster by an order of magnitude, the field moves whether or not the quality question is settled. Part of this session is insisting we keep asking the quality question anyway.</p>
+        <p>The throughput limit is more mundane and just as binding. Frontier preference datasets run to hundreds of thousands of human comparisons; each one is a person reading two responses and deciding. That is slow, costly, and hard to scale to every new capability, language, and harm you would like to cover. Lee et al. (2023, covered in 7.3) estimate AI preference labelling at more than ten times cheaper than human annotation. It returns labels in seconds, not days. When a method is both cheaper and faster by an order of magnitude, the field moves whether or not the quality question is settled. Part of this session is insisting we keep asking the quality question anyway.</p>
         <div class="info-box">
             <h4>The throughput gap in numbers</h4>
             <p>Put rough numbers on it. Suppose one comparison takes a human rater 30 seconds of careful reading. A 100,000-comparison preference set is then about 830 hours of labelling: months of one person's full-time work, or a sizeable paid crowd, before a single policy update. An LLM labeller returns the same 100,000 judgements in the time it takes to run the inference, at an estimated tenth of the cost. The pressure behind the pivot is scale and price: the AI labels arrive faster and cheaper than human labelling can manage, whatever their quality. What that speed costs in reliability is the question 7.3 takes up.</p>
@@ -56,7 +56,7 @@
 
         <div class="case-study">
             <h4>The labour behind the number</h4>
-            <p style="color:#555;">Those 830 hours are a throughput figure here, and a price. They are also somebody's working month. Session 6.1 carries a related case: safety labelling is often subcontracted, paid at a fraction of what the contracting lab pays for the time, and some of it, such as red-teaming and toxic-content filtering, uses material chosen for being harmful.</p>
+            <p style="color:#555;">Those 830 hours are a throughput figure here, and a price. They are also months of somebody's full-time work. Session 6.1 carries a related case: safety labelling is often subcontracted, paid at a fraction of what the contracting lab pays for the time, and some of it, such as red-teaming and toxic-content filtering, uses material chosen for being harmful.</p>
             <p style="color:#555;">That gives the pivot to AI feedback an argument in its favour which the cost framing does not capture. Fewer people have to read this material at all.</p>
             <p style="color:#555;">The same framing hides a cost on the other side. The humans being removed are the ones whose judgement was the justification for the method in the first place. "Human feedback" is where the legitimacy came from, so automating it does not only make the pipeline faster, it removes the part that made the result answerable to anyone outside the lab. That worry is separate from the reliability question 7.3 takes up, and it survives even if the AI labels turn out to be every bit as good: the question stops being "are these judgements accurate" and becomes "whose judgements are these". 7.2 and 7.4 are where the course tries to answer it.</p>
         </div>
@@ -94,7 +94,7 @@
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>State the evaluation limits from 6.4 in one sentence. Why does swapping a human labeller for an AI one not, by itself, lift it?</li>
+            <li>State the evaluation limit from 6.4. Why does swapping a human labeller for an AI one not, by itself, lift it?</li>
             <li>"The only human oversight is the constitution." List three human inputs to a Constitutional-AI model that this phrase glosses over. Does naming them weaken the method, or only describe it accurately?</li>
             <li>Writing principles down instead of collecting labels makes values auditable but also makes one choice scale. Which property matters more, and to whom?</li>
             <li>If AI feedback is ten times cheaper and returns in seconds, what would have to be true about its quality for the trade to be a bad one anyway?</li>
@@ -119,10 +119,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-06/lab-rlhf.html"><span class="nav-label">← Previous</span><span class="nav-title">6.5 · Lab: reward models and over-optimisation</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.2 · Constitutional AI</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-06/lab-rlhf.html" aria-label="Previous: 6.5 · Lab: reward models and over-optimisation"><span class="nav-label">← Previous</span><span class="nav-title">6.5 · Lab: reward models and over-optimisation</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="constitutional-ai.html" aria-label="Next: 7.2 · Constitutional AI"><span class="nav-label">Next →</span><span class="nav-title">7.2 · Constitutional AI</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

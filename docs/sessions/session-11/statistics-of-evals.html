@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 11.4 — The statistics of evals</title>
+    <title>Session 11.4: The statistics of evals</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 11</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="construct-validity.html">← <span class="tn-title">11.3 · Does the eval measure what it claims?</span></a>
-    <a class="tn-next" href="lab-isizulu-eval.html"><span class="tn-title">11.5 · Lab: audit a multilingual safety eval</span> →</a>
+    <a class="tn-prev" href="construct-validity.html" aria-label="Previous: 11.3 · Does the eval measure what it claims?">← <span class="tn-title">11.3 · Does the eval measure what it claims?</span></a>
+    <a class="tn-next" href="lab-isizulu-eval.html" aria-label="Next: 11.5 · Lab: audit a multilingual safety eval"><span class="tn-title">11.5 · Lab: audit a multilingual safety eval</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -46,36 +46,36 @@
 
         <h2 class="section-title">A pass rate is a sample proportion</h2>
 
-        <p>Think of the benchmark's questions as a sample drawn from a large "super-population" of questions you could have asked. The population pass rate is the quantity we want to estimate; your measured score is an estimate of it from \(n\) questions. For \(k\) passes out of \(n\), the estimate and its standard error are</p>
+        <p>Think of the benchmark's questions as a sample drawn from a large "super-population" of questions you could have asked. The population pass rate is the quantity we want to estimate. Your measured score is an estimate of it from \(n\) questions. For \(k\) passes out of \(n\), the estimate and its standard error are</p>
         <div class="formula">\[ \hat{p} = \frac{k}{n}, \qquad \mathrm{SE}(\hat{p}) = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}, \qquad \text{95\% CI} \approx \hat{p} \pm 1.96\,\mathrm{SE}. \]</div>
         <div class="info-box">
             <h4>Worked: 43 out of 50</h4>
-            <p>A model passes 43 of 50 questions: \(\hat{p} = 0.86\). Then \(\mathrm{SE} = \sqrt{0.86 \times 0.14 / 50} = \sqrt{0.00241} \approx 0.049\), and the 95% interval is \(0.86 \pm 1.96(0.049) = 0.86 \pm 0.096\), roughly \([0.76,\,0.96]\). The interval spans nearly twenty percentage points on a 50-question eval. A reported score of 0.86 alone would obscure that uncertainty. (Near the 0 or 1 boundary the symmetric normal interval misbehaves; the <strong>Wilson</strong> interval is the standard fix and you should prefer it for extreme rates. The qualitative lesson is unchanged: small \(n\) means fat error bars.)</p>
+            <p>A model passes 43 of 50 questions: \(\hat{p} = 0.86\). Then \(\mathrm{SE} = \sqrt{0.86 \times 0.14 / 50} = \sqrt{0.00241} \approx 0.049\), and the 95% interval is \(0.86 \pm 1.96(0.049) = 0.86 \pm 0.096\), roughly \([0.76,\,0.96]\). The interval spans nearly twenty percentage points on a 50-question eval. A reported score of 0.86 alone would obscure that uncertainty. (Near the 0 or 1 boundary the symmetric normal interval misbehaves. The <strong>Wilson</strong> interval, obtained by inverting a binomial score test, is a standard alternative and you should prefer it for extreme rates. The qualitative lesson is unchanged: small \(n\) means fat error bars.)</p>
         </div>
 
         <h2 class="section-title">Clustered errors and paired comparisons</h2>
 
         <div class="technical-detail">
             <h4>Clustered standard errors</h4>
-            <p style="color:#555;">The formula above assumes independent questions. Real benchmarks group them (ten questions about one passage, twenty variants of one template) and answers within a cluster are correlated. Treating \(n\) correlated questions as \(n\) independent ones <em>understates</em> the standard error, sometimes badly: Miller notes the corrected (clustered) SE can be more than three times the naïve one. When answers within a cluster are strongly correlated, the effective \(n\) approaches the number of independent clusters rather than the number of questions, and an interval computed without clustering can be three times too narrow, turning noise into a "significant" result.</p>
+            <p style="color:#555;">The formula above assumes independent questions. Real benchmarks group them (ten questions about one passage, twenty variants of one template) and answers within a cluster are correlated. Treating \(n\) correlated questions as \(n\) independent ones understates the standard error, sometimes badly: Miller notes the corrected (clustered) SE can be more than three times the naïve one. When answers within a cluster are strongly correlated, the effective \(n\) approaches the number of independent clusters rather than the number of questions, and an interval computed without clustering can be three times too narrow, turning noise into a "significant" result.</p>
         </div>
         <div class="technical-detail">
             <h4>Paired comparisons between models</h4>
             <p style="color:#555;">Compare models on the same questions using paired differences (<a href="https://arxiv.org/html/2411.00640v1#S4.SS2">Miller, Section 4.2</a>). Let \(X_{Ai}, X_{Bi}\) be their scores on question \(i\), with per-question variances \(v_A,v_B\) and within-pair correlation \(\rho\). For \(n\) independent question pairs, \(\hat p_A-\hat p_B=n^{-1}\sum_i(X_{Ai}-X_{Bi})\). Independence across pairs gives the following variance.</p>
             <div class="formula">\[ \mathrm{Var}(\hat{p}_A - \hat{p}_B) = \frac{v_A + v_B - 2\rho\sqrt{v_A v_B}}{n} \;\approx\; \frac{2v(1-\rho)}{n}. \]</div>
-            <p style="color:#555;">Clusters of related questions require a further adjustment: compute the clustered standard error of the paired differences (Miller, Equation 8).</p>
+            <p style="color:#555;">Clusters of related questions require a further adjustment: compute the clustered standard error of the paired differences (<a href="https://arxiv.org/html/2411.00640v1#S4.E8" target="_blank" rel="noopener">Miller, Equation 8</a>).</p>
             <p style="color:#555;">If the per-question variances are equal and \(\rho=0.5\), the paired standard error is \(\sqrt{v/n}\), compared with \(\sqrt{2v/n}\) for independent samples: a factor \(1/\sqrt{2}\) smaller. This correlation is illustrative, not an estimate for a particular benchmark. Pairing can change the uncertainty substantially. For binary scores, McNemar’s test uses the two discordant paired counts.</p>
         </div>
 
         <h2 class="section-title">Power and the winner's curse</h2>
 
-        <p>To detect a true difference \(\delta\) in pass rates at significance \(\alpha\) and power \(1-\beta\), the rough sample size <em>per model</em> for independent samples is (where \(z_q\) is the standard normal \(q\)-quantile)</p>
+        <p>To detect a true difference \(\delta\) in pass rates at significance \(\alpha\) and power \(1-\beta\), the rough sample size per model for independent samples is (where \(z_q\) is the standard normal \(q\)-quantile)</p>
         <div class="formula">\[ n \;\approx\; \frac{(z_{1-\alpha/2} + z_{1-\beta})^2 \,\cdot\, 2\,p(1-p)}{\delta^2}. \]</div>
-        <p>Put numbers in: to detect a 3-point gap (\(\delta = 0.03\)) near \(p = 0.8\), at \(\alpha = 0.05\) and 80% power, \(n \approx (1.96 + 0.84)^2 \times 2(0.16) / 0.0009 \approx 2{,}800\) questions. A 500-question independent-sample comparison has less power to resolve such a gap. Pairing can reduce the sample requirement, depending on the correlation. Selection also creates a <strong>winner's curse</strong>: rank dozens of models on a noisy benchmark and the apparent "best" is partly lucky, so its lead shrinks on re-evaluation. Testing many comparisons also raises a multiplicity problem. Bonferroni controls the family-wise error rate; false-discovery-rate procedures control a different error rate. Neither removes the upward bias in the selected winner’s score. Re-evaluate the selected model on independent data, or use an estimate that accounts for selection.</p>
+        <p>Put numbers in: to detect a 3-point gap (\(\delta = 0.03\)) near \(p = 0.8\), at \(\alpha = 0.05\) and 80% power, \(n \approx (1.96 + 0.84)^2 \times 2(0.16) / 0.0009 \approx 2{,}800\) questions. A 500-question independent-sample comparison has less power to resolve such a gap. Pairing can reduce the sample requirement, depending on the correlation. Selection also creates a <strong>winner's curse</strong>: rank dozens of models on a noisy benchmark and the apparent "best" is partly lucky, so its lead shrinks on re-evaluation. Testing many comparisons also raises a multiplicity problem. Bonferroni controls the family-wise error rate (FWER), the probability of at least one false rejection among the tests. False-discovery-rate (FDR) procedures control the expected proportion of false rejections among all rejections, counting that proportion as zero when there are no rejections. Neither removes the upward bias in the selected winner’s score. Re-evaluate the selected model on independent data, or use an estimate that accounts for selection.</p>
 
         <h2 class="section-title">A worked case: the time horizon</h2>
 
-        <p>METR (2025) summarises an agent's capability as a <strong>time horizon</strong>: the length of task (measured by how long it takes a human) that the model can complete with 50% success. Fit a logistic curve of success probability against (log) human task-time; the time horizon is the task-duration at which the fitted curve crosses 0.5. So the headline number is not measured directly: it is <em>read off a fit</em>, which means it inherits the fit's uncertainty. METR propagate that with a <strong>hierarchical bootstrap</strong>: resample task families, then tasks within families, then attempts within tasks, refit each time, and take the spread of the crossing point as the confidence interval. We do not re-derive the bootstrap here. A "50% time horizon of 30 minutes" is an estimate with error bars, and its largest caveat is <em>external</em> validity, because the fixed task suite may differ from the tasks encountered in deployment.</p>
+        <p>METR (2025) summarises an agent's capability as a <strong>time horizon</strong>: the length of task (measured by how long it takes a human) that the model can complete with 50% success. Fit a logistic curve of success probability against (log) human task-time. The time horizon is the task-duration at which the fitted curve crosses 0.5. The time-horizon estimate is read off a fitted curve and inherits the fit's uncertainty. METR propagate that with a <strong>hierarchical bootstrap</strong>: resample task families, then tasks within families, then attempts within tasks, refit each time, and take the spread of the crossing point as the confidence interval. We do not re-derive the bootstrap here. A "50% time horizon of 30 minutes" is an estimate with error bars, and its largest caveat is external validity, because the fixed task suite may differ from the tasks encountered in deployment.</p>
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The African lens: small samples and uncertain estimates</span></h3>
@@ -84,8 +84,8 @@
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>Compute the 95% CI for 43/50 and for a second model at 39/50. Do the independent intervals overlap? Compute an approximate paired standard error assuming \(\rho=0.5\). Which conclusion follows under that assumption? What paired counts would you need for an exact McNemar test?</li>
-            <li>Why does ignoring question clustering make an interval too <em>narrow</em>? Give a benchmark structure where the effective \(n\) is far below the question count.</li>
+            <li>Compute the 95% CI for 43/50 and for a second model at 39/50. Do the independent intervals overlap? Compute an approximate paired standard error assuming \(\rho=0.5\). Which conclusion follows under that assumption? For an exact McNemar test, let \(n_{10}\) count questions A passes and B fails, and \(n_{01}\) count questions B passes and A fails. Why do the two marginal pass totals not determine these discordant counts?</li>
+            <li>Why does ignoring question clustering make an interval too narrow? Give a benchmark structure where the effective \(n\) is far below the question count.</li>
             <li>Use the power formula to find how many questions you need to detect a 5-point gap at \(p = 0.7\), 80% power. Compare to a typical 500-question benchmark.</li>
             <li>The time horizon is "read off a fitted curve." Name two sources of uncertainty the hierarchical bootstrap is capturing, and one (external validity) that it is not.</li>
         </ul>
@@ -107,10 +107,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="construct-validity.html"><span class="nav-label">← Previous</span><span class="nav-title">11.3 · Does the eval measure what it claims?</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-isizulu-eval.html"><span class="nav-label">Next →</span><span class="nav-title">11.5 · Lab: audit a multilingual safety eval</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="construct-validity.html" aria-label="Previous: 11.3 · Does the eval measure what it claims?"><span class="nav-label">← Previous</span><span class="nav-title">11.3 · Does the eval measure what it claims?</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="lab-isizulu-eval.html" aria-label="Next: 11.5 · Lab: audit a multilingual safety eval"><span class="nav-label">Next →</span><span class="nav-title">11.5 · Lab: audit a multilingual safety eval</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

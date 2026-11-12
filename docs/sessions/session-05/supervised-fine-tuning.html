@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 5.2 — From predictor to instruction-follower (SFT)</title>
+    <title>Session 5.2: From predictor to instruction-follower (SFT)</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 5</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="pretraining.html">← <span class="tn-title">5.1 · Pretraining: learning to predict the next token</span></a>
-    <a class="tn-next" href="post-training-stack.html"><span class="tn-title">5.3 · The post-training stack</span> →</a>
+    <a class="tn-prev" href="pretraining.html" aria-label="Previous: 5.1 · Pretraining: learning to predict the next token">← <span class="tn-title">5.1 · Pretraining: learning to predict the next token</span></a>
+    <a class="tn-next" href="post-training-stack.html" aria-label="Next: 5.3 · The post-training stack"><span class="tn-title">5.3 · The post-training stack</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -57,17 +57,17 @@
         </div>
 
 <h2 class="section-title">Supervised fine-tuning, mechanically</h2>
-        <p>SFT is not a new algorithm. It is the <em>same</em> cross-entropy training as pretraining, on different, chosen data.</p>
-        <p>We assemble a dataset of <strong>demonstrations</strong>: prompts paired with high-quality target responses, written or curated by people. Then we continue training the base model with the next-token loss, but compute it only over the <em>response</em> tokens \(y\) given the prompt \(x\):</p>
-        <div class="formula">\[ L_{\text{SFT}}(\theta) = -\, \mathbb{E}_{(x,y)\sim \mathcal{D}}\left[ \sum_{i} \log p_\theta\!\left(y_i \mid x,\, y_{&lt;i}\right) \right]. \]</div>
-        <p>That is the whole mechanism: show the model thousands of examples of "when asked like <em>this</em>, a good answer looks like <em>that</em>", and gradient descent shifts it toward producing such answers. In InstructGPT (Ouyang et al., 2022), this is step 1 of the pipeline (fine-tune the base model on labeler-written demonstrations of the desired behaviour), and it already transforms a raw completion engine into something that broadly does what it's told.</p>
+        <p>SFT is not a new algorithm. It is the same cross-entropy training as pretraining, on different, chosen data.</p>
+        <p>We assemble a dataset of <strong>demonstrations</strong>: prompts paired with high-quality target responses, written or curated by people. Then we continue training the base model with the next-token loss, but compute it only over the response tokens \(y\) given the prompt \(x\):</p>
+        <div class="formula">\[ L_{\text{SFT}}(\theta) = -\, \mathbb{E}_{(x,y)\sim \mathcal{D}}\left[ \frac{1}{|y|}\sum_{i=1}^{|y|} \log p_\theta\!\left(y_i \mid x,\, y_{&lt;i}\right) \right]. \]</div>
+        <p>That is the whole mechanism: show the model thousands of examples of "when asked like this, a good answer looks like that", and gradient descent shifts it toward producing such answers. In InstructGPT (Ouyang et al., 2022), this is step 1 of the pipeline (fine-tune the base model on labeller-written demonstrations of the desired behaviour), and it already transforms a raw completion engine into something that broadly does what it's told.</p>
         <div class="info-box">
             <h4>The effect of SFT</h4>
             <p>SFT can make abilities learned during pretraining easier to elicit, and can also teach from new examples. How much it changes task performance, instruction following or style is an empirical question. The base-versus-instruct lab compares these effects on a small set of prompts.</p>
         </div>
 
         <h2 class="section-title">Instruction tuning: generalising to unseen tasks</h2>
-        <p>The striking finding is that demonstrations of <em>many</em> tasks teach the model to follow instructions for tasks it never saw.</p>
+        <p>The striking finding is that demonstrations of many tasks teach the model to follow instructions for tasks it never saw.</p>
         <p>Wei et al. (2022, "Finetuned Language Models Are Zero-Shot Learners", the <em>FLAN</em> work) fine-tuned a large model on 60+ NLP datasets, each phrased as a natural-language instruction, and found that this <strong>instruction tuning</strong> substantially improved <em>zero-shot</em> performance on held-out task types, beating zero-shot GPT-3 on a majority of the tasks tested. Chung et al. (2022, "Scaling Instruction-Finetuned Language Models") then scaled the recipe to ~1,800 tasks and added chain-of-thought data, with consistent gains. Instruction-following is itself a skill that generalises once you demonstrate enough of its variety. This is why a modern "instruct" or "chat" model feels qualitatively different from a base model: it has been taught the general habit of treating the prompt as a request to be fulfilled.</p>
 
         <h2 class="section-title">The wall SFT hits</h2>
@@ -83,15 +83,15 @@
         </div>
         <div class="info-box">
             <h4>The bridge to Session 6</h4>
-            <p>This wall is the opening for <strong>reinforcement learning from human feedback</strong>. RLHF replaces "imitate this answer" with "humans <em>prefer</em> this answer to that one", a signal that is cheaper to collect, can exceed the quality of any single demonstration, and can carry negative as well as positive information. The price, as Session 6 shows, is that we now optimise against a <em>learned model</em> of human preference: a proxy, with all the Goodhart hazards of Session 3.1.</p>
+            <p>This wall is the opening for <strong>reinforcement learning from human feedback</strong>. RLHF replaces "imitate this answer" with "humans prefer this answer to that one", a signal that is cheaper to collect, can exceed the quality of any single demonstration, and can carry negative as well as positive information. The price, as Session 6 shows, is that we now optimise against a learned model of human preference: a proxy, with all the Goodhart hazards of Session 3.1.</p>
         </div>
 
         <h2 class="section-title">Where safety first enters</h2>
-        <p>SFT is also where the first, partial safety behaviours are installed: demonstration sets include examples of politely refusing harmful requests, hedging on uncertain claims, and declining out-of-scope tasks. This matters for two reasons. It means a model's "refusal reflex" is, at bottom, a fine-tuned habit over a limited set of demonstrated situations, which is why it can fail off-distribution (a harmful request rephrased in isiZulu, or in an unusual format, looks unlike the refusal demonstrations). And it means the <em>values</em> a model expresses trace back to choices about whose demonstrations were collected and what counted as a "good" answer: the "whose values?" question we take up properly in Session 8.</p>
+        <p>SFT is also where the first, partial safety behaviours are installed: demonstration sets include examples of politely refusing harmful requests, hedging on uncertain claims, and declining out-of-scope tasks. This matters for two reasons. It means a model's "refusal reflex" is, at bottom, a fine-tuned habit over a limited set of demonstrated situations, which is why it can fail off-distribution (a harmful request rephrased in isiZulu, or in an unusual format, looks unlike the refusal demonstrations). And it means the values a model expresses trace back to choices about whose demonstrations were collected and what counted as a "good" answer: the "whose values?" question we take up properly in Session 8.</p>
 
         <h2 class="section-title">Why "be honest" resists SFT</h2>
         <p>Consider a property that a rater can recognise more easily than they can demonstrate, such as a well-calibrated answer to an unfamiliar question.</p>
-        <p>Suppose we want the model to stop confidently making things up (to be calibrated about what it knows). With SFT we would write demonstrations of honest answers. But consider what that requires. For a question the labeller knows, the ideal answer depends on what <em>the model</em> knows, and the labeller can't see that, so they can't reliably demonstrate "admit uncertainty <em>here</em> but answer confidently <em>there</em>". For a question the labeller doesn't know, they can't write the correct answer at all. And a fluent fabrication and a correct answer look <em>identical</em> as demonstrations: both are just plausible text. SFT's loss, "make this target more likely", has no handle on "and was it actually true?".</p>
+        <p>Suppose we want the model to stop confidently making things up (to be calibrated about what it knows). With SFT we would write demonstrations of honest answers. But consider what that requires. For a question the labeller knows, the ideal answer depends on what the model knows, and the labeller can't see that, so they can't reliably demonstrate "admit uncertainty here but answer confidently there". For a question the labeller doesn't know, they can't write the correct answer at all. And a fluent fabrication and a correct answer look identical as demonstrations: both are just plausible text. SFT's loss, "make this target more likely", has no handle on "and was it actually true?".</p>
         <div class="technical-detail">
             <h4>The general pattern</h4>
             <p>Demonstrations are useful when suitable target responses can be obtained. Comparisons may be easier on some tasks, including open-ended responses with several acceptable answers. Neither format guarantees truthful labels. Check the feedback against independent evidence and measure the behaviour learned from it.</p>
@@ -103,7 +103,7 @@
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>Give a property you'd want in an assistant that is <em>easy to demonstrate</em>, and one that is <em>hard to demonstrate but easy to judge</em>. Why does the distinction predict where SFT succeeds?</li>
+            <li>Give a property you'd want in an assistant that is easy to demonstrate, and one that is hard to demonstrate but easy to judge. Why does the distinction predict where SFT succeeds?</li>
             <li>SFT "selects a persona" from the base model rather than teaching new skills. What evidence from the base-vs-instruct comparison (the 5.4 lab) would support or undermine that claim?</li>
             <li>Refusals are installed as fine-tuned habits over demonstrated situations. Predict three kinds of request where that habit would fail to generalise.</li>
             <li>"Judging is easier than producing." Is that always true? Construct a case where it isn't, and say what that would mean for RLHF.</li>
@@ -116,10 +116,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="pretraining.html"><span class="nav-label">← Previous</span><span class="nav-title">5.1 · Pretraining: learning to predict the next token</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="post-training-stack.html"><span class="nav-label">Next →</span><span class="nav-title">5.3 · The post-training stack</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="pretraining.html" aria-label="Previous: 5.1 · Pretraining: learning to predict the next token"><span class="nav-label">← Previous</span><span class="nav-title">5.1 · Pretraining: learning to predict the next token</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="post-training-stack.html" aria-label="Next: 5.3 · The post-training stack"><span class="nav-label">Next →</span><span class="nav-title">5.3 · The post-training stack</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

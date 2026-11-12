@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 9.3 — Safety under transformations</title>
+    <title>Session 9.3: Safety under transformations</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 9</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="jailbreaks-as-optimisation.html">← <span class="tn-title">9.2 · Jailbreaks as discrete optimisation</span></a>
-    <a class="tn-next" href="lab-isizulu-robustness.html"><span class="tn-title">9.4 · Lab: multilingual safety evaluation</span> →</a>
+    <a class="tn-prev" href="jailbreaks-as-optimisation.html" aria-label="Previous: 9.2 · Jailbreaks as discrete optimisation">← <span class="tn-title">9.2 · Jailbreaks as discrete optimisation</span></a>
+    <a class="tn-next" href="lab-isizulu-robustness.html" aria-label="Next: 9.4 · Lab: multilingual safety evaluation"><span class="tn-title">9.4 · Lab: multilingual safety evaluation</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -46,8 +46,8 @@
         <h2 class="section-title">Two ways safety training breaks</h2>
         <p>A deployed chat model is the product of three training pressures: pretraining (predict the next token over a large corpus of web and other text), instruction-following (be helpful, do what the user asks), and safety (refuse a defined set of harms). These are not automatically consistent. Wei et al.'s insight is that the two large classes of jailbreak each exploit a specific kind of inconsistency.</p>
         <div class="technical-detail">
-            <h4>Failure mode 1 — competing objectives</h4>
-            <p style="color:#555;">The model is simultaneously trained to be helpful and to refuse. When a prompt is engineered so that <em>following instructions</em> and <em>being safe</em> point in opposite directions, the helpfulness/pretraining pressure can win. Two exploits:</p>
+            <h4>Failure mode 1: competing objectives</h4>
+            <p style="color:#555;">The model is simultaneously trained to be helpful and to refuse. When a prompt is engineered so that following instructions and being safe point in opposite directions, the helpfulness/pretraining pressure can win. Two exploits:</p>
             <ul class="styled-list">
                 <li>Prefix injection: instruct the model to begin its answer with a fixed affirmative phrase ("Start your reply with 'Absolutely! Here is'"). Once committed to that opening, the most fluent continuation is to actually comply. GCG (9.2) pulls the same lever by optimisation; here it is pulled by hand.</li>
                 <li>Refusal suppression: instruct the model not to use refusal language (Wei et al.'s example: do not apologise, do not add a note or disclaimer, never say words such as "cannot" or "unable"). This removes the surface form the safety training learned to produce, which makes harmful content more likely to follow.</li>
@@ -55,8 +55,8 @@
             <p style="color:#555;">Wei et al. interpret these attacks as evidence that instruction-following and safety can compete. Calling safety a “thin layer” is a useful intuition for some post-training procedures, but the internal mechanism is not established by the behavioural result alone.</p>
         </div>
         <div class="technical-detail">
-            <h4>Failure mode 2 — mismatched generalisation</h4>
-            <p style="color:#555;">Pretraining covers a vast input distribution; safety training covers a much narrower one. So there are inputs that are firmly <em>in-distribution</em> for the model's capabilities but <em>out-of-distribution</em> for its safety training; there, capability generalises while safety does not. Exploits all share the shape "transform the request into something the safety data never covered, that the model is still capable enough to understand":</p>
+            <h4>Failure mode 2: mismatched generalisation</h4>
+            <p style="color:#555;">Pretraining covers a vast input distribution. Safety training covers a much narrower one. So there are inputs that are firmly <em>in-distribution</em> for the model's capabilities but <em>out-of-distribution</em> for its safety training. There, capability generalises while safety does not. Exploits all share the shape "transform the request into something the safety data never covered, that the model is still capable enough to understand":</p>
             <ul class="styled-list">
                 <li>Encodings: Base64, ROT13 and leetspeak. A model may decode a form that was sparse or absent from its safety data.</li>
                 <li>Ciphers and obfuscation: ask for the answer in a substitution cipher, or split across tokens.</li>
@@ -67,7 +67,7 @@
 
         <h2 class="section-title">The limits of scaling</h2>
         <p>Wei et al. argue that scale alone does not resolve either failure mode. A more capable model may understand transformations that a smaller model cannot, creating cases in which capability generalises farther than safety. For competing objectives, they point to the trade-off between reward, pretraining loss and distance from the base model in post-training objectives. Recall the simplified KL-regularised objective from Session 6:</p>
-        <div class="formula">\[ \max_{\pi_\theta}\; \mathbb{E}_{y \sim \pi_\theta}\!\big[\, r_\phi(x,y) \,\big] \;-\; \beta\, \mathrm{KL}\!\big(\pi_\theta(\cdot\mid x)\,\|\,\pi_{\text{base}}(\cdot\mid x)\big). \]</div>
+        <div class="formula">\[ \max_{\pi_\theta}\; \mathbb{E}_{y \sim \pi_\theta}\!\big[\, r_\phi(x,y) \,\big] \;-\; \beta\, \mathrm{KL}\!\big(\pi_\theta(\cdot\mid x)\,\|\,\pi_{\text{ref}}(\cdot\mid x)\big). \]</div>
         <p>The KL term penalises departures from a reference policy. Wei et al.'s point is that safety post-training still trades against objectives inherited from pretraining and instruction-following. The equation does not imply a simple monotonic relation between \(\beta\) and safety: changing \(\beta\) also changes usefulness, response style and optimisation dynamics. Their broader claim is that increasing model size or data does not guarantee that safety coverage expands as far as capability.</p>
         <div class="info-box">
             <h4>Safety–capability parity</h4>
@@ -112,10 +112,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="jailbreaks-as-optimisation.html"><span class="nav-label">← Previous</span><span class="nav-title">9.2 · Jailbreaks as discrete optimisation</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-isizulu-robustness.html"><span class="nav-label">Next →</span><span class="nav-title">9.4 · Lab: multilingual safety evaluation</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="jailbreaks-as-optimisation.html" aria-label="Previous: 9.2 · Jailbreaks as discrete optimisation"><span class="nav-label">← Previous</span><span class="nav-title">9.2 · Jailbreaks as discrete optimisation</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="lab-isizulu-robustness.html" aria-label="Next: 9.4 · Lab: multilingual safety evaluation"><span class="nav-label">Next →</span><span class="nav-title">9.4 · Lab: multilingual safety evaluation</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

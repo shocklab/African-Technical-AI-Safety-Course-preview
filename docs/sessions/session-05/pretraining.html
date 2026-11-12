@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 5.1 — Pretraining: learning to predict the next token</title>
+    <title>Session 5.1: Pretraining: learning to predict the next token</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 5</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-04/sustainable-and-sovereign-ai.html">← <span class="tn-title">4.4 · Sustainable and sovereign AI</span></a>
-    <a class="tn-next" href="supervised-fine-tuning.html"><span class="tn-title">5.2 · From predictor to instruction-follower (SFT)</span> →</a>
+    <a class="tn-prev" href="../session-04/sustainable-and-sovereign-ai.html" aria-label="Previous: 4.4 · Sustainable and sovereign AI">← <span class="tn-title">4.4 · Sustainable and sovereign AI</span></a>
+    <a class="tn-next" href="supervised-fine-tuning.html" aria-label="Next: 5.2 · From predictor to instruction-follower (SFT)"><span class="tn-title">5.2 · From predictor to instruction-follower (SFT)</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -39,8 +39,8 @@
     <div class="content">
 
         <div class="highlight-box">
-            <h3><span style="color:#ffffff;">Week 3 — how an LLM is actually trained</span></h3>
-            <p>Week 2 told us a transformer is trained by minimising next-token loss, and that the gap between the objective we write and the behaviour we want is where alignment lives. This week follows the real pipeline that turns a pile of text into a deployed assistant (pretraining, supervised fine-tuning, and RLHF in Session 6), asking at each stage: what is being optimised, and what does that incentivise?</p>
+            <h3><span style="color:#ffffff;">Week 3: how an LLM is actually trained</span></h3>
+            <p>Session 2 (Week 1) showed how a transformer is trained by minimising next-token loss, and Session 3 (Week 2) showed that the gap between the objective we write and the behaviour we want is where alignment lives. This week follows the real pipeline that turns a pile of text into a deployed assistant (pretraining, supervised fine-tuning, and RLHF in Session 6), asking at each stage: what is being optimised, and what does that incentivise?</p>
             <p style="margin-bottom:0;">This session's sub-sessions: 5.1 pretraining · 5.2 supervised fine-tuning · 5.3 the post-training stack · 5.4 lab: nanochat (Colab).</p>
         </div>
 
@@ -68,42 +68,42 @@
         <div class="formula">\[ L(\theta) = -\frac{1}{T} \sum_{i} \log p_\theta\!\left(t_i \mid t_{&lt;i}\right). \]</div>
         <div class="info-box">
             <h4>Why "self-supervised"?</h4>
-            <p>Supervised learning needs labelled examples; producing labels is expensive, which caps dataset size. Next-token prediction sidesteps this: the label for position \(i\) is just \(t_i\), already present in the raw text. So <em>any</em> text is training data, and the supply is effectively the internet. This is the trick that let language models scale: the bottleneck moved from "labelled data" to "compute and raw text".</p>
+            <p>Supervised learning needs labelled examples. Producing labels is expensive, which caps dataset size. Next-token prediction sidesteps this: the label for position \(i\) is just \(t_i\), already present in the raw text. So any text is training data, and the supply is effectively the internet. This is the trick that let language models scale: the bottleneck moved from "labelled data" to "compute and raw text".</p>
         </div>
-        <p>This is a humble-sounding objective with a profound consequence. To predict the next token well across the breadth of human text (code, dialogue, proofs, translations, arguments), a model is pressured to build internal machinery that captures syntax, facts, reasoning patterns, and styles. Capabilities are not programmed in; they are whatever turns out to <em>reduce next-token loss</em> on a sufficiently varied corpus. This is the seed of the alignment problem: the model learns whatever serves the objective, which is only a proxy for what we want.</p>
+        <p>This is a humble-sounding objective with a profound consequence. To predict the next token well across the breadth of human text (code, dialogue, proofs, translations, arguments), a model is pressured to build internal machinery that captures syntax, facts, reasoning patterns, and styles. Capabilities are not programmed in; they are whatever turns out to reduce next-token loss on a sufficiently varied corpus. This is the seed of the alignment problem: the model learns whatever serves the objective, which is only a proxy for what we want.</p>
 
         <h2 class="section-title">The product of pretraining: a base model</h2>
         <p>The output of a pretraining run is a base model (or "foundation model"): a powerful next-token predictor, and nothing more specific than that.</p>
         <p>A base model is, by construction, a model of the <em>training distribution</em>. Prompt it and it continues the text in the most plausible way given what it has read. That makes it astonishingly capable and, simultaneously, not what most users want:</p>
         <div class="card-grid">
-            <div class="card"><h3>It completes text</h3><p>Ask a base model "What is the capital of France?" and it might continue with a list of more quiz questions, because on the web, that string is often followed by more questions. It imitates plausible text; it has no notion of "doing what the user asked".</p></div>
-            <div class="card"><h3>It learns in context</h3><p>Brown et al. (2020) showed GPT-3 (175B) can perform tasks <em>few-shot</em>, given a handful of examples in the prompt, with <em>no</em> gradient updates. The ability to pick up a pattern from the prompt is itself a learned product of pretraining ("in-context learning").</p></div>
-            <div class="card"><h3>It contains multitudes</h3><p>Having modelled the whole web, a base model can imitate the helpful expert <em>and</em> the scammer, the careful reasoner <em>and</em> the conspiracy theorist. It has no fixed persona, only a distribution over all the voices in its data.</p></div>
+            <div class="card"><h3>It completes text</h3><p>Ask a base model "What is the capital of France?" and it might continue with a list of more quiz questions, because on the web, that string is often followed by more questions. It imitates plausible text. It has no notion of "doing what the user asked".</p></div>
+            <div class="card"><h3>It learns in context</h3><p>Brown et al. (2020) showed GPT-3 (175B) can perform tasks <em>few-shot</em>, given a handful of examples in the prompt, with no gradient updates. The ability to pick up a pattern from the prompt is itself a learned product of pretraining ("in-context learning").</p></div>
+            <div class="card"><h3>It contains multitudes</h3><p>Having modelled the whole web, a base model can imitate the helpful expert and the scammer, the careful reasoner and the conspiracy theorist. It has no fixed persona, only a distribution over all the voices in its data.</p></div>
         </div>
         <div class="info-box">
             <h4>Capability without alignment</h4>
-            <p>This is the framing for the rest of the week. Pretraining buys capability (knowledge, reasoning, language) but supplies no alignment: no reliable instruction-following, no stable values, no guardrails beyond whatever correlations exist in the data. Everything we call "the assistant" (helpfulness, honesty, harmlessness, the refusal reflex) is added <em>afterwards</em>, by the much smaller post-training stages (5.2 onward). Alignment is a thin layer applied on top of a vast, indifferent predictor.</p>
+            <p>This is the framing for the rest of the week. Pretraining buys capability (knowledge, reasoning, language) but supplies no alignment: no reliable instruction-following, no stable values, no guardrails beyond whatever correlations exist in the data. Everything we call "the assistant" (helpfulness, honesty, harmlessness, the refusal reflex) is added afterwards, by the much smaller post-training stages (5.2 onward). Alignment is a thin layer applied on top of a vast, indifferent predictor.</p>
         </div>
 
         <h2 class="section-title">Scale and the "bitter lesson"</h2>
         <p>Why are base models so big? Because, empirically, scale works, and it works predictably (Session 2.3).</p>
-        <p>The trajectory is stark: GPT-2 (Radford et al., 2019) was a 1.5-billion-parameter model trained on ~40 GB of web text; a year later GPT-3 (Brown et al., 2020) was 175 billion parameters, and the qualitative leap in capability came largely from scale. GPT-2's own paper already noted that zero-shot performance improved "in a log-linear fashion" with model capacity, the scaling-law story you met in 2.3. Richard Sutton's "Bitter Lesson" (2019) names the pattern bluntly: across seventy years of AI, <em>general methods that use more computation tend to win</em> over cleverly hand-engineered ones. Pretraining is that lesson incarnate: a simple objective, applied at enormous scale.</p>
+        <p>The trajectory is stark: GPT-2 (Radford et al., 2019) was a 1.5-billion-parameter model trained on ~40 GB of web text; a year later GPT-3 (Brown et al., 2020) was 175 billion parameters, and the qualitative leap in capability came largely from scale. GPT-2's own paper already noted that zero-shot performance improved "in a log-linear fashion" with model capacity, the scaling-law story you met in 2.3. Richard Sutton's "Bitter Lesson" (2019) names the pattern bluntly: across seventy years of AI, general methods that use more computation tend to win over cleverly hand-engineered ones. Pretraining is that lesson incarnate: a simple objective, applied at enormous scale.</p>
         <div class="warning-box">
             <h4>The safety consequences of scale</h4>
-            <p>Two consequences follow directly. First, capabilities (including <em>dangerous</em> ones) arrive as a by-product of scaling an objective that knows nothing of safety; they are present in the base model before anyone decides whether to expose them. Second, because the base model has modelled the whole internet, the safety-relevant question shifts from "can it do X?" (often yes, latently) to "can the thin alignment layer reliably <em>suppress</em> X across all the conditions of deployment?", which, as the isiZulu jailbreak (Session 1.4) showed, it frequently cannot.</p>
+            <p>Two consequences follow directly. First, capabilities (including dangerous ones) arrive as a by-product of scaling an objective that knows nothing of safety; they are present in the base model before anyone decides whether to expose them. Second, because the base model has modelled the whole internet, the safety-relevant question shifts from "can it do X?" (often yes, latently) to "can the thin alignment layer reliably suppress X across all the conditions of deployment?", which, as the isiZulu jailbreak (Session 1.4) showed, it frequently cannot.</p>
         </div>
 
         <h2 class="section-title">The pretraining corpus</h2>
-        <p>If the objective is "predict the next token", then the <em>corpus</em> is everything: it is simultaneously the model's source of capability, of bias, and of latent danger. Pretraining data deserves the same scrutiny as the architecture.</p>
+        <p>If the objective is "predict the next token", then the corpus is everything: it is simultaneously the model's source of capability, of bias, and of latent danger. Pretraining data deserves the same scrutiny as the architecture.</p>
         <p>Frontier corpora are assembled from web crawls, books, code, and curated collections, then heavily processed: de-duplication (repeated text distorts what the model "believes" is likely), quality filtering, and removal of the most toxic material. None of this is neutral. Every choice (which languages, which sources, what counts as "low quality") shapes what the model is good at and whose world it represents. Three consequences matter for safety:</p>
         <div class="card-grid">
-            <div class="card"><h3>The data is the values</h3><p>A base model has no values we designed; it has the statistical shadow of its corpus. Over-represent one register, dialect or worldview and the model treats it as the default. The web's heavy skew toward English and the Global North is therefore baked in <em>before</em> any alignment, the deepest root of the multilingual safety gap (Session 1.4).</p></div>
-            <div class="card"><h3>Data is an attack surface</h3><p>Because the model imitates its data, whoever can place text in the corpus can, in principle, shape behaviour: <em>data poisoning</em>. A small, roughly fixed number of crafted documents can plant a backdoor: in one study, about 250 poisoned documents were enough for models from 600M to 13B parameters, whatever the size of the corpus.</p></div>
+            <div class="card"><h3>The data is the values</h3><p>A base model has no values we designed; it has the statistical shadow of its corpus. Over-represent one register, dialect or worldview and the model treats it as the default. The web's heavy skew toward English and the Global North is therefore baked in before any alignment, the deepest root of the multilingual safety gap (Session 1.4).</p></div>
+            <div class="card"><h3>Data is an attack surface</h3><p>Because the model imitates its data, whoever can place text in the corpus can, in principle, shape behaviour: <em>data poisoning</em>. A small, roughly fixed number of crafted documents can plant a backdoor: <a href="https://arxiv.org/abs/2510.07192" target="_blank" rel="noopener">Souly et al. (2025)</a> found that 250 poisoned documents were enough for models from 600M to 13B parameters across the training-corpus sizes they tested.</p></div>
             <div class="card"><h3>High-quality text is finite</h3><p>The Chinchilla result (Session 2.3) made data a first-class scaling resource, and high-quality human text is a bounded supply. This pressure toward synthetic and lower-quality data is itself a safety variable: the corpus is getting harder to vet just as it matters more.</p></div>
         </div>
         <div class="info-box">
             <h4>Predicting the training distribution</h4>
-            <p>This underlies the alignment problem: a base model is optimised to reproduce the distribution of its training data, not to be truthful, helpful, or safe. When those happen to coincide on the data, behaviour looks aligned; where they diverge (rare languages, novel situations, adversarial prompts), the model reverts to "what text is plausible here", which need not be what we want. Pretraining gives us a mirror of the internet, not an agent that shares our goals.</p>
+            <p>This underlies the alignment problem: a base model is optimised to reproduce the distribution of its training data, not to be truthful, helpful, or safe. When those happen to coincide on the data, behaviour looks aligned. Where they diverge (rare languages, novel situations, adversarial prompts), the model reverts to "what text is plausible here", which need not be what we want. Pretraining gives us a mirror of the internet, not an agent that shares our goals.</p>
         </div>
 
         <h2 class="section-title">Questions to bring to class</h2>
@@ -116,15 +116,15 @@
 
 <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>A base model completes text but won't reliably follow instructions. Sub-session 5.2 covers the first fix (supervised fine-tuning) and what it <em>can't</em> do, which is why Session 6 reaches for reinforcement learning.</p>
+            <p>A base model completes text but won't reliably follow instructions. Sub-session 5.2 covers the first fix (supervised fine-tuning) and what it can't do, which is why Session 6 reaches for reinforcement learning.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-04/sustainable-and-sovereign-ai.html"><span class="nav-label">← Previous</span><span class="nav-title">4.4 · Sustainable and sovereign AI</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="supervised-fine-tuning.html"><span class="nav-label">Next →</span><span class="nav-title">5.2 · From predictor to instruction-follower (SFT)</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-04/sustainable-and-sovereign-ai.html" aria-label="Previous: 4.4 · Sustainable and sovereign AI"><span class="nav-label">← Previous</span><span class="nav-title">4.4 · Sustainable and sovereign AI</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="supervised-fine-tuning.html" aria-label="Next: 5.2 · From predictor to instruction-follower (SFT)"><span class="nav-label">Next →</span><span class="nav-title">5.2 · From predictor to instruction-follower (SFT)</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

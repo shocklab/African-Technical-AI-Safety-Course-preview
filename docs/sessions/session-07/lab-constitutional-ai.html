@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.6 — Lab: measuring an AI judge</title>
+    <title>Session 7.6: Lab: measuring an AI judge</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 7</summary>
@@ -27,8 +27,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="model-specifications.html">← <span class="tn-title">7.5 · Model specifications</span></a>
-    <a class="tn-next" href="../session-08/scalable-oversight.html"><span class="tn-title">8.1 · Scalable oversight</span> →</a>
+    <a class="tn-prev" href="model-specifications.html" aria-label="Previous: 7.5 · Model specifications">← <span class="tn-title">7.5 · Model specifications</span></a>
+    <a class="tn-next" href="../session-08/scalable-oversight.html" aria-label="Next: 8.1 · Scalable oversight"><span class="tn-title">8.1 · Scalable oversight</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -46,7 +46,7 @@
         </div>
 
         <div class="lab-box">
-            <h4>Setup <span class="tag">Colab &mdash; no GPU needed</span></h4>
+            <h4>Setup <span class="tag">Colab: no GPU needed</span></h4>
             <p>Allow about an hour for the activity. Record runtime and environment details from your own run. Download speed, hardware and package versions affect timings and outputs; the exercise does not require matching a recorded numerical result.</p>
             <ol style="margin-left:25px; line-height:1.9;">
                 <li><a href="https://colab.research.google.com/github/shocklab/African-Technical-AI-Safety-Course/blob/main/docs/labs/session-7-6-constitutional-ai.ipynb" target="_blank" rel="noopener">Open the starter notebook in Colab</a>, then <em>File &rarr; Save a copy in Drive</em> before you change anything.</li>
@@ -61,12 +61,13 @@
             <h4>The two-model demonstration</h4>
             <p>Phase 1 critiques and revises an answer against a sampled principle. This demonstration uses a base model for the initial answer and an instruction-tuned model for the critique and revision. Bai et al.’s training setup differs: it starts from a helpful model and learns from the revisions.</p>
             <p>Read the critique and revision before judging the method. Identify whether the critique addresses the principle and whether the revision improves the answer. This small demonstration uses different answering and critiquing models and performs no training. A failure cannot be attributed to model size alone without a controlled comparison.</p>
+            <p>Which step worked least well in your run? Propose one change and a criterion for judging whether it improves that step.</p>
         </div>
 
         <h2 class="section-title">&#9313; Judge measurements</h2>
         <div class="technical-detail">
             <h4>Reading a soft label off two tokens</h4>
-            <p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is better. The answer is not read from generated text but from the model's own probabilities on the tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives the soft label which 7.2's Bradley-Terry loss consumes. One forward pass per judgement and no generation, so this part is fast. Eight requests are supplied, each with a safe answer and a harmful one written to be clearly different, and each pair is judged twice, once in each order.</p>
+            <p>Phase 2 hands a <strong>feedback model</strong> two candidate answers and a principle, and asks which is better. The answer is not read from generated text but from the model's own probabilities on the tokens <code>(A</code> and <code>(B</code>, normalised against each other. That gives the soft label which 7.2's Bradley–Terry loss consumes. One forward pass per judgement and no generation, so this part is fast. Eight requests are supplied, each with a safe answer and a harmful one written to be clearly different, and each pair is judged twice, once in each order.</p>
             <p>The notebook reports mean conditional label probabilities and the fraction of hard choices favouring the safe response. These are different measurements: assigning probability 0.51 to the safe label every time yields a safe-choice fraction of 1.0. Averaging both orders gives an order-averaged result; it does not establish that every position effect is cancelled. Inspect individual pairs and the probability mass on the two label prefixes as well.</p>
             <p>7.2 explains position bias, and 7.3 notes that Lee et al. score each pair in both orders to counterbalance it. You have just measured why they bother.</p>
             <p>Write two or three sentences. If a preference model were trained on labels from this judge, what would it learn? Say precisely what the label would encode, and what it would not.</p>
@@ -78,7 +79,7 @@
             <p>Judge the same pairs under two different principles. Compare the resulting probabilities, then test an empty principle and a more specific one. A weak response to these prompts can have several causes; it is not a test of every way to train with a constitution.</p>
             <p>Compare the order-averaged probability under the two principles. Report that difference alongside the order-sensitivity diagnostic, explaining that they are different contrasts. Do not treat their ratio as a general measure of how much constitutions matter.</p>
             <p>Then explore. Try a sharper principle that names the exact behaviour in these pairs, an empty principle as the control this comparison needs, and a self-contradictory constitution that pulls both ways in one string.</p>
-            <p>Session 7.4 asks whose values a constitution encodes. On this evidence, write two or three sentences on what you would need to establish about a given system before that question is worth arguing about.</p>
+            <p>Session 7.4 asks whose values a constitution encodes. Write two or three sentences on what you would need to establish about this system before interpreting the principle comparison.</p>
         </div>
 
         <h2 class="section-title">&#9315; Before asking whether it is worse in isiZulu</h2>
@@ -88,33 +89,33 @@
             <p>The notebook first uses English identity matching to check the response format, then asks the model to select the English translation of an isiZulu sentence against a decoy. It reports conditional probabilities and correct-choice fractions separately. Identity matching is an easier control, not an upper bound or a complete validation of the translation task. Its pass mark, set before the run, is 90% correct with the target listed first and 90% with it listed second. If it fails, the translation comparison is unresolved.</p>
             <p>These are descriptive measurements on a small fixed sample. A result near 0.5 does not establish equivalence to random choice or absence of language comprehension. If the identity control fails, inspect the prompt and scorer; the per-order results show whether answer position explains it. If it passes and translation performs poorly, investigate translation quality, task difficulty and model language support. A broader claim needs a larger, labelled evaluation with an uncertainty analysis.</p>
             <p>The controls test whether this scoring procedure succeeds on particular matching tasks. Session 11 develops the wider question of whether an evaluation measures the capability or behaviour its authors claim.</p>
-            <p>Then write a short paragraph. Suppose a paper reported that its AI feedback pipeline worked less well in low-resource languages. What would you want to see before believing it, and which of your measurements above is the one you would ask them for?</p>
+            <p>What does your run establish about this task, and what remains unknown about language comprehension or safety judgement? Specify a larger evaluation, its correctness labels and the uncertainty analysis you would require before making a general claim.</p>
         </div>
 
         <div class="lab-box">
             <h4>Submit</h4>
-            <p>Submit the notebook with outputs, environment details and four responses: critique-and-revise observations; probability versus hard-choice measurements; the principle comparison and order sensitivity; and both matching controls with a proposal for further evaluation.</p>
+            <p>Submit the notebook with outputs, environment details and four responses: critique-and-revise observations; probability versus hard-choice measurements; the principle comparison and order sensitivity; and the English control, translation-matching results and a proposal for further evaluation.</p>
         </div>
 
         <h2 class="section-title">Tools and references</h2>
         <div class="resource-placeholder reading-core">
             <h4>Reference</h4>
-            <p>&bull; <strong>Bai et al. (2022)</strong>, <a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">Constitutional AI</a> (arXiv:2212.08073): the method you are running in miniature, and the source of the helpful-only starting point in &#9312;.</p>
-            <p>&bull; <strong>Lee et al. (2023)</strong>, <a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">RLAIF</a> (arXiv:2309.00267): the position-bias correction you reproduce in &#9313;. Appendix B, "Position Bias in LLM Labelers", is the one to read, ≈370 words; the published v3 has fourteen appendices and the rest are not about this.</p>
+            <p>&bull; <strong>Bai et al. (2022)</strong>, <a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">Constitutional AI</a> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">arXiv:2212.08073</a>): the method you are running in miniature, and the source of the helpful-only starting point in &#9312;.</p>
+            <p>&bull; <strong>Lee et al. (2023)</strong>, <a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">RLAIF</a> (<a href="https://arxiv.org/abs/2309.00267" target="_blank" rel="noopener">arXiv:2309.00267</a>): the position-bias correction you reproduce in &#9313;. Appendix B, "Position Bias in LLM Labelers", is the one to read, ≈370 words; the published v3 has fourteen appendices and the rest are not about this.</p>
             <p>&bull; <a href="https://github.com/masakhane-io/lafand-mt" target="_blank" rel="noopener"><strong>MAFAND-MT</strong></a> (Adelani et al., 2022; CC BY-NC 4.0): the parallel sentences behind the comprehension control in &#9315;.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>That closes Week 4's first session. Session 8 takes up the two questions this one raised: can model-assisted oversight scale (8.1), and whose values is any of it steering toward (8.2&ndash;8.4)?</p>
+            <p>Session 8 asks whether model-assisted oversight can scale (8.1), and whose values it should use (8.2 to 8.4).</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="model-specifications.html"><span class="nav-label">← Previous</span><span class="nav-title">7.5 · Model specifications</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-08/scalable-oversight.html"><span class="nav-label">Next →</span><span class="nav-title">8.1 · Scalable oversight</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="model-specifications.html" aria-label="Previous: 7.5 · Model specifications"><span class="nav-label">← Previous</span><span class="nav-title">7.5 · Model specifications</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-08/scalable-oversight.html" aria-label="Next: 8.1 · Scalable oversight"><span class="nav-label">Next →</span><span class="nav-title">8.1 · Scalable oversight</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

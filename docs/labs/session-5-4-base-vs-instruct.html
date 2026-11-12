@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Session 5.4 — Lab notebook</title>
+<title>Session 5.4: Lab: from base model to assistant (nanochat)</title>
 <link rel="stylesheet" href="../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -36,7 +36,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>Session 5.4 — Lab notebook</h1>
+        <h1>Session 5.4: Lab: from base model to assistant (nanochat)</h1>
         <p class="subtitle">From base model to assistant</p>
     </div>
     <div class="nb-actions">
@@ -48,8 +48,7 @@
            <a href="../sessions/session-05/lab-nanochat.html">Back to the lab page</a>.</p>
     </div>
     <div class="notebook">
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>African Technical AI Safety</strong> · Week 3, Session 5.4</p>
 <p>Sessions 5.1 to 5.3 described a pipeline: pretraining makes a capable base model, supervised
@@ -65,7 +64,6 @@ before you decide whether that is what happens.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">textwrap</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">urllib.request</span>
@@ -79,7 +77,7 @@ before you decide whether that is what happens.</p>
 <span class="c1"># Record the environment used for this run; results can vary across versions.</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platform</span><span class="o">,</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'Python:'</span><span class="p">,</span> <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span> <span class="s1">'| CPUs:'</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
-<span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'torch'</span><span class="p">,</span> <span class="s1">'transformers'</span><span class="p">,</span> <span class="s1">'transformer_lens'</span><span class="p">,</span> <span class="s1">'numpy'</span><span class="p">,</span> <span class="s1">'pandas'</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'torch'</span><span class="p">,</span> <span class="s1">'transformers'</span><span class="p">,</span> <span class="s1">'numpy'</span><span class="p">,</span> <span class="s1">'pandas'</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
     <span class="k">except</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">PackageNotFoundError</span><span class="p">:</span>
@@ -95,8 +93,7 @@ before you decide whether that is what happens.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="①-Find-the-stages-in-a-real-pipeline">① Find the stages in a real pipeline</h2><p>Andrej Karpathy's <a href="https://github.com/karpathy/nanochat">nanochat</a> is a complete ChatGPT-style
@@ -110,7 +107,6 @@ stars and changes over time, so a line number printed here would go out of date.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">SCRIPTS</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/karpathy/nanochat/master/scripts/'</span>
@@ -150,10 +146,9 @@ stars and changes over time, so a line number printed here would go out of date.
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>nanochat ships <code>scripts/chat_rl.py</code>, which runs GRPO on GSM8K, described in its own docstring as
+<h3 id="Explore-①">Explore ①</h3><p>nanochat ships <code>scripts/chat_rl.py</code>, which runs GRPO on GSM8K, described in its own docstring as
 close to plain REINFORCE once the trust region and the PPO clipping come off. That is the
 verifiable-rewards stage from 5.3 in about 300 lines, and its reward comes from a checker rather
 than from a human or a learned model.</p>
@@ -164,8 +159,7 @@ like in code?</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="②-The-same-questions,-two-models">② The same questions, two models</h2><p>Now the experiment. <code>Qwen2.5-0.5B</code> and <code>Qwen2.5-0.5B-Instruct</code> share an architecture, a size, a
@@ -180,7 +174,6 @@ speaking, which its tuning taught it to expect.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">BASE</span><span class="p">,</span> <span class="n">INSTRUCT</span> <span class="o">=</span> <span class="s1">'Qwen/Qwen2.5-0.5B'</span><span class="p">,</span> <span class="s1">'Qwen/Qwen2.5-0.5B-Instruct'</span>
@@ -225,7 +218,6 @@ speaking, which its tuning taught it to expect.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Explain what a neural network is, in two sentences.'</span><span class="p">,</span>
@@ -249,8 +241,7 @@ speaking, which its tuning taught it to expect.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="What-to-look-at">What to look at</h3><p>Read your outputs before the discussion below. Record differences in answer content, style,
 refusal and stopping. Check factual answers independently, including Nairobi and the play’s
@@ -263,7 +254,6 @@ report the outputs you obtained and the settings that produced them.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [ ]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># substring matches: '1.' will also catch a decimal, 'Sure' will catch 'Surely'</span>
@@ -283,8 +273,7 @@ report the outputs you obtained and the settings that produced them.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Explore-②">Explore ②</h3><ul>
 <li><p><strong>Feed the base model the chat template.</strong> Run the following after the model-loading cells:</p>
@@ -310,18 +299,18 @@ that word license you to assume, and what does it not?</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Answer the Explore question above before reading on. This section works through the same
 sort, so reading it first does the work for you.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Discussion-of-an-earlier-run">Discussion of an earlier run</h3><p>These are observations from an earlier run, not required outcomes for your submission.</p>
+<details>
+<summary>Discussion of an earlier run</summary>
+<p>These are observations from an earlier run, not required outcomes for your submission.</p>
 <p>Only the tuned model opens with "Sure," and produces a refusal. Neither reaches for markdown bold, which is worth knowing: the tuned model does produce it under its shipped generation config, which sets a repetition penalty of 1.1, and the effect disappears once both models are decoded identically. Both
 models number their lists, and stopping early is close to a tie. The willingness to end a turn,
 which sounds like the obvious thing fine-tuning buys, is not visible here at this model size.</p>
@@ -339,11 +328,11 @@ more tasks and controls.</p>
 <p>When a later session says a model was “aligned” by fine-tuning, ask what moved: the
 behaviour, or the capability underneath it. Session 9.3 pushes that question further, and 9.4 has
 you measure the gap in isiZulu.</p>
+</details>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <h2 id="Submission-checklist">Submission checklist</h2><ul>

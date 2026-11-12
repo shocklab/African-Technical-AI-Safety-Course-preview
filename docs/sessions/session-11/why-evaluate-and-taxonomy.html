@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 11.1 — Why evaluate: the eval taxonomy</title>
+    <title>Session 11.1: Why evaluate: the eval taxonomy</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 11</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="../session-09/injection-poisoning-defences.html">← <span class="tn-title">9.5 · Prompt injection and layered defences</span></a>
-    <a class="tn-next" href="dangerous-capability-evals.html"><span class="tn-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span> →</a>
+    <a class="tn-prev" href="../session-09/injection-poisoning-defences.html" aria-label="Previous: 9.5 · Prompt injection and layered defences">← <span class="tn-title">9.5 · Prompt injection and layered defences</span></a>
+    <a class="tn-next" href="dangerous-capability-evals.html" aria-label="Next: 11.2 · Dangerous-capability evals: elicitation and sandbagging"><span class="tn-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -41,7 +41,7 @@
 
         <div class="intro-text">
             <h2>What we'll cover</h2>
-            <p>Earlier sessions used numbers such as reward-model accuracy and jailbreak success rates. How do we know what those numbers establish? An evaluation can give a precise score while measuring the wrong outcome. We begin with the founding distinction (does the model <em>have</em> a dangerous capability, versus does it have the <em>propensity</em> to use one) and a small taxonomy that organises the rest of the session. An eval is evidence about the tasks and conditions it samples. A result from English prompts does not directly establish performance in isiZulu.</p>
+            <p>Earlier sessions used numbers such as reward-model accuracy and jailbreak success rates. How do we know what those numbers establish? An evaluation can give a precise score while measuring the wrong outcome. We begin with the founding distinction (does the model have a dangerous capability, versus does it have the propensity to use one) and a small taxonomy that organises the rest of the session. An eval is evidence about the tasks and conditions it samples. A result from English prompts does not directly establish performance in isiZulu.</p>
         </div>
 
         <h2 class="section-title">Evaluation as the basis of safety claims</h2>
@@ -54,10 +54,10 @@
         <div class="technical-detail">
             <h4>Dangerous-capability versus alignment evaluations</h4>
             <ul class="styled-list">
-                <li><strong>Dangerous-capability evaluation:</strong> does the model <em>have</em> a capability that could cause extreme harm? Can it find a software exploit, design a toxin, autonomously acquire resources? This asks about the ceiling of what the model can do if it tries.</li>
-                <li><strong>Alignment (propensity) evaluation:</strong> setting aside what it <em>can</em> do, does it have the <em>propensity</em> to apply a capability for harm? Would it, in deployment, actually pursue a misaligned goal or resist correction?</li>
+                <li><strong>Dangerous-capability evaluation:</strong> does the model have a capability that could cause extreme harm? Can it find a software exploit, design a toxin, autonomously acquire resources? This asks about the ceiling of what the model can do if it tries.</li>
+                <li><strong>Alignment (propensity) evaluation:</strong> setting aside what it can do, does it have the propensity to apply a capability for harm? Would it, in deployment, actually pursue a misaligned goal or resist correction?</li>
             </ul>
-            <p style="color:#555;">The two come apart in both dangerous directions. A model can be capable but well-behaved (high capability, low harmful propensity), which is the hoped-for case. Or it can be capable and willing, which is the feared case. There is also a subtler case: a model can <em>appear</em> incapable or harmless on the eval while being neither, because it was poorly elicited or because it strategically underperformed. A capability eval measures what the model does under the elicitation methods tested. The best expected score among tested methods is no greater than the best expected score over the feasible methods. A noisy observed score is an estimate, not a guaranteed lower bound or certified ceiling. A propensity eval asks whether the model applies its capabilities for harm under the tested conditions.</p>
+            <p style="color:#555;">The two come apart in both dangerous directions. A model can be capable but well-behaved (high capability, low harmful propensity), which is the hoped-for case. Or it can be capable and willing, which is the feared case. There is also a subtler case: a model can appear incapable or harmless on the eval while being neither, because it was poorly elicited or because it strategically underperformed. A capability eval measures what the model does under the elicitation methods tested. The best expected score among tested methods is no greater than the best expected score over the feasible methods. A noisy observed score is an estimate, not a guaranteed lower bound or certified ceiling. A propensity eval asks whether the model applies its capabilities for harm under the tested conditions.</p>
         </div>
 
         <h2 class="section-title">The taxonomy</h2>
@@ -78,7 +78,7 @@
 
         <h2 class="section-title">Evaluators and the theory of change</h2>
 
-        <p>A handful of organisations define the practice, and they map onto the taxonomy. METR and the UK AI Security Institute (renamed from AI Safety Institute in 2025) focus on capability and agentic evals (METR's autonomy task suites; the Institute's open-source <em>Inspect</em> framework). Apollo Research studies deceptive behaviour and scheming capabilities; its instructed scheming tests do not estimate how often a deployed model would scheme. The labs run their own: Anthropic’s Responsible Scaling Policy and Google DeepMind’s Frontier Safety Framework connect evaluation evidence to safeguards and governance decisions under their respective policy versions. The intended path is a chain: an eval produces a measurement, the measurement feeds a risk assessment, the risk assessment triggers a governance action. That chain, eval to threshold to mitigation, is the subject of Session 12, so here we state it and hand it over. This session covers the first link only: making the measurement trustworthy.</p>
+        <p>A handful of organisations define the practice, and they map onto the taxonomy. METR and the UK AI Security Institute (renamed from AI Safety Institute in 2025) focus on capability and agentic evals (METR's autonomy task suites; the Institute's open-source <em>Inspect</em> framework). Apollo Research studies deceptive behaviour and scheming capabilities. Its instructed scheming tests do not estimate how often a deployed model would scheme. The labs run their own: Anthropic’s Responsible Scaling Policy and Google DeepMind’s Frontier Safety Framework connect evaluation evidence to safeguards and governance decisions under their respective policy versions. The intended path is a chain: an eval produces a measurement, the measurement feeds a risk assessment, the risk assessment triggers a governance action. That chain, eval to threshold to mitigation, is the subject of Session 12, so here we state it and hand it over. This session covers the first link only: making the measurement trustworthy.</p>
 
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">The distribution an eval samples</span></h3>
@@ -110,10 +110,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="../session-09/injection-poisoning-defences.html"><span class="nav-label">← Previous</span><span class="nav-title">9.5 · Prompt injection and layered defences</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="dangerous-capability-evals.html"><span class="nav-label">Next →</span><span class="nav-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="../session-09/injection-poisoning-defences.html" aria-label="Previous: 9.5 · Prompt injection and layered defences"><span class="nav-label">← Previous</span><span class="nav-title">9.5 · Prompt injection and layered defences</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="dangerous-capability-evals.html" aria-label="Next: 11.2 · Dangerous-capability evals: elicitation and sandbagging"><span class="nav-label">Next →</span><span class="nav-title">11.2 · Dangerous-capability evals: elicitation and sandbagging</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

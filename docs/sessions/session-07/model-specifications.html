@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 7.5 — Model specifications</title>
+    <title>Session 7.5: Model specifications</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 7</summary>
@@ -27,8 +27,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="whose-constitution.html">← <span class="tn-title">7.4 · Whose constitution?</span></a>
-    <a class="tn-next" href="lab-constitutional-ai.html"><span class="tn-title">7.6 · Lab: measuring an AI judge</span> →</a>
+    <a class="tn-prev" href="whose-constitution.html" aria-label="Previous: 7.4 · Whose constitution?">← <span class="tn-title">7.4 · Whose constitution?</span></a>
+    <a class="tn-next" href="lab-constitutional-ai.html" aria-label="Next: 7.6 · Lab: measuring an AI judge"><span class="tn-title">7.6 · Lab: measuring an AI judge</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -51,10 +51,11 @@
 
         <h2 class="section-title">The OpenAI Model Spec</h2>
         <p>A versioned public document, first published in May 2024 and rewritten several times since, stating the behaviour OpenAI intends its models to have.</p>
-        <p>The first version organised its content into three categories: <em>objectives</em>, broad goals such as assisting the developer and end user and benefiting humanity; <em>rules</em>, hard constraints such as following the chain of command and complying with applicable laws; and <em>defaults</em>, behaviours such as asking clarifying questions, which hold unless someone with the authority to do so overrides them. Its chain of command ranked platform above developer above user above tool. The version current as this page is written (dated 18 August 2026, dedicated to the public domain under CC0) arranges the material differently: after an overview, a definitions section and the chain of command, the substance sits in behavioural sections named "Stay in bounds", "Seek the truth together", "Do the best work" and "Use appropriate style", followed by a set of under-18 principles. OpenAI states that it trains its models to align to the spec's principles, while acknowledging that production models do not yet fully reflect it: the document is the target, and the gap between target and model is an empirical quantity, which is the subject of the audit two sections down.</p>
+        <p>The first version organised its content into three categories: <em>objectives</em>, broad goals such as assisting the developer and end user and benefiting humanity; <em>rules</em>, hard constraints such as following the chain of command and complying with applicable laws; and <em>defaults</em>, behaviours such as asking clarifying questions, which hold unless someone with the authority to do so overrides them. Its chain of command ranked platform above developer above user above tool. The 18 August 2026 snapshot used here (dedicated to the public domain under CC0) arranges the material differently: after an overview, a definitions section and the chain of command, the substance is in behavioural sections named "Stay in bounds", "Seek the truth together", "Do the best work" and "Use appropriate style", followed by a set of under-18 principles. OpenAI states that it trains its models to align to the spec's principles, while acknowledging that production models do not yet fully reflect it: the document is the target, and the gap between target and model is an empirical quantity, which is the subject of the audit two sections down.</p>
+        <p>The <a href="https://model-spec.openai.com/2026-10-29.html" target="_blank" rel="noopener">29 October 2026 version</a> reorganises the guidance around faithfulness to human intent, harm minimisation, honesty and transparency, human agency, and care. It refers to GPT rather than the assistant and no longer has a separate section headed "Use appropriate style". The reading and structural description here use the 18 August snapshot.</p>
         <div class="info-box">
-            <h4>Instruction levels in the current spec</h4>
-            <p>Every instruction the model receives carries an authority level, and higher levels win conflicts. The current version defines five: <em>root</em> rules, fixed in the spec itself and not overridable by system messages, developers or users; <em>system</em> rules, set by OpenAI and deliverable through system messages; <em>developer</em> instructions, from whoever builds on the API; <em>user</em> instructions, from the person in the conversation; and <em>guidelines</em>, defaults that can be overridden implicitly, for instance by context making clear the user wants something else. Earlier versions used a shorter ladder (platform, developer, user, tool); the splitting and renaming of levels across versions shows the document behaving like a versioned engineering artefact, with levels added as edge cases accumulate.</p>
+            <h4>Instruction levels in the 18 August snapshot</h4>
+            <p>Every instruction the model receives carries an authority level, and higher levels win conflicts. The 18 August snapshot defines five: <em>root</em> rules, fixed in the spec itself and not overridable by system messages, developers or users; <em>system</em> rules, set by OpenAI and deliverable through system messages; <em>developer</em> instructions, from whoever builds on the API; <em>user</em> instructions, from the person in the conversation; and <em>guidelines</em>, defaults that can be overridden implicitly, for instance by context making clear the user wants something else. Earlier versions used a shorter ladder (platform, developer, user, tool); the splitting and renaming of levels across versions shows the document behaving like a versioned engineering artefact, with levels added as edge cases accumulate.</p>
         </div>
         <p>Three other structural features matter for the exercise below. The spec sorts content by permissibility: prohibited content, never produced under any instruction (sexual content involving minors); restricted content, produced only under tight conditions (information hazards, sensitive personal data); and sensitive content acceptable only in appropriate contexts. It also sorts the risks it guards against into three categories: misaligned goals, execution errors, and harmful instructions. And it argues by example. Most principles come with paired sample conversations, a compliant response next to a violating one, and the examples pin down interpretations the one-line principles leave open. When you read your chosen section for class, spend your time on the examples.</p>
 
@@ -94,7 +95,7 @@
         <h2 class="section-title">Readings</h2>
         <div class="resource-placeholder reading-core">
             <h4>Mandatory readings</h4>
-            <p>• <strong>OpenAI, "Model Spec"</strong> (version of 18 August 2026, <a href="https://model-spec.openai.com/2026-08-18.html" target="_blank" rel="noopener">model-spec.openai.com/2026-08-18.html</a>): read the opening paragraphs of the Overview (≈300 words), then Instructions and levels of authority (≈700) and the short introduction to The chain of command (≈100) for the authority structure. Pick one behavioural section to read in depth for the in-class exercise (≈600); the Root principles listed under the chain of command are reference to consult, not reading to get through. ≈1,700 in all. The document entire is about 39,000 words; the site serves the current version, with earlier versions kept as dated snapshots.</p>
+            <p>• <strong>OpenAI, "Model Spec"</strong> (version of 18 August 2026, <a href="https://model-spec.openai.com/2026-08-18.html" target="_blank" rel="noopener">model-spec.openai.com/2026-08-18.html</a>): read the opening paragraphs of the Overview (≈300 words), then Instructions and levels of authority (≈700) and the short introduction to The chain of command (≈100) for the authority structure. Pick one behavioural section to read in depth for the in-class exercise (≈600); the Root principles listed under the chain of command are reference to consult, not reading to get through. ≈1,700 in all. The full snapshot is about 39,000 words. The site also retains earlier versions as dated snapshots.</p>
             <p>• <strong>Ahmed, Klyman, Zeng, Koyejo &amp; Liang (2025), "SpecEval: Evaluating Model Adherence to Behavior Specifications"</strong> (<a href="https://arxiv.org/abs/2509.02464" target="_blank" rel="noopener">arXiv:2509.02464</a>): read §3 for the three-stage audit pipeline and §4.2 for the adherence analysis and the gap of nearly 20 percentage points between providers. ≈1,000 words. Its appendices set out every statement audited from the specifications, with explanations and examples (the authors wrote their own for Anthropic and Google), and run to tens of thousands of words; they are a lookup table, not reading.</p>
             <p style="margin-top:10px; color:#666;">Total mandatory load: ≈2,700 words.</p>
         </div>
@@ -102,21 +103,21 @@
             <h4>Optional readings</h4>
             <p>• <strong>Model Spec (18 August 2026): Red-line principles, General principles and Specific risks</strong> (≈700 words): the layer above the chain of command, read it if you want the whole authority structure rather than the part the exercise uses.</p>
             <p>• <strong>SpecEval, §4.1 and §4.3</strong> (≈900 words): the experimental setup, and the qualitative analysis of where models depart from their own specifications.</p>
-            <p>• <strong>Zvi Mowshowitz (2025), "On OpenAI's Model Spec 2.0"</strong> (<a href="https://thezvi.substack.com/p/on-openais-model-spec-20" target="_blank" rel="noopener">thezvi.substack.com</a>): a close critical reading; note that it reviews the February 2025 revision, not the current version, so check its complaints against today's text.</p>
+            <p>• <strong>Zvi Mowshowitz (2025), "On OpenAI's Model Spec 2.0"</strong> (<a href="https://thezvi.substack.com/p/on-openais-model-spec-20" target="_blank" rel="noopener">thezvi.substack.com</a>): a close critical reading; note that it reviews the February 2025 revision, an earlier version, so check its complaints against the snapshot used here.</p>
             <p>• <strong>Guan et al. (2024), "Deliberative Alignment: Reasoning Enables Safer Language Models"</strong> (<a href="https://arxiv.org/abs/2412.16339" target="_blank" rel="noopener">arXiv:2412.16339</a>): training o-series models to recall and reason over the safety specifications before answering.</p>
         </div>
 
         <div class="intro-text" style="margin-top:50px;">
             <h2>Next</h2>
-            <p>Sub-session 7.6 is the lab, in Colab. You run critique-and-revise, then measure how much of an AI judge's verdict comes from the principle it was handed and how much from the order the options were listed in. The last part is a control rather than a result: before asking whether the judge is worse in isiZulu, you check whether it can read isiZulu at all.</p>
+            <p>Sub-session 7.6 is the lab, in Colab. You run critique-and-revise, then measure a small AI judge's sensitivity to written principles and answer order. Distinguish conditional label probabilities from hard choices, then compare English identity matching with isiZulu-to-English translation matching. Each result concerns this model and evaluation setup.</p>
         </div>
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="whose-constitution.html"><span class="nav-label">← Previous</span><span class="nav-title">7.4 · Whose constitution?</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="lab-constitutional-ai.html"><span class="nav-label">Next →</span><span class="nav-title">7.6 · Lab: measuring an AI judge</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="whose-constitution.html" aria-label="Previous: 7.4 · Whose constitution?"><span class="nav-label">← Previous</span><span class="nav-title">7.4 · Whose constitution?</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="lab-constitutional-ai.html" aria-label="Next: 7.6 · Lab: measuring an AI judge"><span class="nav-label">Next →</span><span class="nav-title">7.6 · Lab: measuring an AI judge</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

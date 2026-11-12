@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 1.4 — Safety isn't solved</title>
+    <title>Session 1.4: Safety isn't solved</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 1</summary>
@@ -25,8 +25,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="the-case-and-its-critics.html">← <span class="tn-title">1.3 · The cases for and against misalignment</span></a>
-    <a class="tn-next" href="../session-02/from-neurons-to-networks.html"><span class="tn-title">2.1 · From neurons to networks</span> →</a>
+    <a class="tn-prev" href="the-case-and-its-critics.html" aria-label="Previous: 1.3 · The cases for and against misalignment">← <span class="tn-title">1.3 · The cases for and against misalignment</span></a>
+    <a class="tn-next" href="../session-02/from-neurons-to-networks.html" aria-label="Next: 2.1 · From neurons to networks"><span class="tn-title">2.1 · From neurons to networks</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -80,7 +80,7 @@
             </div>
             <div class="card">
                 <h3>"Passed our tests" ≠ safe</h3>
-                <p>GPT-4 passed extensive English safety evaluations. In Yong et al.'s test, translating the harmful requests into Zulu alone bypassed the guardrail 53% of the time, and trying four low-resource languages raised that to 79%, against under 1% in English. The evaluations and the deployment distribution didn't match. This is a first, gentle taste of the epistemic problem that drives Weeks 5 to 8. Behaviour on the tests you ran is weak evidence about behaviour on the situations you didn't.</p>
+                <p>GPT-4 passed extensive English safety evaluations. In Yong et al.'s test, translating the harmful requests into Zulu alone bypassed the guardrail 53% of the time, and trying four low-resource languages raised that to 79%, against under 1% in English. The evaluations and the deployment distribution didn't match. This is a first, gentle taste of the epistemic problem that drives Weeks 5 to 7. Behaviour on the tests you ran is weak evidence about behaviour on the situations you didn't.</p>
             </div>
         </div>
 
@@ -102,7 +102,7 @@
         <div class="technical-detail">
             <h4>A reader's checklist</h4>
             <ul class="styled-list">
-                <li><strong>Claim vs evidence.</strong> What exactly is being claimed, and what was actually measured? The gap between a headline and the result that supports it is where most overclaiming lives, and most useful scepticism too.</li>
+                <li><strong>Claim versus evidence.</strong> What exactly is being claimed, and what was actually measured? The gap between a headline and the result that supports it is where most overclaiming lives, and most useful scepticism too.</li>
                 <li><strong>What's the eval?</strong> On which benchmark, which prompts, which models, how many runs? A result is only as trustworthy as the evaluation behind it, and evals are usually narrower than the claim they're used to support (Session 11 is entirely about this).</li>
                 <li><strong>Who's the population?</strong> Whose data, whose preferences, whose language? The isiZulu result is what you find when you ask this question of the word "safety". Ask it of everything.</li>
                 <li><strong>What would falsify it?</strong> A claim that no observation could disconfirm isn't science. Look for the conditions under which the authors would have been wrong, and whether they checked them.</li>
@@ -111,7 +111,7 @@
         </div>
         <div class="info-box">
             <h4>The checklist, applied to its own anchor</h4>
-            <p>Run it on Yong et al., as a careful student would. Claim vs evidence: the claim is "GPT-4's guardrails fail under low-resource translation", and the evidence is attack-success rates on AdvBench, which is concrete and checkable. What's the eval? AdvBench, GPT-4, via a specific public translator, so the exact numbers may shift with model version and translator quality, a limitation the authors note. Who's the population? A handful of low-resource languages, so generalise with care. What would falsify it? If models given safety training in isiZulu still failed as often, the "English-centric safety training" explanation would not hold. If they closed the gap, it would gain support, and that is the kind of follow-up the field is now doing. A strong result and a bounded one. That is how to read most findings here.</p>
+            <p>Run it on Yong et al., as a careful student would. Claim versus evidence: the claim is "GPT-4's guardrails fail under low-resource translation", and the evidence is attack-success rates on AdvBench, which is concrete and checkable. What's the eval? AdvBench, GPT-4, via a specific public translator, so the exact numbers may shift with model version and translator quality, a limitation the authors note. Who's the population? A handful of low-resource languages, so generalise with care. What would falsify it? If models given safety training in isiZulu still failed as often, the "English-centric safety training" explanation would not hold. If they closed the gap, it would gain support, and that is the kind of follow-up the field is now doing. A strong result and a bounded one. That is how to read most findings here.</p>
         </div>
 
         <h2 class="section-title">The main resources</h2>
@@ -120,14 +120,14 @@
             <li><strong>Hendrycks, <em>Intro to ML Safety</em></strong>: the technical backbone (robustness, monitoring, control, systemic safety), with problem sets.</li>
             <li><strong>BlueDot Impact's Technical AI Safety course</strong> (formerly AI Safety Fundamentals): a conceptual reading-and-discussion course with facilitated small groups, good for breadth and current framing.</li>
             <li><strong>Grosse's Toronto alignment course</strong>: the idealised-to-empirical sequencing this course follows, with tiered reading lists including "skeptical takes".</li>
-            <li><strong>ARENA + Neel Nanda's materials + TransformerLens</strong>: the hands-on interpretability labs (Week 7) and a turnkey bank of project ideas.</li>
+            <li><strong>ARENA + Neel Nanda's materials + TransformerLens</strong>: our TransformerLens lab (Session 2.5), our interpretability session (Session 13), and self-study project material.</li>
             <li><strong>The African ecosystem</strong>: Masakhane (open African-NLP datasets and models), Lelapa AI (the InkubaLM model), the ILINA programme (African-led AI-safety field-building), and Research ICT Africa (the rights-based "Just AI" governance work). These anchor the Global-South thread and several project options.</li>
         </ul>
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>The isiZulu result is sometimes summarised as "GPT-4 is unsafe". Restate it precisely, including what was measured and what was <em>not</em>. Where does the loose summary mislead?</li>
-            <li>Capability generalised across languages but safety did not. Why might that asymmetry be the <em>default</em> rather than a surprise, given how the two are trained?</li>
+            <li>The isiZulu result is sometimes summarised as "GPT-4 is unsafe". Restate it precisely, including what was measured and what was not. Where does the loose summary mislead?</li>
+            <li>Capability generalised across languages but safety did not. Why might that asymmetry be the default rather than a surprise, given how the two are trained?</li>
             <li>Suppose a lab "fixes" the isiZulu gap by adding isiXhosa and isiZulu to its safety training. Has it solved the problem, or moved it? What does the Deng et al. resource-gradient finding predict?</li>
             <li>Apply the reader's checklist to one AI claim you've seen in the news this month. Which item does that claim fail hardest?</li>
         </ul>
@@ -140,10 +140,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="the-case-and-its-critics.html"><span class="nav-label">← Previous</span><span class="nav-title">1.3 · The cases for and against misalignment</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="../session-02/from-neurons-to-networks.html"><span class="nav-label">Next →</span><span class="nav-title">2.1 · From neurons to networks</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="the-case-and-its-critics.html" aria-label="Previous: 1.3 · The cases for and against misalignment"><span class="nav-label">← Previous</span><span class="nav-title">1.3 · The cases for and against misalignment</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="../session-02/from-neurons-to-networks.html" aria-label="Next: 2.1 · From neurons to networks"><span class="nav-label">Next →</span><span class="nav-title">2.1 · From neurons to networks</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

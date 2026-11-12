@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session 9.2 — Jailbreaks as discrete optimisation</title>
+    <title>Session 9.2: Jailbreaks as discrete optimisation</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
 <!-- TOP-NAV-START -->
-<div class="top-nav">
+<div class="top-nav" role="navigation" aria-label="Course navigation">
   <a class="tn-home" href="../../index.html">⌂ Contents</a>
   <details class="tn-menu">
     <summary>Session 9</summary>
@@ -26,8 +26,8 @@
     </ul>
   </details>
   <div class="tn-links">
-    <a class="tn-prev" href="adversarial-examples.html">← <span class="tn-title">9.1 · Adversarial examples and threat models</span></a>
-    <a class="tn-next" href="why-safety-training-fails.html"><span class="tn-title">9.3 · Safety under transformations</span> →</a>
+    <a class="tn-prev" href="adversarial-examples.html" aria-label="Previous: 9.1 · Adversarial examples and threat models">← <span class="tn-title">9.1 · Adversarial examples and threat models</span></a>
+    <a class="tn-next" href="why-safety-training-fails.html" aria-label="Next: 9.3 · Safety under transformations"><span class="tn-title">9.3 · Safety under transformations</span> →</a>
   </div>
 </div>
 <!-- TOP-NAV-END -->
@@ -50,18 +50,18 @@
         <p>Zou et al. optimise the probability of a short affirmative opening such as “Sure, here is”. In their experiments, this often moves the model towards producing the requested behaviour. The prefix is a tractable proxy, not the final safety measure: a response can begin affirmatively without providing harmful content, or avoid the target phrase while still crossing the safety boundary.</p>
         <p>Write the user prompt as a token sequence \(x_{1:n}\), with an adversarial suffix occupying a set of positions \(\mathcal{I}\), and let \(y_{1:m}\) be the target affirmative response. The attacker minimises the negative log-likelihood of the target given the prompt-plus-suffix:</p>
         <div class="formula">\[ \mathcal{L}(x_{1:n}) = -\log p\big(y_{1:m} \,\big|\, x_{1:n}\big), \qquad \text{minimise } \mathcal{L} \text{ over the suffix tokens } \{x_i : i \in \mathcal{I}\}. \]</div>
-        <p>This is an ordinary language-model loss (the same cross-entropy used in training), but optimised over the <em>input</em> tokens rather than the weights, and only over the suffix positions. The obstacle is that the input is discrete: you cannot take a gradient step in token space and land on a valid token. GCG's contribution is a way around that.</p>
+        <p>This is an ordinary language-model loss (the same cross-entropy used in training), but optimised over the input tokens rather than the weights, and only over the suffix positions. The obstacle is that the input is discrete: you cannot take a gradient step in token space and land on a valid token. GCG's contribution is a way around that.</p>
 
         <h2 class="section-title">Greedy coordinate gradient, read line by line</h2>
         <div class="technical-detail">
             <h4>The algorithm</h4>
             <p style="color:#555;">Represent each suffix token by a one-hot vector \(e_{x_i} \in \{0,1\}^{|V|}\) over the vocabulary \(V\). Then for each suffix position \(i \in \mathcal{I}\):</p>
             <ul class="styled-list">
-                <li>1. Gradient to shortlist. Compute \(\nabla_{e_{x_i}} \mathcal{L} \in \mathbb{R}^{|V|}\): how the loss would change if token \(i\) were replaced by each vocabulary item (a linearised estimate, read off the embedding gradient). Take the top-\(k\) tokens with the most negative gradient as candidate substitutions for that position. This is cheap: one backward pass gives the shortlist for every position at once.</li>
-                <li>2. Exact evaluation to choose. The gradient is only a first-order guess, so do not trust it to pick the winner. Instead sample a batch of \(B\) candidate swaps (each a single token at one position, drawn from that position's top-\(k\)), and for each one <em>actually run the model</em> and measure the true loss \(\mathcal{L}\). Keep the single swap that lowers the loss most.</li>
-                <li>3. Iterate. Apply the best swap and repeat for many steps. Each step changes one token. Over many steps the loss usually falls, and the attack succeeds if the affirmative target becomes the model's most likely opening; a fixed step budget does not guarantee that it gets there.</li>
+                <li>1. Gradient to shortlist. Compute \(g_i = \nabla_{e_{x_i}} \mathcal{L} \in \mathbb{R}^{|V|}\). Replacing the current token \(x_i\) with token \(v\) has linearised loss change \((g_i)_v - (g_i)_{x_i}\). The second term is constant across replacements at position \(i\), so ranking candidates by \(-g_i\) gives the same ordering. Take the top-\(k\) tokens with the most negative gradient as candidate substitutions for that position. This is cheap: one backward pass gives the shortlist for every position at once.</li>
+                <li>2. Exact evaluation to choose. The gradient is only a first-order guess, so do not trust it to pick the winner. Instead sample a batch of \(B\) candidate swaps (each a single token at one position, drawn from that position's top-\(k\)), and for each one actually run the model and measure the true loss \(\mathcal{L}\). Keep the single swap that lowers the loss most.</li>
+                <li>3. Iterate. Apply the best swap and repeat for many steps. Each step changes one token. Over many steps the loss usually falls. The optimisation has reached its target when the affirmative opening becomes the model's most likely continuation, which a fixed step budget does not guarantee; whether a harmful response then follows is a separate question.</li>
             </ul>
-            <p style="color:#555;">The name says it: <em>coordinate</em> (change one token-position at a time), <em>gradient</em> (to shortlist candidates), <em>greedy</em> (take the best swap each step). The gradient does the cheap pruning over a \(|V| \approx 32{,}000\)-way choice; the forward passes do the reliable selection. The earlier AutoPrompt method searched one position at a time; GCG's advance is to consider swaps across <em>all</em> positions before committing, which makes the search markedly more effective.</p>
+            <p style="color:#555;">The name says it: <em>coordinate</em> (change one token-position at a time), <em>gradient</em> (to shortlist candidates), <em>greedy</em> (take the best swap each step). The gradient does the cheap pruning over a \(|V| \approx 32{,}000\)-way choice; the forward passes do the reliable selection. The earlier AutoPrompt method searched one position at a time; GCG's advance is to consider swaps across all positions before committing, which makes the search markedly more effective.</p>
         </div>
         <div class="info-box">
             <h4>Propose with gradients, decide with evaluations</h4>
@@ -69,11 +69,11 @@
         </div>
 
         <h2 class="section-title">Universal and transferable</h2>
-        <p>Two extensions turn a per-prompt curiosity into a systemic threat. Universality: optimise a single suffix against <em>many</em> harmful prompts at once (sum the losses), and you get one string that jailbreaks requests it was never tuned on. Transfer: optimise that universal suffix against an <em>ensemble of open-weights models</em> (where you have gradients), and it frequently works on commercial black-box models where you have none. The numbers from the paper, on attack success rate:</p>
+        <p>Two extensions turn a per-prompt curiosity into a systemic threat. Universality: optimise a single suffix against many harmful prompts at once (sum the losses), and you get one string that jailbreaks requests it was never tuned on. Transfer: optimise that universal suffix against an ensemble of open-weights models (where you have gradients), and it frequently works on commercial black-box models where you have none. The numbers from the paper, on attack success rate:</p>
         <div class="technical-detail">
             <h4>Attack success rates</h4>
             <ul class="styled-list">
-                <li>White-box, where the attack is computed: Vicuna-7B ≈ 88% (harmful strings) / 99–100% (behaviours); Llama-2-7B-Chat ≈ 57% / 88%.</li>
+                <li>White-box, where the attack is computed: Vicuna-7B ≈ 88% (harmful strings) / 99 to 100% (behaviours); Llama-2-7B-Chat ≈ 57% / 88%.</li>
                 <li>Black-box ensemble success over 388 behaviours: GPT-3.5-turbo-0301 86.6%, PaLM 2 66.0%, GPT-4-0314 46.9% and Claude 2 2.1%.</li>
             </ul>
             <p style="color:#555;">The ensemble measure counts an attack as successful if any tested suffix works, so it is larger than the success rate of a single suffix. The paper reports that Claude 2 appeared more robust to this automated transfer attack, while also showing that a short, manually designed conditioning step could elicit a harmful behaviour that the suffix alone did not. These results compare attacks under this protocol, not the models' robustness to every jailbreak.</p>
@@ -89,9 +89,9 @@
 
         <h2 class="section-title">Questions to bring to class</h2>
         <ul class="styled-list">
-            <li>Write the GCG objective for a target of your choice. Why optimise the negative log-likelihood of an <em>affirmative prefix</em> rather than directly maximising "harmfulness"? What does that tell you about what is easy vs hard to specify?</li>
+            <li>Write the GCG objective for a target of your choice. Why optimise the negative log-likelihood of an affirmative prefix rather than directly maximising "harmfulness"? What does that tell you about what is easy versus hard to specify?</li>
             <li>In step 1 the gradient ranks \(|V|\) candidate tokens per position; in step 2 only a sampled batch is evaluated exactly. Why not trust the gradient's top choice? Why not exactly evaluate all \(|V|\) candidates?</li>
-            <li>Given the distillation caveat, design a fairer experiment to compare two models' robustness to transferred GCG suffixes. What would you change about the surrogate?</li>
+            <li>Vicuna was <a href="https://www.lmsys.org/blog/2023-03-30-vicuna/" target="_blank" rel="noopener">fine-tuned on user-shared ChatGPT conversations collected from ShareGPT</a>. That training lineage could affect transfer to ChatGPT differently from transfer to other targets. Given that possible confound, design a fairer experiment to compare two models' robustness to transferred GCG suffixes. What would you change about the surrogate?</li>
             <li>A perplexity filter rejects high-perplexity inputs. State the attack class against which this is evidence, then compare GCG's fixed-length search with AutoDAN's two-objective, left-to-right procedure.</li>
         </ul>
 
@@ -114,10 +114,10 @@
 
     </div>
 <!-- PAGE-NAV-START -->
-<nav class="page-nav">
-  <a class="prev" href="adversarial-examples.html"><span class="nav-label">← Previous</span><span class="nav-title">9.1 · Adversarial examples and threat models</span></a>
-  <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-  <a class="next" href="why-safety-training-fails.html"><span class="nav-label">Next →</span><span class="nav-title">9.3 · Safety under transformations</span></a>
+<nav class="page-nav" aria-label="Lesson navigation">
+  <a class="prev" href="adversarial-examples.html" aria-label="Previous: 9.1 · Adversarial examples and threat models"><span class="nav-label">← Previous</span><span class="nav-title">9.1 · Adversarial examples and threat models</span></a>
+  <a class="home" href="../../index.html" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>
+  <a class="next" href="why-safety-training-fails.html" aria-label="Next: 9.3 · Safety under transformations"><span class="nav-label">Next →</span><span class="nav-title">9.3 · Safety under transformations</span></a>
 </nav>
 <!-- PAGE-NAV-END -->
 </div>

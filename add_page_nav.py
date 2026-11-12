@@ -21,6 +21,7 @@ Usage:
 import os
 import re
 import sys
+from html import escape, unescape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -80,8 +81,9 @@ def rel(from_dir: Path, to_href: str) -> str:
 
 
 def nav_cell(kind, href, label, title):
+    accessible = escape(f'{"Previous" if kind == "prev" else "Next"}: {unescape(title)}', quote=True)
     return (
-        f'  <a class="{kind}" href="{href}">'
+        f'  <a class="{kind}" href="{href}" aria-label="{accessible}">'
         f'<span class="nav-label">{label}</span>'
         f'<span class="nav-title">{title}</span></a>'
     )
@@ -92,12 +94,12 @@ def build_nav(page_dir, prev, nxt):
         nav_cell("prev", rel(page_dir, prev[0]), "← Previous", prev[1])
         if prev else '  <span class="nav-empty"></span>'
     )
-    home = f'  <a class="home" href="{rel(page_dir, "index.html")}"><span class="nav-title">⌂</span></a>'
+    home = f'  <a class="home" href="{rel(page_dir, "index.html")}" aria-label="Course contents"><span class="nav-title" aria-hidden="true">⌂</span></a>'
     right = (
         nav_cell("next", rel(page_dir, nxt[0]), "Next →", nxt[1])
         if nxt else '  <span class="nav-empty"></span>'
     )
-    return f'{NAV_START}\n<nav class="page-nav">\n{left}\n{home}\n{right}\n</nav>\n{NAV_END}'
+    return f'{NAV_START}\n<nav class="page-nav" aria-label="Lesson navigation">\n{left}\n{home}\n{right}\n</nav>\n{NAV_END}'
 
 
 def inject(html: str, nav: str) -> str:
@@ -133,12 +135,14 @@ def build_top_nav(page_dir, prev, nxt, group, cur_href):
         )
     links = []
     if prev:
-        links.append(f'    <a class="tn-prev" href="{rel(page_dir, prev[0])}">← <span class="tn-title">{prev[1]}</span></a>')
+        label = escape(f'Previous: {unescape(prev[1])}', quote=True)
+        links.append(f'    <a class="tn-prev" href="{rel(page_dir, prev[0])}" aria-label="{label}">← <span class="tn-title">{prev[1]}</span></a>')
     if nxt:
-        links.append(f'    <a class="tn-next" href="{rel(page_dir, nxt[0])}"><span class="tn-title">{nxt[1]}</span> →</a>')
+        label = escape(f'Next: {unescape(nxt[1])}', quote=True)
+        links.append(f'    <a class="tn-next" href="{rel(page_dir, nxt[0])}" aria-label="{label}"><span class="tn-title">{nxt[1]}</span> →</a>')
     links_html = "\n".join(links)
     return (
-        f'{TOP_START}\n<div class="top-nav">\n'
+        f'{TOP_START}\n<div class="top-nav" role="navigation" aria-label="Course navigation">\n'
         f'  <a class="tn-home" href="{home}">⌂ Contents</a>\n'
         f'{menu}'
         f'  <div class="tn-links">\n{links_html}\n  </div>\n'

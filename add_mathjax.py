@@ -20,6 +20,9 @@ BLOCK = (
 
 n = 0
 for f in sorted(DOCS.rglob("*.html")):
+    # Notebook renderings have their own maths configuration.
+    if f.is_relative_to(DOCS / "labs"):
+        continue
     html = f.read_text(encoding="utf-8")
     html = re.sub(r"[ \t]*<!-- MATHJAX-START -->.*?<!-- MATHJAX-END -->\n?", "", html, flags=re.DOTALL)
     if "</head>" not in html:

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appendix to 3.1 — The Optimizer's Curse: A Formal Derivation</title>
+    <title>Appendix to 3.1: The optimizer's curse</title>
     <link rel="stylesheet" href="../../assets/styles.css">
     <!-- MATHJAX-START -->
     <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
@@ -30,13 +30,13 @@
         <h2 class="section-title">① Setup and the claim</h2>
         <div class="technical-detail">
             <h4>The model</h4>
-            <p style="color:#555;">We have a population of options indexed by \(i\). Option \(i\) has an unknown <strong>true value</strong> \(G_i\) (the goal) and we observe only a noisy <strong>proxy</strong></p>
+            <p style="color:#555;">We have \(N\) options indexed by \(i=1,\ldots,N\). The pairs \((G_i,\varepsilon_i)\) are independent across options; in the Gaussian calculation below they have the same distribution. Option \(i\) has an unknown <strong>true value</strong> \(G_i\) (the goal) and we observe only a noisy <strong>proxy</strong></p>
             <div class="formula">\[ P_i = G_i + \varepsilon_i, \qquad \mathbb{E}[\varepsilon_i \mid G_i] = 0, \qquad \varepsilon_i \perp G_i. \]</div>
             <p style="color:#555;">The proxy is <strong>unbiased</strong> as a measurement: averaged over the noise, it equals the truth. We optimise by selecting the option with the largest proxy, \(i^* = \operatorname{argmax}_i P_i\).</p>
         </div>
         <div class="info-box">
             <h4>The claim, precisely</h4>
-            <p>Provided each option's noise has mean zero given all the true values, \(\mathbb{E}[\varepsilon_i \mid G_1,\ldots,G_N] = 0\), the selected option's proxy is biased <em>upward</em> as an estimate of its true value, despite the proxy being unbiased <em>before</em> selection: \(\mathbb{E}[P_{i^*} - G_{i^*}] \ge 0\). The distortion is created by the \(\operatorname{argmax}\) acting on noisy measurements, not by any bias in the measurement. In the independent Gaussian model below, it grows with how hard you optimise. This post-selection over-statement is the <strong>optimizer's curse</strong> (Smith &amp; Winkler, 2006); seen through the lens of metric-gaming it is <strong>regressional Goodhart</strong> (Manheim &amp; Garrabrant, 2018).</p>
+            <p>Provided each option's noise has mean zero given all the true values, \(\mathbb{E}[\varepsilon_i \mid G_1,\ldots,G_N] = 0\), the selected option's proxy is biased upward as an estimate of its true value, despite the proxy being unbiased before selection: \(\mathbb{E}[P_{i^*} - G_{i^*}] \ge 0\). The distortion is created by the \(\operatorname{argmax}\) acting on noisy measurements, not by any bias in the measurement. In the independent Gaussian model below, it grows with how hard you optimise. This post-selection over-statement is the <strong>optimizer's curse</strong> (Smith &amp; Winkler, 2006). In the metric-gaming taxonomy it is <strong>regressional Goodhart</strong> (Manheim &amp; Garrabrant, 2018).</p>
         </div>
 
         <h2 class="section-title">② The single-option posterior</h2>
@@ -52,7 +52,7 @@
         </div>
         <div class="info-box">
             <h4>Two readings of β</h4>
-            <p>This \(\beta\) is exactly the slope of the least-squares <strong>regression</strong> of \(G\) on \(P\): for jointly Gaussian variables the conditional expectation <em>is</em> the linear regression, with slope \(\operatorname{Cov}(G,P)/\operatorname{Var}(P) = \sigma_G^2/(\sigma_G^2+\sigma_\varepsilon^2)\). Hence "regression to the mean" (Galton, 1886): the estimate of a high scorer is pulled back toward the population mean by the factor \(\beta\). The estimate is also the minimum-mean-squared-error estimator, so no cleverer use of the same data avoids the shrinkage.</p>
+            <p>This \(\beta\) is exactly the slope of the least-squares <strong>regression</strong> of \(G\) on \(P\): for jointly Gaussian variables the conditional expectation is the linear regression, with slope \(\operatorname{Cov}(G,P)/\operatorname{Var}(P) = \sigma_G^2/(\sigma_G^2+\sigma_\varepsilon^2)\). Hence "regression to the mean" (Galton, 1886): the estimate of a high scorer is pulled back toward the population mean by the factor \(\beta\). The estimate is also the minimum-mean-squared-error estimator, so no cleverer use of the same data avoids the shrinkage.</p>
         </div>
 
         <h2 class="section-title">③ The over-statement, exactly</h2>
@@ -60,12 +60,12 @@
             <h4>Bias of the proxy at a given score</h4>
             <p style="color:#555;">Define the over-statement \(b(p)\) as proxy minus expected truth at proxy value \(p\):</p>
             <div class="formula">\[ b(p) = p - \mathbb{E}[G \mid P = p] = (1 - \beta)(p - \mu_G) = \frac{\sigma_\varepsilon^2}{\sigma_G^2 + \sigma_\varepsilon^2}(p - \mu_G). \]</div>
-            <p style="color:#555;">Equivalently, the expected noise of an option <em>conditioned on its score</em> is positive for above-average scores: \(\mathbb{E}[\varepsilon \mid P = p] = b(p) &gt; 0\) for \(p &gt; \mu_G\). Selecting a high proxy preferentially selects options that "got lucky".</p>
+            <p style="color:#555;">Equivalently, the expected noise of an option conditioned on its score is positive for above-average scores: \(\mathbb{E}[\varepsilon \mid P = p] = b(p) &gt; 0\) for \(p &gt; \mu_G\). Selecting a high proxy preferentially selects options that "got lucky".</p>
         </div>
         <div class="highlight-box">
             <h3><span style="color:#ffffff;">Two consequences of the formula</span></h3>
             <p>(i) The harder you optimise, the worse it is. \(b(p)\) is proportional to \((p - \mu_G)\), how far into the tail your winner sits. Selecting an extreme proxy value inflates the over-statement without bound.</p>
-            <p>(ii) The worse the proxy, the worse it is. \(b(p)\) scales with \((1 - \beta) = \sigma_\varepsilon^2/(\sigma_G^2+\sigma_\varepsilon^2)\), the noise fraction. A perfect proxy (\(\sigma_\varepsilon = 0\), \(\beta = 1\)) gives zero bias; a noisy one gives a large one.</p>
+            <p>(ii) The worse the proxy, the worse it is. \(b(p)\) scales with \((1 - \beta) = \sigma_\varepsilon^2/(\sigma_G^2+\sigma_\varepsilon^2)\), the noise fraction. A perfect proxy (\(\sigma_\varepsilon = 0\), \(\beta = 1\)) gives zero bias. A noisy one gives a larger bias.</p>
         </div>
         <div class="info-box">
             <h4>Equal-variance example</h4>
@@ -73,19 +73,19 @@
         </div>
 
         <h2 class="section-title">④ Selecting the best of many: optimisation power</h2>
-        <p>"Optimising harder" often means <em>searching more options</em>. Taking the \(\operatorname{argmax}\) over \(N\) independent draws pushes the winning proxy deep into the tail, and §③ then says the over-statement grows with it.</p>
+        <p>"Optimising harder" often means searching more options. Taking the \(\operatorname{argmax}\) over \(N\) independent draws pushes the winning proxy deep into the tail, and §③ then says the over-statement grows with it.</p>
         <div class="technical-detail">
             <h4>Extreme-value scaling</h4>
-            <p style="color:#555;">Let \(P_1,\ldots,P_N\) be i.i.d. \(\mathcal{N}(\mu_P, \sigma_P^2)\) with \(\sigma_P^2 = \sigma_G^2 + \sigma_\varepsilon^2\), and \(M_N = \max_i P_i\). The normal distribution lies in the Gumbel domain of attraction, with centering constant (Embrechts, Klüppelberg &amp; Mikosch, 1997)</p>
+            <p style="color:#555;">Let \(P_1,\ldots,P_N\) be i.i.d. \(\mathcal{N}(\mu_P, \sigma_P^2)\) with \(\sigma_P^2 = \sigma_G^2 + \sigma_\varepsilon^2\), and \(M_N = \max_i P_i\). The normal distribution lies in the Gumbel domain of attraction, with centring constant (Embrechts, Klüppelberg &amp; Mikosch, 1997)</p>
             <div class="formula">\[ b_N = \sqrt{2 \ln N} - \dfrac{\ln \ln N + \ln 4\pi}{2\sqrt{2 \ln N}}, \qquad a_N = \frac{1}{\sqrt{2 \ln N}}. \]</div>
-            <p style="color:#555;">Then \((M_N - \mu_P - \sigma_P b_N)/(\sigma_P a_N)\) converges in distribution to a standard Gumbel, whose mean is the Euler–Mascheroni constant \(\gamma \approx 0.5772\). Hence the <em>expected</em> maximum is</p>
+            <p style="color:#555;">Then \((M_N - \mu_P - \sigma_P b_N)/(\sigma_P a_N)\) converges in distribution to a standard Gumbel, whose mean is the Euler–Mascheroni constant \(\gamma \approx 0.5772\). Hence the expected maximum is</p>
             <div class="formula">\[ \mathbb{E}[M_N] = \mu_P + \sigma_P\!\left( b_N + \gamma \cdot a_N \right) + o\!\left(1/\sqrt{\ln N}\right) \approx \mu_P + \sigma_P\sqrt{2 \ln N} \]</div>
             <p style="color:#555;">(leading order). (The leading term is \(\sqrt{2 \ln N}\). The correction inside \(b_N\) is of order \(\ln\ln N/\sqrt{\ln N}\), larger than the \(\gamma \cdot a_N\) term, which is of order \(1/\sqrt{\ln N}\); we keep both so that the error is \(o(1/\sqrt{\ln N})\).)</p>
         </div>
         <div class="technical-detail">
             <h4>The winner's shortfall</h4>
-            <p style="color:#555;">The selected option's expected over-statement is, to leading order, \(b\) evaluated at the winning score:</p>
-            <div class="formula">\[ \mathbb{E}[P_{i^*} - G_{i^*}] \approx (1 - \beta)\!\left( \mathbb{E}[M_N] - \mu_P \right) \approx (1 - \beta) \cdot \sigma_P \cdot \sqrt{2 \ln N}. \]</div>
+            <p style="color:#555;">The selected option's expected over-statement is exactly \(b\) evaluated at the winning score:</p>
+            <div class="formula">\[ \mathbb{E}[P_{i^*} - G_{i^*}] = (1 - \beta)\!\left( \mathbb{E}[M_N] - \mu_P \right) \approx (1 - \beta) \cdot \sigma_P \cdot \sqrt{2 \ln N}. \]</div>
             <p style="color:#555;">So the gap between what the winner scored and what it is actually worth grows like \(\sqrt{\ln N}\) in the number of options searched: slowly, but without bound. More search, more capability, more compute → a winner further into the tail → a larger illusory inflation.</p>
         </div>
         <div class="info-box">
@@ -98,13 +98,13 @@
         <div class="technical-detail">
             <h4>The optimizer's curse, in general</h4>
             <p style="color:#555;">Suppose options \(1,\ldots,N\) have fixed true values \(V_i\) and we hold unbiased estimates \(\hat{V}_i\) (so \(\mathbb{E}[\hat{V}_i] = V_i\)). Select \(i^* = \operatorname{argmax}_i \hat{V}_i\). Because the maximum is a convex function, Jensen's inequality gives</p>
-            <div class="formula">\[ \mathbb{E}[\hat{V}_{i^*}] = \mathbb{E}[\max_i \hat{V}_i] \ge \max_i \mathbb{E}[\hat{V}_i] = \max_i V_i \ge V_{i^*}. \]</div>
-            <p style="color:#555;">Taking expectations, \(\mathbb{E}[\hat{V}_{i^*} - V_{i^*}] \ge 0\): the estimate of the selected option is biased high, regardless of the distribution of the estimation errors. Normality only fixes the <em>size</em> of the gap (§②–④); its <em>sign</em> is forced by selection alone.</p>
+            <div class="formula">\[ \mathbb{E}[\hat{V}_{i^*}] = \mathbb{E}[\max_i \hat{V}_i] \ge \max_i \mathbb{E}[\hat{V}_i] = \max_i V_i \ge \mathbb{E}[V_{i^*}]. \]</div>
+            <p style="color:#555;">Hence \(\mathbb{E}[\hat{V}_{i^*} - V_{i^*}] \ge 0\): the estimate of the selected option is biased high, regardless of the distribution of the estimation errors. Normality only fixes the size of the gap (§②–④); its sign is forced by selection alone.</p>
         </div>
 
         <h2 class="section-title">⑥ Scope of the result</h2>
         <div class="card-grid">
-            <div class="card"><h3>Regressional Goodhart</h3><p>The shrinkage by \(\beta\) and the noise-driven over-statement are Manheim &amp; Garrabrant's (2018) <em>regressional</em> variant: the unavoidable consequence of selecting on (signal + noise) with a <em>fixed</em> joint distribution. It needs no adversary and no breakdown of the proxy.</p></div>
+            <div class="card"><h3>Regressional Goodhart</h3><p>The shrinkage by \(\beta\) and the noise-driven over-statement are Manheim &amp; Garrabrant's (2018) <em>regressional</em> variant: the unavoidable consequence of selecting on (signal + noise) with a fixed joint distribution. It needs no adversary and no breakdown of the proxy.</p></div>
             <div class="card"><h3>The gentle case</h3><p>The derivation assumes the \(G\)–\(P\) relationship stays linear-Gaussian out into the tail. Real optimisers also reach regions where the proxy stops tracking the goal (<em>extremal</em> Goodhart), where intervening on the proxy breaks its link to the goal because the proxy does not cause the goal (<em>causal</em>), or where another agent games the metric (<em>adversarial</em>). Their effects depend on the setting and are not captured here.</p></div>
         </div>
         <div class="info-box">
@@ -127,23 +127,22 @@
         <h2 class="section-title">References</h2>
         <div class="resource-placeholder reading-core">
             <h4>Primary</h4>
-            <p>• <a href="https://jimsmith.host.dartmouth.edu/wp-content/uploads/2022/04/The_Optimizers_Curse.pdf" target="_blank" rel="noopener"><strong>Smith, J. E. &amp; Winkler, R. L. (2006)</strong></a>, "The Optimizer's Curse: Skepticism and Postdecision Surprise in Decision Analysis", <em>Management Science</em> 52(3), 311–322. DOI <a href="https://doi.org/10.1287/mnsc.1050.0451" target="_blank" rel="noopener">10.1287/mnsc.1050.0451</a>.</p>
+            <p>• <a href="https://jimsmith.host.dartmouth.edu/wp-content/uploads/2022/04/The_Optimizers_Curse.pdf" target="_blank" rel="noopener"><strong>Smith, J. E. &amp; Winkler, R. L. (2006)</strong></a>, "The Optimizer's Curse: Skepticism and Postdecision Surprise in Decision Analysis", <em>Management Science</em> 52(3), 311 to 322. DOI <a href="https://doi.org/10.1287/mnsc.1050.0451" target="_blank" rel="noopener">10.1287/mnsc.1050.0451</a>.</p>
             <p>• <strong>Manheim, D. &amp; Garrabrant, S. (2018)</strong>, "Categorizing Variants of Goodhart's Law", <a href="https://arxiv.org/abs/1803.04585" target="_blank" rel="noopener">arXiv:<code>1803.04585</code></a>.</p>
         </div>
         <div class="resource-placeholder">
             <h4>Background</h4>
-            <p>• <a href="https://galton.org/essays/1880-1889/galton-1886-jaigi-regression-stature.pdf" target="_blank" rel="noopener"><strong>Galton, F. (1886)</strong></a>, "Regression towards Mediocrity in Hereditary Stature", <em>Journal of the Anthropological Institute</em> 15, 246–263: the origin of "regression to the mean".</p>
+            <p>• <a href="https://galton.org/essays/1880-1889/galton-1886-jaigi-regression-stature.pdf" target="_blank" rel="noopener"><strong>Galton, F. (1886)</strong></a>, "Regression towards Mediocrity in Hereditary Stature", <em>Journal of the Anthropological Institute</em> 15, 246 to 263: the origin of "regression to the mean".</p>
             <p>• <a href="https://link.springer.com/book/10.1007/978-3-642-33483-2" target="_blank" rel="noopener"><strong>Embrechts, P., Klüppelberg, C. &amp; Mikosch, T. (1997)</strong></a>, <em>Modelling Extremal Events for Insurance and Finance</em>, Springer (ISBN 978-3-540-60931-5): §3.3 for the Gaussian maximum and Gumbel norming constants.</p>
             <p>• Pan, Bhatia &amp; Steinhardt (2022, <a href="https://arxiv.org/abs/2201.03544" target="_blank" rel="noopener">arXiv:<code>2201.03544</code></a>) and Skalse et al. (2022, <a href="https://arxiv.org/abs/2209.13085" target="_blank" rel="noopener">arXiv:<code>2209.13085</code></a>): empirical and impossibility results on reward hacking. This derivation gives one mechanism for proxy failure; it does not prove either result (see Session 3.1).</p>
         </div>
 
+    </div>
         <nav class="page-nav">
             <a class="prev" href="the-specification-problem.html"><span class="nav-label">Return to</span><span class="nav-title">3.1 · The specification problem</span></a>
             <a class="home" href="../../index.html"><span class="nav-title">⌂</span></a>
-            <span class="nav-empty"></span>
+            <a class="next" href="instrumental-convergence.html"><span class="nav-label">Next →</span><span class="nav-title">3.2 · Instrumental convergence and power-seeking</span></a>
         </nav>
-
-    </div>
 </div>
 </body>
 </html>
