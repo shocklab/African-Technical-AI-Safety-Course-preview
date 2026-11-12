@@ -75,7 +75,7 @@ question to answer. Changing a number and watching the answer move is the point 
 
 <span class="n">IN_COLAB</span> <span class="o">=</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span>
 <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s1">'transformer_lens'</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">q</span> <span class="n">transformer_lens</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">q</span> <span class="s2">"transformer_lens&gt;=4"</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -483,8 +483,8 @@ turning it on someone else's.</p>
 <h2 id="③-Open-up-a-transformer">③ Open up a transformer</h2><p>First contact with the residual-stream picture from 2.2, on a real model. GPT-2 small: 12 layers,
 12 heads, \(d_{\text{model}} = 768\).</p>
 <p>The first cell downloads the weights (about 500 MB) and takes a minute or two. CPU is fine.</p>
-<p>You will probably see a deprecation warning about <code>from_pretrained</code> and a note about
-unauthenticated Hugging Face requests. Both are harmless: the model loads either way.</p>
+<p>You will probably see a note about unauthenticated Hugging Face requests. It is harmless:
+the model loads either way.</p>
 </div>
 </div>
 </div>
@@ -493,9 +493,12 @@ unauthenticated Hugging Face requests. Both are harmless: the model loads either
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">transformer_lens</span><span class="w"> </span><span class="kn">import</span> <span class="n">HookedTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformer_lens</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformerBridge</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">HookedTransformer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">'gpt2'</span><span class="p">)</span>
+<span class="c1"># TransformerLens 4 loads models through TransformerBridge. Compatibility mode gives</span>
+<span class="c1"># the hook names and methods (run_with_cache, to_tokens, ...) used below.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">TransformerBridge</span><span class="o">.</span><span class="n">boot_transformers</span><span class="p">(</span><span class="s1">'gpt2'</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">enable_compatibility_mode</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'layers: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_layers</span><span class="si">}</span><span class="s1"> | heads/layer: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_heads</span><span class="si">}</span><span class="s1"> | '</span>
       <span class="sa">f</span><span class="s1">'d_model: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">d_model</span><span class="si">}</span><span class="s1"> | vocab: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">d_vocab</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
